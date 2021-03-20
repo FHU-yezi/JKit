@@ -7,8 +7,5 @@ ua = {
 
 def GetFollowersCount(user_url):
     html = requests.get(user_url,headers = ua)
-    print(html)
     source = bs4.BeautifulSoup(html.content,"html.parser")
-    print(source.prettify())
-
-GetFollowersCount("https://www.jianshu.com/u/ea36c8d8aa30")
+    return int(source.find("div",class_ = "meta-block").p.text)
