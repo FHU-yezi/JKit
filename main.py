@@ -40,3 +40,13 @@ def GetAssetsCount(user_url):
     raw_data = source.findAll("div",class_ = "meta-block")[5].p.text
     return raw_data.replace(".","").replace("w","000")
 
+def GetUserBasicImformation(user_url):
+    Name = "用户昵称：" + str(GetUserName(user_url))
+    Followers = "关注数：" + str(GetFollowersCount(user_url))
+    Fans = "粉丝数：" + str(GetFansCount(user_url))
+    Articles ="文章数：" + str(GetArticlesCount(user_url))
+    Words = "总字数：" + str(GetWordsCount(user_url))
+    Likes = "喜欢数：" + str(GetLikesCount(user_url))
+    Assets = "总资产：" + str(GetAssetsCount(user_url))
+    Item_List = [Name,"\n",Followers,"\n",Fans,"\n",Articles,"\n",Words,"\n",Likes,"\n",Assets]
+    return "".join(Item_List)
