@@ -50,3 +50,17 @@ def GetUserBasicImformation(user_url):
     Assets = "总资产：" + str(GetAssetsCount(user_url))
     Item_List = [Name,"\n",Followers,"\n",Fans,"\n",Articles,"\n",Words,"\n",Likes,"\n",Assets]
     return "".join(Item_List)
+
+def GetBadgesList(user_url):
+    html = requests.get(user_url,headers = UA)
+    source = bs4.BeautifulSoup(html.content,parser)
+    Item_List = []
+    Final_List = []
+    raw_data = source.findAll("li",class_ = "badge-icon")
+    for raw_item in raw_data:
+        Item_List.append(raw_item.find("a").text)
+    for item in Item_List:
+        Final_List.append(item.replace("\n","").replace(" ",""))
+    return Final_List
+
+print(GetBadgesList("https://www.jianshu.com/u/ea36c8d8aa30"))
