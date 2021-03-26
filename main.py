@@ -39,7 +39,7 @@ def GetAssetsCount(user_url):
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     raw_data = source.findAll("div",class_ = "meta-block")[5].p.text
-    return raw_data.replace(".","").replace("w","000")
+    return float(raw_data.replace(".","").replace("w","000"))
 
 def GetUserBasicImformation(user_url):
     Name = "用户昵称：" + str(GetUserName(user_url))
@@ -89,3 +89,17 @@ def GetBeiKeIslandTotalTradeCount():
     raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList",headers = headers,json = data)
     raw_data = json.loads(raw_data.content)
     return int((raw_data["data"]["totaltime"]))
+
+def GetUserFP(user_url):
+    html = requests.get(user_url,headers = Mobile_UA)
+    source = bs4.BeautifulSoup(html.content,parser)
+    result = source.find("div",class_ = "follow-meta")
+    result = result.findAll("span")[4].text
+    result = result.replace("总资产","").replace(" ","").replace("\n","")
+    return float(result)
+
+def GetUserFTN(user_url):
+    Total_Assets = GetAssetsCount(user_url)
+    FP = GetUserFP(user_url)
+    FTN = Total_Assets - FP
+    return FTN
