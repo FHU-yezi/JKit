@@ -1,5 +1,6 @@
 import bs4
 import requests
+import json
 
 from Errors import *
 from Basic import *
@@ -63,4 +64,20 @@ def GetBadgesList(user_url):
         Final_List.append(item.replace("\n","").replace(" ",""))
     return Final_List
 
-print(GetBadgesList("https://www.jianshu.com/u/ea36c8d8aa30"))
+def GetPersonalIntroduction(user_url):
+    html = requests.get(user_url,headers = UA)
+    source = bs4.BeautifulSoup(html.content,parser)
+    raw_data = str(source.findAll("div",class_ = "js-intro")[0])
+    return raw_data.replace('<div class="js-intro">',"").replace("<br/>","\n").replace("</div>","")
+
+def GetBeiKeIslandTotalTradeAmount():
+    headers = {"Host":"www.beikeisland.com",
+    "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
+    "Content-Type":"application/json",
+    "Version":"v2.0"}
+    data = {"ranktype":3,"pageIndex":1}
+    raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList",headers = headers,json = data)
+    raw_data = json.loads(raw_data.content)
+    return int((raw_data["data"]["totalcount"])
+
+print(GetBeiKeIslandTotalTradeAmount())
