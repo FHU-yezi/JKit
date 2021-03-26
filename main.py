@@ -102,4 +102,6 @@ def GetUserFTN(user_url):
     Total_Assets = GetAssetsCount(user_url)
     FP = GetUserFP(user_url)
     FTN = Total_Assets - FP
+    if Total_Assets != 0 and FTN == 0:
+        raise MethodError("Total Assets is not 0, but FTN is 0, maybe the method has some errors.")
     return round(FTN,2)
