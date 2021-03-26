@@ -102,4 +102,4 @@ def GetUserFTN(user_url):
     Total_Assets = GetAssetsCount(user_url)
     FP = GetUserFP(user_url)
     FTN = Total_Assets - FP
-    return FTN
+    return round(FTN,2)
