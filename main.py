@@ -105,3 +105,41 @@ def GetUserFTN(user_url):
     if Total_Assets != 0 and FTN == 0:
         raise MethodError("Total Assets is not 0, but FTN is 0, maybe the method has some errors.")
     return round(FTN,2)
+
+def GetBeiKeIslandBuyList():
+    headers = {"Host":"www.beikeisland.com",
+    "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
+    "Content-Type":"application/json",
+    "Version":"v2.0"}
+    data = {"pageIndex":1,"retype":2}
+    raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeList",headers = headers,json = data)
+    raw_data = json.loads(raw_data.content)
+    TradeList = raw_data["data"]["tradelist"]
+    FinalData = {}
+    for count in range(10):
+        TradeInfo = []
+        Trade = TradeList[count]
+        TradeInfo.append(TradeList[count]["cantradenum"])
+        TradeInfo.append(TradeList[count]["jianshuname"])
+        TradeInfo.append(TradeList[count]["minlimit"])
+        TradeInfo.append(TradeList[count]["nickname"])
+        TradeInfo.append(TradeList[count]["recount"])
+        TradeInfo.append(TradeList[count]["reprice"])
+        FinalData[count] = TradeInfo
+    for count in range(10):
+        Trade = FinalData[count]
+        output = ""
+        output = output + "贝壳小岛交易信息：\n"
+        output = output + "简书昵称：" + str(Trade[1]) + "\n"
+        output = output + "贝壳小岛昵称：" + str(Trade[3]) + "\n"
+        output = output + "总交易量：" + str(Trade[4]) + "\n"
+        output = output + "剩余可交易量：" + str(Trade[0]) + "\n"
+        output = output + "最少购买数量：" + str(Trade[2]) + "\n"
+        output = output + "价格：" + str(Trade[5])
+        print(output)
+        print("\n")
+        
+
+        
+
+GetBeiKeIslandBuyList()
