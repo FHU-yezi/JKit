@@ -144,3 +144,8 @@ def GetBeiKeIslandTradeList(Trade_type):
         ItemDict["Price"] = Trade[5]
         output.append(ItemDict)
     return output
+
+def GetBeiKeIslandTradePrice(Trade_type):
+    Raw_Data = GetBeiKeIslandTradeList(Trade_type)
+    First_Dict = Raw_Data[0]
+    return First_Dict["Price"]
