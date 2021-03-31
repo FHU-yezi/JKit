@@ -43,13 +43,16 @@ def GetAssetsCount(user_url):
     return float(raw_data.replace(".","").replace("w","000"))
 
 def GetUserBasicImformation(user_url):
-    Name = "用户昵称：" + str(GetUserName(user_url))
-    Followers = "关注数：" + str(GetFollowersCount(user_url))
-    Fans = "粉丝数：" + str(GetFansCount(user_url))
-    Articles ="文章数：" + str(GetArticlesCount(user_url))
-    Words = "总字数：" + str(GetWordsCount(user_url))
-    Likes = "喜欢数：" + str(GetLikesCount(user_url))
-    Assets = "总资产：" + str(GetAssetsCount(user_url))
+    html = requests.get(user_url,headers = UA)
+    source = bs4.BeautifulSoup(html.content,parser)
+    Name = "用户昵称：" + str(source.findAll("a",class_ = "name")[0].text)
+    Followers = "关注数：" + str(source.findAll("div",class_ = "meta-block")[0].p.text)
+    Fans = "粉丝数：" + str(source.findAll("div",class_ = "meta-block")[1].p.text)
+    Articles ="文章数：" + str(source.findAll("div",class_ = "meta-block")[2].p.text)
+    Words = "总字数：" + str(source.findAll("div",class_ = "meta-block")[3].p.text)
+    Likes = "喜欢数：" + str(source.findAll("div",class_ = "meta-block")[4].p.text)
+    Assets_temp = source.findAll("div",class_ = "meta-block")[5].p.text
+    Assets = "总资产：" + str(Assets_temp.replace(".","").replace("w","000"))
     Item_List = [Name,"\n",Followers,"\n",Fans,"\n",Articles,"\n",Words,"\n",Likes,"\n",Assets]
     return "".join(Item_List)
 
