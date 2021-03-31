@@ -149,3 +149,25 @@ def GetBeiKeIslandTradePrice(Trade_type):
     Raw_Data = GetBeiKeIslandTradeList(Trade_type)
     First_Dict = Raw_Data[0]
     return First_Dict["Price"]
+
+def GetUserNoteTitleList(user_url,pages = 10000):
+    result_list = []
+    for page in range(pages):
+        list_len = len(result_list)
+        page += 1
+        url = user_url + "?order_by=shared_at&page=" + str(page)
+        header = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
+        "X-INFINITESCROLL":"true",
+        "X-Requested-With":"XMLHttpRequest"}
+        html = requests.get(url,headers = header)
+        source = bs4.BeautifulSoup(html.content,parser)
+        Note_List = source.findAll("li")
+        for note in Note_List:
+            note = note.find("div",class_ = "content")
+            result = note.find("a",class_ = "title").text
+            result_list.append(result)
+        if list_len == len(result_list):
+            break
+    return result_list
+
+print(GetUserNoteTitleList("https://www.jianshu.com/u/ea36c8d8aa30",10))
