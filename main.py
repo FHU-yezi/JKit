@@ -71,22 +71,14 @@ def GetPersonalIntroduction(user_url):
     return raw_data.replace('<div class="js-intro">',"").replace("<br/>","\n").replace("</div>","")
 
 def GetBeiKeIslandTotalTradeAmount():
-    headers = {"Host":"www.beikeisland.com",
-    "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
-    "Content-Type":"application/json",
-    "Version":"v2.0"}
     data = {"ranktype":3,"pageIndex":1}
-    raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList",headers = headers,json = data)
+    raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList",headers = BeiKeIslandHeaders,json = data)
     raw_data = json.loads(raw_data.content)
     return int((raw_data["data"]["totalcount"]))
 
 def GetBeiKeIslandTotalTradeCount():
-    headers = {"Host":"www.beikeisland.com",
-    "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
-    "Content-Type":"application/json",
-    "Version":"v2.0"}
     data = {"ranktype":3,"pageIndex":1}
-    raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList",headers = headers,json = data)
+    raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList",headers = BeiKeIslandHeaders,json = data)
     raw_data = json.loads(raw_data.content)
     return int((raw_data["data"]["totaltime"]))
 
@@ -169,5 +161,3 @@ def GetUserNoteTitleList(user_url,pages = 10000):
         if list_len == len(result_list):
             break
     return result_list
-
-print(GetUserNoteTitleList("https://www.jianshu.com/u/ea36c8d8aa30",10))
