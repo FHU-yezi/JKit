@@ -1,9 +1,10 @@
-import bs4
-import requests
+from Basic import *
+from Errors import *
+
 import json
 
-from Errors import *
-from Basic import *
+import bs4
+import requests
 
 def GetUserName(user_url):
     html = requests.get(user_url,headers = UA)
