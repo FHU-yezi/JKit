@@ -109,13 +109,9 @@ def GetBeiKeIslandTradeList(Trade_type):
         Trade_type = 1
     else:
         raise ValueError("Wrong parameter")
-    headers = {"Host":"www.beikeisland.com",
-    "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
-    "Content-Type":"application/json",
-    "Version":"v2.0"}
     output = []
     data = {"pageIndex":1,"retype":Trade_type}
-    raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeList",headers = headers,json = data)
+    raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeList",headers = BeiKeIslandHeaders,json = data)
     raw_data = json.loads(raw_data.content)
     TradeList = raw_data["data"]["tradelist"]
     FinalData = {}
