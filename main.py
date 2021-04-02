@@ -324,3 +324,21 @@ def GetUserNoteTitleList(user_url,pages = 10000):
         if list_len == len(result_list):
             break
     return result_list
+
+def GetUserFollowersList(user_url,pages = 10000):
+    raw_url = user_url.replace("/u/","/users/")
+    raw_url = raw_url + "/following?page="
+    header = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
+        "X-INFINITESCROLL":"true",
+        "X-Requested-With":"XMLHttpRequest"}
+    result_list = []
+    for page in range(pages):
+        page = page + 1
+        url = raw_url + str(page)
+        print(url)
+        html = requests.get(url + "1",headers = header)
+        source = bs4.BeautifulSoup(html.content,parser)
+        data_list = source.findAll("a",class_ = "name")
+        for item in data_list:
+            result_list.append(item.text)
+    return result_list
