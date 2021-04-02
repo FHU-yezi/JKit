@@ -6,6 +6,28 @@ import json
 import bs4
 import requests
 
+def GetUserID(user_url):
+    """该函数接收一个链接字符串，并将其转换成用户识别码。
+
+    Args:
+        user_url (str):链接字符串，需要加上 https
+    
+    Returns:
+        str: 用户识别码
+    """
+    return user_url.replace("https://www.jianshu.com/u/","")
+
+def GetUserURL(user_ID):
+    """该函数接收用户 ID，并将其转换成用户主页链接。
+
+    Args:
+        user_ID (str): 一个 12 位字符串
+
+    Returns:
+        str: 用户个人主页链接
+    """
+    return "https://www.jianshu.com/u/" + user_ID
+
 def GetUserName(user_url):
     """该函数接收一个链接字符串，访问后提取用户昵称。
 
