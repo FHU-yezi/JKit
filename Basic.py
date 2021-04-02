@@ -12,3 +12,37 @@ BeiKeIslandHeaders = {"Host":"www.beikeisland.com",
     "Version":"v2.0"}
 
 parser = "html.parser"
+
+def AssertUserURL(para):
+    """该函数接收一个参数，并判断其是否是简书的用户主页 URL。
+
+    Args:
+        para (str): 需要被判断的参数
+
+    Returns:
+        bool: 如为 True 则代表是用户主页 URL，为 False 则不是
+    """
+    if para.find("http") == -1:
+        return False
+    if para.find("www.jianshu.com") == -1:
+        return False
+    if para.find("/u/") == -1:
+        return False
+    return True
+
+def AssertNoteURL(para):
+    """该函数接收一个参数，并判断其是否是简书的文章 URL。
+
+    Args:
+        para (str): 需要被判断的参数
+
+    Returns:
+        bool: 如为 True 则代表是文章 URL，为 False 则不是
+    """
+    if para.find("http") == -1:
+        return False
+    if para.find("www.jianshu.com") == -1:
+        return False
+    if para.find("/p/") == -1:
+        return False
+    return True
