@@ -179,6 +179,14 @@ def GetBeiKeIslandTotalTradeCount():
     return int((raw_data["data"]["totaltime"]))
 
 def GetUserFP(user_url):
+    """该函数用于获取用户的简书钻数量
+
+    Args:
+        user_url (str): 链接字符串，需要加上 https
+
+    Returns:
+        float: 简书钻数量
+    """
     html = requests.get(user_url,headers = Mobile_UA)
     source = bs4.BeautifulSoup(html.content,parser)
     result = source.find("div",class_ = "follow-meta")
@@ -187,6 +195,16 @@ def GetUserFP(user_url):
     return float(result)
 
 def GetUserFTN(user_url):
+    """该函数用于获取用户的简书贝数量
+
+    由于该函数的实现方式利用了简书的已知漏洞，故有可能出现失效，这时代码会报错，避免数据错误。
+
+    Args:
+        user_url (str): 链接字符串，需要加上 https
+
+    Returns:
+        float: 简书贝数量
+    """
     Total_Assets = GetAssetsCount(user_url)
     FP = GetUserFP(user_url)
     FTN = Total_Assets - FP
@@ -195,6 +213,16 @@ def GetUserFTN(user_url):
     return round(FTN,2)
 
 def GetBeiKeIslandTradeList(Trade_type):
+    """该函数用于获取贝壳小岛交易列表
+
+    目前会返回前 10 条数据，买单为价格正序，卖单为价格倒序。
+
+    Args:
+        Trade_type (str): 为 buy 时返回买单列表，为 sell 时返回卖单列表。
+
+    Returns:
+        dict: 包含交易信息的字典
+    """
     if Trade_type == "buy":
         Trade_type = 2
     elif Trade_type == "sell":
@@ -230,11 +258,32 @@ def GetBeiKeIslandTradeList(Trade_type):
     return output
 
 def GetBeiKeIslandTradePrice(Trade_type):
+    """该函数用于获取贝壳小岛交易列表
+
+    目前会返回前 10 条数据，买单为价格正序，卖单为价格倒序。
+
+    Args:
+        Trade_type (str): 为 buy 时返回买单列表，为 sell 时返回卖单列表。
+
+    Returns:
+        dict: 包含交易信息的字典
+    """
     Raw_Data = GetBeiKeIslandTradeList(Trade_type)
     First_Dict = Raw_Data[0]
     return First_Dict["Price"]
 
 def GetUserNoteTitleList(user_url,pages = 10000):
+    """该函数用于获取用户的文章标题列表
+
+    当不指定获取页码时，默认获取前 10000 页，基本等同于全部获取。
+
+    Args:
+        user_url (str): 链接字符串，需要加上 https
+        pages (int, optional): 获取的页码数，默认为 10000
+
+    Returns:
+        list: 包含文章标题信息的列表
+    """
     result_list = []
     for page in range(pages):
         list_len = len(result_list)
