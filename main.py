@@ -1,5 +1,5 @@
-from Basic import *
-from Errors import *
+from .Basic import *
+from .Errors import *
 
 import json
 
