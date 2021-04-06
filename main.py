@@ -178,6 +178,30 @@ def GetPersonalIntroduction(user_url):
     raw_data = str(source.findAll("div",class_ = "js-intro")[0])
     return raw_data.replace('<div class="js-intro">',"").replace("<br/>","\n").replace("</div>","")
 
+def GetUserNotebookInfo(user_url):
+    """该函数接收一个用户主页链接，并获取该用户的文集与连载信息
+
+    Args:
+        user_url (str): 链接字符串，需要加上 https
+
+    Returns:
+        list: 包含用户文集与连载信息的列表
+    """
+    url = user_url.replace("/u/","/users/")
+    id = GetUserID(user_url)
+    url = url + "/collections_and_notebooks?slug=" + id
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    result_list = []
+    Notebook_List = source["notebooks"]
+    for item in Notebook_List:
+        info = {}
+        info["nid"] = item["id"]
+        info["name"] = item["name"]
+        info["is_book"] = item["book"]
+        result_list.append(info)
+    return result_list
+
 def GetBeiKeIslandTotalTradeAmount():
     """该函数用于获取贝壳小岛的总交易额。
 
