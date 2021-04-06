@@ -362,6 +362,14 @@ def GetUserFollowersList(user_url,pages = 10000):
     return result_list
 
 def GetAssetsRankList(start):
+    """该函数接收一个起始值，并返回自起始值后 20 位用户的资产信息
+
+    Args:
+        start (int): 起始值
+
+    Returns:
+        list: 包含用户资产信息的列表
+    """
     url = "https://www.jianshu.com/asimov/fp_rankings?max_id=1000000000&since_id=" + str(start)
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
