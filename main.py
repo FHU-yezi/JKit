@@ -360,3 +360,18 @@ def GetUserFollowersList(user_url,pages = 10000):
         for item in data_list:
             result_list.append(item.text)
     return result_list
+
+def GetAssetsRankList(start):
+    url = "https://www.jianshu.com/asimov/fp_rankings?max_id=1000000000&since_id=" + str(start)
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    rank_list = source["rankings"]
+    result_list = []
+    for item in rank_list:
+        info = {}
+        info["ranking"] = item["ranking"]
+        info["uid"] = item["user"]["id"]
+        info["name"] = item["user"]["nickname"]
+        info["assets"] = item["amount"]
+        result_list.append(info)
+    return result_list
