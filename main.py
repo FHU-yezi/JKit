@@ -311,10 +311,7 @@ def GetUserNoteTitleList(user_url,pages = 10000):
         list_len = len(result_list)
         page += 1
         url = user_url + "?order_by=shared_at&page=" + str(page)
-        header = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
-        "X-INFINITESCROLL":"true",
-        "X-Requested-With":"XMLHttpRequest"}
-        html = requests.get(url,headers = header)
+        html = requests.get(url,headers = request_UA)
         source = bs4.BeautifulSoup(html.content,parser)
         Note_List = source.findAll("li")
         for note in Note_List:
@@ -328,15 +325,12 @@ def GetUserNoteTitleList(user_url,pages = 10000):
 def GetUserFollowersList(user_url,pages = 10000):
     raw_url = user_url.replace("/u/","/users/")
     raw_url = raw_url + "/following?page="
-    header = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
-        "X-INFINITESCROLL":"true",
-        "X-Requested-With":"XMLHttpRequest"}
     result_list = []
     for page in range(pages):
         page = page + 1
         url = raw_url + str(page)
         print(url)
-        html = requests.get(url + "1",headers = header)
+        html = requests.get(url + "1",headers = request_UA)
         source = bs4.BeautifulSoup(html.content,parser)
         data_list = source.findAll("a",class_ = "name")
         for item in data_list:
