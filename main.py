@@ -6,7 +6,7 @@ import json
 import bs4
 import requests
 
-def GetUserID(user_url):
+def GetUID(user_url):
     """该函数接收一个链接字符串，并将其转换成用户识别码。
 
     Args:
@@ -142,7 +142,6 @@ def GetUserBasicImformation(user_url):
     result["likes"] = source.findAll("div",class_ = "meta-block")[4].p.text
     Assets_temp = source.findAll("div",class_ = "meta-block")[5].p.text
     result["total_assets"] = Assets_temp.replace(".","").replace("w","000")
-    Assets = "总资产：" + str(Assets_temp.replace(".","").replace("w","000"))
     return result
 
 def GetUserBadgesList(user_url):
@@ -189,7 +188,7 @@ def GetUserNotebookInfo(user_url):
         list: 包含用户文集与连载信息的列表
     """
     url = user_url.replace("/u/","/users/")
-    id = GetUserID(user_url)
+    id = GetUID(user_url)
     url = url + "/collections_and_notebooks?slug=" + id
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
@@ -215,7 +214,7 @@ def GetUserManageableCollectionInfo(user_url):
         dict: 拥有管理权的专题信息
     """
     url = user_url.replace("/u/","/users/")
-    id = GetUserID(user_url)
+    id = GetUID(user_url)
     url = url + "/collections_and_notebooks?slug=" + id
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
@@ -238,7 +237,7 @@ def GetUserOwnCollectionInfo(user_url):
         dict: 自己创建的专题信息
     """
     url = user_url.replace("/u/","/users/")
-    id = GetUserID(user_url)
+    id = GetUID(user_url)
     url = url + "/collections_and_notebooks?slug=" + id
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
