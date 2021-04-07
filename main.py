@@ -203,6 +203,52 @@ def GetUserNotebookInfo(user_url):
         result_list.append(info)
     return result_list
 
+def GetUserManageableCollectionInfo(user_url):
+    """该函数接收用户链接，并返回该用户拥有管理权的专题信息
+
+    Args:
+        user_url (str): 链接字符串，需要加上 https
+
+    Returns:
+        dict: 拥有管理权的专题信息
+    """
+    url = user_url.replace("/u/","/users/")
+    id = GetUserID(user_url)
+    url = url + "/collections_and_notebooks?slug=" + id
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    result_list = []
+    Collcetion_List = source["manageable_collections"]
+    for item in Collcetion_List:
+        info = {}
+        info["cid"] = item["id"]
+        info["name"] = item["title"]
+        result_list.append(info)
+    return result_list
+
+def GetUserOwnCollectionInfo(user_url):
+    """该函数接收用户链接，并返回该用户自己创建的专题信息
+
+    Args:
+        user_url (str): 链接字符串，需要加上 https
+
+    Returns:
+        dict: 自己创建的专题信息
+    """
+    url = user_url.replace("/u/","/users/")
+    id = GetUserID(user_url)
+    url = url + "/collections_and_notebooks?slug=" + id
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    result_list = []
+    Collcetion_List = source["own_collections"]
+    for item in Collcetion_List:
+        info = {}
+        info["cid"] = item["id"]
+        info["name"] = item["title"]
+        result_list.append(info)
+    return result_list
+
 def GetBeiKeIslandTotalTradeAmount():
     """该函数用于获取贝壳小岛的总交易额。
 
