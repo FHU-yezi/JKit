@@ -41,7 +41,7 @@ def GetUserName(user_url):
     source = bs4.BeautifulSoup(html.content,parser)
     return source.findAll("a",class_ = "name")[0].text
 
-def GetFollowersCount(user_url):
+def GetUserFollowersCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户的关注人数。
 
     Args:
@@ -54,7 +54,7 @@ def GetFollowersCount(user_url):
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[0].p.text)
 
-def GetFansCount(user_url):
+def GetUserFansCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户的粉丝数。
 
     Args:
@@ -67,7 +67,7 @@ def GetFansCount(user_url):
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[1].p.text)
 
-def GetArticlesCount(user_url):
+def GetUserArticlesCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户的文章数。
 
     Args:
@@ -80,7 +80,7 @@ def GetArticlesCount(user_url):
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[2].p.text)
 
-def GetWordsCount(user_url):
+def GetUserWordsCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户的总字数。
 
     Args:
@@ -93,7 +93,7 @@ def GetWordsCount(user_url):
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[3].p.text)
 
-def GetLikesCount(user_url):
+def GetUserLikesCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户被喜欢的总数。
 
     Args:
@@ -106,7 +106,7 @@ def GetLikesCount(user_url):
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[4].p.text)
 
-def GetAssetsCount(user_url):
+def GetUserAssetsCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户资产量。
 
     当用户资产大于一定值时，网页中的显示值将以 w 为单位，本函数会对其自动进行处理，但无法突破其精确度限制。
@@ -145,7 +145,7 @@ def GetUserBasicImformation(user_url):
     Assets = "总资产：" + str(Assets_temp.replace(".","").replace("w","000"))
     return result
 
-def GetBadgesList(user_url):
+def GetUserBadgesList(user_url):
     """该函数接收一个链接字符串，访问后提取用户的徽章列表。
 
     Args:
@@ -165,7 +165,7 @@ def GetBadgesList(user_url):
         Final_List.append(item.replace("\n","").replace(" ",""))
     return Final_List
 
-def GetPersonalIntroduction(user_url):
+def GetUserIntroduction(user_url):
     """该函数接收一个链接字符串，访问后提取用户个人简介。
 
     Args:
