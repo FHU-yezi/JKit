@@ -200,6 +200,8 @@ def GetUserNotebookInfo(user_url):
         info["nid"] = item["id"]
         info["name"] = item["name"]
         info["is_book"] = item["book"]
+        if item["book"] == True:
+            info["paid_book"] = item["paid_book"]
         result_list.append(info)
     return result_list
 
