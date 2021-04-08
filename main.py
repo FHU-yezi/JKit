@@ -366,14 +366,12 @@ def GetBeiKeIslandTradePrice(Trade_type):
     First_Dict = Raw_Data[0]
     return First_Dict["Price"]
 
-def GetUserNoteTitleList(user_url,pages = 10000):
+def GetUserNoteTitleList(user_url,pages = 1):
     """该函数用于获取用户的文章标题列表
-
-    当不指定获取页码时，默认获取前 10000 页，基本等同于全部获取。
 
     Args:
         user_url (str): 链接字符串，需要加上 https
-        pages (int, optional): 获取的页码数，默认为 10000
+        pages (int, optional): 获取的页码数，默认为 1
 
     Returns:
         list: 包含文章标题信息的列表
