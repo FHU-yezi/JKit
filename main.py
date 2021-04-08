@@ -409,6 +409,21 @@ def GetUserFollowersList(user_url,pages = 1):
             result_list.append(item.text)
     return result_list
 
+def GetUserFansList(user_url,pages = 1):
+    raw_url = user_url.replace("/u/","/users/")
+    raw_url = raw_url + "/followers?page="
+    result_list = []
+    for page in range(pages):
+        page = page + 1
+        url = raw_url + str(page)
+        print(url)
+        html = requests.get(url,headers = request_UA)
+        source = bs4.BeautifulSoup(html.content,parser)
+        data_list = source.findAll("a",class_ = "name")
+        for item in data_list:
+            result_list.append(item.text)
+    return result_list
+
 def GetAssetsRankList(start):
     """该函数接收一个起始值，并返回自起始值后 20 位用户的资产信息
 
