@@ -395,6 +395,15 @@ def GetUserNoteTitleList(user_url,pages = 10000):
     return result_list
 
 def GetUserFollowersList(user_url,pages = 1):
+    """该函数接收用户链接，并返回该用户的关注列表
+
+    Args:
+        user_url (str): 链接字符串，需要加上 https
+        pages (int, optional): 获取的页码数，默认为 1
+
+    Returns:
+        list: 包含用户关注信息的列表
+    """
     raw_url = user_url.replace("/u/","/users/")
     raw_url = raw_url + "/following?page="
     result_list = []
@@ -410,6 +419,15 @@ def GetUserFollowersList(user_url,pages = 1):
     return result_list
 
 def GetUserFansList(user_url,pages = 1):
+    """该函数接收用户链接，并返回该用户的粉丝列表
+
+    Args:
+        user_url (str): 链接字符串，需要加上 https
+        pages (int, optional): 获取的页码数，默认为 1
+
+    Returns:
+        list: 包含用户粉丝信息的列表
+    """
     raw_url = user_url.replace("/u/","/users/")
     raw_url = raw_url + "/followers?page="
     result_list = []
