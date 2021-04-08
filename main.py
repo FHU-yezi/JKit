@@ -394,7 +394,7 @@ def GetUserNoteTitleList(user_url,pages = 10000):
             break
     return result_list
 
-def GetUserFollowersList(user_url,pages = 10000):
+def GetUserFollowersList(user_url,pages = 1):
     raw_url = user_url.replace("/u/","/users/")
     raw_url = raw_url + "/following?page="
     result_list = []
@@ -402,7 +402,7 @@ def GetUserFollowersList(user_url,pages = 10000):
         page = page + 1
         url = raw_url + str(page)
         print(url)
-        html = requests.get(url + "1",headers = request_UA)
+        html = requests.get(url,headers = request_UA)
         source = bs4.BeautifulSoup(html.content,parser)
         data_list = source.findAll("a",class_ = "name")
         for item in data_list:
