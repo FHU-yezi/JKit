@@ -449,6 +449,7 @@ def GetAssetsRankList(start = 1):
     Returns:
         list: 包含用户资产信息的列表
     """
+    start = start - 1
     url = "https://www.jianshu.com/asimov/fp_rankings?max_id=1000000000&since_id=" + str(start)
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
@@ -458,6 +459,7 @@ def GetAssetsRankList(start = 1):
         info = {}
         info["ranking"] = item["ranking"]
         info["uid"] = item["user"]["id"]
+        info["slug"] = item["user"]["slug"]
         info["name"] = item["user"]["nickname"]
         info["assets"] = item["amount"]
         result_list.append(info)
