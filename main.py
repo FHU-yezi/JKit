@@ -440,11 +440,11 @@ def GetUserFansList(user_url,pages = 1):
             result_list.append(item.text)
     return result_list
 
-def GetAssetsRankList(start):
+def GetAssetsRankList(start = 1):
     """该函数接收一个起始值，并返回自起始值后 20 位用户的资产信息
 
     Args:
-        start (int): 起始值
+        start (int): 起始值，默认为 1
 
     Returns:
         list: 包含用户资产信息的列表
