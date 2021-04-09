@@ -461,6 +461,10 @@ def GetAssetsRankList(start = 1):
         info["uid"] = item["user"]["id"]
         info["slug"] = item["user"]["slug"]
         info["name"] = item["user"]["nickname"]
-        info["assets"] = item["amount"]
+        temp = item["amount"]
+        temp = list(str(temp))
+        temp.insert(-3,".")
+        temp = "".join(temp)
+        info["assets"] = float(temp)
         result_list.append(info)
     return result_list
