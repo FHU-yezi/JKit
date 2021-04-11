@@ -10,9 +10,11 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/FHU-yezi/JianshuResearchTools",
     packages=["JianshuResearchTools"],
+    install_requires=["bs4>=4.9.3","requests>=2.25.1"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    python_requires=">=3.0"
 )
