@@ -17,6 +17,18 @@ Jianshu-Research-Tools（简书研究工具）是一个数据获取与分析库�
 
 # 快速上手
 
+## 自动安装
+
+执行以下命令：
+
+```
+pip install JianshuResearchTools
+```
+
+全部依赖库将被自动安装。
+
+## 手动安装
+
 目前，JRT 的依赖库如下：
 
 - bs4：用于 HTML 解析与提取
@@ -28,8 +40,6 @@ Jianshu-Research-Tools（简书研究工具）是一个数据获取与分析库�
 pip install bs4
 pip install requests
 ```
-
-由于 JRT 没有上传到 PyPi，您目前还不可以通过 `pip`命令直接安装。
 
 请从[版本页面](https://github.com/FHU-yezi/JianshuResearchTools/releases)下载最新版本的 JRT，并将其解压后放置到您的项目根目录。不要更改文件名，否则将造成导入失败。
 
