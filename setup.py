@@ -9,7 +9,7 @@ setuptools.setup(
     long_description="简书数据获取与分析库",
     long_description_content_type="text/markdown",
     url="https://github.com/FHU-yezi/JianshuResearchTools",
-    packages=setuptools.find_packages(),
+    packages=["JianshuResearchTools"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

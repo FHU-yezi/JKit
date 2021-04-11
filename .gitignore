@@ -1,5 +1,9 @@
 *.log
 *.csv
 *.html
+local_test.py
 JianshuResearchTools/__pycache__/*
 .vscode/*
+build/*
+dist/*
+JianshuResearchTools.egg-info/*
