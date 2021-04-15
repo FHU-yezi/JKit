@@ -1,5 +1,9 @@
-from .Basic import *
-from .Errors import *
+try:
+    from .Basic import *
+    from .Errors import *
+except ImportError:
+    from Basic import *
+    from Errors import *
 
 import json
 
