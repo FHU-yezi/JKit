@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="JianshuResearchTools",
-    version="0.2.3",
+    version="0.2.4",
     author="FHU-yezi",
     author_email="yehaowei20060411@qq.com",
     description="科技赋能创作星辰",
