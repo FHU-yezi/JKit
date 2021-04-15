@@ -332,7 +332,7 @@ def GetUserFTN(user_url):
     Returns:
         float: 简书贝数量
     """
-    Total_Assets = GetAssetsCount(user_url)
+    Total_Assets = GetUserAssetsCount(user_url)
     FP = GetUserFP(user_url)
     FTN = Total_Assets - FP
     if Total_Assets != 0 and FTN == 0:
