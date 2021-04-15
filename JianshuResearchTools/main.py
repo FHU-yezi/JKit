@@ -505,9 +505,40 @@ def GetAssetsRankList(start = 1):
         result_list.append(info)
     return result_list
 
-def GetArticleHTML(article_url):
+def GetArticleHtml(article_url):
+    """该函数接收文章链接，并以 HTML 格式返回文章内容
+
+    目前对图片块的处理还存在一些问题，会有多余的参数。
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        str: HTML 格式的文章内容
+    """
+    # TODO:解决图片块的多余参数问题
     html = requests.get(article_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     raw_data = str(source.find("article"))
     result = Process_HTML(raw_data)
     return result
+
+def GetArticleText(article_url):
+    """该函数接收文章链接，并以纯文本呢格式返回文章内容
+
+    文章中的图片块会被丢弃，但图片描述会保留
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        str: 纯文本格式的文章内容
+    """
+    html = requests.get(article_url,headers = UA)
+    source = bs4.BeautifulSoup(html.content,parser)
+    result = str(source.find("article").text)
+    for i in range(3):  # 为了保证换行符替换完全，需要替换三次
+        result = result.replace("\n\n","\n")
+    return result
+
+print(GetArticleText("https://www.jianshu.com/p/af3e575db7af"))
