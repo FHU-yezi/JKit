@@ -504,3 +504,10 @@ def GetAssetsRankList(start = 1):
         info["assets"] = float(temp)
         result_list.append(info)
     return result_list
+
+def GetArticleHTML(article_url):
+    html = requests.get(article_url,headers = UA)
+    source = bs4.BeautifulSoup(html.content,parser)
+    raw_data = str(source.find("article"))
+    result = Process_HTML(raw_data)
+    return result

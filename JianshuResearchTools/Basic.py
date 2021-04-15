@@ -1,3 +1,5 @@
+import bs4
+
 UA = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
 }
@@ -50,3 +52,16 @@ def AssertNoteURL(para):
     if para.find("/p/") == -1:
         return False
     return True
+
+def Process_HTML(html):
+    raw_html = bs4.BeautifulSoup(html,parser)
+    result_html = []
+    for item in raw_html:
+        item = str(item)
+        item = item.replace("<html><body>","")
+        item = item.replace('<article class="_2rhmJa">',"")
+        item = item.replace("</article>","")
+        item = item.replace(' target="_blank"',"")
+        result_html.append(item)
+    result_html = "".join(result_html)
+    return result_html
