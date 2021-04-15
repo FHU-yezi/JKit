@@ -416,7 +416,7 @@ def GetUserNoteTitleList(user_url,pages = 1):
     for page in range(pages):
         list_len = len(result_list)
         page += 1
-        url = user_url + "?order_by=shared_at&page=" + str(page)
+        url = user_url + "?page=" + str(page)
         html = requests.get(url,headers = request_UA)
         source = bs4.BeautifulSoup(html.content,parser)
         Note_List = source.findAll("li")
