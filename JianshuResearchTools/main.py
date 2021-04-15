@@ -338,6 +338,7 @@ def GetBeiKeIslandTradeList(Trade_type):
         TradeInfo.append(TradeList[count]["nickname"])
         TradeInfo.append(TradeList[count]["recount"])
         TradeInfo.append(TradeList[count]["reprice"])
+        TradeInfo.append(TradeList[count]["userlevel"])
         FinalData[count] = TradeInfo
     for count in range(10):
         Trade = FinalData[count]
@@ -348,6 +349,7 @@ def GetBeiKeIslandTradeList(Trade_type):
         ItemDict["Remaining"] = Trade[0]
         ItemDict["TradeLimit"] = Trade[2]
         ItemDict["Price"] = Trade[5]
+        ItemDict["UserLevel"] = Trade[6]
         output.append(ItemDict)
     return output
 
