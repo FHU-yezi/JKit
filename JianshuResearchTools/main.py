@@ -272,6 +272,29 @@ def GetBeiKeIslandTotalTradeCount():
     raw_data = json.loads(raw_data.content)
     return int((raw_data["data"]["totaltime"]))
 
+def GetBeikeIslandTradeRanking(page = 1):
+    """该函数接收一个页码参数，并返回贝壳小岛交易排行榜中的用户信息
+
+    Args:
+        page (int, optional): 页码参数，默认为 1
+
+    Returns:
+        list: 包含用户信息的列表
+    """
+    data = {"ranktype": 3, "pageIndex": page}
+    raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList",headers = BeiKeIslandHeaders,json = data)
+    raw_data = json.loads(raw_data.content)
+    rank_list = raw_data["data"]["ranklist"]
+    result_list = []
+    for user in rank_list:
+        info = {}
+        info["bkuid"] = user["userid"]
+        info["jianshuname"] = user["jianshuname"]
+        info["amount"] = user["totalamount"]
+        info["time"] = user["totaltime"]
+        result_list.append(info)
+    return result_list
+        
 def GetUserFP(user_url):
     """该函数用于获取用户的简书钻数量
 
