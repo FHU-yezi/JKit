@@ -1,3 +1,6 @@
+# 如果在外部导入本模块，会触发 try 块中的代码，实现相对导入
+# 如果直接运行本模块，ImportError 异常会自动被捕获，并使用另一种导入方式
+
 try:
     from .Basic import *
     from .Errors import *
@@ -124,7 +127,7 @@ def GetUserAssetsCount(user_url):
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     raw_data = source.findAll("div",class_ = "meta-block")[5].p.text
-    return float(raw_data.replace(".","").replace("w","000"))
+    return float(raw_data.replace(".","").replace("w","000")) # 处理资产大于一定值时的缩写
 
 def GetUserBasicImformation(user_url):
     """该函数接收一个链接字符串，访问后提取用户的几项基础信息。
@@ -165,7 +168,7 @@ def GetUserBadgesList(user_url):
     for raw_item in raw_data:
         Item_List.append(raw_item.find("a").text)
     for item in Item_List:
-        Final_List.append(item.replace("\n","").replace(" ",""))
+        Final_List.append(item.replace(" ","").replace("\n","")) # 去除空格和换行符
     return Final_List
 
 def GetUserIntroduction(user_url):
@@ -180,6 +183,9 @@ def GetUserIntroduction(user_url):
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     raw_data = str(source.findAll("div",class_ = "js-intro")[0])
+    # 不知为何无法直接获取到简介字段，只能退而求其次获取上层字段再进行替换
+    # 如果用户简介中含有被替换的字符，会导致结果错误
+    # TODO:使用直接提取字段的方式重写本函数，避免可能造成的结果错误
     return raw_data.replace('<div class="js-intro">',"").replace("<br/>","\n").replace("</div>","")
 
 def GetUserNotebookInfo(user_url):
@@ -204,7 +210,7 @@ def GetUserNotebookInfo(user_url):
         info["name"] = item["name"]
         info["is_book"] = item["book"]
         if item["book"] == True:
-            info["paid_book"] = item["paid_book"]
+            info["paid_book"] = item["paid_book"] # 如果是连载，则判断是否是付费连载
         result_list.append(info)
     return result_list
 
@@ -308,7 +314,7 @@ def GetUserFP(user_url):
     Returns:
         float: 简书钻数量
     """
-    html = requests.get(user_url,headers = Mobile_UA)
+    html = requests.get(user_url,headers = Mobile_UA) # 手机端网页会显示简书钻数量
     source = bs4.BeautifulSoup(html.content,parser)
     result = source.find("div",class_ = "follow-meta")
     result = result.findAll("span")[4].text
@@ -356,6 +362,7 @@ def GetBeiKeIslandTradeList(Trade_type):
     raw_data = json.loads(raw_data.content)
     TradeList = raw_data["data"]["tradelist"]
     FinalData = {}
+    # TODO:重写这段屎山代码
     for count in range(10):
         TradeInfo = []
         Trade = TradeList[count]
@@ -381,15 +388,15 @@ def GetBeiKeIslandTradeList(Trade_type):
     return output
 
 def GetBeiKeIslandTradePrice(Trade_type):
-    """该函数用于获取贝壳小岛交易列表
+    """该函数用于获取贝壳小岛的交易价格
 
-    目前会返回前 10 条数据，买单为价格正序，卖单为价格倒序。
+    买单返回最低价，卖单返回最高价
 
     Args:
-        Trade_type (str): 为 buy 时返回买单列表，为 sell 时返回卖单列表。
+        Trade_type (str): 为 buy 时返回买单价格，为 sell 时返回卖单价格。
 
     Returns:
-        dict: 包含交易信息的字典
+        float: 对应交易类型的价格
     """
     Raw_Data = GetBeiKeIslandTradeList(Trade_type)
     First_Dict = Raw_Data[0]
@@ -479,7 +486,7 @@ def GetAssetsRankList(start = 1):
         list: 包含用户资产信息的列表
     """
     start = start - 1
-    url = "https://www.jianshu.com/asimov/fp_rankings?max_id=1000000000&since_id=" + str(start)
+    url = "https://www.jianshu.com/asimov/fp_rankings?max_id=1000000000&since_id=" + str(start) # max_id 沿用了排行榜页面请求时的默认值
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
     rank_list = source["rankings"]
