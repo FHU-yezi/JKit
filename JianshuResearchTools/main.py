@@ -524,7 +524,7 @@ def GetArticleHtml(article_url):
     return result
 
 def GetArticleText(article_url):
-    """该函数接收文章链接，并以纯文本呢格式返回文章内容
+    """该函数接收文章链接，并以纯文本格式返回文章内容
 
     文章中的图片块会被丢弃，但图片描述会保留
 
@@ -541,4 +541,12 @@ def GetArticleText(article_url):
         result = result.replace("\n\n","\n")
     return result
 
-print(GetArticleText("https://www.jianshu.com/p/af3e575db7af"))
+def GetUserArticlesList(user_url,page = 1):
+    url = user_url + "?page=" + str(page)
+    html = requests.get(url,headers = request_UA)
+    source  = bs4.BeautifulSoup(html.content,parser)
+    html_list = source.findAll("a",class_ = "title",href = True)
+    result_list = []
+    for item in html_list:
+        result_list.append("https://www.jianshu.com" + item["href"])
+    return result_list
