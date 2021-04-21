@@ -537,8 +537,7 @@ def GetArticleText(article_url):
     html = requests.get(article_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     result = str(source.find("article").text)
-    for i in range(3):  # 为了保证换行符替换完全，需要替换三次
-        result = result.replace("\n\n","\n")
+    result = result.replace("\n","")
     return result
 
 def GetUserArticlesList(user_url,page = 1):
@@ -569,3 +568,5 @@ def GetDailyArticleRankList():
         info["slug"] = item["slug"]
         result_list.append(info)
     return result_list
+
+print(GetArticleText("https://www.jianshu.com/p/d1bef91888d8"))
