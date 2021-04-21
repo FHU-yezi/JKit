@@ -158,7 +158,7 @@ def GetUserBadgesList(user_url):
         user_url (str): 链接字符串，需要加上 https
 
     Returns:
-        list: 用户被喜欢数（被点赞数）
+        list: 用户徽章列表
     """
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
@@ -540,7 +540,7 @@ def GetArticleText(article_url):
     for i in range(3):  # 为了保证换行符替换完全，需要替换三次
         result = result.replace("\n\n","\n")
     return result
-
+    
 def GetUserArticlesList(user_url,page = 1):
     url = user_url + "?page=" + str(page)
     html = requests.get(url,headers = request_UA)
