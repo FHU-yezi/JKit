@@ -540,7 +540,7 @@ def GetArticleText(article_url):
     for i in range(3):  # 为了保证换行符替换完全，需要替换三次
         result = result.replace("\n\n","\n")
     return result
-    
+
 def GetUserArticlesList(user_url,page = 1):
     url = user_url + "?page=" + str(page)
     html = requests.get(url,headers = request_UA)
@@ -549,4 +549,23 @@ def GetUserArticlesList(user_url,page = 1):
     result_list = []
     for item in html_list:
         result_list.append("https://www.jianshu.com" + item["href"])
+    return result_list
+
+def GetDailyArticleRankList():
+    """该函数返回日更排行榜中用户的基础信息
+
+    Returns:
+        list: 包含日更用户基础信息的列表
+    """
+    source = requests.get("https://www.jianshu.com/asimov/daily_activity_participants/rank",headers = request_UA)
+    source = json.loads(source.content)
+    raw_data = source["daps"]
+    result_list = []
+    for item in raw_data:
+        info = {}
+        info["ranking"] = item["rank"]
+        info["days"] = item["checkin_count"]
+        info["name"] = item["nickname"]
+        info["slug"] = item["slug"]
+        result_list.append(info)
     return result_list
