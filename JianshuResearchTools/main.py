@@ -569,4 +569,24 @@ def GetDailyArticleRankList():
         result_list.append(info)
     return result_list
 
-print(GetArticleText("https://www.jianshu.com/p/d1bef91888d8"))
+def GetCollectionArticlesList(collcetion_url,page = 1):
+    url = collcetion_url.replace("https://www.jianshu.com/c","https://www.jianshu.com/asimov/collections/slug")
+    url = url + "/public_notes?page=" + str(page) + "&count=20&order_by=added_at"
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    result_list = []
+    for item in source:
+        item_info = {}
+        item = item["object"]["data"]
+        item_info["title"] = item["title"]
+        item_info["nid"] = item["id"]
+        item_info["likes_count"] = item["likes_count"]
+        item_info["time"] = item["first_shared_at"]
+        item_info["commentable"] = item["commentable"]
+        item_info["paid"] = item["paid"]
+        item_info["topped"] = item["is_top"]
+        item_info["comments_count"] = item["public_comments_count"]
+        item_info["fp_amount"] = item["total_fp_amount"]
+        item_info["rewards_count"] = item["total_rewards_count"]
+        result_list.append(item_info)
+    return result_list
