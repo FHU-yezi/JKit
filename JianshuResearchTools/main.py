@@ -540,15 +540,29 @@ def GetArticleText(article_url):
     result = result.replace("\n","")
     return result
 
-def GetUserArticlesList(user_url,page = 1):
-    url = user_url + "?page=" + str(page)
-    html = requests.get(url,headers = request_UA)
-    source  = bs4.BeautifulSoup(html.content,parser)
-    html_list = source.findAll("a",class_ = "title",href = True)
+def GetUserArticlesInfo(user_url,page = 1):
+    url = user_url.replace("https://www.jianshu.com/u/","https://www.jianshu.com/asimov/users/slug/")
+    url = url + "/public_notes?page=" + str(page) + "&count=10&order_by=shared_at"
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
     result_list = []
-    for item in html_list:
-        result_list.append("https://www.jianshu.com" + item["href"])
-    return result_list
+    for item in source:
+        info = {}
+        item = item["object"]["data"]
+        info["title"] = item["title"]
+        info["nid"] = item["id"]
+        info["slug"] = item["slug"]
+        info["time"] = item["first_shared_at"]
+        info["views_count"] = item["views_count"]
+        info["topped"] = item["is_top"]
+        info["likes_count"] = item["likes_count"]
+        info["paid"] = item["paid"]
+        info["commentale"] = item["commentable"]
+        info["comments_amount"] = item["public_comments_count"]
+        info["fp_amount"] = item["total_fp_amount"]
+        info["rewards_amount"] = item["total_rewards_count"]
+        result_list.append(info)
+    return result_list    
 
 def GetDailyArticleRankList():
     """该函数返回日更排行榜中用户的基础信息
