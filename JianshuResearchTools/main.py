@@ -9,6 +9,7 @@ except ImportError:
     from Errors import *
 
 import json
+import time
 
 import bs4
 import requests
@@ -604,3 +605,29 @@ def GetCollectionArticlesList(collection_url,page = 1):
         item_info["rewards_count"] = item["total_rewards_count"]
         result_list.append(item_info)
     return result_list
+
+def GetArticleFPList(date = "latest"):
+    if date == "latest":
+        date = time.strftime("%Y%m%d", time.localtime())
+    url = "https://www.jianshu.com/asimov/fp_rankings/voter_notes?date=" + str(date)
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    result = {}
+    result["total_fp"] = source["fp"]
+    result["total_fp_to_authors"] = source["author_fp"]
+    result["total_fp_to_voters"] = source["fp"] - source["author_fp"]
+    data = []
+    for ranking,item in enumerate(source["notes"]):
+        info = {}
+        ranking = ranking + 1
+        info["ranking"] = ranking
+        info["article_title"] = item["title"] 
+        info["author_name"] = item["author_nickname"]
+        info["author_slug"] = item["slug"]
+        info["total_fp"] = item["fp"]
+        info["fp_to_author"] = item["author_fp"]
+        info["fp_to_voters"] = item["voter_fp"]
+        data.append(info)
+    result["data"] = data
+    print(data)
+    return data
