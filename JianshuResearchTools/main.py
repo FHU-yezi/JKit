@@ -129,7 +129,7 @@ def GetUserAssetsCount(user_url):
     raw_data = source.findAll("div",class_ = "meta-block")[5].p.text
     return float(raw_data.replace(".","").replace("w","000")) # 处理资产大于一定值时的缩写
 
-def GetUserBasicImformation(user_url):
+def GetUserBasicInformation(user_url):
     """该函数接收一个链接字符串，访问后提取用户的几项基础信息。
 
     Args:
@@ -229,8 +229,8 @@ def GetUserManageableCollectionInfo(user_url):
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
     result_list = []
-    Collcetion_List = source["manageable_collections"]
-    for item in Collcetion_List:
+    Collection_List = source["manageable_collections"]
+    for item in Collection_List:
         info = {}
         info["cid"] = item["id"]
         info["name"] = item["title"]
@@ -252,8 +252,8 @@ def GetUserOwnCollectionInfo(user_url):
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
     result_list = []
-    Collcetion_List = source["own_collections"]
-    for item in Collcetion_List:
+    Collection_List = source["own_collections"]
+    for item in Collection_List:
         info = {}
         info["cid"] = item["id"]
         info["name"] = item["title"]
@@ -583,8 +583,8 @@ def GetDailyArticleRankList():
         result_list.append(info)
     return result_list
 
-def GetCollectionArticlesList(collcetion_url,page = 1):
-    url = collcetion_url.replace("https://www.jianshu.com/c","https://www.jianshu.com/asimov/collections/slug")
+def GetCollectionArticlesList(collection_url,page = 1):
+    url = collection_url.replace("https://www.jianshu.com/c","https://www.jianshu.com/asimov/collections/slug")
     url = url + "/public_notes?page=" + str(page) + "&count=20&order_by=added_at"
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
