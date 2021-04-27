@@ -10,6 +10,7 @@ except ImportError:
 
 import json
 import time
+import re
 
 import bs4
 import requests
@@ -669,7 +670,11 @@ def GetArticleFPCount(article_url):
     result.insert(-3,".")
     result = "".join(result)
     result = float(result)
-    print(result)
     return result
 
-GetArticleFPCount("https://www.jianshu.com/p/d1bef91888d8")
+def GetCollectionArticlesCount(collection_url):
+    html = requests.get(collection_url,headers = UA)
+    source = bs4.BeautifulSoup(html.content,parser)
+    result = source.findAll("div",class_ ="info")[0].text
+    result = re.search("\d+",result).group(0)
+    return result
