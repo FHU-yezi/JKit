@@ -629,5 +629,47 @@ def GetArticleFPList(date = "latest"):
         info["fp_to_voters"] = item["voter_fp"]
         data.append(info)
     result["data"] = data
-    print(data)
     return data
+
+def GetArticleTitle(article_url):
+    url = article_url.replace("https://www.jianshu.com/p/","")
+    url = "https://www.jianshu.com/asimov/p/" + url
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    return source["public_title"]
+
+def GetArticleID(article_url):
+    url = article_url.replace("https://www.jianshu.com/p/","")
+    url = "https://www.jianshu.com/asimov/p/" + url
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    return source["id"]
+
+def GetArticleLikeCount(article_url):
+    url = article_url.replace("https://www.jianshu.com/p/","")
+    url = "https://www.jianshu.com/asimov/p/" + url
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    return source["likes_count"]
+
+def GetArticleCommentCount(article_url):
+    url = article_url.replace("https://www.jianshu.com/p/","")
+    url = "https://www.jianshu.com/asimov/p/" + url
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    return source["public_comment_count"]
+
+def GetArticleFPCount(article_url):
+    url = article_url.replace("https://www.jianshu.com/p/","")
+    url = "https://www.jianshu.com/asimov/p/" + url
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    result = source["total_fp_amount"]
+    result = list(str(result))
+    result.insert(-3,".")
+    result = "".join(result)
+    result = float(result)
+    print(result)
+    return result
+
+GetArticleFPCount("https://www.jianshu.com/p/d1bef91888d8")
