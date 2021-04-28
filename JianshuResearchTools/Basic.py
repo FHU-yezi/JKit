@@ -37,7 +37,7 @@ def AssertUserURL(para):
         return False
     return True
 
-def AssertNoteURL(para):
+def AssertArticleURL(para):
     """该函数接收一个参数，并判断其是否是简书的文章 URL。
 
     Args:

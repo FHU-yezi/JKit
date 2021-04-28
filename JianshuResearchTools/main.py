@@ -405,7 +405,7 @@ def GetBeiKeIslandTradePrice(Trade_type):
     First_Dict = Raw_Data[0]
     return First_Dict["Price"]
 
-def GetUserNoteTitleList(user_url,pages = 1):
+def GetUserArticlesTitleList(user_url,pages = 1):
     """该函数用于获取用户的文章标题列表
 
     Args:
@@ -422,10 +422,10 @@ def GetUserNoteTitleList(user_url,pages = 1):
         url = user_url + "?page=" + str(page)
         html = requests.get(url,headers = request_UA)
         source = bs4.BeautifulSoup(html.content,parser)
-        Note_List = source.findAll("li")
-        for note in Note_List:
-            note = note.find("div",class_ = "content")
-            result = note.find("a",class_ = "title").text
+        Article_List = source.findAll("li")
+        for article in Article_List:
+            article = article.find("div",class_ = "content")
+            result = article.find("a",class_ = "title").text
             result_list.append(result)
         if list_len == len(result_list):
             break
