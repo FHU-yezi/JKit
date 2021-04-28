@@ -1,4 +1,5 @@
 import bs4
+import datetime
 
 UA = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
@@ -65,3 +66,21 @@ def Process_HTML(html):
         result_html.append(item)
     result_html = "".join(result_html)
     return result_html
+
+def StrToDatetime(text):
+    """该函数接收一个由简书接口返回的字符串，并构建一个 Datetime 对象
+
+    Args:
+        text (str): 源字符串
+
+    Returns:
+        datetime: UTC+8，精确到秒
+    """
+    year = int(text[0:4])
+    month = int(text[5:7])
+    day = int(text[8:10])
+    hour = int(text[11:13])
+    minute = int(text[14:16])
+    second = int(text[17:19])
+    result = datetime.datetime(year,month,day,hour,minute,second)
+    return result

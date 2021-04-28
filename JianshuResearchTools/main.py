@@ -679,13 +679,7 @@ def GetArticlePublishTime(article_url):
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
     raw_text = source["first_shared_at"]
-    year = int(raw_text[0:4])
-    month = int(raw_text[5:7])
-    day = int(raw_text[8:10])
-    hour = int(raw_text[11:13])
-    minute = int(raw_text[14:16])
-    second = int(raw_text[17:19])
-    result = datetime.datetime(year,month,day,hour,minute,second)
+    result = StrToDatetime(raw_text)
     return result
 
 def GetCollectionArticlesCount(collection_url):
