@@ -19,7 +19,15 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(jrt.BeiKeIslandHeaders["Host"],"www.beikeisland.com")
         self.assertEqual(jrt.BeiKeIslandHeaders["Content-Type"],"application/json")
         self.assertEqual(jrt.BeiKeIslandHeaders["Version"],"v2.0")
-        
+    def testParser(self):
+        self.assertEqual(jrt.parser,"html.parser")
+    def testAssertUserURL(self):
+        self.assertTrue(jrt.AssertUserURL("https://www.jianshu.com/u/ea36c8d8aa30"))
+        self.assertTrue(jrt.AssertUserURL("https://www.jianshu.com/u/0f438ff0a55f?utm_source=desktop&utm_medium=index-users"))
+        self.assertFalse(jrt.AssertUserURL("https://www.jianshu.com/"))
+        self.assertFalse(jrt.AssertUserURL("https://www.baidu.com/"))
+        self.assertFalse(jrt.AssertUserURL("https://www.jianshu.com/p/06d33efe8b35"))
     
+      
 if __name__ == "__main__":
     unittest.main(verbosity = 2)
