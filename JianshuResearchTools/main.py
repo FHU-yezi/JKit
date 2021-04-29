@@ -304,7 +304,7 @@ def GetBeikeIslandTradeRanking(page = 1):
         info["bkuid"] = user["userid"]
         info["jianshuname"] = user["jianshuname"]
         info["amount"] = user["totalamount"]
-        info["time"] = user["totaltime"]
+        info["times"] = user["totaltime"]
         result_list.append(info)
     return result_list
         
