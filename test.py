@@ -90,6 +90,42 @@ class TestBeikeIslandMethods(unittest.TestCase):
             self.assertFalse(item["TradeLimit"] > item["Remaining"])
             self.assertTrue(0 < item["Price"] < 3)
             self.assertIn(item["UserLevel"],["普通用户","普通会员","银牌会员","金牌会员"])
-    
+    def testGetBeiKeIslandTradePrice(self):
+        self.assertTrue(0 <jrt.GetBeiKeIslandTradePrice("buy") < 3)
+        self.assertTrue(0 <jrt.GetBeiKeIslandTradePrice("sell") < 3)
+
+class TestUserInformations(unittest.TestCase):
+    def testGetUID(self):
+        self.assertEqual(jrt.GetUID("https://www.jianshu.com/u/ea36c8d8aa30"),"ea36c8d8aa30")
+    def testGetUserName(self):
+        self.assertEqual(jrt.GetUserName("https://www.jianshu.com/u/ea36c8d8aa30"),"初心不变_叶子")
+    def testGetUserFollowersCount(self):
+        self.assertTrue(0 < jrt.GetUserFollowersCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+    def testGetUserFansCount(self):
+        self.assertTrue(0 < jrt.GetUserFansCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+    def testGetUserArticlesCount(self):
+        self.assertTrue(0 < jrt.GetUserArticlesCount( "https://www.jianshu.com/u/ea36c8d8aa30"))
+    def testGetUsersWordsCount(self):
+        self.assertTrue(0 < jrt.GetUserWordsCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+    def testGetUserLikesCount(self):
+        self.assertTrue(0 < jrt.GetUserLikesCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+    def testUsersAssetsCount(self):
+        self.assertTrue(0 < jrt.GetUserAssetsCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+    def testGetUserBasicInformation(self):
+        result = jrt.GetUserBasicInformation("https://www.jianshu.com/u/ea36c8d8aa30")
+        self.assertTrue(result["name"] == jrt.GetUserName("https://www.jianshu.com/u/ea36c8d8aa30"))
+        self.assertTrue(result["followers"] == jrt.GetUserFollowersCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+        self.assertTrue(result["fans"] == jrt.GetUserFansCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+        self.assertTrue(result["articles"] == jrt.GetUserArticlesCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+        self.assertTrue(result["words"] == jrt.GetUserWordsCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+        self.assertTrue(result["likes"] == jrt.GetUserLikesCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+        self.assertTrue(result["total_assets"] == jrt.GetUserAssetsCount("https://www.jianshu.com/u/ea36c8d8aa30"))
+    def testGetUserBadgesCount(self):
+        self.assertTrue(0 < jrt.GetUserBadgesList("https://www.jianshu.com/u/ea36c8d8aa30") < 30)
+    def testGetUserIntroduction(self):
+        self.assertTrue(0 < len(jrt.GetUserIntroduction("https://www.jianshu.com/u/ea36c8d8aa30") < 1000))
+    def testGetUserNotebookInfo(self):
+        result = jrt.GetUserNotebookInfo("https://www.jianshu.com/u/ea36c8d8aa30")
+        print(result)
 if __name__ == "__main__":
     unittest.main(verbosity = 2)
