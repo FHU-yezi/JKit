@@ -144,7 +144,7 @@ def GetUserBasicInformation(user_url):
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     result = {}
-    result["name"] = int(source.findAll("a",class_ = "name")[0].text)
+    result["name"] = source.findAll("a",class_ = "name")[0].text
     result["followers"] = int(source.findAll("div",class_ = "meta-block")[0].p.text)
     result["fans"] = int(source.findAll("div",class_ = "meta-block")[1].p.text)
     result["articles"] = int(source.findAll("div",class_ = "meta-block")[2].p.text)
