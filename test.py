@@ -94,7 +94,7 @@ class TestBeikeIslandMethods(unittest.TestCase):
         self.assertTrue(0 <jrt.GetBeiKeIslandTradePrice("buy") < 3)
         self.assertTrue(0 <jrt.GetBeiKeIslandTradePrice("sell") < 3)
 
-class TestUserInformations(unittest.TestCase):
+class TestUserMethods(unittest.TestCase):
     def testGetUID(self):
         self.assertEqual(jrt.GetUID("https://www.jianshu.com/u/ea36c8d8aa30"),"ea36c8d8aa30")
     def testGetUserName(self):
@@ -121,11 +121,61 @@ class TestUserInformations(unittest.TestCase):
         self.assertTrue(result["likes"] == jrt.GetUserLikesCount("https://www.jianshu.com/u/ea36c8d8aa30"))
         self.assertTrue(result["total_assets"] == jrt.GetUserAssetsCount("https://www.jianshu.com/u/ea36c8d8aa30"))
     def testGetUserBadgesCount(self):
-        self.assertTrue(0 < jrt.GetUserBadgesList("https://www.jianshu.com/u/ea36c8d8aa30") < 30)
+        self.assertTrue(0 < len(jrt.GetUserBadgesList("https://www.jianshu.com/u/ea36c8d8aa30")) < 30)
     def testGetUserIntroduction(self):
-        self.assertTrue(0 < len(jrt.GetUserIntroduction("https://www.jianshu.com/u/ea36c8d8aa30") < 1000))
+        self.assertTrue(0 <= len(jrt.GetUserIntroduction("https://www.jianshu.com/u/43c3a5c5aca3")) < 1000)
     def testGetUserNotebookInfo(self):
         result = jrt.GetUserNotebookInfo("https://www.jianshu.com/u/ea36c8d8aa30")
-        print(result)
+        for item in result:
+            self.assertTrue(item["nid"] != 0)
+            self.assertTrue(item["name"] != "")
+            if item["is_book"] == True:
+                item["paid_book"] # 如果是连载，检查是否有付费连载状态字段
+    def testGetUserManageableCollectionInfo(self):
+        result = jrt.GetUserManageableCollectionInfo("https://www.jianshu.com/u/ea36c8d8aa30")
+        for item in result:
+            self.assertTrue(item["cid"] != 0)
+            self.assertTrue(item["name"] != "")
+    def testGetUserOwnCollectionInfo(self):
+        result = jrt.GetUserOwnCollectionInfo("https://www.jianshu.com/u/ea36c8d8aa30")
+        for item in result:
+            self.assertTrue(item["cid"] != 0)
+            self.assertTrue(item["name"] != "")
+    def testUserAssetMethods(self):
+        fp = jrt.GetUserFP("https://www.jianshu.com/u/ea36c8d8aa30")
+        ftn = jrt.GetUserFTN("https://www.jianshu.com/u/ea36c8d8aa30")
+        total = jrt.GetUserAssetsCount("https://www.jianshu.com/u/ea36c8d8aa30")
+        self.assertEqual(round(fp + ftn,2),total)
+    def testGetUserArticlesTitleList(self):
+        for page in [1,2]:
+            result = jrt.GetUserArticlesTitleList("https://www.jianshu.com/u/ea36c8d8aa30",page)
+            for item in result:
+                self.assertTrue(item != "")
+    def testGetUserFollowersList(self):
+        for page in [1,2]:
+            result = jrt.GetUserFollowersList("https://www.jianshu.com/u/ea36c8d8aa30",page)
+            for item in result:
+                self.assertTrue(item != "")
+    def testGetUserFansList(self):
+        for page in [1,2]:
+            result = jrt.GetUserFansList("https://www.jianshu.com/u/ea36c8d8aa30",page)
+            for item in result:
+                self.assertTrue(item != "")
+                
+class TestArticleMethods(unittest.TestCase):
+    def testGetArticleTitle(self):
+        self.assertTrue(jrt.GetArticleTitle("https://www.jianshu.com/p/06d33efe8b35") != "")
+    def testGetArticleID(self):
+        self.assertTrue(jrt.GetArticleID("https://www.jianshu.com/p/06d33efe8b35") != 0)
+    def testGetArticleLikeCount(self):
+        self.assertTrue(jrt.GetArticleLikeCount("https://www.jianshu.com/p/06d33efe8b35") >= 0)
+    def testGetArticleCommentCount(self):
+        self.assertTrue(jrt.GetArticleCommentCount("https://www.jianshu.com/p/06d33efe8b35") >= 0)
+    def testGetArticleFPCount(self):
+        self.assertTrue(jrt.GetArticleFPCount("https://www.jianshu.com/p/06d33efe8b35") >= 0)
+    def testGetArticlePublishTime(self):
+        result = jrt.GetArticlePublishTime("https://www.jianshu.com/p/06d33efe8b35")
+        # TODO: 补全测试方法
+
 if __name__ == "__main__":
     unittest.main(verbosity = 2)
