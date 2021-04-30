@@ -145,13 +145,13 @@ def GetUserBasicInformation(user_url):
     source = bs4.BeautifulSoup(html.content,parser)
     result = {}
     result["name"] = source.findAll("a",class_ = "name")[0].text
-    result["followers"] = source.findAll("div",class_ = "meta-block")[0].p.text
-    result["fans"] = source.findAll("div",class_ = "meta-block")[1].p.text
-    result["articles"] = source.findAll("div",class_ = "meta-block")[2].p.text
-    result["words"] = source.findAll("div",class_ = "meta-block")[3].p.text
-    result["likes"] = source.findAll("div",class_ = "meta-block")[4].p.text
+    result["followers"] = int(source.findAll("div",class_ = "meta-block")[0].p.text)
+    result["fans"] = int(source.findAll("div",class_ = "meta-block")[1].p.text)
+    result["articles"] = int(source.findAll("div",class_ = "meta-block")[2].p.text)
+    result["words"] = int(source.findAll("div",class_ = "meta-block")[3].p.text)
+    result["likes"] = int(source.findAll("div",class_ = "meta-block")[4].p.text)
     Assets_temp = source.findAll("div",class_ = "meta-block")[5].p.text
-    result["total_assets"] = Assets_temp.replace(".","").replace("w","000")
+    result["total_assets"] = int(Assets_temp.replace(".","").replace("w","000"))
     return result
 
 def GetUserBadgesList(user_url):
