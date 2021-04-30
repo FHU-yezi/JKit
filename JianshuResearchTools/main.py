@@ -447,7 +447,6 @@ def GetUserFollowersList(user_url,pages = 1):
     for page in range(pages):
         page = page + 1
         url = raw_url + str(page)
-        print(url)
         html = requests.get(url,headers = request_UA)
         source = bs4.BeautifulSoup(html.content,parser)
         data_list = source.findAll("a",class_ = "name")
@@ -471,7 +470,6 @@ def GetUserFansList(user_url,pages = 1):
     for page in range(pages):
         page = page + 1
         url = raw_url + str(page)
-        print(url)
         html = requests.get(url,headers = request_UA)
         source = bs4.BeautifulSoup(html.content,parser)
         data_list = source.findAll("a",class_ = "name")
