@@ -11,7 +11,6 @@ except ImportError:
 import json
 import time
 import re
-import datetime
 
 import bs4
 import requests
