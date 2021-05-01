@@ -695,3 +695,13 @@ def GetArticleCommentableStatus(article_url):
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
     return bool(source["commentable"])
+
+def GetArticlePaidStatus(article_url):
+    url = article_url.replace("https://www.jianshu.com/p/","https://www.jianshu.com/asimov/p/")
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    result = source["paid_type"]
+    if result == "free":
+        result = False
+    elif result == "fbook_paid":
+        result = True
