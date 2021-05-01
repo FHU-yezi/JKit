@@ -32,7 +32,7 @@ pip install JianshuResearchTools
 
 ## 手动安装
 
-目前，JRT 的依赖库如下：
+JRT 的依赖库如下：
 
 - bs4：用于 HTML 解析与提取
 - Requests：用于发起网络请求。
@@ -58,4 +58,4 @@ print(result)
 
 如果一切顺利，输出结果应是“初心不变_叶子“。
 
-之后，您可以探索 JRT 的更多使用场景，如有问题，请新建 Issues 进行反馈。我们亦欢迎您提交 PR 完善这个工具，感谢您的使用！
+感谢您使用 JRT。
