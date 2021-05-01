@@ -175,6 +175,8 @@ def GetUserBadgesList(user_url):
 
 def GetUserIntroduction(user_url):
     """该函数接收一个链接字符串，访问后提取用户个人简介。
+    
+    # ! 该函数在简介中有特殊字符的情况下可能出错，请知悉。
 
     Args:
         user_url (str): 用户主页链接
@@ -509,6 +511,8 @@ def GetArticleHtml(article_url):
     """该函数接收文章链接，并以 HTML 格式返回文章内容
 
     目前对图片块的处理还存在一些问题，会有多余的参数。
+    本函数无法获取文章中付费部分的内容。
+    # !：本函数可以获取设置禁止转载的文章内容，请尊重版权，因违规转载造成的版权问题您需自行担责。
 
     Args:
         article_url (str): 文章链接
@@ -526,7 +530,9 @@ def GetArticleHtml(article_url):
 def GetArticleText(article_url):
     """该函数接收文章链接，并以纯文本格式返回文章内容
 
-    文章中的图片块会被丢弃，但图片描述会保留
+    文章中的图片块会被丢弃，但图片描述会保留。
+    本函数无法获取文章中付费部分的内容。
+    # !：本函数可以获取设置禁止转载的文章内容，请尊重版权，因违规转载造成的版权问题您需自行担责。
 
     Args:
         article_url (str): 文章链接
