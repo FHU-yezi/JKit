@@ -20,7 +20,7 @@ def GetUID(user_url):
     """该函数接收一个链接字符串，并将其转换成用户识别码。
 
     Args:
-        user_url (str):链接字符串，需要加上 https
+        user_url (str): 用户主页链接
     
     Returns:
         str: 用户识别码
@@ -42,7 +42,7 @@ def GetUserName(user_url):
     """该函数接收一个链接字符串，访问后提取用户昵称。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         str: 用户昵称
@@ -55,7 +55,7 @@ def GetUserFollowersCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户的关注人数。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         int: 用户关注人数
@@ -68,7 +68,7 @@ def GetUserFansCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户的粉丝数。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         int: 用户粉丝数
@@ -81,7 +81,7 @@ def GetUserArticlesCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户的文章数。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         int: 用户文章数
@@ -94,7 +94,7 @@ def GetUserWordsCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户的总字数。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         int: 用户总字数
@@ -107,8 +107,7 @@ def GetUserLikesCount(user_url):
     """该函数接收一个链接字符串，访问后提取用户被喜欢的总数。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
-
+        user_url (str): 用户主页链接
     Returns:
         int: 用户被喜欢数（被点赞数）
     """
@@ -122,7 +121,7 @@ def GetUserAssetsCount(user_url):
     当用户资产大于一定值时，网页中的显示值将以 w 为单位，本函数会对其自动进行处理，但无法突破其精确度限制。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         int: 用户资产量
@@ -136,7 +135,7 @@ def GetUserBasicInformation(user_url):
     """该函数接收一个链接字符串，访问后提取用户的几项基础信息。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         dict: 用户基础信息
@@ -158,7 +157,7 @@ def GetUserBadgesList(user_url):
     """该函数接收一个链接字符串，访问后提取用户的徽章列表。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         list: 用户徽章列表
@@ -178,7 +177,7 @@ def GetUserIntroduction(user_url):
     """该函数接收一个链接字符串，访问后提取用户个人简介。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         int: 用户个人简介
@@ -195,7 +194,7 @@ def GetUserNotebookInfo(user_url):
     """该函数接收一个用户主页链接，并获取该用户的文集与连载信息
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         list: 包含用户文集与连载信息的列表
@@ -221,7 +220,7 @@ def GetUserManageableCollectionInfo(user_url):
     """该函数接收用户链接，并返回该用户拥有管理权的专题信息
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         dict: 拥有管理权的专题信息
@@ -244,7 +243,7 @@ def GetUserOwnCollectionInfo(user_url):
     """该函数接收用户链接，并返回该用户自己创建的专题信息
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         dict: 自己创建的专题信息
@@ -312,7 +311,7 @@ def GetUserFP(user_url):
     """该函数用于获取用户的简书钻数量
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         float: 简书钻数量
@@ -330,7 +329,7 @@ def GetUserFTN(user_url):
     由于该函数的实现方式利用了简书的已知漏洞，故有可能出现失效，这时代码会报错，避免数据错误。
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
 
     Returns:
         float: 简书贝数量
@@ -409,7 +408,7 @@ def GetUserArticlesTitleList(user_url,pages = 1):
     """该函数用于获取用户的文章标题列表
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
         pages (int, optional): 获取的页码数，默认为 1
 
     Returns:
@@ -435,7 +434,7 @@ def GetUserFollowersList(user_url,pages = 1):
     """该函数接收用户链接，并返回该用户的关注列表
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
         pages (int, optional): 获取的页码数，默认为 1
 
     Returns:
@@ -458,7 +457,7 @@ def GetUserFansList(user_url,pages = 1):
     """该函数接收用户链接，并返回该用户的粉丝列表
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
         pages (int, optional): 获取的页码数，默认为 1
 
     Returns:
@@ -548,7 +547,7 @@ def GetUserArticlesInfo(user_url,page = 1):
     """该函数接收用户主页链接，并返回其文章的信息
 
     Args:
-        user_url (str): 链接字符串，需要加上 https
+        user_url (str): 用户主页链接
         page (int, optional): 获取的页码数，默认为 1
 
     Returns:
@@ -600,7 +599,7 @@ def GetCollectionArticlesList(collection_url,page = 1):
     """该函数接收专题链接，并返回其中文章的信息
 
     Args:
-        collertion_url (str): 链接字符串，需要加上 https
+        collertion_url (str): 用户主页链接
         page (int, optional): 获取的页码数，默认为 1
 
     Returns:
