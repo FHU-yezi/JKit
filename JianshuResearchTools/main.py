@@ -25,6 +25,7 @@ def GetUID(user_url):
     Returns:
         str: 用户识别码
     """
+    AssertUserURL(user_url)
     return user_url.replace("https://www.jianshu.com/u/","")
 
 def GetUserURL(user_ID):
@@ -47,6 +48,7 @@ def GetUserName(user_url):
     Returns:
         str: 用户昵称
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     return source.findAll("a",class_ = "name")[0].text
@@ -60,6 +62,7 @@ def GetUserFollowersCount(user_url):
     Returns:
         int: 用户关注人数
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[0].p.text)
@@ -73,6 +76,7 @@ def GetUserFansCount(user_url):
     Returns:
         int: 用户粉丝数
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[1].p.text)
@@ -86,6 +90,7 @@ def GetUserArticlesCount(user_url):
     Returns:
         int: 用户文章数
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[2].p.text)
@@ -99,6 +104,7 @@ def GetUserWordsCount(user_url):
     Returns:
         int: 用户总字数
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[3].p.text)
@@ -111,6 +117,7 @@ def GetUserLikesCount(user_url):
     Returns:
         int: 用户被喜欢数（被点赞数）
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     return int(source.findAll("div",class_ = "meta-block")[4].p.text)
@@ -126,13 +133,14 @@ def GetUserAssetsCount(user_url):
     Returns:
         int: 用户资产量
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     raw_data = source.findAll("div",class_ = "meta-block")[5].p.text
     return float(raw_data.replace(".","").replace("w","000")) # 处理资产大于一定值时的缩写
 
 def GetUserBasicInformation(user_url):
-    """该函数接收一个链接字符串，访问后提取用户的几项基础信息。
+    """该函数接收一个链接字符串，访问后提取用户的基础信息。
 
     Args:
         user_url (str): 用户主页链接
@@ -140,6 +148,7 @@ def GetUserBasicInformation(user_url):
     Returns:
         dict: 用户基础信息
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     result = {}
@@ -162,6 +171,7 @@ def GetUserBadgesList(user_url):
     Returns:
         list: 用户徽章列表
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     Item_List = []
@@ -184,6 +194,7 @@ def GetUserIntroduction(user_url):
     Returns:
         int: 用户个人简介
     """
+    AssertUserURL(user_url)
     html = requests.get(user_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     raw_data = str(source.findAll("div",class_ = "js-intro")[0])
@@ -201,6 +212,7 @@ def GetUserNotebookInfo(user_url):
     Returns:
         list: 包含用户文集与连载信息的列表
     """
+    AssertUserURL(user_url)
     url = user_url.replace("/u/","/users/")
     id = GetUID(user_url)
     url = url + "/collections_and_notebooks?slug=" + id
@@ -227,6 +239,7 @@ def GetUserManageableCollectionInfo(user_url):
     Returns:
         dict: 拥有管理权的专题信息
     """
+    AssertUserURL(user_url)
     url = user_url.replace("/u/","/users/")
     id = GetUID(user_url)
     url = url + "/collections_and_notebooks?slug=" + id
@@ -250,6 +263,7 @@ def GetUserOwnCollectionInfo(user_url):
     Returns:
         dict: 自己创建的专题信息
     """
+    AssertUserURL(user_url)
     url = user_url.replace("/u/","/users/")
     id = GetUID(user_url)
     url = url + "/collections_and_notebooks?slug=" + id
@@ -336,6 +350,7 @@ def GetUserFTN(user_url):
     Returns:
         float: 简书贝数量
     """
+    AssertUserURL(user_url)
     Total_Assets = GetUserAssetsCount(user_url)
     FP = GetUserFP(user_url)
     FTN = Total_Assets - FP
@@ -416,6 +431,7 @@ def GetUserArticlesTitleList(user_url,pages = 1):
     Returns:
         list: 包含文章标题信息的列表
     """
+    AssertUserURL(user_url)
     result_list = []
     for page in range(pages):
         list_len = len(result_list)
@@ -442,6 +458,7 @@ def GetUserFollowersList(user_url,pages = 1):
     Returns:
         list: 包含用户关注信息的列表
     """
+    AssertUserURL(user_url)
     raw_url = user_url.replace("/u/","/users/")
     raw_url = raw_url + "/following?page="
     result_list = []
@@ -465,6 +482,7 @@ def GetUserFansList(user_url,pages = 1):
     Returns:
         list: 包含用户粉丝信息的列表
     """
+    AssertUserURL(user_url)
     raw_url = user_url.replace("/u/","/users/")
     raw_url = raw_url + "/followers?page="
     result_list = []
@@ -521,6 +539,7 @@ def GetArticleHtml(article_url):
         str: HTML 格式的文章内容
     """
     # TODO:解决图片块的多余参数问题
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/","https://www.jianshu.com/asimov/")
     source = requests.get(url,headers = request_UA).content
     source = json.loads(source)
@@ -540,6 +559,7 @@ def GetArticleText(article_url):
     Returns:
         str: 纯文本格式的文章内容
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/","https://www.jianshu.com/asimov/")
     source = requests.get(url,headers = request_UA).content
     source = json.loads(source)
@@ -559,6 +579,7 @@ def GetUserArticlesInfo(user_url,page = 1):
     Returns:
         list: 包含用户文章信息的列表
     """
+    AssertUserURL(user_url)
     url = user_url.replace("https://www.jianshu.com/u/","https://www.jianshu.com/asimov/users/slug/")
     url = url + "/public_notes?page=" + str(page) + "&count=10&order_by=shared_at"
     source = requests.get(url,headers = request_UA)
@@ -611,6 +632,7 @@ def GetCollectionArticlesList(collection_url,page = 1):
     Returns:
         list: 包含专题文章信息的列表
     """
+    AssertCollectionURL(collection_url)
     url = collection_url.replace("https://www.jianshu.com/c","https://www.jianshu.com/asimov/collections/slug")
     url = url + "/public_notes?page=" + str(page) + "&count=20&order_by=added_at"
     source = requests.get(url,headers = request_UA)
@@ -674,6 +696,7 @@ def GetArticleTitle(article_url):
     Returns:
         str: 文章标题
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -689,6 +712,7 @@ def GetArticleID(article_url):
     Returns:
         int: 文章 ID
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -704,6 +728,7 @@ def GetArticleLikeCount(article_url):
     Returns:
         int: 点赞数
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -719,6 +744,7 @@ def GetArticleCommentCount(article_url):
     Returns:
         int: 文章评论数
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -734,6 +760,7 @@ def GetArticleFPCount(article_url):
     Returns:
         int: 文章获钻数
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -754,6 +781,7 @@ def GetArticlePublishTime(article_url):
     Returns:
         datetime: 文章发布时间（UTF+8）
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -771,6 +799,7 @@ def GetCollectionArticlesCount(collection_url):
     Returns:
         int: 专题中的文章数量
     """
+    AssertCollectionURL(collection_url)
     html = requests.get(collection_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     result = source.findAll("div",class_ ="info")[0].text
@@ -786,6 +815,7 @@ def GetArticleCommentableStatus(article_url):
     Returns:
         bool: 评论区开启状态
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/","https://www.jianshu.com/asimov/p/")
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
@@ -800,6 +830,7 @@ def GetArticlePaidStatus(article_url):
     Returns:
         bool: 文章付费状态（有付费部分为 True，没有付费部分为 False）
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/","https://www.jianshu.com/asimov/p/")
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
@@ -819,6 +850,7 @@ def GetArticleReprintStatus(article_url):
     Returns:
         bool: 文章转载声明状态（可转载为 True，不可转载为 False）
     """
+    AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/","https://www.jianshu.com/asimov/p/")
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)

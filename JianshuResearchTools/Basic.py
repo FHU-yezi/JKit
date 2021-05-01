@@ -20,14 +20,14 @@ BeiKeIslandHeaders = {"Host":"www.beikeisland.com",
 
 parser = "html.parser"
 
-def AssertUserURL(para):
+def IsUserURL(para):
     """该函数接收一个参数，并判断其是否是简书的用户主页 URL。
 
     Args:
         para (str): 需要被判断的参数
 
     Returns:
-        bool: 如为 True 则代表是用户主页 URL，为 False 则不是
+        bool: 如为 True 代表是用户主页 URL，为 False 则不是
     """
     if para.find("http") == -1:
         return False
@@ -37,14 +37,14 @@ def AssertUserURL(para):
         return False
     return True
 
-def AssertArticleURL(para):
+def IsArticleURL(para):
     """该函数接收一个参数，并判断其是否是简书的文章 URL。
 
     Args:
         para (str): 需要被判断的参数
 
     Returns:
-        bool: 如为 True 则代表是文章 URL，为 False 则不是
+        bool: 如为 True 代表是文章 URL，为 False 则不是
     """
     if para.find("http") == -1:
         return False
@@ -53,6 +53,38 @@ def AssertArticleURL(para):
     if para.find("/p/") == -1:
         return False
     return True
+
+def IsCollentionURL(para):
+    """该函数接收一个参数，并判断其是否是简书的专题 URL。
+
+    Args:
+        para (str): 需要被判断的参数
+
+    Returns:
+        bool: 如为 True 代表是专题 URL，为 False 则不是
+    """
+    if para.find("http") == -1:
+        return False
+    if para.find("www.jianshu.com") == -1:
+        return False
+    if para.find("/c/") == -1:
+        return False
+    return True
+
+def AssertUserURL(para):
+    result = IsUserURL(para)
+    if result == False:
+        raise ValueError("Wrong parameter:parameter isn't a Jianshu user URL.")
+
+def AssertArticleURL(para):
+    result = IsArticleURL(para)
+    if result == False:
+        raise ValueError("Wrong parameter:parameter isn't a Jianshu article URL.")
+    
+def AssertCollectionURL(para):
+    result = IsCollentionURL(para)
+    if result == False:
+        raise ValueError("Wrong parameter:parameter isn't a Jianshu collection URL.")
 
 def StrToDatetime(text):
     """该函数接收一个由简书接口返回的字符串，并构建一个 Datetime 对象
