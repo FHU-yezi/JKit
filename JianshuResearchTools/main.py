@@ -705,3 +705,9 @@ def GetArticlePaidStatus(article_url):
         result = False
     elif result == "fbook_paid":
         result = True
+
+def GetArticleReprintStatus(article_url):
+    url = article_url.replace("https://www.jianshu.com/p/","https://www.jianshu.com/asimov/p/")
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    return bool(source["reprintable"])
