@@ -54,19 +54,6 @@ def AssertArticleURL(para):
         return False
     return True
 
-def Process_HTML(html):
-    raw_html = bs4.BeautifulSoup(html,parser)
-    result_html = []
-    for item in raw_html:
-        item = str(item)
-        item = item.replace("<html><body>","")
-        item = item.replace('<article class="_2rhmJa">',"")
-        item = item.replace("</article>","")
-        item = item.replace(' target="_blank"',"")
-        result_html.append(item)
-    result_html = "".join(result_html)
-    return result_html
-
 def StrToDatetime(text):
     """该函数接收一个由简书接口返回的字符串，并构建一个 Datetime 对象
 

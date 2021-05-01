@@ -518,11 +518,11 @@ def GetArticleHtml(article_url):
         str: HTML 格式的文章内容
     """
     # TODO:解决图片块的多余参数问题
-    html = requests.get(article_url,headers = UA)
-    source = bs4.BeautifulSoup(html.content,parser)
-    raw_data = str(source.find("article"))
-    result = Process_HTML(raw_data)
-    return result
+    url = article_url.replace("https://www.jianshu.com/","https://www.jianshu.com/asimov/")
+    source = requests.get(url,headers = request_UA).content
+    source = json.loads(source)
+    html = source["free_content"]
+    return html
 
 def GetArticleText(article_url):
     """该函数接收文章链接，并以纯文本格式返回文章内容
@@ -535,11 +535,16 @@ def GetArticleText(article_url):
     Returns:
         str: 纯文本格式的文章内容
     """
-    html = requests.get(article_url,headers = UA)
-    source = bs4.BeautifulSoup(html.content,parser)
-    result = str(source.find("article").text)
+    url = article_url.replace("https://www.jianshu.com/","https://www.jianshu.com/asimov/")
+    source = requests.get(url,headers = request_UA).content
+    source = json.loads(source)
+    html = source["free_content"]
+    source = bs4.BeautifulSoup(html,parser)
+    result = source.text
     result = result.replace("\n","")
     return result
+
+print(GetArticleText("https://www.jianshu.com/p/06d33efe8b35"))
 
 def GetUserArticlesInfo(user_url,page = 1):
     url = user_url.replace("https://www.jianshu.com/u/","https://www.jianshu.com/asimov/users/slug/")
