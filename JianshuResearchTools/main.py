@@ -545,6 +545,15 @@ def GetArticleText(article_url):
     return result
 
 def GetUserArticlesInfo(user_url,page = 1):
+    """该函数接收用户主页链接，并返回其文章的信息
+
+    Args:
+        user_url (str): 链接字符串，需要加上 https
+        page (int, optional): 获取的页码数，默认为 1
+
+    Returns:
+        list: 包含用户文章信息的列表
+    """
     url = user_url.replace("https://www.jianshu.com/u/","https://www.jianshu.com/asimov/users/slug/")
     url = url + "/public_notes?page=" + str(page) + "&count=10&order_by=shared_at"
     source = requests.get(url,headers = request_UA)
@@ -588,6 +597,15 @@ def GetDailyArticleRankList():
     return result_list
 
 def GetCollectionArticlesList(collection_url,page = 1):
+    """该函数接收专题链接，并返回其中文章的信息
+
+    Args:
+        collertion_url (str): 链接字符串，需要加上 https
+        page (int, optional): 获取的页码数，默认为 1
+
+    Returns:
+        list: 包含专题文章信息的列表
+    """
     url = collection_url.replace("https://www.jianshu.com/c","https://www.jianshu.com/asimov/collections/slug")
     url = url + "/public_notes?page=" + str(page) + "&count=20&order_by=added_at"
     source = requests.get(url,headers = request_UA)
@@ -610,6 +628,14 @@ def GetCollectionArticlesList(collection_url,page = 1):
     return result_list
 
 def GetArticleFPList(date = "latest"):
+    """该函数接收一个日期，并返回该日的文章收益排行榜数据
+
+    Args:
+        date (str, optional): 格式为”年月日“，如20210101
+
+    Returns:
+        list: 包含该日文章收益排行榜信息的列表
+    """
     if date == "latest":
         date = time.strftime("%Y%m%d", time.localtime())
     url = "https://www.jianshu.com/asimov/fp_rankings/voter_notes?date=" + str(date)
@@ -635,6 +661,14 @@ def GetArticleFPList(date = "latest"):
     return data
 
 def GetArticleTitle(article_url):
+    """该函数接收文章链接，并返回该文章的标题
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        str: 文章标题
+    """
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -642,6 +676,14 @@ def GetArticleTitle(article_url):
     return source["public_title"]
 
 def GetArticleID(article_url):
+    """该函数接收文章链接，并返回该文章的 ID
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        int: 文章 ID
+    """
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -649,6 +691,14 @@ def GetArticleID(article_url):
     return source["id"]
 
 def GetArticleLikeCount(article_url):
+    """该函数接收文章链接，并返回该文章的点赞数
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        int: 点赞数
+    """
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -656,6 +706,14 @@ def GetArticleLikeCount(article_url):
     return source["likes_count"]
 
 def GetArticleCommentCount(article_url):
+    """该函数接收文章链接，并返回该文章的评论数
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        int: 文章评论数
+    """
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -663,6 +721,14 @@ def GetArticleCommentCount(article_url):
     return source["public_comment_count"]
 
 def GetArticleFPCount(article_url):
+    """该函数接收文章链接，并返回该文章的获钻数
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        int: 文章获钻数
+    """
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -675,6 +741,14 @@ def GetArticleFPCount(article_url):
     return result
 
 def GetArticlePublishTime(article_url):
+    """该函数接收文章链接，并返回该文章的发布时间
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        datetime: 文章发布时间（UTF+8）
+    """
     url = article_url.replace("https://www.jianshu.com/p/","")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url,headers = request_UA)
@@ -684,6 +758,14 @@ def GetArticlePublishTime(article_url):
     return result
 
 def GetCollectionArticlesCount(collection_url):
+    """该函数接收专题链接，并返回该专题内的文章数量
+
+    Args:
+        collection_url (str): 专题链接
+
+    Returns:
+        int: 专题中的文章数量
+    """
     html = requests.get(collection_url,headers = UA)
     source = bs4.BeautifulSoup(html.content,parser)
     result = source.findAll("div",class_ ="info")[0].text
@@ -691,12 +773,28 @@ def GetCollectionArticlesCount(collection_url):
     return result
 
 def GetArticleCommentableStatus(article_url):
+    """该函数接收文章链接，并返回文章的评论区开启状态
+
+    Args:
+        article_url (url): 文章链接
+
+    Returns:
+        bool: 评论区开启状态
+    """
     url = article_url.replace("https://www.jianshu.com/p/","https://www.jianshu.com/asimov/p/")
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
     return bool(source["commentable"])
 
 def GetArticlePaidStatus(article_url):
+    """该函数接收文章链接，并返回文章的付费状态
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        bool: 文章付费状态（有付费部分为 True，没有付费部分为 False）
+    """
     url = article_url.replace("https://www.jianshu.com/p/","https://www.jianshu.com/asimov/p/")
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
@@ -705,8 +803,17 @@ def GetArticlePaidStatus(article_url):
         result = False
     elif result == "fbook_paid":
         result = True
+    return result
 
 def GetArticleReprintStatus(article_url):
+    """该函数接收文章链接，并返回文章的转载声明状态
+
+    Args:
+        article_url (str): 文章链接
+
+    Returns:
+        bool: 文章转载声明状态（可转载为 True，不可转载为 False）
+    """
     url = article_url.replace("https://www.jianshu.com/p/","https://www.jianshu.com/asimov/p/")
     source = requests.get(url,headers = request_UA)
     source = json.loads(source.content)
