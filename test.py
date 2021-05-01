@@ -22,18 +22,6 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(jrt.BeiKeIslandHeaders["Version"],"v2.0")
     def testParser(self):
         self.assertEqual(jrt.parser,"html.parser")
-    def testAssertUserURL(self):
-        self.assertTrue(jrt.AssertUserURL("https://www.jianshu.com/u/ea36c8d8aa30"))
-        self.assertTrue(jrt.AssertUserURL("https://www.jianshu.com/u/0f438ff0a55f?utm_source=desktop&utm_medium=index-users"))
-        self.assertFalse(jrt.AssertUserURL("https://www.jianshu.com/"))
-        self.assertFalse(jrt.AssertUserURL("https://www.baidu.com/"))
-        self.assertFalse(jrt.AssertUserURL("https://www.jianshu.com/p/06d33efe8b35"))
-    def testAssertArticleUrl(self):
-        self.assertTrue(jrt.AssertArticleURL("https://www.jianshu.com/p/06d33efe8b35"))
-        self.assertTrue(jrt.AssertArticleURL("https://www.jianshu.com/p/b3cd0fee6325"))
-        self.assertFalse(jrt.AssertArticleURL("https://www.jianshu.com/u/ea36c8d8aa30"))
-        self.assertFalse(jrt.AssertArticleURL("https://www.jianshu.com/"))
-        self.assertFalse(jrt.AssertArticleURL("https://www.baidu.com/"))
     def testStrToDatetime(self):
         result = jrt.StrToDatetime("2021-03-07T08:53:54.000+08:00")
         self.assertEqual(result.year,2021)
