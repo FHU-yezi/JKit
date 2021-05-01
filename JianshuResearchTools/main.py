@@ -544,8 +544,6 @@ def GetArticleText(article_url):
     result = result.replace("\n","")
     return result
 
-print(GetArticleText("https://www.jianshu.com/p/06d33efe8b35"))
-
 def GetUserArticlesInfo(user_url,page = 1):
     url = user_url.replace("https://www.jianshu.com/u/","https://www.jianshu.com/asimov/users/slug/")
     url = url + "/public_notes?page=" + str(page) + "&count=10&order_by=shared_at"
@@ -691,3 +689,9 @@ def GetCollectionArticlesCount(collection_url):
     result = source.findAll("div",class_ ="info")[0].text
     result = re.search("\d+",result).group(0)
     return result
+
+def GetArticleCommentableStatus(article_url):
+    url = article_url.replace("https://www.jianshu.com/p/","https://www.jianshu.com/asimov/p/")
+    source = requests.get(url,headers = request_UA)
+    source = json.loads(source.content)
+    return bool(source["commentable"])
