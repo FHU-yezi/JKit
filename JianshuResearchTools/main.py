@@ -635,7 +635,8 @@ def GetUserArticlesInfo(user_url, page=1):
         info["paid"] = item["paid"]
         info["commentale"] = item["commentable"]
         info["comments_amount"] = item["public_comments_count"]
-        info["fp_amount"] = item["total_fp_amount"]
+        info["fp_amount"] = item["total_fp_amount"] / 1000
+        print(info["fp_amount"])
         info["rewards_amount"] = item["total_rewards_count"]
         result_list.append(info)
     return result_list
