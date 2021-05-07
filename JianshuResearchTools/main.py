@@ -402,28 +402,36 @@ def GetBeiKeIslandTradeList(Trade_type):
     raw_data = json.loads(raw_data.content)
     TradeList = raw_data["data"]["tradelist"]
     FinalData = {}
-    # TODO:重写这段屎山代码
+
+    listdata = ["jianshuname",
+                "nickname",
+                "recount",
+                "cantradenum",
+                "minlimit",
+                "reprice",
+                "userlevel",
+                ]
+    listsavedata = ["JianshuName",
+                    "BeiKeIslandName",
+                    "Total",
+                    "Remaining",
+                    "TradeLimit",
+                    "Price",
+                    "UserLevel",
+                    ]
+
     for count in range(10):
         TradeInfo = []
         Trade = TradeList[count]
-        TradeInfo.append(TradeList[count]["cantradenum"])
-        TradeInfo.append(TradeList[count]["jianshuname"])
-        TradeInfo.append(TradeList[count]["minlimit"])
-        TradeInfo.append(TradeList[count]["nickname"])
-        TradeInfo.append(TradeList[count]["recount"])
-        TradeInfo.append(TradeList[count]["reprice"])
-        TradeInfo.append(TradeList[count]["userlevel"])
+        for data in listdata:
+            TradeInfo.append(Trade[data])
         FinalData[count] = TradeInfo
+
     for count in range(10):
         Trade = FinalData[count]
         ItemDict = {}
-        ItemDict["JianshuName"] = Trade[1]
-        ItemDict["BeiKeIslandName"] = Trade[3]
-        ItemDict["Total"] = Trade[4]
-        ItemDict["Remaining"] = Trade[0]
-        ItemDict["TradeLimit"] = Trade[2]
-        ItemDict["Price"] = Trade[5]
-        ItemDict["UserLevel"] = Trade[6]
+        for sdata, i in zip(listsavedata, range(len(listdata))):
+            ItemDict[sdata] = Trade[i]
         output.append(ItemDict)
     return output
 
