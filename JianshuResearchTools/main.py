@@ -16,7 +16,7 @@ import bs4
 import requests
 
 
-def GetUID(user_url):
+def GetUID(user_url: str) -> str:
     """该函数接收一个链接字符串，并将其转换成用户识别码。
 
     Args:
@@ -29,7 +29,7 @@ def GetUID(user_url):
     return user_url.replace("https://www.jianshu.com/u/", "")
 
 
-def GetUserURL(user_ID):
+def GetUserURL(user_ID: str) -> str:
     """该函数接收用户 ID，并将其转换成用户主页链接。
 
     Args:
@@ -41,7 +41,7 @@ def GetUserURL(user_ID):
     return "https://www.jianshu.com/u/" + user_ID
 
 
-def GetUserName(user_url):
+def GetUserName(user_url: str) -> str:
     """该函数接收一个链接字符串，访问后提取用户昵称。
 
     Args:
@@ -56,7 +56,7 @@ def GetUserName(user_url):
     return source.findAll("a", class_="name")[0].text
 
 
-def GetUserFollowersCount(user_url):
+def GetUserFollowersCount(user_url: str) -> int:
     """该函数接收一个链接字符串，访问后提取用户的关注人数。
 
     Args:
@@ -71,7 +71,7 @@ def GetUserFollowersCount(user_url):
     return int(source.findAll("div", class_="meta-block")[0].p.text)
 
 
-def GetUserFansCount(user_url):
+def GetUserFansCount(user_url: str) -> int:
     """该函数接收一个链接字符串，访问后提取用户的粉丝数。
 
     Args:
@@ -86,7 +86,7 @@ def GetUserFansCount(user_url):
     return int(source.findAll("div", class_="meta-block")[1].p.text)
 
 
-def GetUserArticlesCount(user_url):
+def GetUserArticlesCount(user_url: str) -> int:
     """该函数接收一个链接字符串，访问后提取用户的文章数。
 
     Args:
@@ -101,7 +101,7 @@ def GetUserArticlesCount(user_url):
     return int(source.findAll("div", class_="meta-block")[2].p.text)
 
 
-def GetUserWordsCount(user_url):
+def GetUserWordsCount(user_url: str) -> int:
     """该函数接收一个链接字符串，访问后提取用户的总字数。
 
     Args:
@@ -116,7 +116,7 @@ def GetUserWordsCount(user_url):
     return int(source.findAll("div", class_="meta-block")[3].p.text)
 
 
-def GetUserLikesCount(user_url):
+def GetUserLikesCount(user_url: str) -> int:
     """该函数接收一个链接字符串，访问后提取用户被喜欢的总数。
 
     Args:
@@ -130,7 +130,7 @@ def GetUserLikesCount(user_url):
     return int(source.findAll("div", class_="meta-block")[4].p.text)
 
 
-def GetUserAssetsCount(user_url):
+def GetUserAssetsCount(user_url: str) -> float:
     """该函数接收一个链接字符串，访问后提取用户资产量。
 
     当用户资产大于一定值时，网页中的显示值将以 w 为单位，本函数会对其自动进行处理，但无法突破其精确度限制。
@@ -149,7 +149,7 @@ def GetUserAssetsCount(user_url):
     return float(raw_data.replace(".", "").replace("w", "000"))
 
 
-def GetUserBasicInformation(user_url):
+def GetUserBasicInformation(user_url: str) -> dict:
     """该函数接收一个链接字符串，访问后提取用户的基础信息。
 
     Args:
@@ -173,7 +173,7 @@ def GetUserBasicInformation(user_url):
     return result
 
 
-def GetUserBadgesList(user_url):
+def GetUserBadgesList(user_url: str) -> list:
     """该函数接收一个链接字符串，访问后提取用户的徽章列表。
 
     Args:
@@ -195,7 +195,7 @@ def GetUserBadgesList(user_url):
     return Final_List
 
 
-def GetUserIntroduction(user_url):
+def GetUserIntroduction(user_url: str) -> str:
     """该函数接收一个链接字符串，访问后提取用户个人简介。
 
     # ! 该函数在简介中有特殊字符的情况下可能出错，请知悉。
@@ -216,7 +216,7 @@ def GetUserIntroduction(user_url):
     return raw_data.replace('<div class="js-intro">', "").replace("<br/>", "\n").replace("</div>", "")
 
 
-def GetUserNotebookInfo(user_url):
+def GetUserNotebookInfo(user_url: str) -> list:
     """该函数接收一个用户主页链接，并获取该用户的文集与连载信息
 
     Args:
@@ -244,14 +244,14 @@ def GetUserNotebookInfo(user_url):
     return result_list
 
 
-def GetUserManageableCollectionInfo(user_url):
+def GetUserManageableCollectionInfo(user_url: str) -> list:
     """该函数接收用户链接，并返回该用户拥有管理权的专题信息
 
     Args:
         user_url (str): 用户主页链接
 
     Returns:
-        dict: 拥有管理权的专题信息
+        list: 拥有管理权的专题信息
     """
     AssertUserURL(user_url)
     url = user_url.replace("/u/", "/users/")
@@ -269,14 +269,14 @@ def GetUserManageableCollectionInfo(user_url):
     return result_list
 
 
-def GetUserOwnCollectionInfo(user_url):
+def GetUserOwnCollectionInfo(user_url: list) -> list:
     """该函数接收用户链接，并返回该用户自己创建的专题信息
 
     Args:
         user_url (str): 用户主页链接
 
     Returns:
-        dict: 自己创建的专题信息
+        list: 自己创建的专题信息
     """
     AssertUserURL(user_url)
     url = user_url.replace("/u/", "/users/")
@@ -294,7 +294,7 @@ def GetUserOwnCollectionInfo(user_url):
     return result_list
 
 
-def GetBeiKeIslandTotalTradeAmount():
+def GetBeiKeIslandTotalTradeAmount() -> int:
     """该函数用于获取贝壳小岛的总交易额。
 
     Returns:
@@ -303,10 +303,10 @@ def GetBeiKeIslandTotalTradeAmount():
     data = {"ranktype": 3, "pageIndex": 1}
     raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", headers=BeiKeIslandHeaders, json=data)
     raw_data = json.loads(raw_data.content)
-    return int((raw_data["data"]["totalcount"]))
+    return int(raw_data["data"]["totalcount"])
 
 
-def GetBeiKeIslandTotalTradeCount():
+def GetBeiKeIslandTotalTradeCount() -> int:
     """该函数用于获取贝壳小岛的总交易次数。
 
     Returns:
@@ -318,7 +318,7 @@ def GetBeiKeIslandTotalTradeCount():
     return int((raw_data["data"]["totaltime"]))
 
 
-def GetBeikeIslandTradeRanking(page=1):
+def GetBeikeIslandTradeRanking(page: int =1) -> list:
     """该函数接收一个页码参数，并返回贝壳小岛交易排行榜中的用户信息
 
     Args:
@@ -342,7 +342,7 @@ def GetBeikeIslandTradeRanking(page=1):
     return result_list
 
 
-def GetUserFP(user_url):
+def GetUserFP(user_url: str) -> float:
     """该函数用于获取用户的简书钻数量
 
     Args:
@@ -359,7 +359,7 @@ def GetUserFP(user_url):
     return float(result)
 
 
-def GetUserFTN(user_url):
+def GetUserFTN(user_url: str) -> float:
     """该函数用于获取用户的简书贝数量
 
     由于该函数的实现方式利用了简书的已知漏洞，故有可能出现失效，这时代码会报错，避免数据错误。
@@ -379,7 +379,7 @@ def GetUserFTN(user_url):
     return round(FTN, 2)
 
 
-def GetBeiKeIslandTradeList(Trade_type):
+def GetBeiKeIslandTradeList(Trade_type: str) -> list:
     """该函数用于获取贝壳小岛交易列表
 
     目前会返回前 10 条数据，买单为价格正序，卖单为价格倒序。
@@ -388,7 +388,7 @@ def GetBeiKeIslandTradeList(Trade_type):
         Trade_type (str): 为 buy 时返回买单列表，为 sell 时返回卖单列表。
 
     Returns:
-        dict: 包含交易信息的字典
+        list: 包含交易信息的列表
     """
     if Trade_type == "buy":
         Trade_type = 2
@@ -436,7 +436,7 @@ def GetBeiKeIslandTradeList(Trade_type):
     return output
 
 
-def GetBeiKeIslandTradePrice(Trade_type):
+def GetBeiKeIslandTradePrice(Trade_type: str) -> float:
     """该函数用于获取贝壳小岛的交易价格
 
     买单返回最低价，卖单返回最高价
@@ -452,7 +452,7 @@ def GetBeiKeIslandTradePrice(Trade_type):
     return First_Dict["Price"]
 
 
-def GetUserArticlesTitleList(user_url, pages=1):
+def GetUserArticlesTitleList(user_url: str, pages: int =1) -> list:
     """该函数用于获取用户的文章标题列表
 
     Args:
@@ -480,7 +480,7 @@ def GetUserArticlesTitleList(user_url, pages=1):
     return result_list
 
 
-def GetUserFollowersList(user_url, pages=1):
+def GetUserFollowersList(user_url: str, pages: int =1) -> list:
     """该函数接收用户链接，并返回该用户的关注列表
 
     Args:
@@ -505,7 +505,7 @@ def GetUserFollowersList(user_url, pages=1):
     return result_list
 
 
-def GetUserFansList(user_url, pages=1):
+def GetUserFansList(user_url: str, pages: int =1) -> list:
     """该函数接收用户链接，并返回该用户的粉丝列表
 
     Args:
@@ -530,7 +530,7 @@ def GetUserFansList(user_url, pages=1):
     return result_list
 
 
-def GetAssetsRankList(start=1):
+def GetAssetsRankList(start: int=1) -> list:
     """该函数接收一个起始值，并返回自起始值后 20 位用户的资产信息
 
     Args:
@@ -560,7 +560,7 @@ def GetAssetsRankList(start=1):
     return result_list
 
 
-def GetArticleHtml(article_url):
+def GetArticleHtml(article_url: str) -> str:
     """该函数接收文章链接，并以 HTML 格式返回文章内容
 
     目前对图片块的处理还存在一些问题，会有多余的参数。
@@ -582,7 +582,7 @@ def GetArticleHtml(article_url):
     return html
 
 
-def GetArticleText(article_url):
+def GetArticleText(article_url: str) -> str:
     """该函数接收文章链接，并以纯文本格式返回文章内容
 
     文章中的图片块会被丢弃，但图片描述会保留。
@@ -606,7 +606,7 @@ def GetArticleText(article_url):
     return result
 
 
-def GetUserArticlesInfo(user_url, page=1):
+def GetUserArticlesInfo(user_url: str, page: int =1) -> list:
     """该函数接收用户主页链接，并返回其文章的信息
 
     Args:
@@ -642,7 +642,7 @@ def GetUserArticlesInfo(user_url, page=1):
     return result_list
 
 
-def GetDailyArticleRankList():
+def GetDailyArticleRankList() -> list:
     """该函数返回日更排行榜中用户的基础信息
 
     Returns:
@@ -662,7 +662,7 @@ def GetDailyArticleRankList():
     return result_list
 
 
-def GetCollectionArticlesList(collection_url, page=1):
+def GetCollectionArticlesList(collection_url: str, page: int =1) -> list:
     """该函数接收专题链接，并返回其中文章的信息
 
     Args:
@@ -695,7 +695,7 @@ def GetCollectionArticlesList(collection_url, page=1):
     return result_list
 
 
-def GetArticleFPList(date="latest"):
+def GetArticleFPList(date: str ="latest") -> list:
     """该函数接收一个日期，并返回该日的文章收益排行榜数据
 
     Args:
@@ -729,7 +729,7 @@ def GetArticleFPList(date="latest"):
     return data
 
 
-def GetArticleTitle(article_url):
+def GetArticleTitle(article_url: str) -> str:
     """该函数接收文章链接，并返回该文章的标题
 
     Args:
@@ -746,24 +746,24 @@ def GetArticleTitle(article_url):
     return source["public_title"]
 
 
-def GetArticleID(article_url):
+def GetArticleID(article_url: str) -> str:
     """该函数接收文章链接，并返回该文章的 ID
 
     Args:
         article_url (str): 文章链接
 
     Returns:
-        int: 文章 ID
+        str: 文章 ID
     """
     AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/", "")
     url = "https://www.jianshu.com/asimov/p/" + url
     source = requests.get(url, headers=request_UA)
     source = json.loads(source.content)
-    return source["id"]
+    return str(source["id"])
 
 
-def GetArticleLikeCount(article_url):
+def GetArticleLikeCount(article_url: str) -> int:
     """该函数接收文章链接，并返回该文章的点赞数
 
     Args:
@@ -780,7 +780,7 @@ def GetArticleLikeCount(article_url):
     return source["likes_count"]
 
 
-def GetArticleCommentCount(article_url):
+def GetArticleCommentCount(article_url: str) -> int:
     """该函数接收文章链接，并返回该文章的评论数
 
     Args:
@@ -797,14 +797,14 @@ def GetArticleCommentCount(article_url):
     return source["public_comment_count"]
 
 
-def GetArticleFPCount(article_url):
+def GetArticleFPCount(article_url: str) -> float:
     """该函数接收文章链接，并返回该文章的获钻数
 
     Args:
         article_url (str): 文章链接
 
     Returns:
-        int: 文章获钻数
+        float: 文章获钻数
     """
     AssertArticleURL(article_url)
     url = article_url.replace("https://www.jianshu.com/p/", "")
@@ -819,7 +819,7 @@ def GetArticleFPCount(article_url):
     return result
 
 
-def GetArticlePublishTime(article_url):
+def GetArticlePublishTime(article_url: str) -> datetime:
     """该函数接收文章链接，并返回该文章的发布时间
 
     Args:
@@ -838,7 +838,7 @@ def GetArticlePublishTime(article_url):
     return result
 
 
-def GetCollectionArticlesCount(collection_url):
+def GetCollectionArticlesCount(collection_url: str) -> int:
     """该函数接收专题链接，并返回该专题内的文章数量
 
     Args:
@@ -855,7 +855,7 @@ def GetCollectionArticlesCount(collection_url):
     return result
 
 
-def GetArticleCommentableStatus(article_url):
+def GetArticleCommentableStatus(article_url: str) -> bool:
     """该函数接收文章链接，并返回文章的评论区开启状态
 
     Args:
@@ -871,7 +871,7 @@ def GetArticleCommentableStatus(article_url):
     return bool(source["commentable"])
 
 
-def GetArticlePaidStatus(article_url):
+def GetArticlePaidStatus(article_url: str) -> bool:
     """该函数接收文章链接，并返回文章的付费状态
 
     Args:
@@ -892,7 +892,7 @@ def GetArticlePaidStatus(article_url):
     return result
 
 
-def GetArticleReprintStatus(article_url):
+def GetArticleReprintStatus(article_url: str) -> bool:
     """该函数接收文章链接，并返回文章的转载声明状态
 
     Args:
