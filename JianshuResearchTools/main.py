@@ -906,3 +906,11 @@ def GetArticleReprintStatus(article_url: str) -> bool:
     source = requests.get(url, headers=request_UA)
     source = json.loads(source.content)
     return bool(source["reprintable"])
+
+# ! 这个方法目前不可用
+# def GetSearchUserResult(keyword: str, page: int = 1) -> list:
+#     url = "https://www.jianshu.com/search/do?q=" + keyword + "&type=user&page=" + str(page) + "&order_by=default"
+#     source = requests.post(url, headers = request_UA)
+#     print(source.status_code)
+#     source = json.loads(source.content)
+#     print(source)
