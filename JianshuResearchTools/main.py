@@ -676,7 +676,7 @@ def GetCollectionArticlesList(collection_url: str, page: int = 1) -> list:
     url = collection_url.replace("https://www.jianshu.com/c", "https://www.jianshu.com/asimov/collections/slug")
     url = url + "/public_notes?page=" + str(page) + "&count=20&order_by=added_at"
     source = requests.get(url, headers=request_UA)
-    source = json.loads(source)
+    source = json.loads(source.content)
     result_list = []
 
     listdatas = [
