@@ -5,7 +5,7 @@ with open("README.md","r",encoding = "utf-8") as file:
 
 setuptools.setup(
     name="JianshuResearchTools",
-    version="1.0.0",
+    version="1.1.0",
     author="FHU-yezi",
     author_email="yehaowei20060411@qq.com",
     description="科技赋能创作星辰",
@@ -19,5 +19,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.0"
+    python_requires=">=3.6"
 )
