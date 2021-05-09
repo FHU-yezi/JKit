@@ -662,11 +662,11 @@ def GetDailyArticleRankList() -> list:
     return result_list
 
 
-def GetCollectionArticlesList(collection_url: str, page: int =1) -> list:
+def GetCollectionArticlesList(collection_url: str, page: int = 1) -> list:
     """该函数接收专题链接，并返回其中文章的信息
 
     Args:
-        collertion_url (str): 用户主页链接
+        collertion_url (str): 专题链接
         page (int, optional): 获取的页码数，默认为 1
 
     Returns:
@@ -676,21 +676,41 @@ def GetCollectionArticlesList(collection_url: str, page: int =1) -> list:
     url = collection_url.replace("https://www.jianshu.com/c", "https://www.jianshu.com/asimov/collections/slug")
     url = url + "/public_notes?page=" + str(page) + "&count=20&order_by=added_at"
     source = requests.get(url, headers=request_UA)
-    source = json.loads(source.content)
+    source = json.loads(source)
     result_list = []
+
+    listdatas = [
+        "title",
+        "id",
+        "likes_count",
+        "first_shared_at",
+        "commentable",
+        "paid",
+        "is_top",
+        "public_comments_count",
+        "total_fp_amount",
+        "total_rewards_count",
+        "slug"
+    ]
+    savelistdatas = [
+        "title",
+        "nid",
+        "likes_count",
+        "time",
+        "commentable",
+        "paid",
+        "topped",
+        "comments_count",
+        "fp_amount",
+        "rewards_count",
+        "slug"
+    ]
+
     for item in source:
         item_info = {}
         item = item["object"]["data"]
-        item_info["title"] = item["title"]
-        item_info["nid"] = item["id"]
-        item_info["likes_count"] = item["likes_count"]
-        item_info["time"] = item["first_shared_at"]
-        item_info["commentable"] = item["commentable"]
-        item_info["paid"] = item["paid"]
-        item_info["topped"] = item["is_top"]
-        item_info["comments_count"] = item["public_comments_count"]
-        item_info["fp_amount"] = item["total_fp_amount"]
-        item_info["rewards_count"] = item["total_rewards_count"]
+        for listdata, savelistdata in zip(listdatas, savelistdatas):
+            item_info[f'{savelistdata}'] = item[f'{listdata}']
         result_list.append(item_info)
     return result_list
 
@@ -907,10 +927,14 @@ def GetArticleReprintStatus(article_url: str) -> bool:
     source = json.loads(source.content)
     return bool(source["reprintable"])
 
-# ! 这个方法目前不可用
-# def GetSearchUserResult(keyword: str, page: int = 1) -> list:
-#     url = "https://www.jianshu.com/search/do?q=" + keyword + "&type=user&page=" + str(page) + "&order_by=default"
-#     source = requests.post(url, headers = request_UA)
-#     print(source.status_code)
-#     source = json.loads(source.content)
-#     print(source)
+
+def GetArticleSlug(article_url: str) -> str:
+    """该函数接收一个文章 URL，并将其转换成文章slug
+
+    Args:
+        article_url (str): 文章 URL
+
+    Returns:
+        str: 文章 slug
+    """
+    return article_url.replace("https://www.jianshu.com/p/","")
