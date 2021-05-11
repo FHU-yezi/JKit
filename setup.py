@@ -5,7 +5,7 @@ with open("README.md","r",encoding = "utf-8") as file:
 
 setuptools.setup(
     name="JianshuResearchTools",
-    version="1.1.1",
+    version="1.1.2",
     author="FHU-yezi",
     author_email="yehaowei20060411@qq.com",
     description="科技赋能创作星辰",
