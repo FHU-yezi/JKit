@@ -1,6 +1,7 @@
 *.log
 *.csv
 *.html
+*.ipynb
 local_test.py
 JianshuResearchTools/__pycache__/*
 .vscode/*
