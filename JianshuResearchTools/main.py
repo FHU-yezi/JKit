@@ -927,7 +927,7 @@ def GetArticleReprintStatus(article_url: str) -> bool:
 
 
 def GetArticleSlug(article_url: str) -> str:
-    """该函数接收一个文章 URL，并将其转换成文章slug
+    """该函数接收一个文章 URL，并将其转换成文章 slug
 
     Args:
         article_url (str): 文章 URL
@@ -936,3 +936,71 @@ def GetArticleSlug(article_url: str) -> str:
         str: 文章 slug
     """
     return article_url.replace("https://www.jianshu.com/p/","")
+
+def GetIslandSlug(island_url: str) -> str:
+    """该函数接收一个小岛 URL，并将其转换成小岛 slug
+
+    Args:
+        island_url (str): 小岛 URL
+
+    Returns:
+        str: 小岛 slug
+    """
+    return island_url.replace("https://www.jianshu.com/g/", "")
+
+def GetIslandPostList(island_url: str, start_id: str=None, count:int=10, topic_id: str=None) -> list:
+    """该函数接收一个小岛链接和一些可选参数，并返回小岛中帖子的基础信息
+
+    Args:
+        island_url (str): 小岛 URL
+        max_id (str, optional): 起始帖子 ID，如不指定则获取最新的帖子。获取到的数据不包含这个 ID 对应的帖子. Defaults to None.
+        count (int, optional): 获取的帖子个数. Defaults to 10.
+        topic_id (str, optional): 话题 ID. Defaults to None.
+
+    Returns:
+        list: 包含小岛中帖子信息的列表
+    """
+    url = "https://www.jianshu.com/asimov/posts?group_slug=" + GetIslandSlug(island_url) + "&order_by=latest"
+    if start_id != None:
+        url = url + "&max_id=" + str(start_id)  # 万一用户传个整数呢
+    url = url + "&count=" + str(count)
+    if topic_id != None:
+        url = url + "&topic_id=" + str(topic_id)
+    source = requests.get(url, headers = request_UA)
+    source = json.loads(source.content)
+
+    result = []
+    
+    for item in source:
+        item_data = {}
+        item_data["sorted_id"] = str(item["sorted_id"])
+        item_data["pid"] = str(item["id"])
+        item_data["pslug"] = item["slug"]
+        item_data["title"] = item["title"]
+        item_data["content"] = item["content"]
+        item_data["likes_count"] = item["likes_count"]
+        item_data["comments_count"] = item["comments_count"]
+        item_data["is_topped"] = item["is_top"]
+        item_data["is_new"] = item["is_new"]
+        item_data["is_hot"] = item["is_hot"]
+        item_data["is_most_valuable"] = item["is_best"]
+        item_data["create_time"] = time.localtime(item["created_at"])
+        pic_list = []
+        for pic in item["images"]:
+            pic_list.append(pic["url"])
+        item_data["pictures"] = pic_list
+        item_data["nickname"] = item["user"]["nickname"]
+        item_data["uid"] = str(item["user"]["id"])
+        item_data["uslug"] = item["user"]["slug"]
+        try:
+            item_data["user_badge"] = item["user"]["badge"]["text"]
+        except KeyError:
+            pass  # 没有挂出徽章的跳过
+        try:
+            item_data["topic_name"] = item["topic"]["name"]
+            item_data["tid"] = str(item["topic"]["id"])
+            item_data["tslug"] = item["topic"]["slug"]
+        except KeyError:
+            pass  # 没有指定帖子话题的跳过
+        result.append(item_data)
+    return result
