@@ -1006,3 +1006,51 @@ def GetIslandPostList(island_url: str, start_id: str=None, count:int=10, topic_i
             pass  # 没有指定帖子话题的跳过
         result.append(item_data)
     return result
+
+def GetUserPageURLScheme(user_url: str) -> str:
+    """该函数接收一个用户主页 URL，返回跳转到简书 App 对应用户页面的 URL Scheme
+
+    Args:
+        user_url (str): 用户主页 URL
+
+    Returns:
+        str: 跳转到用户页面的 URL Scheme
+    """
+    AssertUserURL(user_url)
+    return user_url.replace("https://www.jianshu.com/u/", "jianshu://u/")
+
+def GetArticlePageURLScheme(article_url: str) -> str:
+    """该函数接收一个文章 URL，返回跳转到简书 App 对应文章页面的 URL Scheme
+
+    Args:
+        article_url (str): 文章 URL
+
+    Returns:
+        str: 跳转到文章页面的 URL Scheme
+    """
+    AssertArticleURL(user_url)
+    return article_url.replace("https://www.jianshu.com/p/", "jianshu://notes/")
+
+def GetNotebookPageURLScheme(notebook_url: str) -> str:
+    """该函数接收一个文集 URL，返回跳转到简书 App 对应文集页面的 URL Scheme
+
+    Args:
+        notebook_url (str): 文集 URL
+
+    Returns:
+        str: 跳转到文集页面的 URL Scheme
+    """
+    # TODO:补全检测是否是文集链接的函数
+    return article_url.replace("https://www.jianshu.com/nb/", "jianshu://nb/")
+
+def GetCollectionPageURLScheme(collection_url: str) -> str:
+    """该函数接收一个专题 URL，返回跳转到简书 App 对应专题页面的 URL Scheme
+
+    Args:
+        collection_url (str): 专题 URL
+
+    Returns:
+        str: 跳转到专题页面的 URL Scheme
+    """
+    # TODO:补全检测是否是专题链接的函数
+    return article_url.replace("https://www.jianshu.com/c/", "jianshu://c/")
