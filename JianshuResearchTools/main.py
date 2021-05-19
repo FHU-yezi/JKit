@@ -1028,7 +1028,7 @@ def GetArticlePageURLScheme(article_url: str) -> str:
     Returns:
         str: 跳转到文章页面的 URL Scheme
     """
-    AssertArticleURL(user_url)
+    AssertArticleURL(article_url)
     return article_url.replace("https://www.jianshu.com/p/", "jianshu://notes/")
 
 def GetNotebookPageURLScheme(notebook_url: str) -> str:
@@ -1041,7 +1041,7 @@ def GetNotebookPageURLScheme(notebook_url: str) -> str:
         str: 跳转到文集页面的 URL Scheme
     """
     # TODO:补全检测是否是文集链接的函数
-    return article_url.replace("https://www.jianshu.com/nb/", "jianshu://nb/")
+    return notebook_url.replace("https://www.jianshu.com/nb/", "jianshu://nb/")
 
 def GetCollectionPageURLScheme(collection_url: str) -> str:
     """该函数接收一个专题 URL，返回跳转到简书 App 对应专题页面的 URL Scheme
@@ -1053,4 +1053,4 @@ def GetCollectionPageURLScheme(collection_url: str) -> str:
         str: 跳转到专题页面的 URL Scheme
     """
     # TODO:补全检测是否是专题链接的函数
-    return article_url.replace("https://www.jianshu.com/c/", "jianshu://c/")
+    return collection_url.replace("https://www.jianshu.com/c/", "jianshu://c/")
