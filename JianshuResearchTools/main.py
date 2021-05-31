@@ -1054,3 +1054,36 @@ def GetCollectionPageURLScheme(collection_url: str) -> str:
     """
     # TODO:补全检测是否是专题链接的函数
     return collection_url.replace("https://www.jianshu.com/c/", "jianshu://c/")
+
+def GetDailyFPGrantToArticlesList(date: str) -> dict:
+    """该函数接收一个日期，并返回当日简书钻发放排行榜上的文章排名数据
+
+    Args:
+        date (str): 格式类似"20210101"
+
+    Returns:
+        dict: 包含文章排名数据的字典
+    """
+    url = "https://www.jianshu.com/asimov/fp_rankings/voter_notes?date=" + date
+    source = requests.get(url, headers=request_UA)
+    source = json.loads(source.content)
+    result = {}
+    result["total_fp"] = source["fp"]
+    result["fp_to_authors"] = source["author_fp"]
+    result["fp_to_voters"] = source["fp"] - source["author_fp"]
+    ranklist = []
+    rank = 1
+    for item in source["notes"]:
+        note_info = {}
+        note_info["rank"] = rank
+        note_info["title"] = item["title"]
+        note_info["author"] = item["author_nickname"]
+        note_info["author_slug"] = item["slug"]
+        note_info["fp_to_author"] = item["author_fp"]
+        note_info["fp_to_voter"] = item["voter_fp"]
+        note_info["total_fp"] = item["fp"]
+        ranklist.append(note_info)
+        rank += 1
+    result["rank"] = ranklist
+    return result
+
