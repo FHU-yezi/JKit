@@ -1087,3 +1087,35 @@ def GetDailyFPGrantToArticlesList(date: str) -> dict:
     result["rank"] = ranklist
     return result
 
+
+def GetDailyFPGrantToUsersList(date: str) -> dict:
+    """该函数接收一个日期，并返回当日简书钻发放排行榜上的用户收益排名数据
+
+    Args:
+        date (str): 格式类似"20210101"
+
+    Returns:
+        dict: 包含用户收益排名数据的字典
+    """
+    url = "https://www.jianshu.com/asimov/fp_rankings/voter_users?date=" + date
+    source = requests.get(url, headers=request_UA)
+    source = json.loads(source.content)
+    result = {}
+    result["total_fp"] = source["fp"]
+    result["fp_to_authors"] = source["author_fp"]
+    result["fp_to_voters"] = source["fp"] - source["author_fp"]
+    ranklist = []
+    rank = 1
+    for item in source["users"]:
+        user_info = {}
+        user_info["rank"] = rank
+        user_info["user"] = item["nickname"]
+        user_info["uslug"] = item["slug"]
+        user_info["fp_to_author"] = item["author_fp"]
+        user_info["fp_to_voter"] = item["voter_fp"]
+        user_info["total_fp"] = item["fp"]
+        ranklist.append(user_info)
+        rank += 1
+    result["rank"] = ranklist
+    return result
+
