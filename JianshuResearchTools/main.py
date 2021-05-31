@@ -1057,6 +1057,8 @@ def GetCollectionPageURLScheme(collection_url: str) -> str:
 
 def GetDailyFPGrantToArticlesList(date: str) -> dict:
     """该函数接收一个日期，并返回当日简书钻发放排行榜上的文章排名数据
+    
+    目前只能获取 2020 年 6 月 20 日及其之后的数据，
 
     Args:
         date (str): 格式类似"20210101"
@@ -1067,6 +1069,8 @@ def GetDailyFPGrantToArticlesList(date: str) -> dict:
     url = "https://www.jianshu.com/asimov/fp_rankings/voter_notes?date=" + date
     source = requests.get(url, headers=request_UA)
     source = json.loads(source.content)
+    if source["notes"] == []:
+        return {}  # 如果没有获取到数据，返回空字典
     result = {}
     result["total_fp"] = source["fp"]
     result["fp_to_authors"] = source["author_fp"]
@@ -1100,6 +1104,8 @@ def GetDailyFPGrantToUsersList(date: str) -> dict:
     url = "https://www.jianshu.com/asimov/fp_rankings/voter_users?date=" + date
     source = requests.get(url, headers=request_UA)
     source = json.loads(source.content)
+    if source["users"] == []:
+        return {}  # 如果没有获取到数据，返回空字典
     result = {}
     result["total_fp"] = source["fp"]
     result["fp_to_authors"] = source["author_fp"]
