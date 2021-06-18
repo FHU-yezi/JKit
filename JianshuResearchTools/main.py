@@ -1,4 +1,4 @@
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 
 # 如果在外部导入本模块，会触发 try 块中的代码，实现相对导入
 # 如果直接运行本模块，ImportError 异常会自动被捕获，并使用另一种导入方式
@@ -146,9 +146,13 @@ def GetUserAssetsCount(user_url: str) -> float:
     AssertUserURL(user_url)
     html = requests.get(user_url, headers=UA)
     source = bs4.BeautifulSoup(html.content, parser)
-    raw_data = source.findAll("div", class_="meta-block")[5].p.text
-    # 处理资产大于一定值时的缩写
-    return float(raw_data.replace(".", "").replace("w", "000"))
+    try:
+        raw_data = source.findAll("div", class_="meta-block")[5].p.text
+    except IndexError:
+        return None
+    else:
+        # 处理资产大于一定值时的缩写
+        return float(raw_data.replace(".", "").replace("w", "000"))
 
 
 def GetUserBasicInformation(user_url: str) -> dict:
@@ -356,7 +360,10 @@ def GetUserFP(user_url: str) -> float:
     html = requests.get(user_url, headers=Mobile_UA) # 手机端网页会显示简书钻数量
     source = bs4.BeautifulSoup(html.content, parser)
     result = source.find("div", class_="follow-meta")
-    result = result.findAll("span")[4].text
+    try:
+        result = result.findAll("span")[4].text
+    except IndexError:
+        return None
     result = result.replace("总资产", "").replace(" ", "").replace("\n", "")
     return float(result)
 
