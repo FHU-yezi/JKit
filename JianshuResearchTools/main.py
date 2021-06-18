@@ -290,14 +290,14 @@ def GetUserOwnCollectionInfo(user_url: list) -> list:
     url = url + "/collections_and_notebooks?slug=" + id
     source = requests.get(url, headers=request_UA)
     source = json.loads(source.content)
-    result_list = []
+    result = []
     Collection_List = source["own_collections"]
     for item in Collection_List:
         info = {}
         info["cid"] = item["id"]
         info["name"] = item["title"]
-        result_list.append(info)
-    return result_list
+        result.append(info)
+    return result
 
 
 def GetBeiKeIslandTotalTradeAmount() -> int:
@@ -321,7 +321,7 @@ def GetBeiKeIslandTotalTradeCount() -> int:
     data = {"ranktype": 3, "pageIndex": 1}
     raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", headers=BeiKeIslandHeaders, json=data)
     raw_data = json.loads(raw_data.content)
-    return int((raw_data["data"]["totaltime"]))
+    return int(raw_data["data"]["totaltime"])
 
 
 def GetBeikeIslandTradeRanking(page: int =1) -> list:
@@ -337,15 +337,15 @@ def GetBeikeIslandTradeRanking(page: int =1) -> list:
     raw_data = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", headers=BeiKeIslandHeaders, json=data)
     raw_data = json.loads(raw_data.content)
     rank_list = raw_data["data"]["ranklist"]
-    result_list = []
+    result = []
     for user in rank_list:
         info = {}
         info["bkuid"] = user["userid"]
         info["jianshuname"] = user["jianshuname"]
         info["amount"] = user["totalamount"]
         info["times"] = user["totaltime"]
-        result_list.append(info)
-    return result_list
+        result.append(info)
+    return result
 
 
 def GetUserFP(user_url: str) -> float:
@@ -362,7 +362,7 @@ def GetUserFP(user_url: str) -> float:
     result = source.find("div", class_="follow-meta")
     try:
         result = result.findAll("span")[4].text
-    except IndexError:
+    except IndexError:  # 用户没有文章，获取不到资产量
         return None
     result = result.replace("总资产", "").replace(" ", "").replace("\n", "")
     return float(result)
