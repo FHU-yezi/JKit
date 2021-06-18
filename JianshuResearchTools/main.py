@@ -149,7 +149,7 @@ def GetUserAssetsCount(user_url: str) -> float:
     try:
         raw_data = source.findAll("div", class_="meta-block")[5].p.text
     except IndexError:
-        return None
+        raise MethodError("The user does not have any article, so we can't get his/her FP count.")
     else:
         # 处理资产大于一定值时的缩写
         return float(raw_data.replace(".", "").replace("w", "000"))
@@ -363,7 +363,7 @@ def GetUserFP(user_url: str) -> float:
     try:
         result = result.findAll("span")[4].text
     except IndexError:  # 用户没有文章，获取不到资产量
-        return None
+        raise MethodError("The user does not have any article, so we can't get his/her FP count.")
     result = result.replace("总资产", "").replace(" ", "").replace("\n", "")
     return float(result)
 
