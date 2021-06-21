@@ -1,5 +1,19 @@
 # 项目简介
 
+![许可证 Badge](https://img.shields.io/github/license/fhu-yezi/JianshuResearchTools?color=%234263eb&label=%E8%AE%B8%E5%8F%AF%E8%AF%81)
+
+![代码库大小 Badge](https://img.shields.io/github/repo-size/fhu-yezi/JianshuResearchTools?color=%2352c41a&label=%E4%BB%A3%E7%A0%81%E5%BA%93%E5%A4%A7%E5%B0%8F)
+
+![GitHub 最新版本 Badge](https://img.shields.io/github/v/release/fhu-yezi/JianshuResearchTools?color=%233339af0&label=GitHub%20%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC)
+
+![PyPI 最新版本 Badge](https://img.shields.io/pypi/v/JianshuResearchTools?color=%233339af0&label=PyPI%20%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC)
+
+![Github Release 总下载量 Badge](https://img.shields.io/github/downloads/fhu-yezi/JianshuResearchTools/total?color=%23c41d7f&label=GitHub%20%E6%80%BB%E4%B8%8B%E8%BD%BD%E9%87%8F)
+
+![PyPI 月下载量 Badge](https://img.shields.io/pypi/dm/JianshuResearchTools?color=%23597ef7&label=PyPI%20%E6%9C%88%E4%B8%8B%E8%BD%BD%E9%87%8F)
+
+![打开的 Issues 数量 Badge](https://img.shields.io/github/issues-raw/fhu-yezi/JianshuResearchTools?color=%23339af0&label=%E6%89%93%E5%BC%80%E7%9A%84%20Issues%20%E6%95%B0%E9%87%8F)
+
 > 科技赋能创作星辰。
 
 JRT 是一个简书数据获取与分析库，致力于用更简单的方式，帮助有编程基础的用户快速进行数据分析，助力社区成长。
@@ -10,7 +24,7 @@ JRT 是一个简书数据获取与分析库，致力于用更简单的方式，�
 
 # 安装与使用
 
-JRT 已上传到 PyPi，可使用以下命令一键安装：
+JRT 已上传到 PyPI，可使用以下命令一键安装：
 
 ```
 pip install JianshuResearchTools
