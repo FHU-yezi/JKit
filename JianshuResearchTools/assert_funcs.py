@@ -1,4 +1,4 @@
-from errors import InputError
+from exceptions import InputError
 
 
 def AssertUserUrl(string: str) -> None:

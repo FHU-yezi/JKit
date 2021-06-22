@@ -1,7 +1,7 @@
 import requests
 from lxml import etree
 from basic import PC_header, mobile_header, jianshu_request_header
-from errors import *
+from exceptions import *
 
 from assert_funcs import AssertUserUrl
 
