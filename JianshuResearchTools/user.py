@@ -125,6 +125,25 @@ def GetUserAssetsCount(user_url: str) -> int:
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
+def GetUserFP(user_url: str) -> str:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        int: 用户简书钻数量
+    """
+    AssertUserUrl(user_url)
+    source = requests.get(user_url, headers=mobile_header).content
+    html_obj = etree.HTML(source)
+    try:
+        result = html_obj.xpath("//div[@class='follow-meta']/span[3]")[0].text
+    except IndexError:
+        raise APIException("受简书网页展示限制，无法获取该用户的简书钻数量")
+    result = float(result)
+    return result
+
 def GetUserBadgesList(user_url: str) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的徽章列表
 
