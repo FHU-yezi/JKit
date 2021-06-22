@@ -1,9 +1,12 @@
+import json
+
 import requests
 from lxml import etree
-from basic import PC_header, mobile_header, jianshu_request_header
-from exceptions import *
 
 from assert_funcs import AssertUserUrl
+from convert import *
+from basic import PC_header, jianshu_request_header, mobile_header
+from exceptions import *
 
 
 def GetUserName(user_url: str) -> str:
@@ -16,8 +19,8 @@ def GetUserName(user_url: str) -> str:
         str: 用户昵称
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     result = html_obj.xpath("//a[@class='name']")[0].text
     return result
 
@@ -31,8 +34,8 @@ def GetUserFollowersCount(user_url: str) -> int:
         int: 用户关注数
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     result = html_obj.xpath("//div[@class='info']/ul/li[1]/div[@class='meta-block']/a/p")[0].text
     result = int(result)
     return result
@@ -47,8 +50,8 @@ def GetUserFansCount(user_url: str) -> int:
         int: 用户粉丝数
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     result = html_obj.xpath("//div[@class='info']/ul/li[2]/div[@class='meta-block']/a/p")[0].text
     result = int(result)
     return result
@@ -63,8 +66,8 @@ def GetUserArticlesCount(user_url: str) -> int:
         int: 用户文章数
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     result = html_obj.xpath("//div[@class='info']/ul/li[3]/div[@class='meta-block']/a/p")[0].text
     result = int(result)
     return result
@@ -79,8 +82,8 @@ def GetUserWordsCount(user_url: str) -> int:
         int: 用户文章总字数
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     result = html_obj.xpath("//div[@class='info']/ul/li[4]/div[@class='meta-block']/p")[0].text
     result = int(result)
     return result
@@ -95,8 +98,8 @@ def GetUserLikesCount(user_url: str) -> int:
         int: 用户被喜欢数
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     result = html_obj.xpath("//div[@class='info']/ul/li[5]/div[@class='meta-block']/p")[0].text
     result = int(result)
     return result
@@ -113,8 +116,8 @@ def GetUserAssetsCount(user_url: str) -> int:
         int: 用户总资产
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     try:
         result = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
     except IndexError:
@@ -132,8 +135,8 @@ def GetUserBagdesList(user_url: str) -> list:
         list: 用户被喜欢数
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     result = html_obj.xpath("//li[@class='badge-icon']/a/text()")
     result = [item.replace(" ", "").replace("\n", "") for item in result]  # 移除空格和换行符
     result = [item for item in result if item != ""]  # 去除空值
@@ -149,8 +152,8 @@ def GetUserIntroduction(user_url: str) -> str:
         str: 用户个人简介
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     lines = html_obj.xpath("//div[@class='js-intro']/text() | //div[@class='js-intro']/a/@href")  # 同时获取文字和链接
     result = "\n".join(lines)
     return result
@@ -166,8 +169,8 @@ def GetUserBasicInformation(user_url: str) -> dict:
         dict: 用户基础信息
     """
     AssertUserUrl(user_url)
-    html = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(html)
+    source = requests.get(user_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
     result = {
         "name": html_obj.xpath("//a[@class='name']")[0].text, 
         "followers_count": int(html_obj.xpath("//div[@class='info']/ul/li[1]/div[@class='meta-block']/a/p")[0].text), 
