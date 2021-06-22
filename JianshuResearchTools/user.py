@@ -125,7 +125,7 @@ def GetUserAssetsCount(user_url: str) -> int:
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
-def GetUserBagdesList(user_url: str) -> list:
+def GetUserBadgesList(user_url: str) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的徽章列表
 
     Args:
@@ -188,7 +188,7 @@ def GetUserBasicInformation(user_url: str) -> dict:
         result["assets_count"] = assets_count
     return result
 
-def GetUserNotebookInfo(user_url: str) -> list:
+def GetUserNotebooksInfo(user_url: str) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文集与连载信息
 
     Args:
@@ -216,7 +216,7 @@ def GetUserNotebookInfo(user_url: str) -> list:
         result.append(item_info)
     return result
 
-def GetUserOwnCollectionInfo(user_url: str) -> list:
+def GetUserOwnCollectionsInfo(user_url: str) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户自己创建的专题信息
 
     Args:
@@ -234,6 +234,33 @@ def GetUserOwnCollectionInfo(user_url: str) -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj["own_collections"]:
+        item_info = {
+            "cid": item["id"], 
+            "cslug": item["slug"], 
+            "name": item["title"], 
+            "avatar": item["avatar"]
+        }
+        result.append(item_info)
+    return result
+
+def GetUserManageableCollectionsInfo(user_url: str) -> list:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户有管理权限的专题信息
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        list: 用户有管理权限的专题信息
+    """
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("/u/", "/users/") + "/collections_and_notebooks"
+    params = {
+        "slug": UserUrlToUserSlug(user_url)
+    }
+    source = requests.get(request_url, headers=jianshu_request_header, params=params).content
+    json_obj = json.loads(source)
+    result = []
+    for item in json_obj["manageable_collections"]:
         item_info = {
             "cid": item["id"], 
             "cslug": item["slug"], 
