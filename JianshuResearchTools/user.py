@@ -215,3 +215,30 @@ def GetUserNotebookInfo(user_url: str) -> list:
             item_info["is_paid_book"] = item["paid_book"]  # 如果是连载，则判断是否是付费连载
         result.append(item_info)
     return result
+
+def GetUserOwnCollectionInfo(user_url: str) -> list:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户自己创建的专题信息
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        list: 用户自己创建的专题信息
+    """
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("/u/", "/users/") + "/collections_and_notebooks"
+    params = {
+        "slug": UserUrlToUserSlug(user_url)
+    }
+    source = requests.get(request_url, headers=jianshu_request_header, params=params).content
+    json_obj = json.loads(source)
+    result = []
+    for item in json_obj["own_collections"]:
+        item_info = {
+            "cid": item["id"], 
+            "cslug": item["slug"], 
+            "name": item["title"], 
+            "avatar": item["avatar"]
+        }
+        result.append(item_info)
+    return result
