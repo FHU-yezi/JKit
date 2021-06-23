@@ -339,7 +339,16 @@ def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
         result.append(item_info)
     return result
 
-def GetUserFollowersList(user_url: str, page:int =1) -> list:
+def GetUserFollowersInfo(user_url: str, page:int =1) -> list:
+    """该函数接收用户个人主页 Url 和页码，并返回该用户关注列表中对应页数的用户信息
+
+    Args:
+        user_url (str): 用户个人主页 Url
+        page (int, optional): 关注列表页码. Defaults to 1.
+
+    Returns:
+        list: 该用户关注列表中对应页数的用户信息
+    """
     AssertUserUrl(user_url)
     request_url = user_url.replace("/u/", "/users/") + "/followers"
     params = {
