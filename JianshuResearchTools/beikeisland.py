@@ -126,6 +126,15 @@ def GetBeikeIslandSellTradeRankInfo(page: int =1) -> list:
     return result
 
 def GetBeikeIslandTradeInfo(trade_type: str, page: int =1) -> list:
+    """该函数接收一个交易类型字符串和一个页码参数，并返回贝壳小岛中该类型交易列表中对应页的交易信息
+
+    Args:
+        trade_type (str): 为 buy 时获取买单信息，为 sell 时获取卖单信息
+        page (int, optional): 交易列表页码. Defaults to 1.
+
+    Returns:
+        list: 该类型交易列表中对应页的信息
+    """
     data = {
         "pageIndex": page, 
         "retype": {
@@ -158,4 +167,28 @@ def GetBeikeIslandTradeInfo(trade_type: str, page: int =1) -> list:
             "release_time": item["releasetime"]
         }
         result.append(item_info)
+    return result
+
+def GetBeikeIslandTradePrice(trade_type: str, rank: int =1) -> float:
+    """该函数接收一个消息类型字符串和一个排名参数，并返回贝壳小岛交易列表中该类型对应位置交易单的交易价格
+
+    Args:
+        trade_type (str): 为 buy 时获取买单信息，为 sell 时获取卖单信息
+        rank (int, optional): 该类型中目标价格的位置. Defaults to 1.
+
+    Returns:
+        float: 交易列表中该类型对应位置交易单的交易价格
+    """
+    data = {
+        "pageIndex": int(rank / 10),  # 确定需要请求的页码
+        "retype": {
+            "buy": 2, 
+            "sell": 1
+        }[trade_type]  # 通过 trade_type 构建 retype
+    }
+    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeList", 
+                            headers=BeikeIsland_request_header, json=data)
+    json_obj = json.loads(source.content)
+    rank_in_this_page = rank % 10  # 本页信息中目标交易单的位置，考虑索引下标起始值为 0 问题
+    result = json_obj["data"]["tradelist"][rank_in_this_page]["reprice"]
     return result
