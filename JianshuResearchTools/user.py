@@ -292,7 +292,7 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
         result.append(item_info)
     return result
 
-def GetUserArticlesInfoList(user_url: str, page: int =1, count: int =10) -> list:
+def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文章信息
 
     Args:
