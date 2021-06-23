@@ -1,5 +1,6 @@
-from datetime import datetime
 import json
+import re
+from datetime import datetime
 
 import requests
 from lxml import etree
@@ -154,7 +155,7 @@ def GetUserBadgesList(user_url: str) -> list:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        list: 用户被喜欢数
+        list: 用户徽章列表
     """
     AssertUserUrl(user_url)
     source = requests.get(user_url, headers=PC_header).content
@@ -334,6 +335,32 @@ def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
             "total_fp_amount": item["object"]["data"]["total_fp_amount"] / 1000, 
             "comments_count": item["object"]["data"]["public_comments_count"], 
             "rewards_count": item["object"]["data"]["total_rewards_count"]
+        }
+        result.append(item_info)
+    return result
+
+def GetUserFollowersList(user_url: str, page:int =1) -> list:
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("/u/", "/users/") + "/followers"
+    params = {
+        "page": page
+    }
+    source = requests.get(request_url, headers=PC_header, params=params).content
+    html_obj = etree.HTML(source)
+    name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
+    followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
+    fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
+    articles_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[3]")
+    words_and_likes_raw_data = html_obj.xpath("//div[@class='meta'][2]")
+    result = []
+    for index in range(8):
+        item_info = {
+            "name": name_raw_data[index].text, 
+            "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
+            "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
+            "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")), 
+            "words_count": int(re.findall("\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
+            "likes_count": int(re.findall("\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_info)
     return result
