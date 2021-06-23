@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 import requests
 
@@ -120,6 +121,41 @@ def GetBeikeIslandSellTradeRankInfo(page: int =1) -> list:
             "uslug": UserUrlToUserSlug(item["jianshupath"]), 
             "total_trade_amount": item["totalamount"], 
             "total_trade_times": item["totaltime"]
+        }
+        result.append(item_info)
+    return result
+
+def GetBeikeIslandTradeInfo(trade_type: str, page: int =1) -> list:
+    data = {
+        "pageIndex": page, 
+        "retype": {
+            "buy": 2, 
+            "sell": 1
+        }[trade_type]  # 通过 trade_type 构建 retype
+    }
+    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeList", 
+                            headers=BeikeIsland_request_header, json=data)
+    json_obj = json.loads(source.content)
+    result = []
+    for item in json_obj["data"]["tradelist"]:
+        item_info = { # TODO: 这里应该改成双层嵌套结构
+            "tradeid": item["id"], 
+            "tradeslug": item["tradeno"],   # ? 我也不确定这个 no 什么意思,回来去问问
+            "bkname": item["reusername"],   # ? 还有个 nickname，不知道哪个对
+            "jianshuname": item["jianshuname"], 
+            "avatar": item["avatarurl"], 
+            "total": item["recount"], 
+            "traded": item["recount"] - item["cantradenum"], 
+            "remaining": item["cantradenum"], 
+            "price": item["reprice"], 
+            "minimum_limit": item["minlimit"], 
+            "percentage": item["compeletper"], 
+            "statuscode": item["statuscode"], 
+            "status": item["statustext"], 
+            "userlevelcode": item["levelnum"], 
+            "userlevel": item["userlevel"], 
+            "user_trade_count": item["tradecount"], 
+            "release_time": item["releasetime"]
         }
         result.append(item_info)
     return result
