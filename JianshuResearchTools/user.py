@@ -127,6 +127,7 @@ def GetUserAssetsCount(user_url: str) -> int:
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
+
 def GetUserFP(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
 
@@ -146,7 +147,24 @@ def GetUserFP(user_url: str) -> str:
     result = float(result)
     return result
 
-# TODO: 由于 GetUserFTN 可能出现负数结果，故暂时搁置
+def GetUserFTN(user_url: str) -> str:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
+
+    # ! 视用户资产配置情况不同，该函数获取到的数值会有不大于 1000 的偏差
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        int: 用户简书钻数量
+    """
+    assets = GetUserAssetsCount(user_url)
+    FTN = GetUserFP(user_url)
+    print(assets, FTN)
+    result = assets - FTN
+    result = abs(result)  # 处理用户简书贝数量较少导致结果为负的情况
+    result = round(result, 3)  # 处理浮点数精度问题
+    return result
 
 def GetUserBadgesList(user_url: str) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的徽章列表
