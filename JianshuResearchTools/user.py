@@ -1,11 +1,12 @@
+from datetime import datetime
 import json
 
 import requests
 from lxml import etree
 
 from assert_funcs import AssertUserUrl
-from convert import *
 from basic import PC_header, jianshu_request_header, mobile_header
+from convert import *
 from exceptions import *
 
 
@@ -143,6 +144,8 @@ def GetUserFP(user_url: str) -> str:
         raise APIException("受简书网页展示限制，无法获取该用户的简书钻数量")
     result = float(result)
     return result
+
+# TODO: 由于 GetUserFTN 可能出现负数结果，故暂时搁置
 
 def GetUserBadgesList(user_url: str) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的徽章列表
@@ -285,6 +288,52 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
             "cslug": item["slug"], 
             "name": item["title"], 
             "avatar": item["avatar"]
+        }
+        result.append(item_info)
+    return result
+
+def GetUserArticlesInfoList(user_url: str, page: int =1, count: int =10) -> list:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户的文章信息
+
+    Args:
+        user_url (str): 用户个人主页 Url
+        page (int, optional): 页码，与网页端文章顺序相同. Defaults to 1.
+        count (int, optional): 获取的文章数量. Defaults to 10.
+
+    Returns:
+        list: 用户文章信息
+    """
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("/u/", "/asimov/users/slug/") + "/public_notes"
+    params = {
+        "page": page, 
+        "count": count
+    }
+    source = requests.get(request_url, headers=jianshu_request_header, params=params).content
+    json_obj = json.loads(source)
+    result = []
+    for item in json_obj:
+        item_info  = {
+            "aid": item["object"]["data"]["id"], 
+            "title": item["object"]["data"]["title"], 
+            "aslug": item["object"]["data"]["slug"], 
+            "time": datetime.fromisoformat(item["object"]["data"]["first_shared_at"]), 
+            "image_url": item["object"]["data"]["list_image_url"], 
+            "summary": item["object"]["data"]["public_abbr"], 
+            "views_count": item["object"]["data"]["views_count"], 
+            "likes_count": item["object"]["data"]["likes_count"], 
+            "is_top": item["object"]["data"]["is_top"], 
+            "paid": item["object"]["data"]["paid"], 
+            "commentable": item["object"]["data"]["commentable"], 
+            "user": {
+                "uid": item["object"]["data"]["user"]["id"], 
+                "name": item["object"]["data"]["user"]["nickname"], 
+                "uslug": item["object"]["data"]["user"]["slug"], 
+                "avatar": item["object"]["data"]["user"]["avatar"]
+            }, 
+            "total_fp_amount": item["object"]["data"]["total_fp_amount"] / 1000, 
+            "comments_count": item["object"]["data"]["public_comments_count"], 
+            "rewards_count": item["object"]["data"]["total_rewards_count"]
         }
         result.append(item_info)
     return result
