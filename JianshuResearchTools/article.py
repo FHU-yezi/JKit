@@ -39,3 +39,26 @@ def GetArticleHtml(article_url: str) -> str:
         else:
             replaced = replaced.replace(old_img_blocks[index], new_img_blocks[index])  # 替换 img 标签
     return replaced
+
+def GetArticleText(article_url: str) -> str:
+    """该函数接收文章 Url，并以纯文本格式返回文章内容
+
+    # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
+    # ! 该函数不能获取需要付费的文章内容
+    # ! 文章中的换行将会丢失
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        str: 纯文本格式的文章内容
+    """
+    AssertArticleUrl(article_url)
+    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    html_text = json_obj["free_content"]
+    html_obj = etree.HTML(html_text)
+    # TODO: 优化筛选逻辑，保留单个空行
+    result = "".join([item for item in html_obj.itertext() if item != "\n"])
+    return result
