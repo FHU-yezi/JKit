@@ -368,7 +368,7 @@ def GetUserFollowersInfo(user_url: str, page:int =1) -> list:
         list: 该用户关注列表中对应页数的用户信息
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("/u/", "/users/") + "/followers"
+    request_url = user_url.replace("/u/", "/users/") + "/following"
     params = {
         "page": page
     }
