@@ -152,3 +152,51 @@ def IslandSlugToIslandUrl(island_slug: str) -> str:
     result = "https://www.jinshu.com/c/" + island_slug
     AssertIslandUrl(result)
     return result
+
+def UserUrlToUserUrlScheme(user_url: str) -> str:
+    """该函数接收用户个人主页 Url，并返回跳转到简书 App 中对应用户的 Url Scheme
+
+    Args:
+        user_url (str): 用户个人主页 Url
+    Returns:
+        str: 跳转到简书 App 中对应用户的 Url Scheme
+    """
+    AssertUserUrl(user_url)
+    result = user_url.replace("https://www.jianshu.com/u/", "jianshu://u/")
+    return result
+
+def ArticleUrlToArticleUrlScheme(article_url: str) -> str:
+    """该函数接收文章 Url，并返回跳转到简书 App 中对应文章的 Url Scheme
+
+    Args:
+        article_url (str): 文章 Url
+    Returns:
+        str: 跳转到简书 App 中对应文章的 Url Scheme
+    """
+    AssertArticleUrl(article_url)
+    result = article_url.replace("https://www.jianshu.com/p/", "jianshu://notes/")
+    return result
+
+def NotebookUrlToNotebookUrlScheme(notebook_url: str) -> str:
+    """该函数接收文集 Url，并返回跳转到简书 App 中对应文集的 Url Scheme
+
+    Args:
+        notebook_url (str): 文集 Url
+    Returns:
+        str: 跳转到简书 App 中对应文集的 Url Scheme
+    """
+    AssertNotebookUrl(notebook_url)
+    result = notebook_url.replace("https://www.jianshu.com/nb/", "jianshu://nb/")
+    return result
+
+def CollectionUrlToCollectionUrlScheme(collection_url: str) -> str:
+    """该函数接收专题 Url，并返回跳转到简书 App 中对应专题的 Url Scheme
+
+    Args:
+        collection_url (str): 专题 Url
+    Returns:
+        str: 跳转到简书 App 中对应专题的 Url Scheme
+    """
+    AssertCollectionUrl(collection_url)
+    result = collection_url.replace("https://www.jianshu.com/c/", "jianshu://c/")
+    return result

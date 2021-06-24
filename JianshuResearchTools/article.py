@@ -167,6 +167,41 @@ def GetArticlePaidStatus(article_url: str) -> bool:
     result = paid_type[json_obj["paid_type"]]
     return result
 
+def GetArticleReprintStatus(article_url: str) -> bool:  # TODO: 是不是要改个名？
+    """该函数接收文章 Url，并返回该链接对应文章的转载声明状态
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        bool: 文章转载声明状态，True 为允许转载，False 为禁止转载
+    """
+    AssertArticleUrl(article_url)
+    AssertArticleStatusNormal(article_url)
+    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["reprintable"]
+    return result
+
+def GetArticleCommentStatus(article_url: str) -> bool:
+    """该函数接收文章 Url，并返回该链接对应文章的评论状态
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        bool: 文章评论状态，True 为开启评论，False 为关闭评论
+    """
+    AssertArticleUrl(article_url)
+    AssertArticleStatusNormal(article_url)
+    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["commentable"]
+    return result
+
+
 def GetArticleHtml(article_url: str) -> str:
     """该函数接收文章 Url，并以 HTML 格式返回文章内容
 
