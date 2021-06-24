@@ -391,3 +391,38 @@ def GetUserFollowersInfo(user_url: str, page:int =1) -> list:
         }
         result.append(item_info)
     return result
+
+def GetUserFansInfo(user_url: str, page:int =1) -> list:
+    """该函数接收用户个人主页 Url 和页码，并返回该用户粉丝列表中对应页数的用户信息
+
+    Args:
+        user_url (str): 用户个人主页 Url
+        page (int, optional): 粉丝列表页码. Defaults to 1.
+
+    Returns:
+        list: 该用户粉丝列表中对应页数的用户信息
+    """
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("/u/", "/users/") + "/followers"
+    params = {
+        "page": page
+    }
+    source = requests.get(request_url, headers=PC_header, params=params).content
+    html_obj = etree.HTML(source)
+    name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
+    followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
+    fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
+    articles_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[3]")
+    words_and_likes_raw_data = html_obj.xpath("//div[@class='meta'][2]")
+    result = []
+    for index in range(8):
+        item_info = {
+            "name": name_raw_data[index].text, 
+            "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
+            "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
+            "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")), 
+            "words_count": int(re.findall("\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
+            "likes_count": int(re.findall("\d+", words_and_likes_raw_data[index].text)[1])
+        }
+        result.append(item_info)
+    return result
