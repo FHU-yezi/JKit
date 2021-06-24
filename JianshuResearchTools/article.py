@@ -3,6 +3,7 @@ import re
 
 import requests
 from lxml import etree
+from datetime import datetime
 
 from assert_funcs import AssertArticleUrl, AssertArticleStatusNormal
 from basic import jianshu_request_header
@@ -94,7 +95,7 @@ def GetArticleTotalFPCount(article_url: str) -> int:
     result = json_obj["total_fp_amount"] / 1000
     return result
 
-def GetArticleDescription(article_url: str) -> int:
+def GetArticleDescription(article_url: str) -> datetime:
     """该函数接收文章 Url，并返回该链接对应文章的摘要
 
     Args:
@@ -109,6 +110,40 @@ def GetArticleDescription(article_url: str) -> int:
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = json_obj["description"]
+    return result
+
+def GetArticlePublishTime(article_url: str) -> int:
+    """该函数接收文章 Url，并返回该链接对应文章的更新时间
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        datetime: 文章更新时间
+    """
+    AssertArticleUrl(article_url)
+    AssertArticleStatusNormal(article_url)
+    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = datetime.fromisoformat(json_obj["first_shared_at"])
+    return result
+
+def GetArticleUpdateTime(article_url: str) -> int:
+    """该函数接收文章 Url，并返回该链接对应文章的更新时间
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        datetime: 文章更新时间
+    """
+    AssertArticleUrl(article_url)
+    AssertArticleStatusNormal(article_url)
+    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
 def GetArticlePaidStatus(article_url: str) -> bool:
