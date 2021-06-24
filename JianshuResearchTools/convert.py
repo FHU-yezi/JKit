@@ -1,4 +1,6 @@
 from assert_funcs import *
+import requests
+import json
 
 def UserUrlToUserSlug(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并将其转换成用户 Slug
@@ -51,6 +53,23 @@ def ArticleSlugToArticleUrl(article_slug: str) -> str:
     # TODO: 如果传入的参数类型不是字符串会出现报错
     result = "https://www.jinshu.com/p/" + article_slug
     AssertArticleUrl(result)
+    return result
+
+def ArticleSlugToArticleID(article_url: str) -> int:
+    """该函数接收文章 Slug，并将其转换成文章 ID
+
+    Args:
+        article_slug (str): 文章 Slug
+
+    Returns:
+        int: 文章 ID
+    """
+    AssertArticleUrl(article_url)
+    AssertArticleUrl(article_url)
+    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["id"]
     return result
 
 
