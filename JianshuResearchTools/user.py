@@ -7,7 +7,7 @@ from lxml import etree
 
 from assert_funcs import AssertUserUrl
 from basic import PC_header, jianshu_request_header, mobile_header
-from convert import *
+from convert import UserUrlToUserSlug
 from exceptions import *
 
 
@@ -386,8 +386,8 @@ def GetUserFollowersInfo(user_url: str, page:int =1) -> list:
             "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
             "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
             "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")), 
-            "words_count": int(re.findall("\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
-            "likes_count": int(re.findall("\d+", words_and_likes_raw_data[index].text)[1])
+            "words_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
+            "likes_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_info)
     return result
