@@ -336,7 +336,7 @@ def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
             "title": item["object"]["data"]["title"], 
             "aslug": item["object"]["data"]["slug"], 
             "release_time": datetime.fromisoformat(item["object"]["data"]["first_shared_at"]), 
-            "image_url": item["object"]["data"]["list_image_url"], 
+            "image_url": item["object"]["data"]["list_image_url"],   # TODO: 名字不太贴切
             "summary": item["object"]["data"]["public_abbr"], 
             "views_count": item["object"]["data"]["views_count"], 
             "likes_count": item["object"]["data"]["likes_count"], 
