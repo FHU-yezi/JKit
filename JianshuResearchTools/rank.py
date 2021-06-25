@@ -1,10 +1,14 @@
-import requests
 import json
+import time
+
+import requests
+
 from assert_funcs import AssertJianshuUrl
 from basic import jianshu_request_header
 from convert import UserSlugToUserUrl
+from exceptions import APIException, ResourceError
 from user import GetUserAssetsCount
-from exceptions import APIException
+
 
 def GetAssetsRankData(start_id: int =1, get_full: bool =False) -> list:
     """该函数接收一个起始位置参数和一个获取全部数据的布尔值，并返回自该位置后 20 名用户的资产数据
@@ -62,3 +66,38 @@ def GetDailyArticleRankData() -> list:
         result.append(item_info)
     return result
 
+def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带参数也尽量不要报错？默认获取昨天的数据试试
+    """该函数接收一个日期参数，并返回对应日期的文章收益排行榜数据
+
+    Args:
+        date (str, optional): 日期参数，格式“YYYYMMDD”. Defaults to "latest".
+
+    Raises:
+        ResourceError: 对应日期的排行榜数据为空时会抛出此异常
+
+    Returns:
+        list: 对应日期的文章收益排行榜数据
+    """
+    if date == "latest":
+        date = time.strftime("%Y%m%d", time.localtime())
+    params = {
+        "date": date
+    }
+    source = requests.get("https://www.jianshu.com/asimov/fp_rankings/voter_notes", params=params, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    if json_obj["notes"] == []:
+        raise ResourceError("对应日期的排行榜数据为空")
+    result = []
+    for ranking, item in enumerate(json_obj["notes"]):
+        item_info = {
+            "ranking": ranking, 
+            "aslug": item["slug"], 
+            "title": item["title"], 
+            "author_name": item["author_nickname"], 
+            "author_avatar": item["author_avatar"],
+            "fp_to_author": item["author_fp"] / 1000, 
+            "fp_to_voter": item["voter_fp"] / 1000, 
+            "total_fp": item["fp"] / 1000
+        }
+        result.append(item_info)
+    return result
