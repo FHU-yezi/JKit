@@ -8,11 +8,10 @@ from headers import BeikeIsland_request_header
 
 
 def GetBeikeIslandTotalTradeAmount() -> int:
-    # TODO: 注释优化
-    """该函数返回贝壳小岛的总交易额。
+    """获取贝壳小岛总交易量
 
     Returns:
-        int: 总交易额
+        int: 总交易量
     """
     data = {}  # 不传送数据也能正常获取，节省时间和带宽
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
@@ -22,11 +21,10 @@ def GetBeikeIslandTotalTradeAmount() -> int:
     return result
 
 def GetBeikeIslandTotalTradeCount() -> int:
-    # TODO: 注释优化
-    """该函数返回贝壳小岛的总交易次数。
+    """获取贝壳小岛总交易笔数
 
     Returns:
-        int: 总交易次数
+        int: 总交易笔数
     """
     data = {}  # 不传送数据也能正常获取，节省时间和带宽
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
@@ -35,14 +33,14 @@ def GetBeikeIslandTotalTradeCount() -> int:
     result = json_obj["data"]["totaltime"]
     return result
 
-def GetBeikeIslandTotalTradeRankInfo(page: int =1) -> list:
-    """该函数接收一个页码参数，并返回贝壳小岛总交易排行榜中对应页码的用户信息
+def GetBeikeIslandTotalTradeRankData(page: int =1) -> list:
+    """获取贝壳小岛总交易排行榜中的用户数据
 
     Args:
-        page (int, optional): 排行榜页码. Defaults to 1.
+        page (int, optional): 页码. Defaults to 1.
 
     Returns:
-        list: 总交易排行榜中对应页码的用户信息
+        list: 总交易排行榜的用户数据
     """
     data = {
         "ranktype": 3, 
@@ -65,14 +63,14 @@ def GetBeikeIslandTotalTradeRankInfo(page: int =1) -> list:
         result.append(item_data)
     return result
 
-def GetBeikeIslandBuyTradeRankInfo(page: int =1) -> list:
-    """该函数接收一个页码参数，并返回贝壳小岛买贝排行榜中对应页码的用户信息
+def GetBeikeIslandBuyTradeRankData(page: int =1) -> list:
+    """获取贝壳小岛买贝排行榜中的用户数据
 
     Args:
-        page (int, optional): 排行榜页码. Defaults to 1.
+        page (int, optional): 页码. Defaults to 1.
 
     Returns:
-        list: 买贝排行榜中对应页码的用户信息
+        list: 买贝榜的用户数据
     """
     data = {
         "ranktype": 1, 
@@ -95,14 +93,14 @@ def GetBeikeIslandBuyTradeRankInfo(page: int =1) -> list:
         result.append(item_data)
     return result
 
-def GetBeikeIslandSellTradeRankInfo(page: int =1) -> list:
-    """该函数接收一个页码参数，并返回贝壳小岛卖贝排行榜中对应页码的用户信息
+def GetBeikeIslandSellTradeRankData(page: int =1) -> list:
+    """获取贝壳小岛卖贝排行榜中的用户数据
 
     Args:
-        page (int, optional): 排行榜页码. Defaults to 1.
+        page (int, optional): 页码. Defaults to 1.
 
     Returns:
-        list: 卖贝排行榜中对应页码的用户信息
+        list: 卖贝榜的用户数据
     """
     data = {
         "ranktype": 2, 
@@ -125,15 +123,15 @@ def GetBeikeIslandSellTradeRankInfo(page: int =1) -> list:
         result.append(item_data)
     return result
 
-def GetBeikeIslandTradeInfo(trade_type: str, page: int =1) -> list:
-    """该函数接收一个交易类型字符串和一个页码参数，并返回贝壳小岛中该类型交易列表中对应页的交易信息
+def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int =1) -> list:
+    """获取贝壳小岛的挂单信息
 
     Args:
-        trade_type (str): 为 buy 时获取买单信息，为 sell 时获取卖单信息
-        page (int, optional): 交易列表页码. Defaults to 1.
+        trade_type (str): buy 为买单，sell 为卖单
+        page (int, optional): 页码. Defaults to 1.
 
     Returns:
-        list: 该类型交易列表中对应页的信息
+        list: 挂单数据
     """
     data = {
         "pageIndex": page, 
@@ -170,14 +168,14 @@ def GetBeikeIslandTradeInfo(trade_type: str, page: int =1) -> list:
     return result
 
 def GetBeikeIslandTradePrice(trade_type: str, rank: int =1) -> float:
-    """该函数接收一个消息类型字符串和一个排名参数，并返回贝壳小岛交易列表中该类型对应位置交易单的交易价格
+    """获取特定位置交易单的价格
 
     Args:
-        trade_type (str): 为 buy 时获取买单信息，为 sell 时获取卖单信息
-        rank (int, optional): 该类型中目标价格的位置. Defaults to 1.
+        trade_type (str): buy 为买单，sell 为卖单
+        rank (int, optional): 自最低 / 最高价开始，需要获取的价格所在的位置. Defaults to 1.
 
     Returns:
-        float: 交易列表中该类型对应位置交易单的交易价格
+        float: 交易单的价格
     """
     data = {
         "pageIndex": int(rank / 10),  # 确定需要请求的页码

@@ -10,7 +10,7 @@ from headers import PC_header, jianshu_request_header, mobile_header
 
 
 def GetArticleTitle(article_url: str) -> str:
-    """该函数接收文章 Url，并返回该链接对应文章的标题
+    """获取文章标题
 
     Args:
         article_url (str): 文章 Url
@@ -29,13 +29,13 @@ def GetArticleTitle(article_url: str) -> str:
 # TODO: 获取文章阅读量没找到接口，暂时搁置
 
 def GetArticleLikesCount(article_url: str) -> int:
-    """该函数接收文章 Url，并返回该链接对应文章的点赞量
+    """获取文章点赞量
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        str: 文章点赞量
+        int: 文章点赞量
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -46,13 +46,13 @@ def GetArticleLikesCount(article_url: str) -> int:
     return result
 
 def GetArticleCommentsCount(article_url: str) -> int:
-    """该函数接收文章 Url，并返回该链接对应文章的评论量
+    """获取文章评论量
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        str: 文章评论量
+        int: 文章评论量
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -62,14 +62,14 @@ def GetArticleCommentsCount(article_url: str) -> int:
     result = json_obj["public_comment_count"]
     return result
 
-def GetArticleFeaturedCommentsCount(article_url: str) -> int:
-    """该函数接收文章 Url，并返回该链接对应文章的精选评论量
+def GetArticleMostValuableCommentsCount(article_url: str) -> int:
+    """获取文章精选评论量
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        str: 文章精选评论量
+        int: 文章精选评论量
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -80,13 +80,13 @@ def GetArticleFeaturedCommentsCount(article_url: str) -> int:
     return result
 
 def GetArticleTotalFPCount(article_url: str) -> int:
-    """该函数接收文章 Url，并返回该链接对应文章的总获钻量
+    """获取文章总获钻量
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        str: 文章总获钻量
+        int: 文章总获钻量
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -96,8 +96,8 @@ def GetArticleTotalFPCount(article_url: str) -> int:
     result = json_obj["total_fp_amount"] / 1000
     return result
 
-def GetArticleDescription(article_url: str) -> datetime:
-    """该函数接收文章 Url，并返回该链接对应文章的摘要
+def GetArticleDescription(article_url: str) -> str:
+    """获取文章摘要
 
     Args:
         article_url (str): 文章 Url
@@ -113,14 +113,14 @@ def GetArticleDescription(article_url: str) -> datetime:
     result = json_obj["description"]
     return result
 
-def GetArticlePublishTime(article_url: str) -> int:
-    """该函数接收文章 Url，并返回该链接对应文章的更新时间
+def GetArticlePublishTime(article_url: str) -> datetime:
+    """获取文章发布时间
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        datetime: 文章更新时间
+        datetime: 文章发布时间
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -130,8 +130,8 @@ def GetArticlePublishTime(article_url: str) -> int:
     result = datetime.fromisoformat(json_obj["first_shared_at"])
     return result
 
-def GetArticleUpdateTime(article_url: str) -> int:
-    """该函数接收文章 Url，并返回该链接对应文章的更新时间
+def GetArticleUpdateTime(article_url: str) -> datetime:
+    """获取文章更新时间
 
     Args:
         article_url (str): 文章 Url
@@ -148,7 +148,7 @@ def GetArticleUpdateTime(article_url: str) -> int:
     return result
 
 def GetArticlePaidStatus(article_url: str) -> bool:
-    """该函数接收文章 Url，并返回该链接对应文章的付费状态
+    """获取文章付费状态
 
     Args:
         article_url (str): 文章 Url
@@ -169,7 +169,7 @@ def GetArticlePaidStatus(article_url: str) -> bool:
     return result
 
 def GetArticleReprintStatus(article_url: str) -> bool:  # TODO: 是不是要改个名？
-    """该函数接收文章 Url，并返回该链接对应文章的转载声明状态
+    """获取文章转载声明状态
 
     Args:
         article_url (str): 文章 Url
@@ -186,7 +186,7 @@ def GetArticleReprintStatus(article_url: str) -> bool:  # TODO: 是不是要改�
     return result
 
 def GetArticleCommentStatus(article_url: str) -> bool:
-    """该函数接收文章 Url，并返回该链接对应文章的评论状态
+    """获取文章评论状态
 
     Args:
         article_url (str): 文章 Url
@@ -204,7 +204,7 @@ def GetArticleCommentStatus(article_url: str) -> bool:
 
 
 def GetArticleHtml(article_url: str) -> str:
-    """该函数接收文章 Url，并以 HTML 格式返回文章内容
+    """获取 Html 格式的文章内容
 
     # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
     # ! 该函数不能获取需要付费的文章内容
@@ -214,7 +214,7 @@ def GetArticleHtml(article_url: str) -> str:
         article_url (str): 文章 Url
 
     Returns:
-        str: HTML 格式的文章内容
+        str: Html 格式的文章内容
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -237,7 +237,7 @@ def GetArticleHtml(article_url: str) -> str:
     return replaced
 
 def GetArticleText(article_url: str) -> str:
-    """该函数接收文章 Url，并以纯文本格式返回文章内容
+    """获取纯文本格式的文章内容
 
     # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
     # ! 该函数不能获取需要付费的文章内容
