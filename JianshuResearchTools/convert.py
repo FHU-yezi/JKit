@@ -24,7 +24,7 @@ def UserSlugToUserUrl(user_slug: str) -> str:
         str: 用户个人主页 Url
     """
     # TODO: 如果传入的参数类型不是字符串会出现报错
-    result = "https://www.jinshu.com/u/" + user_slug
+    result = "https://www.jianshu.com/u/" + user_slug
     AssertUserUrl(result)
     return result
 
