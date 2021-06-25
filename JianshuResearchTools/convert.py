@@ -1,6 +1,11 @@
-from assert_funcs import *
-import requests
 import json
+
+import requests
+
+from assert_funcs import (AssertArticleUrl, AssertCollectionUrl,
+                          AssertIslandUrl, AssertNotebookUrl, AssertUserUrl)
+from headers import jianshu_request_header
+
 
 def UserUrlToUserSlug(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并将其转换成用户 Slug

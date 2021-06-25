@@ -1,13 +1,13 @@
 import json
 import re
+from datetime import datetime
 
 import requests
 from lxml import etree
 
 from assert_funcs import AssertCollectionUrl
-from basic import PC_header, jianshu_request_header
-from datetime import datetime
 from convert import CollectionUrlToCollectionSlug
+from headers import PC_header, jianshu_request_header
 
 
 def GetCollectionName(collection_url: str) -> str:

@@ -1,11 +1,14 @@
-import requests
 import json
-from assert_funcs import AssertIslandUrl
-from lxml import etree
-from basic import PC_header, jianshu_request_header
 import re
-from convert import IslandUrlToIslandSlug
 from datetime import datetime
+
+import requests
+from lxml import etree
+
+from assert_funcs import AssertIslandUrl
+from convert import IslandUrlToIslandSlug
+from headers import PC_header, jianshu_request_header
+
 
 def GetIslandName(island_url: str) -> str:
     AssertIslandUrl(island_url)

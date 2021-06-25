@@ -1,7 +1,10 @@
-from exceptions import InputError, ResourceError
-from basic import jianshu_request_header
 import json
+
 import requests
+
+from exceptions import InputError, ResourceError
+from headers import jianshu_request_header
+
 
 def AssertJianshuUrl(string: str) -> None:
     """该函数接收一个字符串，并在其不是有效的简书 Url 时抛出异常

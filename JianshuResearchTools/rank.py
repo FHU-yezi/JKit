@@ -4,9 +4,9 @@ import time
 import requests
 
 from assert_funcs import AssertJianshuUrl
-from basic import jianshu_request_header
 from convert import UserSlugToUserUrl
 from exceptions import APIException, ResourceError
+from headers import jianshu_request_header
 from user import GetUserAssetsCount
 
 

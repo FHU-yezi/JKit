@@ -1,12 +1,13 @@
 import json
 import re
+from datetime import datetime
 
 import requests
 from lxml import etree
-from datetime import datetime
 
-from assert_funcs import AssertArticleUrl, AssertArticleStatusNormal
-from basic import jianshu_request_header
+from assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
+from headers import PC_header, jianshu_request_header, mobile_header
+
 
 def GetArticleTitle(article_url: str) -> str:
     """该函数接收文章 Url，并返回该链接对应文章的标题
