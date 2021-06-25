@@ -69,7 +69,7 @@ def GetDailyArticleRankData() -> list:
 def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带参数也尽量不要报错？默认获取昨天的数据试试
     """该函数接收一个日期参数，并返回对应日期的文章收益排行榜数据
 
-    目前只能获取 2020 年 6 月 20 日及其之后的数据。
+    目前只能获取 2020 年 6 月 20 日之后的数据。
 
     Args:
         date (str, optional): 日期参数，格式“YYYYMMDD”. Defaults to "latest".
@@ -106,3 +106,43 @@ def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带�
 
 # TODO: 差一个获取文章收益排行榜基础数据（总分发简书钻量等）的函数
 
+def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> list:  # TODO: 是不是不带参数也尽量不要报错？默认获取昨天的数据试试
+    """该函数接收一个日期参数，并返回对应日期的用户收益排行榜数据
+
+    目前只能获取 2020 年 6 月 20 日之后的数据。
+
+    Args:
+        date (str, optional): 日期参数，格式“YYYYMMDD”. Defaults to "latest".
+
+    Raises:
+        ResourceError: 对应日期的排行榜数据为空时会抛出此异常
+
+    Returns:
+        list: 对应日期的用户收益排行榜数据
+    """
+    if date == "latest":
+        date = time.strftime("%Y%m%d", time.localtime())
+    params = {
+        "date": date, 
+        "type": {
+            "all": None, 
+            "write": "note", 
+            "vote": "like"
+        }[rank_type]
+    }
+    source = requests.get("https://www.jianshu.com/asimov/fp_rankings/voter_users", params=params, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    if json_obj["users"] == []:
+        raise ResourceError("对应日期的排行榜数据为空")
+    result = []
+    for ranking, item in enumerate(json_obj["users"]):
+        item_info = {
+            "ranking": ranking, 
+            "uslug": item["slug"], 
+            "name": item["nickname"], 
+            "avatar": item["avatar"], 
+            "fp_from_write": item["author_fp"], 
+            "fp_from_vote": item["voter_fp"]
+        }
+        result.append(item_info)
+    return result
