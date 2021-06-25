@@ -7,6 +7,15 @@ from user import GetUserAssetsCount
 from exceptions import APIException
 
 def GetAssetsRankData(start_id: int =1, get_full: bool =False) -> list:
+    """该函数接收一个起始位置参数和一个获取全部数据的布尔值，并返回自该位置后 20 名用户的资产数据
+
+    Args:
+        start_id (int, optional): 起始位置. Defaults to 1.
+        get_full (bool, optional): 为 True 时获取简书贝和总资产数据，为 False 时不获取. Defaults to False.
+
+    Returns:
+        list: 用户资产数据
+    """
     start_id -= 1  # 索引下标为 0
     params = {
         "max_id": 1000000000,   # 与官方接口数值相同
@@ -34,6 +43,11 @@ def GetAssetsRankData(start_id: int =1, get_full: bool =False) -> list:
     return result
 
 def GetDailyArticleRankData() -> list:
+    """该函数返回日更排行榜的用户信息
+
+    Returns:
+        list: 日更排行榜用户信息
+    """
     source = requests.get("https://www.jianshu.com/asimov/daily_activity_participants/rank", headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = []
