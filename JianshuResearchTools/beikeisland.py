@@ -53,7 +53,7 @@ def GetBeikeIslandTotalTradeRankInfo(page: int =1) -> list:
     json_obj = json.loads(source.content)
     result = []
     for item in json_obj["data"]["ranklist"]:
-        item_info = {
+        item_data = {
             "bkuid": item["userid"], 
             "jianshuname": item["jianshuname"], 
             "avatar": item["avatarurl"], 
@@ -62,7 +62,7 @@ def GetBeikeIslandTotalTradeRankInfo(page: int =1) -> list:
             "total_trade_amount": item["totalamount"], 
             "total_trade_times": item["totaltime"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetBeikeIslandBuyTradeRankInfo(page: int =1) -> list:
@@ -83,7 +83,7 @@ def GetBeikeIslandBuyTradeRankInfo(page: int =1) -> list:
     json_obj = json.loads(source.content)
     result = []
     for item in json_obj["data"]["ranklist"]:
-        item_info = {
+        item_data = {
             "bkuid": item["userid"], 
             "jianshuname": item["jianshuname"], 
             "avatar": item["avatarurl"], 
@@ -92,7 +92,7 @@ def GetBeikeIslandBuyTradeRankInfo(page: int =1) -> list:
             "total_trade_amount": item["totalamount"], 
             "total_trade_times": item["totaltime"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetBeikeIslandSellTradeRankInfo(page: int =1) -> list:
@@ -113,7 +113,7 @@ def GetBeikeIslandSellTradeRankInfo(page: int =1) -> list:
     json_obj = json.loads(source.content)
     result = []
     for item in json_obj["data"]["ranklist"]:
-        item_info = {
+        item_data = {
             "bkuid": item["userid"], 
             "jianshuname": item["jianshuname"], 
             "avatar": item["avatarurl"], 
@@ -122,7 +122,7 @@ def GetBeikeIslandSellTradeRankInfo(page: int =1) -> list:
             "total_trade_amount": item["totalamount"], 
             "total_trade_times": item["totaltime"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetBeikeIslandTradeInfo(trade_type: str, page: int =1) -> list:
@@ -147,7 +147,7 @@ def GetBeikeIslandTradeInfo(trade_type: str, page: int =1) -> list:
     json_obj = json.loads(source.content)
     result = []
     for item in json_obj["data"]["tradelist"]:
-        item_info = { # TODO: 这里应该改成双层嵌套结构
+        item_data = { # TODO: 这里应该改成双层嵌套结构
             "tradeid": item["id"], 
             "tradeslug": item["tradeno"],   # ? 我也不确定这个 no 什么意思,回来去问问
             "bkname": item["reusername"],   # ? 还有个 nickname，不知道哪个对
@@ -166,7 +166,7 @@ def GetBeikeIslandTradeInfo(trade_type: str, page: int =1) -> list:
             "user_trade_count": item["tradecount"], 
             "release_time": item["releasetime"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetBeikeIslandTradePrice(trade_type: str, rank: int =1) -> float:

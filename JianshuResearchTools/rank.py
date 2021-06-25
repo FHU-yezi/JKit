@@ -29,7 +29,7 @@ def GetAssetsRankData(start_id: int =1, get_full: bool =False) -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj["rankings"]:
-        item_info = {
+        item_data = {
             "ranking": item["ranking"], 
             "uid": item["user"]["id"], 
             "uslug": item["user"]["slug"], 
@@ -37,13 +37,13 @@ def GetAssetsRankData(start_id: int =1, get_full: bool =False) -> list:
             "FP": item["amount"] / 1000
         }
         if get_full == True:
-            user_url = UserSlugToUserUrl(item_info["uslug"])
+            user_url = UserSlugToUserUrl(item_data["uslug"])
             try:
-                item_info["Assets"] = GetUserAssetsCount(user_url)
-                item_info["FTN"] =  round(item_info["Assets"] - item_info["FP"], 3) # 处理浮点数精度问题
+                item_data["Assets"] = GetUserAssetsCount(user_url)
+                item_data["FTN"] =  round(item_data["Assets"] - item_data["FP"], 3) # 处理浮点数精度问题
             except APIException:
                 pass
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetDailyArticleRankData() -> list:
@@ -56,14 +56,14 @@ def GetDailyArticleRankData() -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj["daps"]:
-        item_info = {
+        item_data = {
             "ranking": item["rank"], 
             "uslug": item["slug"], 
             "name": item["nickname"], 
             "avatar": item["avatar"], 
             "check_in_count": item["checkin_count"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带参数也尽量不要报错？默认获取昨天的数据试试
@@ -91,7 +91,7 @@ def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带�
         raise ResourceError("对应日期的排行榜数据为空")
     result = []
     for ranking, item in enumerate(json_obj["notes"]):
-        item_info = {
+        item_data = {
             "ranking": ranking, 
             "aslug": item["slug"], 
             "title": item["title"], 
@@ -101,7 +101,7 @@ def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带�
             "fp_to_voter": item["voter_fp"] / 1000, 
             "total_fp": item["fp"] / 1000
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 # TODO: 差一个获取文章收益排行榜基础数据（总分发简书钻量等）的函数
@@ -136,7 +136,7 @@ def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> list:  # TO
         raise ResourceError("对应日期的排行榜数据为空")
     result = []
     for ranking, item in enumerate(json_obj["users"]):
-        item_info = {
+        item_data = {
             "ranking": ranking, 
             "uslug": item["slug"], 
             "name": item["nickname"], 
@@ -144,5 +144,5 @@ def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> list:  # TO
             "fp_from_write": item["author_fp"], 
             "fp_from_vote": item["voter_fp"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result

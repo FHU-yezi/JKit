@@ -246,14 +246,14 @@ def GetUserNotebooksInfo(user_url: str) -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj["notebooks"]:
-        item_info = {
+        item_data = {
             "nid": item["id"], 
             "name": item["name"], 
             "is_book": item["book"]
         }
         if item["book"] == True:
-            item_info["is_paid_book"] = item["paid_book"]  # 如果是连载，则判断是否是付费连载
-        result.append(item_info)
+            item_data["is_paid_book"] = item["paid_book"]  # 如果是连载，则判断是否是付费连载
+        result.append(item_data)
     return result
 
 def GetUserOwnCollectionsInfo(user_url: str) -> list:
@@ -274,13 +274,13 @@ def GetUserOwnCollectionsInfo(user_url: str) -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj["own_collections"]:
-        item_info = {
+        item_data = {
             "cid": item["id"], 
             "cslug": item["slug"], 
             "name": item["title"], 
             "avatar": item["avatar"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetUserManageableCollectionsInfo(user_url: str) -> list:
@@ -301,13 +301,13 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj["manageable_collections"]:
-        item_info = {
+        item_data = {
             "cid": item["id"], 
             "cslug": item["slug"], 
             "name": item["title"], 
             "avatar": item["avatar"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
@@ -331,7 +331,7 @@ def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj:
-        item_info  = {
+        item_data  = {
             "aid": item["object"]["data"]["id"], 
             "title": item["object"]["data"]["title"], 
             "aslug": item["object"]["data"]["slug"], 
@@ -353,7 +353,7 @@ def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
             "comments_count": item["object"]["data"]["public_comments_count"], 
             "rewards_count": item["object"]["data"]["total_rewards_count"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetUserFollowersInfo(user_url: str, page:int =1) -> list:
@@ -380,7 +380,7 @@ def GetUserFollowersInfo(user_url: str, page:int =1) -> list:
     words_and_likes_raw_data = html_obj.xpath("//div[@class='meta'][2]")
     result = []
     for index in range(8):
-        item_info = {
+        item_data = {
             "name": name_raw_data[index].text, 
             "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
             "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
@@ -388,7 +388,7 @@ def GetUserFollowersInfo(user_url: str, page:int =1) -> list:
             "words_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
             "likes_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetUserFansInfo(user_url: str, page:int =1) -> list:
@@ -415,7 +415,7 @@ def GetUserFansInfo(user_url: str, page:int =1) -> list:
     words_and_likes_raw_data = html_obj.xpath("//div[@class='meta'][2]")
     result = []
     for index in range(8):
-        item_info = {
+        item_data = {
             "name": name_raw_data[index].text, 
             "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
             "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
@@ -423,5 +423,5 @@ def GetUserFansInfo(user_url: str, page:int =1) -> list:
             "words_count": int(re.findall("\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
             "likes_count": int(re.findall("\d+", words_and_likes_raw_data[index].text)[1])
         }
-        result.append(item_info)
+        result.append(item_data)
     return result

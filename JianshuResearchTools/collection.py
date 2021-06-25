@@ -92,12 +92,12 @@ def GetCollectionEditorsInfo(collection_id: int, page: int =1) -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj["editors"]:
-        item_info = {
+        item_data = {
             "uslug": item["slug"], 
             "name": item["nickname"], 
             "avatar": item["avatar_source"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetCollectionRecommendedWritersInfo(collection_id: int, page: int =1, count: int =20) -> list:
@@ -121,7 +121,7 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int =1, count:
     json_obj = json.loads(source)
     result = []
     for item in json_obj["users"]:
-        item_info = {
+        item_data = {
             "uid": item["id"], 
             "uslug": item["slug"], 
             "name": item["nickname"], 
@@ -130,7 +130,7 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int =1, count:
             "likes_count": item["total_likes_count"], 
             "words_count": item["total_wordage"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetCollectionFansInfo(collection_id: int, start_sort_id: int) -> list:
@@ -151,14 +151,14 @@ def GetCollectionFansInfo(collection_id: int, start_sort_id: int) -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj:
-        item_info = {
+        item_data = {
             "uslug": item["slug"], 
             "name": item["nickname"], 
             "avatar": item["avatar_source"], 
             "sort_id": item["like_id"], 
             "subscribe_time": datetime.fromisoformat(item["subscribed_at"])
         }
-        result.append(item_info)
+        result.append(item_data)
     return result
 
 def GetCollectionArticlesInfo(collection_url: str, page: int =1, 
@@ -191,7 +191,7 @@ def GetCollectionArticlesInfo(collection_url: str, page: int =1,
     json_obj = json.loads(source)
     result = []
     for item in json_obj:
-        item_info  = {
+        item_data  = {
             "aid": item["object"]["data"]["id"], 
             "title": item["object"]["data"]["title"], 
             "aslug": item["object"]["data"]["slug"], 
@@ -212,5 +212,5 @@ def GetCollectionArticlesInfo(collection_url: str, page: int =1,
             "comments_count": item["object"]["data"]["public_comments_count"], 
             "rewards_count": item["object"]["data"]["total_rewards_count"]
         }
-        result.append(item_info)
+        result.append(item_data)
     return result

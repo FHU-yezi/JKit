@@ -51,7 +51,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int =None, count: int =10,
 
     result = []
     for item in json_obj:
-        item_info = {
+        item_data = {
             "sorted_id": item["sorted_id"], 
             "pid": item["id"], 
             "pslug": item["slug"], 
@@ -92,11 +92,11 @@ def GetIslandPosts(island_url: str, start_sort_id: int =None, count: int =10,
         except KeyError:
             pass  # 没有图片则跳过
         try: 
-            item_info["user"]["badge"] = item["user"]["badge"]["text"]
+            item_data["user"]["badge"] = item["user"]["badge"]["text"]
         except KeyError:
             pass  # 没有徽章则跳过
         try:
-            item_info["topic"] = {
+            item_data["topic"] = {
                 "tid": item["topic"]["id"], 
                 "tslug": item["topic"]["slug"], 
                 "topic_name": item["topic"]["name"]
@@ -104,5 +104,5 @@ def GetIslandPosts(island_url: str, start_sort_id: int =None, count: int =10,
             }
         except KeyError:
             pass  # 没有话题则跳过
-        result.append(item_info)
+        result.append(item_data)
     return result
