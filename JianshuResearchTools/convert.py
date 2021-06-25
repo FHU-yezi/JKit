@@ -137,7 +137,7 @@ def IslandUrlToIslandSlug(island_url: str) -> str:
         str: 小岛 Slug
     """
     AssertIslandUrl(island_url)
-    return island_url.replace("https://www.jianshu.com/c/", "")
+    return island_url.replace("https://www.jianshu.com/g/", "")
 
 def IslandSlugToIslandUrl(island_slug: str) -> str:
     """该函数接收小岛 Slug，并将其转换成小岛 Url
@@ -149,7 +149,7 @@ def IslandSlugToIslandUrl(island_slug: str) -> str:
         str: 小岛 Url
     """
     # TODO: 如果传入的参数类型不是字符串会出现报错
-    result = "https://www.jinshu.com/c/" + island_slug
+    result = "https://www.jinshu.com/g/" + island_slug
     AssertIslandUrl(result)
     return result
 
