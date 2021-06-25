@@ -6,7 +6,7 @@ from convert import UserSlugToUserUrl
 from user import GetUserAssetsCount
 from exceptions import APIException
 
-def GetAssetsRank(start_id: int =1, get_full: bool =False) -> list:
+def GetAssetsRankData(start_id: int =1, get_full: bool =False) -> list:
     start_id -= 1  # 索引下标为 0
     params = {
         "max_id": 1000000000,   # 与官方接口数值相同
@@ -33,4 +33,18 @@ def GetAssetsRank(start_id: int =1, get_full: bool =False) -> list:
         result.append(item_info)
     return result
 
-print(GetAssetsRank(get_full=True))
+def GetDailyArticleRankData() -> list:
+    source = requests.get("https://www.jianshu.com/asimov/daily_activity_participants/rank", headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = []
+    for item in json_obj["daps"]:
+        item_info = {
+            "ranking": item["rank"], 
+            "uslug": item["slug"], 
+            "name": item["nickname"], 
+            "avatar": item["avatar"], 
+            "check_in_count": item["checkin_count"]
+        }
+        result.append(item_info)
+    return result
+
