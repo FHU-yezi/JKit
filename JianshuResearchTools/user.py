@@ -160,7 +160,6 @@ def GetUserFTN(user_url: str) -> str:
     """
     assets = GetUserAssetsCount(user_url)
     FTN = GetUserFP(user_url)
-    print(assets, FTN)
     result = assets - FTN
     result = abs(result)  # 处理用户简书贝数量较少导致结果为负的情况
     result = round(result, 3)  # 处理浮点数精度问题
