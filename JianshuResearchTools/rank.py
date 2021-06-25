@@ -69,6 +69,8 @@ def GetDailyArticleRankData() -> list:
 def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带参数也尽量不要报错？默认获取昨天的数据试试
     """该函数接收一个日期参数，并返回对应日期的文章收益排行榜数据
 
+    目前只能获取 2020 年 6 月 20 日及其之后的数据。
+
     Args:
         date (str, optional): 日期参数，格式“YYYYMMDD”. Defaults to "latest".
 
@@ -101,3 +103,6 @@ def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带�
         }
         result.append(item_info)
     return result
+
+# TODO: 差一个获取文章收益排行榜基础数据（总分发简书钻量等）的函数
+
