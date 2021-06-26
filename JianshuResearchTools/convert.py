@@ -17,7 +17,7 @@ def UserUrlToUserSlug(user_url: str) -> str:
         str: 用户 Slug
     """
     AssertUserUrl(user_url)
-    return user_url.replace("https://www.jianshu.com/u/", "")
+    return user_url.replace("https://www.jianshu.com/u/", "").replace("/", "")
 
 def UserSlugToUserUrl(user_slug: str) -> str:
     """该函数接收用户 Slug，并将其转换成用户个人主页 Url
