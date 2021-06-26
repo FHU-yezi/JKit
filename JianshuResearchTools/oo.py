@@ -1,4 +1,5 @@
 import hashlib
+from datetime import datetime
 
 import article
 import beikeisland
@@ -21,6 +22,23 @@ def GetHash(*args: any) -> str:
     result = result[0:7]  # 取前 6 位
     return result
 
+def SimpleCache(cache_obj: any, getting_func: object, args: dict, disable_cache: bool =False):
+    if cache_obj != None and disable_cache == False:
+        return cache_obj
+    else:
+        result = getting_func(**args)
+        cache_obj = result
+        return result
+
+def HashCache(cache_obj: any, getting_func: object, args: dict, disable_cache: bool =False):
+    hash = GetHash(*list(args.values()))
+    cache = cache_obj.get(hash)
+    if cache != None and disable_cache == False:
+        return cache
+    else:
+        result = getting_func(**args)
+        cache_obj[hash] = result
+        return result
 
 class User():
     """用户类
@@ -69,18 +87,18 @@ class User():
         return self._url
     
     @property
-    def slug(self) -> str:
-        """获取用户 slug
+    def slug(self, disable_cache: bool =False) -> str:
+        """获取用户 Slug
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
 
         Returns:
-            str: 用户 slug
+            str: 用户 Slug
         """
-        if self._slug != None:
-            return self._slug
-        else:
-            result = UserUrlToUserSlug(self._url)
-            self._slug = result
-            return result
+        result = SimpleCache(self._slug, UserUrlToUserSlug, 
+                            {"user_url": self._url})
+        return result
     
     @property
     def name(self, disable_cache:bool =False) -> str:
@@ -92,12 +110,9 @@ class User():
         Returns:
             str: 用户昵称
         """
-        if self._name != None and disable_cache == False:
-            return self._name
-        else:
-            result = user.GetUserName(self._url)
-            self._name = result
-            return result
+        result = SimpleCache(self._name, user.GetUserName, 
+                            {"user_url": self._url}, disable_cache)
+        return result
 
     @property
     def followers_count(self, disable_cache: bool =False) -> int:
@@ -109,12 +124,9 @@ class User():
         Returns:
             int: 关注数
         """
-        if self._followers_count != None and disable_cache == False:
-            return self._followers_count
-        else:
-            result = user.GetUserFollowersCount(self._url)
-            self._followers_count = result
-            return result
+        result = SimpleCache(self._followers_count, user.GetUserFollowersCount, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
     def fans_count(self, disable_cache: bool =False) -> int:
@@ -126,12 +138,9 @@ class User():
         Returns:
             int: 粉丝数
         """
-        if self._fans_count != None and disable_cache == False:
-            return self._fans_count
-        else:
-            result = user.GetUserFansCount(self._url)
-            self._fans_count = result
-            return result
+        result = SimpleCache(self._fans_count, user.GetUserFansCount, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
     def articles_count(self, disable_cache: bool =False) -> int:
@@ -143,12 +152,9 @@ class User():
         Returns:
             int: 文章数
         """
-        if self._articles_count != None and disable_cache == False:
-            return self._articles_count
-        else:
-            result = user.GetUserArticlesCount(self._url)
-            self._articles_count = result
-            return result
+        result = SimpleCache(self._articles_count, user.GetUserArticlesCount, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
     def words_count(self, disable_cache: bool =False) -> int:
@@ -160,12 +166,9 @@ class User():
         Returns:
             int: 总字数
         """
-        if self._words_count != None and disable_cache == False:
-            return self._words_count
-        else:
-            result = user.GetUserWordsCount(self._url)
-            self._words_count = result
-            return result
+        result = SimpleCache(self._words_count, user.GetUserWordsCount, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
     def likes_count(self, disable_cache: bool =False) -> int:
@@ -177,12 +180,9 @@ class User():
         Returns:
             int: 被点赞数
         """
-        if self._likes_count != None and disable_cache == False:
-            return self._likes_count
-        else:
-            result = user.GetUserLikesCount(self._url)
-            self._likes_count = result
-            return result
+        result = SimpleCache(self._likes_count, user.GetUserLikesCount, 
+                            {"user_url": self._url}, disable_cache)
+        return result
 
     @property
     def assets_count(self, disable_cache:bool =False) -> int:
@@ -194,12 +194,9 @@ class User():
         Returns:
             int: 资产量
         """
-        if self._assets_count != None and disable_cache == False:
-            return self._assets_count
-        else:
-            result = user.GetUserAssetsCount(self._url)
-            self._assets_count = result
-            return result
+        result = SimpleCache(self._assets_count, user.GetUserAssetsCount, 
+                            {"usr_url": self._url}, disable_cache)
+        return result
     
     @property
     def FP_count(self, disable_cache: bool =False) -> int:
@@ -211,12 +208,9 @@ class User():
         Returns:
             int: 简书钻数量
         """
-        if self._FP_count != None and disable_cache == False:
-            return self._FP_count
-        else:
-            result = user.GetUserFPCount(self._url)
-            self._FP_count = result
-            return result
+        result = SimpleCache(self._FP_count, user.GetUserFPCount, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
     def FTN_count(self, disable_cache: bool =False) -> int:
@@ -228,12 +222,9 @@ class User():
         Returns:
             int: 简书贝数量
         """
-        if self._FTN_count != None and disable_cache == False:
-            return self._FTN_count
-        else:
-            result = user.GetUserFTNCount(self._url)
-            self._FTN_count = result
-            return result
+        result = SimpleCache(self._FTN_count, user.GetUserFTNCount, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
     def badges(self, disable_cache: bool =False) -> list:
@@ -245,12 +236,9 @@ class User():
         Returns:
             list: 徽章列表
         """
-        if self._badges != None and disable_cache == False:
-            return self._badges
-        else:
-            result = user.GetUserBadgesList(self._url)
-            self._badges = result
-            return result
+        result = SimpleCache(self._badges, user.GetUserBadgesList, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
     def introduction(self, disable_cache: bool =False) -> str:
@@ -262,12 +250,9 @@ class User():
         Returns:
             str: 用户简介
         """
-        if self._introduction != None and disable_cache == False:
-            return self._introduction
-        else:
-            result = user.GetUserIntroduction(self._url)
-            self._introduction = result
-            return result
+        result = SimpleCache(self._introduction, user.GetUserIntroduction, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
     def notebooks(self, disable_cache: bool =False) -> list:
@@ -279,15 +264,12 @@ class User():
         Returns:
             list: 文集信息
         """
-        if self._notebooks != None and disable_cache == False:
-            return self._notebooks
-        else:
-            result = user.GetUserNotebooksInfo(self._url)
-            self._notebooks = result
-            return result
+        result = SimpleCache(self._notebooks, user.GetUserNotebooksInfo, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
-    def own_collections(self, force_refresh: bool = False) -> list:
+    def own_collections(self, disable_cache: bool = False) -> list:
         """获取自己创建的专题信息
 
         Args:
@@ -296,12 +278,9 @@ class User():
         Returns:
             list: 自己创建的专题信息
         """
-        if self._own_collections != None and disable_cache == False:
-            return self._own_collections
-        else:
-            result = user.GetUserOwnCollectionsInfo(self._url)
-            self._own_collections = result
-            return result
+        result = SimpleCache(self._own_collections, user.GetUserOwnCollectionsInfo, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     @property
     def manageable_collections(self, disable_cache: bool =False) -> list:
@@ -313,12 +292,9 @@ class User():
         Returns:
             list: 有管理权的专题信息
         """
-        if self._manageable_collections != None and disable_cache == False:
-            return self._manageable_collections
-        else:
-            result = user.GetUserManageableCollectionsInfo(self._url)
-            self._manageable_collections = result
-            return result
+        result = SimpleCache(self._manageable_collections, user.GetUserManageableCollectionsInfo, 
+                            {"user_url": self._url}, disable_cache)
+        return result
     
     def articles_info(self, page: int =1, count: int =10, 
                         disable_cache: bool =False) -> list:
@@ -332,15 +308,10 @@ class User():
         Returns:
             list: 文章信息
         """
-        hash = GetHash(page, count)
-        cache = self._articles_info.get(hash)
-        if cache != None and disable_cache == False:
-            return cache
-        else:
-            result = user.GetUserArticlesInfo(self._url, page, count)
-            hash = GetHash(page, count)
-            self._articles_info[hash] = result
-            return result
+        result = HashCache(self._articles_info, user.GetUserArticlesInfo, 
+                            {"user_url": self._url, "page": page, "count": count}, 
+                            disable_cache)
+        return result
 
     def followers_info(self, page: int =1, disable_cache: bool =False) -> list:
         """获取关注者信息
@@ -352,15 +323,9 @@ class User():
         Returns:
             list: 关注者信息
         """
-        hash = GetHash(page)
-        cache = self._followers_info.get(hash)
-        if cache != None and disable_cache == False:
-            return cache
-        else:
-            result = user.GetUserFollowersInfo(self._url, page)
-            hash = GetHash(page)
-            self._followers_info[hash] = result
-            return result
+        result = HashCache(self._followers_info, user.GetUserFollowersInfo, 
+                            {"user_url": self._url, "page": page}, disable_cache)
+        return result
 
     def fans_info(self, page: int =1, disable_cache: bool =False) -> list:
         """获取粉丝信息
@@ -372,15 +337,9 @@ class User():
         Returns:
             list: 粉丝信息
         """
-        hash = GetHash(page)
-        cache = self._fans_info.get(hash)
-        if cache != None and disable_cache == False:
-            return cache
-        else:
-            result = user.GetUserFansInfo(self._url, page)
-            hash = GetHash(page)
-            self._fans_info[hash] = result
-            return result
+        result = HashCache(self._fans_info, user.GetUserFansInfo, 
+                            {"user_url": self._url, "page": page}, disable_cache)
+        return result
     
     def __eq__(self, other):
         """判断是否是同一个用户
@@ -438,37 +397,56 @@ class Article():
         return self._url
     
     @property
-    def slug(self) -> str:
-        if self._slug != None:
-            return self._slug
-        else:
-            result = ArticleUrlToArticleSlug(self._url)
-            self._slug = result
-            return result
+    def slug(self, disable_cache: bool =False) -> str:
+        result = SimpleCache(self._slug, ArticleUrlToArticleSlug, 
+                            {"user_url": self._slug})
+        return result
     
     @property
-    def title(self) -> str:
-        if self._title != None:
-            return self._title
-        else:
-            result = article.GetArticleTitle(self._url)
-            self._title = result
-            return result
+    def title(self, disable_cache: bool =False) -> str:
+        result = SimpleCache(self._title, article.GetArticleTitle, 
+                            {"article_url": self._url}, disable_cache)
+        return result
     
     @property
-    def likes_count(self) -> int:
-        if self._likes_count != None:
-            return self._likes_count
-        else:
-            result = article.GetArticleLikesCount(self._url)
-            self._likes_count = result
-            return result
+    def likes_count(self, disable_cache: bool =False) -> int:
+        result = SimpleCache(self._likes_count, article.GetArticleLikesCount, 
+                            {"article_url": self._url}, disable_cache)
+        return result
     
     @property
-    def comments_count(self) -> int:
-        if self._comments_count != None:
-            return self.comments_count
-        else:
-            result = article.GetArticleCommentsCount(self._url)
-            self._comments_count = result
-            return result
+    def comments_count(self, disable_cache: bool =False) -> int:
+        result = SimpleCache(self._comments_count, article.GetArticleCommentsCount, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def most_valuable_comments_count(self, disable_cache: bool =False) -> int:
+        result = SimpleCache(self._most_valuable_comments_count, 
+                            article.GetArticleMostValuableCommentsCount, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def total_FP_count(self, disable_cache: bool =False) -> int:
+        result = SimpleCache(self._total_FP_count, article.GetArticleTotalFPCount, 
+                            {"article_url": self._total_FP_count}, disable_cache)
+        return result
+
+    @property
+    def description(self, disable_cache: bool =False) -> str:
+        result = SimpleCache(self._desciption, article.GetArticleDescription, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def publish_time(self, disable_cache: bool =False) -> datetime:
+        result = SimpleCache(self._publish_time, article.GetArticlePublishTime, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def update_time(self, disable_cache: bool =False) -> datetime:
+        result = SimpleCache(self._update_time, article.GetArticleUpdateTime, 
+                            {"article_url": self._url}, disable_cache)
+        return result
