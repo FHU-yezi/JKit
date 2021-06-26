@@ -321,6 +321,7 @@ def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
     Returns:
         list: 用户文章信息
     """
+    # TODO: 这个函数需要加一个排序方式的参数，修改之后面向对象中相应的部分也需要调整
     AssertUserUrl(user_url)
     request_url = user_url.replace("/u/", "/asimov/users/slug/") + "/public_notes"
     params = {

@@ -1,3 +1,5 @@
+import hashlib
+
 import article
 import beikeisland
 import collection
@@ -7,10 +9,31 @@ from assert_funcs import *
 from convert import *
 
 
+def GetHash(*args: any) -> str:
+    """获取任意数量参数的哈希值
+
+    Returns:
+        str: 哈希值前 6 位
+    """
+    data = "".join([str(item) for item in args])
+    result = hashlib.md5(data.encode("utf-8")).hexdigest()
+    result = result[0:7]  # 取前 6 位
+    return result
+
+
 class User():
     """用户类
     """
     def __init__(self, url: str =None, slug: str = None):
+        """构建新的用户对象
+
+        Args:
+            url (str, optional): 用户主页 Url. Defaults to None.
+            slug (str, optional): 用户 Slug. Defaults to None.
+
+        Raises:
+            AttributeError: url 与 slug 同时为空时抛出此错误
+        """
         if url != None:
             AssertUserUrl(url)
             self._url = url
@@ -36,16 +59,27 @@ class User():
         self._notebooks = None
         self._own_collections = None
         self._manageable_collections = None
-        self._articles_info = None
-        self._followers_info = None
-        self._fans_info = None
+
+        self._articles_info = {}
+        self._followers_info = {}
+        self._fans_info = {}
     
     @property
-    def url(self):
+    def url(self) -> str:
+        """获取用户主页 Url
+
+        Returns:
+            str: 用户主页 Url
+        """
         return self._url
     
     @property
-    def slug(self):
+    def slug(self) -> str:
+        """获取用户 slug
+
+        Returns:
+            str: 用户 slug
+        """
         if self._slug != None:
             return self._slug
         else:
@@ -54,8 +88,16 @@ class User():
             return result
     
     @property
-    def name(self, force_refresh:bool =False):
-        if self._name != None and force_refresh == False:
+    def name(self, disable_cache:bool =False) -> str:
+        """获取用户昵称
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存，强制请求新结果. Defaults to False.
+
+        Returns:
+            str: 用户昵称
+        """
+        if self._name != None and disable_cache == False:
             return self._name
         else:
             result = user.GetUserName(self._url)
@@ -63,8 +105,16 @@ class User():
             return result
 
     @property
-    def followers_count(self, force_refresh: bool =False):
-        if self._followers_count != None and force_refresh == False:
+    def followers_count(self, disable_cache: bool =False) -> int:
+        """获取用户关注数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存，强制请求结果. Defaults to False.
+
+        Returns:
+            int: 关注数
+        """
+        if self._followers_count != None and disable_cache == False:
             return self._followers_count
         else:
             result = user.GetUserFollowersCount(self._url)
@@ -72,8 +122,16 @@ class User():
             return result
     
     @property
-    def fans_count(self, force_refresh: bool =False):
-        if self._fans_count != None and force_refresh == False:
+    def fans_count(self, disable_cache: bool =False) -> int:
+        """获取用户粉丝数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存，强制请求结果. Defaults to False.
+
+        Returns:
+            int: 粉丝数
+        """
+        if self._fans_count != None and disable_cache == False:
             return self._fans_count
         else:
             result = user.GetUserFansCount(self._url)
@@ -81,8 +139,16 @@ class User():
             return result
     
     @property
-    def articles_count(self, force_refresh: bool =False):
-        if self._articles_count != None and force_refresh == False:
+    def articles_count(self, disable_cache: bool =False) -> int:
+        """获取用户文章数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存，强制请求结果. Defaults to False.
+
+        Returns:
+            int: 文章数
+        """
+        if self._articles_count != None and disable_cache == False:
             return self._articles_count
         else:
             result = user.GetUserArticlesCount(self._url)
@@ -90,8 +156,16 @@ class User():
             return result
     
     @property
-    def words_count(self, force_refresh: bool =False):
-        if self._words_count != None and force_refresh == False:
+    def words_count(self, disable_cache: bool =False) -> int:
+        """获取用户总字数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 总字数
+        """
+        if self._words_count != None and disable_cache == False:
             return self._words_count
         else:
             result = user.GetUserWordsCount(self._url)
@@ -99,8 +173,16 @@ class User():
             return result
     
     @property
-    def likes_count(self, force_refresh: bool =False):
-        if self._likes_count != None and force_refresh == False:
+    def likes_count(self, disable_cache: bool =False) -> int:
+        """获取用户被点赞数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 被点赞数
+        """
+        if self._likes_count != None and disable_cache == False:
             return self._likes_count
         else:
             result = user.GetUserLikesCount(self._url)
@@ -108,8 +190,16 @@ class User():
             return result
 
     @property
-    def assets_count(self, force_refresh:bool =False):
-        if self._assets_count != None and force_refresh == False:
+    def assets_count(self, disable_cache:bool =False) -> int:
+        """获取用户资产量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 资产量
+        """
+        if self._assets_count != None and disable_cache == False:
             return self._assets_count
         else:
             result = user.GetUserAssetsCount(self._url)
@@ -117,8 +207,16 @@ class User():
             return result
     
     @property
-    def FP_count(self, force_refresh: bool =False):
-        if self._FP_count != None and force_refresh == False:
+    def FP_count(self, disable_cache: bool =False) -> int:
+        """获取用户简书钻数量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 简书钻数量
+        """
+        if self._FP_count != None and disable_cache == False:
             return self._FP_count
         else:
             result = user.GetUserFPCount(self._url)
@@ -126,8 +224,16 @@ class User():
             return result
     
     @property
-    def FTN_count(self, force_refresh: bool =False):
-        if self._FTN_count != None and force_refresh == False:
+    def FTN_count(self, disable_cache: bool =False) -> int:
+        """获取用户简书贝数量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 简书贝数量
+        """
+        if self._FTN_count != None and disable_cache == False:
             return self._FTN_count
         else:
             result = user.GetUserFTNCount(self._url)
@@ -135,8 +241,16 @@ class User():
             return result
     
     @property
-    def badges(self, force_refresh: bool =False):
-        if self._badges != None and force_refresh == False:
+    def badges(self, disable_cache: bool =False) -> list:
+        """获取徽章列表
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 徽章列表
+        """
+        if self._badges != None and disable_cache == False:
             return self._badges
         else:
             result = user.GetUserBadgesList(self._url)
@@ -144,10 +258,156 @@ class User():
             return result
     
     @property
-    def introduction(self, force_refresh: bool =False):
-        if self._introduction != None and force_refresh == False:
+    def introduction(self, disable_cache: bool =False) -> str:
+        """获取用户简介
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 用户简介
+        """
+        if self._introduction != None and disable_cache == False:
             return self._introduction
         else:
             result = user.GetUserIntroduction(self._url)
             self._introduction = result
             return result
+    
+    @property
+    def notebooks(self, disable_cache: bool =False) -> list:
+        """获取用户文集信息
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 文集信息
+        """
+        if self._notebooks != None and disable_cache == False:
+            return self._notebooks
+        else:
+            result = user.GetUserNotebooksInfo(self._url)
+            self._notebooks = result
+            return result
+    
+    @property
+    def own_collections(self, force_refresh: bool = False) -> list:
+        """获取自己创建的专题信息
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 自己创建的专题信息
+        """
+        if self._own_collections != None and disable_cache == False:
+            return self._own_collections
+        else:
+            result = user.GetUserOwnCollectionsInfo(self._url)
+            self._own_collections = result
+            return result
+    
+    @property
+    def manageable_collections(self, disable_cache: bool =False) -> list:
+        """获取有管理权的专题信息
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 有管理权的专题信息
+        """
+        if self._manageable_collections != None and disable_cache == False:
+            return self._manageable_collections
+        else:
+            result = user.GetUserManageableCollectionsInfo(self._url)
+            self._manageable_collections = result
+            return result
+    
+    def articles_info(self, page: int =1, count: int =10, 
+                        disable_cache: bool =False) -> list:
+        """获取文章信息
+
+        Args:
+            page (int, optional): 页码. Defaults to 1.
+            count (int, optional): 每次获取的文章信息数量. Defaults to 10.
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 文章信息
+        """
+        hash = GetHash(page, count)
+        cache = self._articles_info.get(hash)
+        if cache != None and disable_cache == False:
+            return cache
+        else:
+            result = user.GetUserArticlesInfo(self._url, page, count)
+            hash = GetHash(page, count)
+            self._articles_info[hash] = result
+            return result
+
+    def followers_info(self, page: int =1, disable_cache: bool =False) -> list:
+        """获取关注者信息
+
+        Args:
+            page (int, optional): 页码. Defaults to 1.
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 关注者信息
+        """
+        hash = GetHash(page)
+        cache = self._followers_info.get(hash)
+        if cache != None and disable_cache == False:
+            return cache
+        else:
+            result = user.GetUserFollowersInfo(self._url, page)
+            hash = GetHash(page)
+            self._followers_info[hash] = result
+            return result
+
+    def fans_info(self, page: int =1, disable_cache: bool =False) -> list:
+        """获取粉丝信息
+
+        Args:
+            page (int, optional): 页码. Defaults to 1.
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 粉丝信息
+        """
+        hash = GetHash(page)
+        cache = self._fans_info.get(hash)
+        if cache != None and disable_cache == False:
+            return cache
+        else:
+            result = user.GetUserFansInfo(self._url, page)
+            hash = GetHash(page)
+            self._fans_info[hash] = result
+            return result
+    
+    def __eq__(self, other):
+        """判断是否是同一个用户
+
+        Args:
+            other (object): 另一个对象
+        """
+        if isinstance(other, User) == False:
+            return False  # 不是由用户类构建的均不相等
+        if self.slug == other.slug:
+            return True
+        else:
+            return False
+
+    def __str__(self) -> str:
+        """输出用户信息摘要
+
+        Returns:
+            str: 用户信息摘要
+        """
+        result = "用户名：{}\n关注数:{}\n粉丝数：{}\n文章数：{}\n总字数：{}\n被点赞数：{}\n总资产：{}".format(
+            self.name, self.followers_count, self.fans_count, self.articles_count, \
+            self.words_count, self.likes_count, self.assets_count
+        )
+        return result
