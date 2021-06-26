@@ -15,8 +15,8 @@ def GetBeikeIslandTotalTradeAmount() -> int:
     """
     data = {}  # 不传送数据也能正常获取，节省时间和带宽
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data)
-    json_obj = json.loads(source.content)
+                            headers=BeikeIsland_request_header, json=data).content
+    json_obj = json.loads(source)
     result = json_obj["data"]["totalcount"]
     return result
 
@@ -28,8 +28,8 @@ def GetBeikeIslandTotalTradeCount() -> int:
     """
     data = {}  # 不传送数据也能正常获取，节省时间和带宽
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data)
-    json_obj = json.loads(source.content)
+                            headers=BeikeIsland_request_header, json=data).content
+    json_obj = json.loads(source)
     result = json_obj["data"]["totaltime"]
     return result
 
@@ -47,8 +47,8 @@ def GetBeikeIslandTotalTradeRankData(page: int =1) -> list:
         "pageIndex": page
     }
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data)
-    json_obj = json.loads(source.content)
+                            headers=BeikeIsland_request_header, json=data).content
+    json_obj = json.loads(source)
     result = []
     for item in json_obj["data"]["ranklist"]:
         item_data = {
@@ -77,8 +77,8 @@ def GetBeikeIslandBuyTradeRankData(page: int =1) -> list:
         "pageIndex": page
     }
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data)
-    json_obj = json.loads(source.content)
+                            headers=BeikeIsland_request_header, json=data).content
+    json_obj = json.loads(source)
     result = []
     for item in json_obj["data"]["ranklist"]:
         item_data = {
@@ -107,8 +107,8 @@ def GetBeikeIslandSellTradeRankData(page: int =1) -> list:
         "pageIndex": page
     }
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data)
-    json_obj = json.loads(source.content)
+                            headers=BeikeIsland_request_header, json=data).content
+    json_obj = json.loads(source)
     result = []
     for item in json_obj["data"]["ranklist"]:
         item_data = {
@@ -141,8 +141,8 @@ def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int =1) -> list:
         }[trade_type]  # 通过 trade_type 构建 retype
     }
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeList", 
-                            headers=BeikeIsland_request_header, json=data)
-    json_obj = json.loads(source.content)
+                            headers=BeikeIsland_request_header, json=data).content
+    json_obj = json.loads(source)
     result = []
     for item in json_obj["data"]["tradelist"]:
         item_data = { # TODO: 这里应该改成双层嵌套结构
@@ -185,8 +185,8 @@ def GetBeikeIslandTradePrice(trade_type: str, rank: int =1) -> float:
         }[trade_type]  # 通过 trade_type 构建 retype
     }
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeList", 
-                            headers=BeikeIsland_request_header, json=data)
-    json_obj = json.loads(source.content)
+                            headers=BeikeIsland_request_header, json=data).content
+    json_obj = json.loads(source)
     rank_in_this_page = rank % 10  # 本页信息中目标交易单的位置，考虑索引下标起始值为 0 问题
     result = json_obj["data"]["tradelist"][rank_in_this_page]["reprice"]
     return result
