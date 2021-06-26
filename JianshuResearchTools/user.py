@@ -128,7 +128,7 @@ def GetUserAssetsCount(user_url: str) -> int:
     return result
 
 
-def GetUserFP(user_url: str) -> str:
+def GetUserFPCount(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
 
     Args:
@@ -147,7 +147,7 @@ def GetUserFP(user_url: str) -> str:
     result = float(result)
     return result
 
-def GetUserFTN(user_url: str) -> str:
+def GetUserFTNCount(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
 
     # ! 视用户资产配置情况不同，该函数获取到的数值会有不大于 1000 的偏差
@@ -159,7 +159,7 @@ def GetUserFTN(user_url: str) -> str:
         int: 用户简书钻数量
     """
     assets = GetUserAssetsCount(user_url)
-    FTN = GetUserFP(user_url)
+    FTN = GetUserFPCount(user_url)
     result = assets - FTN
     result = abs(result)  # 处理用户简书贝数量较少导致结果为负的情况
     result = round(result, 3)  # 处理浮点数精度问题
