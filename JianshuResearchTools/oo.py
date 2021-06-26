@@ -7,6 +7,7 @@ import island
 import user
 from assert_funcs import *
 from convert import *
+from exceptions import InputError
 
 
 def GetHash(*args: any) -> str:
@@ -24,25 +25,19 @@ def GetHash(*args: any) -> str:
 class User():
     """用户类
     """
-    def __init__(self, url: str =None, slug: str = None):
+    def __init__(self, source: str):
         """构建新的用户对象
 
         Args:
-            url (str, optional): 用户主页 Url. Defaults to None.
-            slug (str, optional): 用户 Slug. Defaults to None.
-
-        Raises:
-            AttributeError: url 与 slug 同时为空时抛出此错误
+            source (str): 用户个人主页 Url 或用户 Slug
         """
-        if url != None:
-            AssertUserUrl(url)
-            self._url = url
-        elif slug != None:
-            url = UserSlugToUserUrl(slug)
-            AssertUserUrl(url)
-            self._url = url
-        else:
-            raise AttributeError("url 与 slug 不能同时为空")
+        try:
+            AssertUserUrl(source)
+        except InputError:
+            # TODO: 这里还有点问题
+            source = UserSlugToUserUrl(source)
+            AssertUserUrl(source)
+        self._url = source
 
         self._slug = None
         self._name = None
@@ -411,3 +406,69 @@ class User():
             self.words_count, self.likes_count, self.assets_count
         )
         return result
+
+class Article():
+    """文章类
+    """
+    def __init__(self, source):
+        try:
+            AssertArticleUrl(source)
+        except InputError:
+            source = ArticleSlugToArticleUrl(source)
+            AssertArticleUrl(source)
+        self._url = source
+
+        self._slug = None
+        self._title = None
+        self._likes_count = None
+        self._comments_count = None
+        self._most_valuable_comments_count = None
+        self._total_FP_count = None
+        self._desciption = None
+        self._publish_time = None
+        self._update_time = None
+        self._paid_status = None
+        self._reprint_status = None
+        self._comment_status = None
+        self._html = None
+        self._text = None
+    
+    @property
+    def url(self) -> str:
+        return self._url
+    
+    @property
+    def slug(self) -> str:
+        if self._slug != None:
+            return self._slug
+        else:
+            result = ArticleUrlToArticleSlug(self._url)
+            self._slug = result
+            return result
+    
+    @property
+    def title(self) -> str:
+        if self._title != None:
+            return self._title
+        else:
+            result = article.GetArticleTitle(self._url)
+            self._title = result
+            return result
+    
+    @property
+    def likes_count(self) -> int:
+        if self._likes_count != None:
+            return self._likes_count
+        else:
+            result = article.GetArticleLikesCount(self._url)
+            self._likes_count = result
+            return result
+    
+    @property
+    def comments_count(self) -> int:
+        if self._comments_count != None:
+            return self.comments_count
+        else:
+            result = article.GetArticleCommentsCount(self._url)
+            self._comments_count = result
+            return result
