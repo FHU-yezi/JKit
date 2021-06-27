@@ -346,6 +346,9 @@ class User():
 
         Args:
             other (object): 另一个对象
+
+        Returns:
+            bool: 判断结果
         """
         if isinstance(other, User) == False:
             return False  # 不是由用户类构建的均不相等
@@ -369,7 +372,12 @@ class User():
 class Article():
     """文章类
     """
-    def __init__(self, source):
+    def __init__(self, source: str):
+        """构建新的文章对象
+
+        Args:
+            source (str): 文章 Url 或文章 Slug
+        """
         try:
             AssertArticleUrl(source)
         except InputError:
@@ -397,52 +405,121 @@ class Article():
     
     @property
     def url(self) -> str:
+        """获取文章 Url
+
+        Returns:
+            str: 文章 Url
+        """
         return self._url
     
     @property
     def slug(self, disable_cache: bool =False) -> str:
+        """获取文章 Slug
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 文章 Slug
+        """
         result = SimpleCache(self._slug, ArticleUrlToArticleSlug, 
                             {"user_url": self._slug})
         return result
     
     @property
     def title(self, disable_cache: bool =False) -> str:
+        """获取文章标题
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 标题
+        """
         result = SimpleCache(self._title, article.GetArticleTitle, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
-    def author(self, disable_cache: bool =False) -> str:
+    def author_name(self, disable_cache: bool =False) -> str:
+        """获取文章作者名
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 作者名
+        """
         result = SimpleCache(self._author, article.GetArticleAuthorName, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def words_count(self, disable_cache: bool =False) -> int:
+        """获取文章总字数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 总字数
+        """
         result = SimpleCache(self._words_count, article.GetArticleWordsCount, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def reads_count(self, disable_cache: bool =False) -> int:
+        """获取文章阅读量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 阅读量
+        """
         result = SimpleCache(self._reads_count, article.GetArticleReadsCount, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def likes_count(self, disable_cache: bool =False) -> int:
+        """获取文章点赞量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 文章点赞量
+        """
         result = SimpleCache(self._likes_count, article.GetArticleLikesCount, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def comments_count(self, disable_cache: bool =False) -> int:
+        """获取文章评论量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 文章评论量
+        """
         result = SimpleCache(self._comments_count, article.GetArticleCommentsCount, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def most_valuable_comments_count(self, disable_cache: bool =False) -> int:
+        """获取文章精选评论量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 文章精选评论量
+        """
         result = SimpleCache(self._most_valuable_comments_count, 
                             article.GetArticleMostValuableCommentsCount, 
                             {"article_url": self._url}, disable_cache)
@@ -450,61 +527,141 @@ class Article():
     
     @property
     def total_FP_count(self, disable_cache: bool =False) -> int:
+        """获取文章总获钻量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 文章总获钻量
+        """
         result = SimpleCache(self._total_FP_count, article.GetArticleTotalFPCount, 
                             {"article_url": self._url}, disable_cache)
         return result
 
     @property
     def description(self, disable_cache: bool =False) -> str:
+        """获取文章摘要
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 文章摘要
+        """
         result = SimpleCache(self._description, article.GetArticleDescription, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def publish_time(self, disable_cache: bool =False) -> datetime:
+        """获取文章发布时间
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            datetime: 文章发布时间
+        """
         result = SimpleCache(self._publish_time, article.GetArticlePublishTime, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def update_time(self, disable_cache: bool =False) -> datetime:
+        """获取文章更新时间
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            datetime: 文章更新时间
+        """
         result = SimpleCache(self._update_time, article.GetArticleUpdateTime, 
                             {"article_url": self._url}, disable_cache)
         return result
 
     @property
     def paid_status(self, disable_cache: bool =False) -> bool:
+        """获取文章付费状态
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            bool: 文章付费状态
+        """
         result = SimpleCache(self._paid_status, article.GetArticlePaidStatus, 
                             {"article_url": self._url}, disable_cache)
         return result
 
     @property
     def reprint_status(self, disable_cache: bool =False) -> bool:
+        """获取文章转载状态
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            bool: 文章转载状态
+        """
         result = SimpleCache(self._reprint_status, article.GetArticleReprintStatus, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def comment_status(self, disable_cache: bool =False) -> bool:
+        """获取文章评论状态
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            bool: 文章评论状态
+        """
         result = SimpleCache(self._comment_status, article.GetArticleCommentStatus, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def html(self, disable_cache: bool =False) -> str:
+        """获取 Html 格式的文章内容
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: Html 格式的文章内容
+        """
         result = SimpleCache(self._html, article.GetArticleHtml, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     @property
     def text(self, disable_cache: bool =False) -> str:
+        """获取纯文本格式的文章内容
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 纯文本格式的文章内容
+        """
         result = SimpleCache(self._text, article.GetArticleText, 
                             {"article_url": self._url}, disable_cache)
         return result
     
     def __eq__(self, other):
+        """判断是否是同一篇文章
+
+        Args:
+            other (object): 另一个对象
+
+        Returns:
+            bool: 判断结果
+        """
         if isinstance(other, Article) == False:
-            return False
+            return False  # 不是由文章类构建的均不相等
         if self.slug == other.slug:
             return True
         else:
@@ -512,7 +669,7 @@ class Article():
     
     def __str__(self) -> str:
         result = "标题：{}\n作者：{}\n获钻量：{}\n发布时间：{}\n更新时间：{}\n字数：{}\n阅读量：{}\n点赞量：{}\n评论量：{}".format(
-            self.title, self.author, self.total_FP_count, self.publish_time, \
+            self.title, self.author_name, self.total_FP_count, self.publish_time, \
             self.update_time, self.words_count, self.reads_count, self.likes_count, self.comments_count
         )
         return result
