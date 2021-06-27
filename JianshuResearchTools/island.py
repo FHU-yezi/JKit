@@ -11,6 +11,14 @@ from headers import PC_header, jianshu_request_header
 
 
 def GetIslandName(island_url: str) -> str:
+    """获取小岛名称
+
+    Args:
+        island_url (str): 小岛 Url
+
+    Returns:
+        str: 小岛名称
+    """
     AssertIslandUrl(island_url)
     source = requests.get(island_url, headers=PC_header).content.decode()  # TODO: 不知道为什么会出现编码问题
     html_obj = etree.HTML(source)
@@ -19,6 +27,14 @@ def GetIslandName(island_url: str) -> str:
     return result
 
 def GetIslandIntroduction(island_url: str) -> str:
+    """获取小岛简介
+
+    Args:
+        island_url (str): 小岛 Url
+
+    Returns:
+        str: 小岛简介
+    """
     AssertIslandUrl(island_url)
     source = requests.get(island_url, headers=PC_header).content.decode()  # TODO: 不知道为什么会出现编码问题
     html_obj = etree.HTML(source)
@@ -27,6 +43,14 @@ def GetIslandIntroduction(island_url: str) -> str:
     return result
 
 def GetIslandMembersCount(island_url: str) -> int:
+    """获取小岛成员数量
+
+    Args:
+        island_url (str): 小岛 Url
+
+    Returns:
+        int: 成员数量
+    """
     AssertIslandUrl(island_url)
     source = requests.get(island_url, headers=PC_header).content.decode()  # TODO: 不知道为什么会出现编码问题
     html_obj = etree.HTML(source)
@@ -36,6 +60,19 @@ def GetIslandMembersCount(island_url: str) -> int:
 
 def GetIslandPosts(island_url: str, start_sort_id: int =None, count: int =10, 
                     topic_id: int =None, sorting_method: str ="time") -> list:
+    """获取小岛帖子信息
+
+        Args:
+            island_url (str): 小岛 Url
+            start_sort_id (int, optional): 起始序号，等于上一条数据的序号. Defaults to None.
+            count (int, optional): 每次返回的数据数量. Defaults to 10.
+            topic_id (int, optional): 话题 Id. Defaults to None.
+            sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+
+        Returns:
+            list: 帖子信息
+        """
     AssertIslandUrl(island_url)
     params = {
         "group_slug": IslandUrlToIslandSlug(island_url), 
