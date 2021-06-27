@@ -85,7 +85,7 @@ class User():
         self._followers_count = []
         self._fans_count = []
         self._articles_count = []
-        self._words_count = []
+        self._wordage = []
         self._likes_count = []
         self._assets_count = []
         self._FP_count = []
@@ -180,7 +180,7 @@ class User():
         return result
     
     @property
-    def words_count(self, disable_cache: bool = False) -> int:
+    def wordage(self, disable_cache: bool = False) -> int:
         """获取用户总字数
 
         Args:
@@ -189,7 +189,7 @@ class User():
         Returns:
             int: 总字数
         """
-        result = SimpleCache(self._words_count, user.GetUserWordsCount, 
+        result = SimpleCache(self._wordage, user.GetUserWordage, 
                             {"user_url": self._url}, disable_cache)
         return result
     
@@ -388,7 +388,7 @@ class User():
         """
         result = "用户信息摘要：\n用户名：{}\n关注数:{}\n粉丝数：{}\n文章数：{}\n总字数：{}\n被点赞数：{}\n总资产：{}".format(
             self.name, self.followers_count, self.fans_count, self.articles_count, \
-            self.words_count, self.likes_count, self.assets_count
+            self.wordage, self.likes_count, self.assets_count
         )
         return result
 
@@ -411,7 +411,7 @@ class Article():
         self._slug = []
         self._title = []
         self._author = []
-        self._words_count = []
+        self._wordage = []
         self._reads_count = []
         self._likes_count = []
         self._comments_count = []
@@ -478,7 +478,7 @@ class Article():
         return result
     
     @property
-    def words_count(self, disable_cache: bool = False) -> int:
+    def wordage(self, disable_cache: bool = False) -> int:
         """获取文章总字数
 
         Args:
@@ -487,7 +487,7 @@ class Article():
         Returns:
             int: 总字数
         """
-        result = SimpleCache(self._words_count, article.GetArticleWordsCount, 
+        result = SimpleCache(self._wordage, article.GetArticleWordage, 
                             {"article_url": self._url}, disable_cache)
         return result
     
@@ -693,7 +693,7 @@ class Article():
     def __str__(self) -> str:
         result = "文章信息摘要：\n标题：{}\n作者：{}\n获钻量：{}\n发布时间：{}\n更新时间：{}\n字数：{}\n阅读量：{}\n点赞量：{}\n评论量：{}".format(
             self.title, self.author_name, self.total_FP_count, self.publish_time, \
-            self.update_time, self.words_count, self.reads_count, self.likes_count, self.comments_count
+            self.update_time, self.wordage, self.reads_count, self.likes_count, self.comments_count
         )
         return result
 
@@ -719,7 +719,7 @@ class Notebook():
         self._articles_count = []
         self._author_name = []
         self._author_info = []
-        self._words_count = []
+        self._wordage = []
         self._subscribers_count = []
         self._update_time = []
         self._articles_info = {}
@@ -818,7 +818,7 @@ class Notebook():
         return result
     
     @property
-    def words_count(self, disable_cache: bool = False) -> int:
+    def wordage(self, disable_cache: bool = False) -> int:
         """获取文集中所有文章的总字数
 
         Args:
@@ -827,7 +827,7 @@ class Notebook():
         Returns:
             int: 文集总字数
         """
-        result = SimpleCache(self._words_count, notebook.GetNotebookWordsCount, 
+        result = SimpleCache(self._wordage, notebook.GetNotebookWordage, 
                              {"notebook_url": self._url}, disable_cache)
         return result
     
@@ -900,7 +900,7 @@ class Notebook():
             str: 文集信息摘要
         """
         result = "文具信息摘要：\n名称：{}\n作者：{}\n文章数：{}\n总字数：{}\n关注者数量：{}\n更新时间：{}".format(
-            self.name, self.author_name, self.articles_count, self.words_count, 
+            self.name, self.author_name, self.articles_count, self.wordage, 
             self.subscribers_count, self.update_time
         )
         return result

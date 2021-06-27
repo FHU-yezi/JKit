@@ -60,7 +60,7 @@ def GetArticleReadsCount(article_url: str) -> str:
     result = json_obj["props"]["initialState"]["note"]["data"]["views_count"]
     return result
 
-def GetArticleWordsCount(article_url: str) -> str:
+def GetArticleWordage(article_url: str) -> str:
     """获取文章总字数
 
     Args:

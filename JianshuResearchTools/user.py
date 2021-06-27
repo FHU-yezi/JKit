@@ -74,7 +74,7 @@ def GetUserArticlesCount(user_url: str) -> int:
     result = int(result)
     return result
 
-def GetUserWordsCount(user_url: str) -> int:
+def GetUserWordage(user_url: str) -> int:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文章总字数
 
     Args:

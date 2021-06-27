@@ -74,7 +74,7 @@ def GetNotebookAuthorInfo(notebook_url: str) -> dict:
     }
     return result
 
-def GetNotebookWordsCount(notebook_url: str) -> int:
+def GetNotebookWordage(notebook_url: str) -> int:
     """获取文集中所有文章的总字数
 
     Args:
