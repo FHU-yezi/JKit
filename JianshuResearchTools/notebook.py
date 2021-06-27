@@ -6,23 +6,6 @@ import requests
 from assert_funcs import AssertNotebookUrl
 from headers import jianshu_request_header
 
-
-def GetNotebookId(notebook_url: str) -> int:
-    """获取文集 Id
-
-    Args:
-        notebook_url (str): 文集 Url
-
-    Returns:
-        int: 文集 Id
-    """
-    AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
-    result = json_obj["id"]
-    return result
-
 def GetNotebookName(notebook_url: str) -> str:
     """获取文集名称
 
@@ -33,13 +16,13 @@ def GetNotebookName(notebook_url: str) -> str:
         str: 文集名称
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov")
+    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = json_obj["name"]
     return result
 
-def GetNotebookNotesCount(notebook_url: str) -> int:
+def GetNotebookArticlesCount(notebook_url: str) -> int:
     """获取文集中的文章数量
 
     Args:
@@ -49,10 +32,26 @@ def GetNotebookNotesCount(notebook_url: str) -> int:
         int: 文章数量
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov")
+    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = json_obj["notes_count"]
+    return result
+
+def GetNotebookAuthorName(notebook_url: str) -> str:
+    """获取文集的作者名
+
+    Args:
+        notebook_url (str): 文集 Url
+
+    Returns:
+        int: 作者名
+    """
+    AssertNotebookUrl(notebook_url)
+    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["user"]["nickname"]
     return result
 
 def GetNotebookAuthorInfo(notebook_url: str) -> dict:
@@ -65,7 +64,7 @@ def GetNotebookAuthorInfo(notebook_url: str) -> dict:
         list: 作者信息
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov")
+    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = {
@@ -85,7 +84,7 @@ def GetNotebookWordsCount(notebook_url: str) -> int:
         int: 文章总字数
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov")
+    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = json_obj["wordage"]
@@ -101,7 +100,7 @@ def GetNotebookSubscribersCount(notebook_url: str) -> int:
         int: 关注着数量
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov")
+    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = json_obj["subscribers_count"]
@@ -117,7 +116,7 @@ def GetNotebookUpdateTime(notebook_url: str) -> datetime:
         datetime: 更新时间
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov")
+    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])

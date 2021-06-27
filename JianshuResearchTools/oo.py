@@ -5,6 +5,7 @@ import article
 import beikeisland
 import collection
 import island
+import notebook
 import user
 from assert_funcs import *
 from convert import *
@@ -22,7 +23,18 @@ def GetHash(*args: any) -> str:
     result = result[0:7]  # 取前 6 位
     return result
 
-def SimpleCache(cache_obj: any, getting_func: object, args: dict, disable_cache: bool =False):
+def SimpleCache(cache_obj:  list, getting_func: object, args: dict, disable_cache: bool =False) -> any:
+    """基本缓存
+
+    Args:
+        cache_obj (any): 缓存信息储存对象
+        getting_func (object): 信息获取函数
+        args (dict): 信息获取函数的参数
+        disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+    Returns:
+        any: 信息获取函数的返回值
+    """
     if cache_obj != [] and disable_cache == False:
         return cache_obj[0]
     else:
@@ -30,7 +42,18 @@ def SimpleCache(cache_obj: any, getting_func: object, args: dict, disable_cache:
         cache_obj.append(result)
         return result
 
-def HashCache(cache_obj: any, getting_func: object, args: dict, disable_cache: bool =False):
+def HashCache(cache_obj: list, getting_func: object, args: dict, disable_cache: bool =False) -> any:
+    """基于哈希值的缓存
+
+    Args:
+        cache_obj (any): 缓存信息储存对象
+        getting_func (object): 信息获取函数
+        args (dict): 信息获取函数的参数
+        disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+    Returns:
+        any: 信息获取函数的返回值
+    """
     hash = GetHash(*list(args.values()))
     cache = cache_obj.get(hash)
     if cache != None and disable_cache == False:
@@ -341,7 +364,7 @@ class User():
                             {"user_url": self._url, "page": page}, disable_cache)
         return result
     
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """判断是否是同一个用户
 
         Args:
@@ -351,7 +374,7 @@ class User():
             bool: 判断结果
         """
         if isinstance(other, User) == False:
-            return False  # 不是由用户类构建的均不相等
+            return False  # 不是由用户类构建的必定不相等
         if self.slug == other.slug:
             return True
         else:
@@ -363,7 +386,7 @@ class User():
         Returns:
             str: 用户信息摘要
         """
-        result = "用户名：{}\n关注数:{}\n粉丝数：{}\n文章数：{}\n总字数：{}\n被点赞数：{}\n总资产：{}".format(
+        result = "用户信息摘要：\n用户名：{}\n关注数:{}\n粉丝数：{}\n文章数：{}\n总字数：{}\n被点赞数：{}\n总资产：{}".format(
             self.name, self.followers_count, self.fans_count, self.articles_count, \
             self.words_count, self.likes_count, self.assets_count
         )
@@ -423,7 +446,7 @@ class Article():
             str: 文章 Slug
         """
         result = SimpleCache(self._slug, ArticleUrlToArticleSlug, 
-                            {"user_url": self._slug})
+                            {"user_url": self._slug}, disable_cache)
         return result
     
     @property
@@ -651,7 +674,7 @@ class Article():
                             {"article_url": self._url}, disable_cache)
         return result
     
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """判断是否是同一篇文章
 
         Args:
@@ -661,15 +684,228 @@ class Article():
             bool: 判断结果
         """
         if isinstance(other, Article) == False:
-            return False  # 不是由文章类构建的均不相等
+            return False  # 不是由文章类构建的必定不相等
         if self.slug == other.slug:
             return True
         else:
             return False
     
     def __str__(self) -> str:
-        result = "标题：{}\n作者：{}\n获钻量：{}\n发布时间：{}\n更新时间：{}\n字数：{}\n阅读量：{}\n点赞量：{}\n评论量：{}".format(
+        """输出文章信息摘要
+
+        Returns:
+            str: 文章信息摘要
+        """
+        result = "文章信息摘要：\n标题：{}\n作者：{}\n获钻量：{}\n发布时间：{}\n更新时间：{}\n字数：{}\n阅读量：{}\n点赞量：{}\n评论量：{}".format(
             self.title, self.author_name, self.total_FP_count, self.publish_time, \
             self.update_time, self.words_count, self.reads_count, self.likes_count, self.comments_count
+        )
+        return result
+
+class Notebook():
+    """文集类
+    """
+    def __init__(self, source: str):
+        """构建新的文集对象
+
+        Args:
+            source (str): 文集 Url 或文集 Slug
+        """
+        try:
+            AssertNotebookUrl(source)
+        except InputError:
+            source = NotebookSlugToNotebookUrl(source)
+            AssertNotebookUrl(source)
+        self._url = source
+
+        self._id = []
+        self._slug = []
+        self._name = []
+        self._articles_count = []
+        self._author_name = []
+        self._author_info = []
+        self._words_count = []
+        self._subscribers_count = []
+        self._update_time = []
+        self._articles_info = []
+        
+    @property
+    def url(self) -> str:
+        """获取文集 Url
+
+        Returns:
+            str: 文集 Url
+        """
+        return self._url
+    
+    @property
+    def id(self, disable_cache: bool =False) -> int:
+        """获取文集 Id
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 文集 Id
+        """
+        result = SimpleCache(self._id, NotebookUrlToNotebookId, 
+                             {"notebook_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def slug(self, disable_cache: bool =False) -> str:
+        """获取文集 Slug
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 文集 Slug
+        """
+        result = SimpleCache(self._slug, NotebookUrlToNotebookSlug, 
+                             {"notebook_url": self._url}, disable_cache)
+        return result
+
+    @property
+    def name(self, disable_cache: bool =False) -> str:
+        """获取文集名称
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 文集名称
+        """
+        result = SimpleCache(self._name, notebook.GetNotebookName, 
+                             {"notebook_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def articles_count(self, disable_cache: bool =False) -> int:
+        """获取文集中的文章总数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 文章总数
+        """
+        result = SimpleCache(self._articles_count, notebook.GetNotebookArticlesCount, 
+                             {"notebook_url": self._url}, disable_cache)
+        return result
+
+    @property
+    def author_name(self, disable_cache: bool =False) -> str:
+        """获取文集的作者名
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 作者名
+        """
+        result = SimpleCache(self._author_name, notebook.GetNotebookAuthorName, 
+                             {"notebook_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def author_info(self, disable_cache: bool =False) -> dict:
+        """获取文集的作者信息
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            dict: 作者信息
+        """
+        result = SimpleCache(self._author_info, notebook.GetNotebookAuthorInfo, 
+                             {"notebook_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def words_count(self, disable_cache: bool =False) -> int:
+        """获取文集中所有文章的总字数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 文集总字数
+        """
+        result = SimpleCache(self._words_count, notebook.GetNotebookWordsCount, 
+                             {"notebook_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def subscribers_count(self, disable_cache: bool =False) -> int:
+        """获取文集的关注者数量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 关注者数量
+        """
+        result = SimpleCache(self._subscribers_count, notebook.GetNotebookSubscribersCount, 
+                             {"notebook_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def update_time(self, disable_cache: bool =False) -> datetime:
+        """获取文集的更新时间
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            datetime: 更新时间
+        """
+        result = SimpleCache(self._update_time, notebook.GetNotebookUpdateTime, 
+                             {"notebook_url": self._url}, disable_cache)
+        return result
+    
+    def articles_info(self, page: int =1, count: int =10, sorting_method: str ="time", disable_cache: bool =False) -> list:
+        """获取文集中的文章信息
+
+        Args:
+            page (int, optional): 页码. Defaults to 1.
+            count (int, optional): 每次返回的数据数量. Defaults to 10.
+            sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 文章信息
+        """
+        result = HashCache(self._articles_info, notebook.GetNotebookArticlesInfo, 
+                           {"notebook_url": self._url, "page": page, "count": count, 
+                            "sorting_method": sorting_method}, disable_cache)
+        return result
+
+    def __eq__(self, other: object) -> bool:
+        """判断是否是同一个文集
+
+        Args:
+            other (object): 另一个对象
+
+        Returns:
+            bool: 判断结果
+        """
+        if isinstance(other, Notebook) == False:
+            return False  # 不是由文集类构建的必定不相等
+        if self.slug == other.slug:
+            return True
+        else:
+            return False
+        
+    def __str__(self) -> str:
+        """输出文集信息摘要
+
+        Returns:
+            str: 文集信息摘要
+        """
+        result = "文具信息摘要：\n名称：{}\n作者：{}\n文章数：{}\n总字数：{}\n关注者数量：{}\n更新时间：{}".format(
+            self.name, self.author_name, self.articles_count, self.words_count, 
+            self.subscribers_count, self.update_time
         )
         return result

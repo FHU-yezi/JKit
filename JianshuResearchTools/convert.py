@@ -78,6 +78,22 @@ def ArticleSlugToArticleID(article_url: str) -> int:
     return result
 
 
+def NotebookUrlToNotebookId(notebook_url: str) -> int:
+    """该函数接收文集 Url，并将其转换成文集 Id
+
+    Args:
+        notebook_url (str): 文集 Url
+
+    Returns:
+        int: 文集 Id
+    """
+    AssertNotebookUrl(notebook_url)
+    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["id"]
+    return result
+
 def NotebookUrlToNotebookSlug(notebook_url: str) -> str:
     """该函数接收文集 Url，并将其转换成文集 Slug
 
