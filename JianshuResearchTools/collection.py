@@ -184,7 +184,7 @@ def GetCollectionArticlesInfo(collection_url: str, page: int =1,
         "order_by": {
             "time": "added_at", 
             "comment_time": "commented_at", 
-            "hot": "top"  # 是不是太直白了点
+            "hot": "top"  # TODO: 是不是太直白了点
         }[sorting_method]
     }
     source = requests.get(request_url, params=params, headers=jianshu_request_header).content
