@@ -73,7 +73,7 @@ def GetCollectionSubscribersCount(collection_url: str) -> int:
     result = re.findall(r"\d+", result)[1]
     return result
 
-def GetCollectionEditorsInfo(collection_id: int, page: int =1) -> list:
+def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> list:
     """该函数接收专题 ID，并返回 ID 对应专题的编辑信息
 
     Args:
@@ -99,7 +99,7 @@ def GetCollectionEditorsInfo(collection_id: int, page: int =1) -> list:
         result.append(item_data)
     return result
 
-def GetCollectionRecommendedWritersInfo(collection_id: int, page: int =1, count: int =20) -> list:
+def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count: int = 20) -> list:
     """该函数接收一个专题 ID，并返回该 ID 对应专题的推荐作者信息
 
     Args:
@@ -160,8 +160,8 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int) -> list
         result.append(item_data)
     return result
 
-def GetCollectionArticlesInfo(collection_url: str, page: int =1, 
-                                count: int =10, sorting_method: str ="time") -> list:
+def GetCollectionArticlesInfo(collection_url: str, page: int = 1, 
+                                count: int = 10, sorting_method: str ="time") -> list:
     """该函数接收专题 Url ，并返回该 Url 对应专题的文章信息
 
     Args:

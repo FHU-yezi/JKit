@@ -310,7 +310,7 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
         result.append(item_data)
     return result
 
-def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
+def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文章信息
 
     Args:
@@ -357,7 +357,7 @@ def GetUserArticlesInfo(user_url: str, page: int =1, count: int =10) -> list:
         result.append(item_data)
     return result
 
-def GetUserFollowersInfo(user_url: str, page:int =1) -> list:
+def GetUserFollowersInfo(user_url: str, page:int = 1) -> list:
     """该函数接收用户个人主页 Url 和页码，并返回该用户关注列表中对应页数的用户信息
 
     Args:
@@ -392,7 +392,7 @@ def GetUserFollowersInfo(user_url: str, page:int =1) -> list:
         result.append(item_data)
     return result
 
-def GetUserFansInfo(user_url: str, page:int =1) -> list:
+def GetUserFansInfo(user_url: str, page:int = 1) -> list:
     """该函数接收用户个人主页 Url 和页码，并返回该用户粉丝列表中对应页数的用户信息
 
     Args:

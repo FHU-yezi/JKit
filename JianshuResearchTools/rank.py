@@ -10,7 +10,7 @@ from headers import jianshu_request_header
 from user import GetUserAssetsCount
 
 
-def GetAssetsRankData(start_id: int =1, get_full: bool =False) -> list:
+def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:
     """该函数接收一个起始位置参数和一个获取全部数据的布尔值，并返回自该位置后 20 名用户的资产数据
 
     Args:

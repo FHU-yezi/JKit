@@ -58,8 +58,8 @@ def GetIslandMembersCount(island_url: str) -> int:
     result = re.findall(r"\d+", result)[0]
     return result
 
-def GetIslandPosts(island_url: str, start_sort_id: int =None, count: int =10, 
-                    topic_id: int =None, sorting_method: str ="time") -> list:
+def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10, 
+                    topic_id: int = None, sorting_method: str ="time") -> list:
     """获取小岛帖子信息
 
         Args:

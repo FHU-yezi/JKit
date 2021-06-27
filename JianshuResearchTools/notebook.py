@@ -122,8 +122,8 @@ def GetNotebookUpdateTime(notebook_url: str) -> datetime:
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
-def GetNotebookArticlesInfo(notebook_url: str, page: int =1, 
-                            count: int =10, sorting_method: str ="time") -> list:
+def GetNotebookArticlesInfo(notebook_url: str, page: int = 1, 
+                            count: int = 10, sorting_method: str ="time") -> list:
     """获取文集中的文章信息
 
     Args:

@@ -23,7 +23,7 @@ def GetHash(*args: any) -> str:
     result = result[0:7]  # 取前 6 位
     return result
 
-def SimpleCache(cache_obj: list, getting_func: object, args: dict, disable_cache: bool =False) -> any:
+def SimpleCache(cache_obj: list, getting_func: object, args: dict, disable_cache: bool = False) -> any:
     """基本缓存
 
     Args:
@@ -42,7 +42,7 @@ def SimpleCache(cache_obj: list, getting_func: object, args: dict, disable_cache
         cache_obj.append(result)
         return result
 
-def HashCache(cache_obj: dict, getting_func: object, args: dict, disable_cache: bool =False) -> any:
+def HashCache(cache_obj: dict, getting_func: object, args: dict, disable_cache: bool = False) -> any:
     """基于哈希值的缓存
 
     Args:
@@ -110,7 +110,7 @@ class User():
         return self._url
     
     @property
-    def slug(self, disable_cache: bool =False) -> str:
+    def slug(self, disable_cache: bool = False) -> str:
         """获取用户 Slug
 
         Args:
@@ -124,7 +124,7 @@ class User():
         return result
     
     @property
-    def name(self, disable_cache:bool =False) -> str:
+    def name(self, disable_cache:bool = False) -> str:
         """获取用户昵称
 
         Args:
@@ -138,7 +138,7 @@ class User():
         return result
 
     @property
-    def followers_count(self, disable_cache: bool =False) -> int:
+    def followers_count(self, disable_cache: bool = False) -> int:
         """获取用户关注数
 
         Args:
@@ -152,7 +152,7 @@ class User():
         return result
     
     @property
-    def fans_count(self, disable_cache: bool =False) -> int:
+    def fans_count(self, disable_cache: bool = False) -> int:
         """获取用户粉丝数
 
         Args:
@@ -166,7 +166,7 @@ class User():
         return result
     
     @property
-    def articles_count(self, disable_cache: bool =False) -> int:
+    def articles_count(self, disable_cache: bool = False) -> int:
         """获取用户文章数
 
         Args:
@@ -180,7 +180,7 @@ class User():
         return result
     
     @property
-    def words_count(self, disable_cache: bool =False) -> int:
+    def words_count(self, disable_cache: bool = False) -> int:
         """获取用户总字数
 
         Args:
@@ -194,7 +194,7 @@ class User():
         return result
     
     @property
-    def likes_count(self, disable_cache: bool =False) -> int:
+    def likes_count(self, disable_cache: bool = False) -> int:
         """获取用户被点赞数
 
         Args:
@@ -208,7 +208,7 @@ class User():
         return result
 
     @property
-    def assets_count(self, disable_cache:bool =False) -> int:
+    def assets_count(self, disable_cache:bool = False) -> int:
         """获取用户资产量
 
         Args:
@@ -222,7 +222,7 @@ class User():
         return result
     
     @property
-    def FP_count(self, disable_cache: bool =False) -> int:
+    def FP_count(self, disable_cache: bool = False) -> int:
         """获取用户简书钻数量
 
         Args:
@@ -236,7 +236,7 @@ class User():
         return result
     
     @property
-    def FTN_count(self, disable_cache: bool =False) -> int:
+    def FTN_count(self, disable_cache: bool = False) -> int:
         """获取用户简书贝数量
 
         Args:
@@ -250,7 +250,7 @@ class User():
         return result
     
     @property
-    def badges(self, disable_cache: bool =False) -> list:
+    def badges(self, disable_cache: bool = False) -> list:
         """获取徽章列表
 
         Args:
@@ -264,7 +264,7 @@ class User():
         return result
     
     @property
-    def introduction(self, disable_cache: bool =False) -> str:
+    def introduction(self, disable_cache: bool = False) -> str:
         """获取用户简介
 
         Args:
@@ -278,7 +278,7 @@ class User():
         return result
     
     @property
-    def notebooks(self, disable_cache: bool =False) -> list:
+    def notebooks(self, disable_cache: bool = False) -> list:
         """获取用户文集信息
 
         Args:
@@ -306,7 +306,7 @@ class User():
         return result
     
     @property
-    def manageable_collections(self, disable_cache: bool =False) -> list:
+    def manageable_collections(self, disable_cache: bool = False) -> list:
         """获取有管理权的专题信息
 
         Args:
@@ -319,8 +319,8 @@ class User():
                             {"user_url": self._url}, disable_cache)
         return result
     
-    def articles_info(self, page: int =1, count: int =10, 
-                        disable_cache: bool =False) -> list:
+    def articles_info(self, page: int = 1, count: int = 10, 
+                        disable_cache: bool = False) -> list:
         """获取文章信息
 
         Args:
@@ -336,7 +336,7 @@ class User():
                             disable_cache)
         return result
 
-    def followers_info(self, page: int =1, disable_cache: bool =False) -> list:
+    def followers_info(self, page: int = 1, disable_cache: bool = False) -> list:
         """获取关注者信息
 
         Args:
@@ -350,7 +350,7 @@ class User():
                             {"user_url": self._url, "page": page}, disable_cache)
         return result
 
-    def fans_info(self, page: int =1, disable_cache: bool =False) -> list:
+    def fans_info(self, page: int = 1, disable_cache: bool = False) -> list:
         """获取粉丝信息
 
         Args:
@@ -436,7 +436,7 @@ class Article():
         return self._url
     
     @property
-    def slug(self, disable_cache: bool =False) -> str:
+    def slug(self, disable_cache: bool = False) -> str:
         """获取文章 Slug
 
         Args:
@@ -450,7 +450,7 @@ class Article():
         return result
     
     @property
-    def title(self, disable_cache: bool =False) -> str:
+    def title(self, disable_cache: bool = False) -> str:
         """获取文章标题
 
         Args:
@@ -464,7 +464,7 @@ class Article():
         return result
     
     @property
-    def author_name(self, disable_cache: bool =False) -> str:
+    def author_name(self, disable_cache: bool = False) -> str:
         """获取文章作者名
 
         Args:
@@ -478,7 +478,7 @@ class Article():
         return result
     
     @property
-    def words_count(self, disable_cache: bool =False) -> int:
+    def words_count(self, disable_cache: bool = False) -> int:
         """获取文章总字数
 
         Args:
@@ -492,7 +492,7 @@ class Article():
         return result
     
     @property
-    def reads_count(self, disable_cache: bool =False) -> int:
+    def reads_count(self, disable_cache: bool = False) -> int:
         """获取文章阅读量
 
         Args:
@@ -506,7 +506,7 @@ class Article():
         return result
     
     @property
-    def likes_count(self, disable_cache: bool =False) -> int:
+    def likes_count(self, disable_cache: bool = False) -> int:
         """获取文章点赞量
 
         Args:
@@ -520,7 +520,7 @@ class Article():
         return result
     
     @property
-    def comments_count(self, disable_cache: bool =False) -> int:
+    def comments_count(self, disable_cache: bool = False) -> int:
         """获取文章评论量
 
         Args:
@@ -534,7 +534,7 @@ class Article():
         return result
     
     @property
-    def most_valuable_comments_count(self, disable_cache: bool =False) -> int:
+    def most_valuable_comments_count(self, disable_cache: bool = False) -> int:
         """获取文章精选评论量
 
         Args:
@@ -549,7 +549,7 @@ class Article():
         return result
     
     @property
-    def total_FP_count(self, disable_cache: bool =False) -> int:
+    def total_FP_count(self, disable_cache: bool = False) -> int:
         """获取文章总获钻量
 
         Args:
@@ -563,7 +563,7 @@ class Article():
         return result
 
     @property
-    def description(self, disable_cache: bool =False) -> str:
+    def description(self, disable_cache: bool = False) -> str:
         """获取文章摘要
 
         Args:
@@ -577,7 +577,7 @@ class Article():
         return result
     
     @property
-    def publish_time(self, disable_cache: bool =False) -> datetime:
+    def publish_time(self, disable_cache: bool = False) -> datetime:
         """获取文章发布时间
 
         Args:
@@ -591,7 +591,7 @@ class Article():
         return result
     
     @property
-    def update_time(self, disable_cache: bool =False) -> datetime:
+    def update_time(self, disable_cache: bool = False) -> datetime:
         """获取文章更新时间
 
         Args:
@@ -605,7 +605,7 @@ class Article():
         return result
 
     @property
-    def paid_status(self, disable_cache: bool =False) -> bool:
+    def paid_status(self, disable_cache: bool = False) -> bool:
         """获取文章付费状态
 
         Args:
@@ -619,7 +619,7 @@ class Article():
         return result
 
     @property
-    def reprint_status(self, disable_cache: bool =False) -> bool:
+    def reprint_status(self, disable_cache: bool = False) -> bool:
         """获取文章转载状态
 
         Args:
@@ -633,7 +633,7 @@ class Article():
         return result
     
     @property
-    def comment_status(self, disable_cache: bool =False) -> bool:
+    def comment_status(self, disable_cache: bool = False) -> bool:
         """获取文章评论状态
 
         Args:
@@ -647,7 +647,7 @@ class Article():
         return result
     
     @property
-    def html(self, disable_cache: bool =False) -> str:
+    def html(self, disable_cache: bool = False) -> str:
         """获取 Html 格式的文章内容
 
         Args:
@@ -661,7 +661,7 @@ class Article():
         return result
     
     @property
-    def text(self, disable_cache: bool =False) -> str:
+    def text(self, disable_cache: bool = False) -> str:
         """获取纯文本格式的文章内容
 
         Args:
@@ -734,7 +734,7 @@ class Notebook():
         return self._url
     
     @property
-    def id(self, disable_cache: bool =False) -> int:
+    def id(self, disable_cache: bool = False) -> int:
         """获取文集 Id
 
         Args:
@@ -748,7 +748,7 @@ class Notebook():
         return result
     
     @property
-    def slug(self, disable_cache: bool =False) -> str:
+    def slug(self, disable_cache: bool = False) -> str:
         """获取文集 Slug
 
         Args:
@@ -762,7 +762,7 @@ class Notebook():
         return result
 
     @property
-    def name(self, disable_cache: bool =False) -> str:
+    def name(self, disable_cache: bool = False) -> str:
         """获取文集名称
 
         Args:
@@ -776,7 +776,7 @@ class Notebook():
         return result
     
     @property
-    def articles_count(self, disable_cache: bool =False) -> int:
+    def articles_count(self, disable_cache: bool = False) -> int:
         """获取文集中的文章总数
 
         Args:
@@ -790,7 +790,7 @@ class Notebook():
         return result
 
     @property
-    def author_name(self, disable_cache: bool =False) -> str:
+    def author_name(self, disable_cache: bool = False) -> str:
         """获取文集的作者名
 
         Args:
@@ -804,7 +804,7 @@ class Notebook():
         return result
     
     @property
-    def author_info(self, disable_cache: bool =False) -> dict:
+    def author_info(self, disable_cache: bool = False) -> dict:
         """获取文集的作者信息
 
         Args:
@@ -818,7 +818,7 @@ class Notebook():
         return result
     
     @property
-    def words_count(self, disable_cache: bool =False) -> int:
+    def words_count(self, disable_cache: bool = False) -> int:
         """获取文集中所有文章的总字数
 
         Args:
@@ -832,7 +832,7 @@ class Notebook():
         return result
     
     @property
-    def subscribers_count(self, disable_cache: bool =False) -> int:
+    def subscribers_count(self, disable_cache: bool = False) -> int:
         """获取文集的关注者数量
 
         Args:
@@ -846,7 +846,7 @@ class Notebook():
         return result
     
     @property
-    def update_time(self, disable_cache: bool =False) -> datetime:
+    def update_time(self, disable_cache: bool = False) -> datetime:
         """获取文集的更新时间
 
         Args:
@@ -859,7 +859,7 @@ class Notebook():
                              {"notebook_url": self._url}, disable_cache)
         return result
     
-    def articles_info(self, page: int =1, count: int =10, sorting_method: str ="time", disable_cache: bool =False) -> list:
+    def articles_info(self, page: int = 1, count: int = 10, sorting_method: str ="time", disable_cache: bool = False) -> list:
         """获取文集中的文章信息
 
         Args:
@@ -908,7 +908,7 @@ class Notebook():
 class Collection():
     """专题类
     """
-    def __init__(self, source: str, id: int =None):
+    def __init__(self, source: str, id: int = None):
         """构建新的文集对象
 
         Args:
@@ -943,7 +943,7 @@ class Collection():
         return self._url
     
     @property
-    def slug(self, disable_cache: bool =False) -> str:
+    def slug(self, disable_cache: bool = False) -> str:
         """获取专题 Slug
 
         Args:
@@ -957,7 +957,7 @@ class Collection():
         return result
     
     @property
-    def name(self, disable_cache: bool =False) -> str:
+    def name(self, disable_cache: bool = False) -> str:
         """获取专题名称
 
         Args:
@@ -971,7 +971,7 @@ class Collection():
         return result
     
     @property
-    def introduction(self, disable_cache: bool =False) -> str:
+    def introduction(self, disable_cache: bool = False) -> str:
         """获取专题简介
 
         Args:
@@ -985,7 +985,7 @@ class Collection():
         return result
     
     @property
-    def articles_count(self, disable_cache: bool =False) -> int:
+    def articles_count(self, disable_cache: bool = False) -> int:
         """获取专题文章数
 
         Args:
@@ -999,7 +999,7 @@ class Collection():
         return result
     
     @property
-    def subscribers_count(self, disable_cache: bool =False) -> int:
+    def subscribers_count(self, disable_cache: bool = False) -> int:
         """获取专题关注者数
 
         Args:
@@ -1012,7 +1012,7 @@ class Collection():
                              {"collection_url": self._url}, disable_cache)
         return result
     
-    def editors_info(self, page: int =1, disable_cache: bool =False) -> list:
+    def editors_info(self, page: int = 1, disable_cache: bool = False) -> list:
         """获取专题编辑信息
 
         Args:
@@ -1031,7 +1031,7 @@ class Collection():
                            {"collection_id": self._id, "page": page}, disable_cache)
         return result
 
-    def recommended_writers_info(self, page: int =False, disable_cache: bool =False) -> list:
+    def recommended_writers_info(self, page: int = False, disable_cache: bool = False) -> list:
         """获取专题推荐作者信息
 
         Args:
@@ -1050,7 +1050,7 @@ class Collection():
                            {"collection_id": self._id}, disable_cache)
         return result
     
-    def subscribers_info(self, start_sort_id: int, disable_cache: bool =False) -> list:
+    def subscribers_info(self, start_sort_id: int, disable_cache: bool = False) -> list:
         """获取专题关注者信息
 
         Args:
@@ -1069,8 +1069,8 @@ class Collection():
                            {"collection_id": self._id, "start_sort_id": start_sort_id}, disable_cache)
         return result
     
-    def articles_info(self, page: int =1, count: int =10, 
-                      sorting_method: str ="time", disable_cache: bool =False) -> list:
+    def articles_info(self, page: int = 1, count: int = 10, 
+                      sorting_method: str ="time", disable_cache: bool = False) -> list:
         """获取专题文章信息
 
         Args:
@@ -1147,7 +1147,7 @@ class Island():
         return self._url
     
     @property
-    def slug(self, disable_cache: bool =False) -> str:
+    def slug(self, disable_cache: bool = False) -> str:
         """获取小岛 Slug
 
         Args:
@@ -1161,7 +1161,7 @@ class Island():
         return result
     
     @property
-    def name(self, disable_cache: bool =False) -> str:
+    def name(self, disable_cache: bool = False) -> str:
         """获取小岛名称
 
         Args:
@@ -1175,7 +1175,7 @@ class Island():
         return result
     
     @property
-    def introduction(self, disable_cache: bool =False) -> str:
+    def introduction(self, disable_cache: bool = False) -> str:
         """获取小岛简介
 
         Args:
@@ -1189,7 +1189,7 @@ class Island():
         return result
     
     @property
-    def members_count(self, disable_cache: bool =False) -> int:
+    def members_count(self, disable_cache: bool = False) -> int:
         """获取小岛成员数量
 
         Args:
@@ -1202,8 +1202,8 @@ class Island():
                              {"island_url": self._url}, disable_cache)
         return result
     
-    def posts(self, start_sort_id: int =None, count: int =10, 
-              topic_id: int =None, sorting_method: str ="time", disable_cache: bool =False) -> list:
+    def posts(self, start_sort_id: int = None, count: int = 10, 
+              topic_id: int = None, sorting_method: str ="time", disable_cache: bool = False) -> list:
         """获取小岛帖子信息
 
         Args:

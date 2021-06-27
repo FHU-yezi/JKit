@@ -33,7 +33,7 @@ def GetBeikeIslandTotalTradeCount() -> int:
     result = json_obj["data"]["totaltime"]
     return result
 
-def GetBeikeIslandTotalTradeRankData(page: int =1) -> list:
+def GetBeikeIslandTotalTradeRankData(page: int = 1) -> list:
     """获取贝壳小岛总交易排行榜中的用户数据
 
     Args:
@@ -63,7 +63,7 @@ def GetBeikeIslandTotalTradeRankData(page: int =1) -> list:
         result.append(item_data)
     return result
 
-def GetBeikeIslandBuyTradeRankData(page: int =1) -> list:
+def GetBeikeIslandBuyTradeRankData(page: int = 1) -> list:
     """获取贝壳小岛买贝排行榜中的用户数据
 
     Args:
@@ -93,7 +93,7 @@ def GetBeikeIslandBuyTradeRankData(page: int =1) -> list:
         result.append(item_data)
     return result
 
-def GetBeikeIslandSellTradeRankData(page: int =1) -> list:
+def GetBeikeIslandSellTradeRankData(page: int = 1) -> list:
     """获取贝壳小岛卖贝排行榜中的用户数据
 
     Args:
@@ -123,7 +123,7 @@ def GetBeikeIslandSellTradeRankData(page: int =1) -> list:
         result.append(item_data)
     return result
 
-def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int =1) -> list:
+def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int = 1) -> list:
     """获取贝壳小岛的挂单信息
 
     Args:
@@ -167,7 +167,7 @@ def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int =1) -> list:
         result.append(item_data)
     return result
 
-def GetBeikeIslandTradePrice(trade_type: str, rank: int =1) -> float:
+def GetBeikeIslandTradePrice(trade_type: str, rank: int = 1) -> float:
     """获取特定位置交易单的价格
 
     Args:
