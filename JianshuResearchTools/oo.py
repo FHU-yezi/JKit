@@ -691,11 +691,6 @@ class Article():
             return False
     
     def __str__(self) -> str:
-        """输出文章信息摘要
-
-        Returns:
-            str: 文章信息摘要
-        """
         result = "文章信息摘要：\n标题：{}\n作者：{}\n获钻量：{}\n发布时间：{}\n更新时间：{}\n字数：{}\n阅读量：{}\n点赞量：{}\n评论量：{}".format(
             self.title, self.author_name, self.total_FP_count, self.publish_time, \
             self.update_time, self.words_count, self.reads_count, self.likes_count, self.comments_count
@@ -1117,5 +1112,139 @@ class Collection():
         """
         result = "专题信息摘要：\n名称：{}\n文章数：{}\n关注者数：{}".format(
             self.name, self.articles_count, self.subscribers_count
+        )
+        return result
+
+class Island():
+    """小岛类
+    """
+    def __init__(self, source):
+        """构建新的小岛对象
+
+        Args:
+            source (str): 小岛 Url 或小岛 Slug
+        """
+        try:
+            AssertIslandUrl(source)
+        except InputError:
+            source = IslandSlugToIslandUrl(source)
+            AssertIslandUrl(source)
+        self._url = source
+        
+        self._slug = []
+        self._name = []
+        self._introduction = []
+        self._members_count = []
+        self._posts = {}
+    
+    @property
+    def url(self) -> str:
+        """获取小岛 Url
+
+        Returns:
+            str: 小岛 Url
+        """
+        return self._url
+    
+    @property
+    def slug(self, disable_cache: bool =False) -> str:
+        """获取小岛 Slug
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 小岛 Slug
+        """
+        result = SimpleCache(self._slug, IslandUrlToIslandSlug, 
+                            {"user_url": self._slug}, disable_cache)
+        return result
+    
+    @property
+    def name(self, disable_cache: bool =False) -> str:
+        """获取小岛名称
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 小岛名称
+        """
+        result = SimpleCache(self._name, island.GetIslandName, 
+                             {"island_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def introduction(self, disable_cache: bool =False) -> str:
+        """获取小岛简介
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 小岛简介
+        """
+        result = SimpleCache(self._introduction, island.GetIslandIntroduction, 
+                             {"island_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def members_count(self, disable_cache: bool =False) -> int:
+        """获取小岛成员数量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 成员数量
+        """
+        result = SimpleCache(self._members_count, island.GetIslandMembersCount, 
+                             {"island_url": self._url}, disable_cache)
+        return result
+    
+    def posts(self, start_sort_id: int =None, count: int =10, 
+              topic_id: int =None, sorting_method: str ="time", disable_cache: bool =False) -> list:
+        """获取小岛帖子信息
+
+        Args:
+            start_sort_id (int, optional): 起始序号，等于上一条数据的序号. Defaults to None.
+            count (int, optional): 每次返回的数据数量. Defaults to 10.
+            topic_id (int, optional): 话题 Id. Defaults to None.
+            sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 帖子信息
+        """
+        result = HashCache(self._posts, island.GetIslandPosts, 
+                           {"island_url": self._url, "start_sort_id": start_sort_id, 
+                            "count": count, "topic_id": topic_id, "sorting_method": sorting_method}, disable_cache)
+        return result
+    
+    def __eq__(self, other: object) -> bool:
+        """判断是否是同一个小岛
+
+        Args:
+            other (object): 另一个对象
+
+        Returns:
+            bool: 判断结果
+        """
+        if isinstance(other, Collection) == False:
+            return False  # 不是由小岛类构建的必定不相等
+        if self._slug == other._slug:
+            return True
+        else:
+            return False
+    
+    def __str__(self) -> str:
+        """输出小岛信息摘要
+
+        Returns:
+            str: 小岛信息摘要
+        """
+        result = "小岛信息摘要：\n名称：{}\n成员人数：{}".format(
+            self.name, self.members_count
         )
         return result
