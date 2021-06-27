@@ -26,6 +26,15 @@ def GetArticleTitle(article_url: str) -> str:
     result = json_obj["public_title"]
     return result
 
+def GetArticleAuthorName(article_url: str) -> str:
+    AssertArticleUrl(article_url)
+    AssertArticleStatusNormal(article_url)
+    source = requests.get(article_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
+    json_obj = json.loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
+    result = json_obj["props"]["initialState"]["note"]["data"]["user"]["nickname"]
+    return result
+
 def GetArticleReadsCount(article_url: str) -> str:
     """获取文章阅读量
 
