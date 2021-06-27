@@ -23,11 +23,11 @@ def GetHash(*args: any) -> str:
     return result
 
 def SimpleCache(cache_obj: any, getting_func: object, args: dict, disable_cache: bool =False):
-    if cache_obj != None and disable_cache == False:
-        return cache_obj
+    if cache_obj != [] and disable_cache == False:
+        return cache_obj[0]
     else:
         result = getting_func(**args)
-        cache_obj = result
+        cache_obj.append(result)
         return result
 
 def HashCache(cache_obj: any, getting_func: object, args: dict, disable_cache: bool =False):
@@ -57,21 +57,21 @@ class User():
             AssertUserUrl(source)
         self._url = source
 
-        self._slug = None
-        self._name = None
-        self._followers_count = None
-        self._fans_count = None
-        self._articles_count = None
-        self._words_count = None
-        self._likes_count = None
-        self._assets_count = None
-        self._FP_count = None
-        self._FTN_count = None
-        self._badges = None
-        self._introduction = None
-        self._notebooks = None
-        self._own_collections = None
-        self._manageable_collections = None
+        self._slug = []
+        self._name = []
+        self._followers_count = []
+        self._fans_count = []
+        self._articles_count = []
+        self._words_count = []
+        self._likes_count = []
+        self._assets_count = []
+        self._FP_count = []
+        self._FTN_count = []
+        self._badges = []
+        self._introduction = []
+        self._notebooks = []
+        self._own_collections = []
+        self._manageable_collections = []
 
         self._articles_info = {}
         self._followers_info = {}
@@ -377,20 +377,23 @@ class Article():
             AssertArticleUrl(source)
         self._url = source
 
-        self._slug = None
-        self._title = None
-        self._likes_count = None
-        self._comments_count = None
-        self._most_valuable_comments_count = None
-        self._total_FP_count = None
-        self._desciption = None
-        self._publish_time = None
-        self._update_time = None
-        self._paid_status = None
-        self._reprint_status = None
-        self._comment_status = None
-        self._html = None
-        self._text = None
+        self._slug = []
+        self._title = []
+        self._author = []
+        self._words_count = []
+        self._reads_count = []
+        self._likes_count = []
+        self._comments_count = []
+        self._most_valuable_comments_count = []
+        self._total_FP_count = []
+        self._description = []
+        self._publish_time = []
+        self._update_time = []
+        self._paid_status = []
+        self._reprint_status = []
+        self._comment_status = []
+        self._html = []
+        self._text = []
     
     @property
     def url(self) -> str:
@@ -405,6 +408,24 @@ class Article():
     @property
     def title(self, disable_cache: bool =False) -> str:
         result = SimpleCache(self._title, article.GetArticleTitle, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def author(self, disable_cache: bool =False) -> str:
+        result = SimpleCache(self._author, article.GetArticleAuthorName, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def words_count(self, disable_cache: bool =False) -> int:
+        result = SimpleCache(self._words_count, article.GetArticleWordsCount, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def reads_count(self, disable_cache: bool =False) -> int:
+        result = SimpleCache(self._reads_count, article.GetArticleReadsCount, 
                             {"article_url": self._url}, disable_cache)
         return result
     
@@ -430,12 +451,12 @@ class Article():
     @property
     def total_FP_count(self, disable_cache: bool =False) -> int:
         result = SimpleCache(self._total_FP_count, article.GetArticleTotalFPCount, 
-                            {"article_url": self._total_FP_count}, disable_cache)
+                            {"article_url": self._url}, disable_cache)
         return result
 
     @property
     def description(self, disable_cache: bool =False) -> str:
-        result = SimpleCache(self._desciption, article.GetArticleDescription, 
+        result = SimpleCache(self._description, article.GetArticleDescription, 
                             {"article_url": self._url}, disable_cache)
         return result
     
@@ -449,4 +470,49 @@ class Article():
     def update_time(self, disable_cache: bool =False) -> datetime:
         result = SimpleCache(self._update_time, article.GetArticleUpdateTime, 
                             {"article_url": self._url}, disable_cache)
+        return result
+
+    @property
+    def paid_status(self, disable_cache: bool =False) -> bool:
+        result = SimpleCache(self._paid_status, article.GetArticlePaidStatus, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+
+    @property
+    def reprint_status(self, disable_cache: bool =False) -> bool:
+        result = SimpleCache(self._reprint_status, article.GetArticleReprintStatus, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def comment_status(self, disable_cache: bool =False) -> bool:
+        result = SimpleCache(self._comment_status, article.GetArticleCommentStatus, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def html(self, disable_cache: bool =False) -> str:
+        result = SimpleCache(self._html, article.GetArticleHtml, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def text(self, disable_cache: bool =False) -> str:
+        result = SimpleCache(self._text, article.GetArticleText, 
+                            {"article_url": self._url}, disable_cache)
+        return result
+    
+    def __eq__(self, other):
+        if isinstance(other, Article) == False:
+            return False
+        if self.slug == other.slug:
+            return True
+        else:
+            return False
+    
+    def __str__(self) -> str:
+        result = "标题：{}\n作者：{}\n获钻量：{}\n发布时间：{}\n更新时间：{}\n字数：{}\n阅读量：{}\n点赞量：{}\n评论量：{}".format(
+            self.title, self.author, self.total_FP_count, self.publish_time, \
+            self.update_time, self.words_count, self.reads_count, self.likes_count, self.comments_count
+        )
         return result
