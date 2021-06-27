@@ -23,7 +23,6 @@ def GetCollectionName(collection_url: str) -> str:
     source = requests.get(collection_url, headers=PC_header).content
     html_obj = etree.HTML(source)
     result = html_obj.xpath("//a[@class='name']")[0].text
-    print(result)
     return result
 
 def GetCollectionIntroduction(collection_url: str) -> str:
@@ -58,7 +57,7 @@ def GetCollectionArticlesCount(collection_url: str) -> int:
     result = re.findall(r"\d+", result)[0]
     return result
 
-def GetCollectionFansCount(collection_url: str) -> int:
+def GetCollectionSubscribersCount(collection_url: str) -> int:
     """该函数接收专题 Url，并返回该链接对应专题的关注者数量
 
     Args:
@@ -133,7 +132,7 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int =1, count:
         result.append(item_data)
     return result
 
-def GetCollectionFansInfo(collection_id: int, start_sort_id: int) -> list:
+def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int) -> list:
     """该函数接收一个专题 ID，并返回该 ID 对应专题的关注者信息
 
     Args:

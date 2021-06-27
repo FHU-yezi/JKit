@@ -23,11 +23,11 @@ def GetHash(*args: any) -> str:
     result = result[0:7]  # 取前 6 位
     return result
 
-def SimpleCache(cache_obj:  list, getting_func: object, args: dict, disable_cache: bool =False) -> any:
+def SimpleCache(cache_obj: list, getting_func: object, args: dict, disable_cache: bool =False) -> any:
     """基本缓存
 
     Args:
-        cache_obj (any): 缓存信息储存对象
+        cache_obj (list): 缓存信息储存对象
         getting_func (object): 信息获取函数
         args (dict): 信息获取函数的参数
         disable_cache (bool, optional): 禁用缓存. Defaults to False.
@@ -42,11 +42,11 @@ def SimpleCache(cache_obj:  list, getting_func: object, args: dict, disable_cach
         cache_obj.append(result)
         return result
 
-def HashCache(cache_obj: list, getting_func: object, args: dict, disable_cache: bool =False) -> any:
+def HashCache(cache_obj: dict, getting_func: object, args: dict, disable_cache: bool =False) -> any:
     """基于哈希值的缓存
 
     Args:
-        cache_obj (any): 缓存信息储存对象
+        cache_obj (dict): 缓存信息储存对象
         getting_func (object): 信息获取函数
         args (dict): 信息获取函数的参数
         disable_cache (bool, optional): 禁用缓存. Defaults to False.
@@ -375,7 +375,7 @@ class User():
         """
         if isinstance(other, User) == False:
             return False  # 不是由用户类构建的必定不相等
-        if self.slug == other.slug:
+        if self._slug == other._slug:
             return True
         else:
             return False
@@ -685,7 +685,7 @@ class Article():
         """
         if isinstance(other, Article) == False:
             return False  # 不是由文章类构建的必定不相等
-        if self.slug == other.slug:
+        if self._slug == other._slug:
             return True
         else:
             return False
@@ -727,7 +727,7 @@ class Notebook():
         self._words_count = []
         self._subscribers_count = []
         self._update_time = []
-        self._articles_info = []
+        self._articles_info = {}
         
     @property
     def url(self) -> str:
@@ -907,5 +907,215 @@ class Notebook():
         result = "文具信息摘要：\n名称：{}\n作者：{}\n文章数：{}\n总字数：{}\n关注者数量：{}\n更新时间：{}".format(
             self.name, self.author_name, self.articles_count, self.words_count, 
             self.subscribers_count, self.update_time
+        )
+        return result
+    
+class Collection():
+    """专题类
+    """
+    def __init__(self, source: str, id: int =None):
+        """构建新的文集对象
+
+        Args:
+            source (str): 文集 Url 或文集 Slug
+            id (int): 专题 Id，如不传入将无法获取编辑、推荐作者和关注者信息
+        """
+        try:
+            AssertCollectionUrl(source)
+        except InputError:
+            source = CollectionSlugToCollectionUrl(source)
+            AssertCollectionUrl(source)
+        self._url = source
+        self._id = id
+        
+        self._slug = []
+        self._name = []
+        self._introduction = []
+        self._articles_count = []
+        self._subscribers_count = []
+        self._editors_info = {}
+        self._recommended_writers_info = {}
+        self._subscribers_info = {}
+        self._articles_info = {}
+        
+    @property
+    def url(self) -> str:
+        """获取专题 Url
+
+        Returns:
+            str: 专题 Url
+        """
+        return self._url
+    
+    @property
+    def slug(self, disable_cache: bool =False) -> str:
+        """获取专题 Slug
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 专题 Slug
+        """
+        result = SimpleCache(self._slug, CollectionUrlToCollectionSlug, 
+                            {"user_url": self._slug}, disable_cache)
+        return result
+    
+    @property
+    def name(self, disable_cache: bool =False) -> str:
+        """获取专题名称
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 专题名称
+        """
+        result = SimpleCache(self._name, collection.GetCollectionName, 
+                             {"collection_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def introduction(self, disable_cache: bool =False) -> str:
+        """获取专题简介
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 专题简介
+        """
+        result = SimpleCache(self._introduction, collection.GetCollectionIntroduction, 
+                             {"collection_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def articles_count(self, disable_cache: bool =False) -> int:
+        """获取专题文章数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 专题文章数
+        """
+        result = SimpleCache(self._articles_count, collection.GetCollectionArticlesCount, 
+                             {"collection_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def subscribers_count(self, disable_cache: bool =False) -> int:
+        """获取专题关注者数
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 专题关注者数
+        """
+        result = SimpleCache(self._subscribers_count, collection.GetCollectionSubscribersCount, 
+                             {"collection_url": self._url}, disable_cache)
+        return result
+    
+    def editors_info(self, page: int =1, disable_cache: bool =False) -> list:
+        """获取专题编辑信息
+
+        Args:
+            page (int, optional): 页码. Defaults to 1.
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Raises:
+            InputError: 因缺少 Id 参数而无法获取结果时抛出此异常
+
+        Returns:
+            list: 编辑信息
+        """
+        if self._id == None:
+            raise InputError("实例化该专题对象时未传入 Id 参数，无法获取编辑信息")
+        result = HashCache(self._editors_info, collection.GetCollectionEditorsInfo, 
+                           {"collection_id": self._id, "page": page}, disable_cache)
+        return result
+
+    def recommended_writers_info(self, page: int =False, disable_cache: bool =False) -> list:
+        """获取专题推荐作者信息
+
+        Args:
+            page (int, optional): 页码. Defaults to False.
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Raises:
+            InputError: 因缺少 Id 参数而无法获取结果时抛出此异常
+
+        Returns:
+            list: 推荐作者信息
+        """
+        if self._id == None:
+            raise InputError("实例化该专题对象时未传入 Id 参数，无法获取推荐作者信息")
+        result = HashCache(self._recommended_writers_info, collection.GetCollectionRecommendedWritersInfo, 
+                           {"collection_id": self._id}, disable_cache)
+        return result
+    
+    def subscribers_info(self, start_sort_id: int, disable_cache: bool =False) -> list:
+        """获取专题关注者信息
+
+        Args:
+            start_sort_id (int): 起始序号，等于上一条数据的序号
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Raises:
+            InputError: 因缺少 Id 参数而无法获取结果时抛出此异常
+
+        Returns:
+            list: 关注者信息
+        """
+        if self._id == None:
+            raise InputError("实例化该专题对象时未传入 Id 参数，无法获取关注着信息")
+        result = HashCache(self._subscribers_info, collection.GetCollectionSubscribersInfo, 
+                           {"collection_id": self._id, "start_sort_id": start_sort_id}, disable_cache)
+        return result
+    
+    def articles_info(self, page: int =1, count: int =10, 
+                      sorting_method: str ="time", disable_cache: bool =False) -> list:
+        """获取专题文章信息
+
+        Args:
+            page (int, optional): 页码. Defaults to 1.
+            count (int, optional): 每次返回的数据数量. Defaults to 10.
+            sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            list: 文章信息
+        """
+        result = HashCache(self._articles_info, collection.GetCollectionArticlesInfo, 
+                           {"collection_url": self._url, "page": page, "count": count, 
+                            "sorting_method": sorting_method}, disable_cache)
+        return result
+    
+    def __eq__(self, other: object) -> bool:
+        """判断是否是同一个专题
+
+        Args:
+            other (object): 另一个对象
+
+        Returns:
+            bool: 判断结果
+        """
+        if isinstance(other, Collection) == False:
+            return False  # 不是由专题类构建的必定不相等
+        if self._slug == other._slug:
+            return True
+        else:
+            return False
+    
+    def __str__(self) -> str:
+        """输出专题信息摘要
+
+        Returns:
+            str: 专题信息摘要
+        """
+        result = "专题信息摘要：\n名称：{}\n文章数：{}\n关注者数：{}".format(
+            self.name, self.articles_count, self.subscribers_count
         )
         return result
