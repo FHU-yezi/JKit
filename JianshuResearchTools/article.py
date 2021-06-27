@@ -26,7 +26,39 @@ def GetArticleTitle(article_url: str) -> str:
     result = json_obj["public_title"]
     return result
 
-# TODO: 获取文章阅读量没找到接口，暂时搁置
+def GetArticleReadsCount(article_url: str) -> str:
+    """获取文章阅读量
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        str: 文章阅读量
+    """
+    AssertArticleUrl(article_url)
+    AssertArticleStatusNormal(article_url)
+    source = requests.get(article_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
+    json_obj = json.loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
+    result = json_obj["props"]["initialState"]["note"]["data"]["views_count"]
+    return result
+
+def GetArticleWordsCount(article_url: str) -> str:
+    """获取文章总字数
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        str: 文章总字数
+    """
+    AssertArticleUrl(article_url)
+    AssertArticleStatusNormal(article_url)
+    source = requests.get(article_url, headers=PC_header).content
+    html_obj = etree.HTML(source)
+    json_obj = json.loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
+    result = json_obj["props"]["initialState"]["note"]["data"]["wordage"]
+    return result
 
 def GetArticleLikesCount(article_url: str) -> int:
     """获取文章点赞量
