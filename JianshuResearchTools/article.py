@@ -27,6 +27,14 @@ def GetArticleTitle(article_url: str) -> str:
     return result
 
 def GetArticleAuthorName(article_url: str) -> str:
+    """获取文章作者名
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        str: 文章作者名
+    """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
     source = requests.get(article_url, headers=PC_header).content
