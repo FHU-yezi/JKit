@@ -236,7 +236,7 @@ class User():
             int: 资产量
         """
         result = SimpleCache(self._assets_count, user.GetUserAssetsCount, 
-                            {"usr_url": self._url}, disable_cache)
+                            {"user_url": self._url}, disable_cache)
         return result
     
     @property
@@ -446,9 +446,10 @@ class User():
         Returns:
             str: 用户信息摘要
         """
-        result = "用户信息摘要：\n用户名：{}\n关注数:{}\n粉丝数：{}\n文章数：{}\n总字数：{}\n被点赞数：{}\n总资产：{}".format(
-            self.name, self.followers_count, self.fans_count, self.articles_count, \
-            self.wordage, self.likes_count, self.assets_count
+        result = "用户信息摘要：\n用户名：{}\n性别：{}\n关注数：{}\n粉丝数：{}\n文章数：{}\n总字数：{}\n被点赞数：{}\n总资产：{}\n简书钻：{}\n简书贝：{}\n会员等级：{}\n会员过期时间：{}".format(
+            self.name, {0: "未知", 1: "男", 2: "女"}[self.gender], self.followers_count, 
+            self.fans_count, self.articles_count, self.wordage, self.likes_count, self.assets_count, 
+            self.FP_count, self.FTN_count, self.VIP_info["vip_type"], self.VIP_info["expire_date"]
         )
         return result
 

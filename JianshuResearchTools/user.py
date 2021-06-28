@@ -122,7 +122,7 @@ def GetUserLikesCount(user_url: str) -> int:
     result = json_obj["total_likes_count"]
     return result
 
-def GetUserAssetsCount(user_url: str) -> int:
+def GetUserAssetsCount(user_url: str) -> float:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的总资产
     
     # ! 当用户资产大于 10000 时，结果的精确度将下降到 1000
@@ -131,7 +131,7 @@ def GetUserAssetsCount(user_url: str) -> int:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        int: 用户总资产
+        float: 用户总资产
     """
     AssertUserUrl(user_url)
     source = requests.get(user_url, headers=PC_header).content
@@ -143,14 +143,14 @@ def GetUserAssetsCount(user_url: str) -> int:
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
-def GetUserFPCount(user_url: str) -> str:
+def GetUserFPCount(user_url: str) -> float:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        int: 用户简书钻数量
+        float: 用户简书钻数量
     """
     AssertUserUrl(user_url)
     request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
@@ -161,8 +161,8 @@ def GetUserFPCount(user_url: str) -> str:
         raise APIException("受简书限制，无法获取该用户的总资产")
     return result
 
-def GetUserFTNCount(user_url: str) -> str:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
+def GetUserFTNCount(user_url: str) -> float:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户的简书贝数量
 
     # ! 视用户资产配置情况不同，该函数获取到的数值会有不大于 1000 的偏差
 
@@ -170,7 +170,7 @@ def GetUserFTNCount(user_url: str) -> str:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        int: 用户简书钻数量
+        float: 用户简书贝数量
     """
     assets = GetUserAssetsCount(user_url)
     FTN = GetUserFPCount(user_url)
@@ -203,7 +203,7 @@ def GetUserLastUpdateTime(user_url: str) -> datetime:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        dict: 用户文章最近更新时间
+        datetime: 用户文章最近更新时间
     """
     AssertUserUrl(user_url)
     request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
