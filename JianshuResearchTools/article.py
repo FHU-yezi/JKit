@@ -305,6 +305,6 @@ def GetArticleText(article_url: str) -> str:
     json_obj = json.loads(source)
     html_text = json_obj["free_content"]
     html_obj = etree.HTML(html_text)
-    # TODO: 优化筛选逻辑，保留单个空行
-    result = "".join([item for item in html_obj.itertext() if item != "\n"])
+    result = "".join(html_obj.itertext())
+    result = re.sub("\s{2,}", "", result)
     return result
