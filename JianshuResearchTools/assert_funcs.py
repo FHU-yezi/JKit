@@ -5,6 +5,18 @@ import requests
 from exceptions import InputError, ResourceError
 from headers import jianshu_request_header
 
+def AssertString(object: any) -> None:
+    if isinstance(object, str) == False:
+        raise TypeError("传入的数据不是字符串")
+
+def AssertInt(object: any) -> None:
+    if isinstance(object, int) == False:
+        raise TypeError("传入的数据不是整数")
+
+def AssertFloat(object: any) -> None:
+    if isinstance(object, float) == False:
+        raise TypeError("传入的数据不是浮点数")
+
 
 def AssertJianshuUrl(string: str) -> None:
     """判断是否是有效的简书 Url
