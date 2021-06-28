@@ -10,7 +10,6 @@ from convert import UserUrlToUserSlug
 from exceptions import APIException
 from headers import PC_header, jianshu_request_header, mobile_header
 
-
 def GetUserName(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的昵称
 
@@ -21,9 +20,26 @@ def GetUserName(user_url: str) -> str:
         str: 用户昵称
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//a[@class='name']")[0].text
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["nickname"]
+    return result
+
+def GetUserGender(user_url: str) ->int:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户的性别
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        str: 用户性别，0 为未知，1 为男，2 为女
+    """
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["gender"]
     return result
 
 def GetUserFollowersCount(user_url: str) -> int:
@@ -36,10 +52,10 @@ def GetUserFollowersCount(user_url: str) -> int:
         int: 用户关注数
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='info']/ul/li[1]/div[@class='meta-block']/a/p")[0].text
-    result = int(result)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["following_users_count"]
     return result
 
 def GetUserFansCount(user_url: str) -> int:
@@ -52,10 +68,10 @@ def GetUserFansCount(user_url: str) -> int:
         int: 用户粉丝数
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='info']/ul/li[2]/div[@class='meta-block']/a/p")[0].text
-    result = int(result)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["followers_count"]
     return result
 
 def GetUserArticlesCount(user_url: str) -> int:
@@ -84,10 +100,10 @@ def GetUserWordage(user_url: str) -> int:
         int: 用户文章总字数
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='info']/ul/li[4]/div[@class='meta-block']/p")[0].text
-    result = int(result)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["total_wordage"]
     return result
 
 def GetUserLikesCount(user_url: str) -> int:
@@ -100,10 +116,10 @@ def GetUserLikesCount(user_url: str) -> int:
         int: 用户被喜欢数
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='info']/ul/li[5]/div[@class='meta-block']/p")[0].text
-    result = int(result)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["total_likes_count"]
     return result
 
 def GetUserAssetsCount(user_url: str) -> int:
@@ -138,14 +154,14 @@ def GetUserFPCount(user_url: str) -> str:
         int: 用户简书钻数量
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=mobile_header).content
-    html_obj = etree.HTML(source)
-    try:
-        result = html_obj.xpath("//div[@class='follow-meta']/span[3]")[0].text
-    except IndexError:
-        raise APIException("受简书网页展示限制，无法获取该用户的简书钻数量")
-    result = float(result)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["jsd_balance"] / 1000
+    if json_obj["total_wordage"] == 0 and result == 0:
+        raise APIException("受简书限制，无法获取该用户的总资产")
     return result
+
 
 def GetUserFTNCount(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
@@ -182,20 +198,84 @@ def GetUserBadgesList(user_url: str) -> list:
     result = [item for item in result if item != ""]  # 去除空值
     return result
 
-def GetUserIntroduction(user_url: str) -> str:
+def GetUserLastUpdateTime(user_url: str) -> datetime:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户的文章最近更新时间
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        dict: 用户文章最近更新时间
+    """
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = datetime.fromtimestamp(json_obj["last_updated_at"])
+    return result
+
+def GetUserVIPInfo(user_url: str) -> dict:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户的会员信息
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        dict: 用户会员信息
+    """
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    try:
+        result = {
+            "vip_type": {
+                "bronze": "铜牌",
+                "silver": "银牌" , 
+                "gold": "黄金", 
+                "platina": "白金"
+            }[json_obj["member"]["type"]], 
+            "expire_date": datetime.fromtimestamp(json_obj["member"]["expires_at"])
+        }
+    except KeyError:
+        result = {
+            "vip_type": None, 
+            "expire_date": None
+        }
+    return result
+
+def GetUserIntroductionHtml(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的个人简介
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        str: 用户个人简介
+        str: Html 格式的用户个人简介
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    lines = html_obj.xpath("//div[@class='js-intro']/text() | //div[@class='js-intro']/a/@href")  # 同时获取文字和链接
-    result = "\n".join(lines)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["intro"]
+    return result
+
+def GetUserIntroductionText(user_url: str) -> str:
+    """该函数接收用户个人主页 Url，并返回该链接对应用户的个人简介
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        str: 纯文本格式的用户个人简介
+    """
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    html_obj = etree.HTML(json_obj["intro"])
+    result = html_obj.xpath("//*/text()")
+    result = "\n".join(result)
     return result
 
 def GetUserBasicInformation(user_url: str) -> dict:
