@@ -6,6 +6,35 @@ from assert_funcs import (AssertArticleUrl, AssertCollectionUrl,
                           AssertIslandUrl, AssertNotebookUrl, AssertUserUrl)
 from headers import jianshu_request_header
 
+def UserUrlToUserId(user_url: str) -> int:
+    """该函数接收用户个人主页 Url，并将其转换成用户 Id
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        int: 用户 Id
+    """
+    AssertUserUrl(user_url)
+    request_url = user_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/user/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["id"]
+    return result
+
+def UserSlugToUserId(user_slug: str) -> int:
+    """该函数接收用户 Slug，并将其转换成用户 Id
+
+    Args:
+        user_url (str): 用户 Slug
+
+    Returns:
+        int: 用户 Id
+    """
+    user_url = UserSlugToUserUrl(user_slug)
+    result = UserUrlToUserId(user_url)
+    return result
+    
 
 def UserUrlToUserSlug(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并将其转换成用户 Slug
