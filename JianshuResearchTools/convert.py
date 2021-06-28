@@ -16,7 +16,7 @@ def UserUrlToUserId(user_url: str) -> int:
         int: 用户 Id
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/user/slug/")
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/user/slug/")
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = json_obj["id"]
