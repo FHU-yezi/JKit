@@ -26,14 +26,14 @@ def GetUserName(user_url: str) -> str:
     result = json_obj["nickname"]
     return result
 
-def GetUserGender(user_url: str) ->int:
+def GetUserGender(user_url: str) -> int:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的性别
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        str: 用户性别，0 为未知，1 为男，2 为女
+        int: 用户性别，0 为未知，1 为男，2 为女
     """
     AssertUserUrl(user_url)
     request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
@@ -143,7 +143,6 @@ def GetUserAssetsCount(user_url: str) -> int:
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
-
 def GetUserFPCount(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
 
@@ -161,7 +160,6 @@ def GetUserFPCount(user_url: str) -> str:
     if json_obj["total_wordage"] == 0 and result == 0:
         raise APIException("受简书限制，无法获取该用户的总资产")
     return result
-
 
 def GetUserFTNCount(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量

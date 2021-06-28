@@ -82,6 +82,7 @@ class User():
 
         self._slug = []
         self._name = []
+        self._gender = []
         self._followers_count = []
         self._fans_count = []
         self._articles_count = []
@@ -91,7 +92,10 @@ class User():
         self._FP_count = []
         self._FTN_count = []
         self._badges = []
-        self._introduction = []
+        self._last_update_time = []
+        self._VIP_info = []
+        self._introduction_text = []
+        self._introduction_html = []
         self._notebooks = []
         self._own_collections = []
         self._manageable_collections = []
@@ -137,6 +141,20 @@ class User():
                             {"user_url": self._url}, disable_cache)
         return result
 
+    @property
+    def gender(self, disable_cache: bool = False) -> int:
+        """获取用户性别
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存，强制请求新结果. Defaults to False.
+
+        Returns:
+            int: 用户性别，0 为未知，1 为男，2 为女
+        """
+        result = SimpleCache(self._gender, user.GetUserGender, 
+                             {"user_url": self._url}, disable_cache)
+        return result
+    
     @property
     def followers_count(self, disable_cache: bool = False) -> int:
         """获取用户关注数
@@ -264,16 +282,58 @@ class User():
         return result
     
     @property
-    def introduction(self, disable_cache: bool = False) -> str:
-        """获取用户简介
+    def last_update_time(self, disable_cache: bool = False) -> datetime:
+        """获取最近更新时间
 
         Args:
             disable_cache (bool, optional): 禁用缓存. Defaults to False.
 
         Returns:
-            str: 用户简介
+            datetime: 最近更新时间
         """
-        result = SimpleCache(self._introduction, user.GetUserIntroduction, 
+        result = SimpleCache(self._last_update_time, user.GetUserLastUpdateTime, 
+                             {"user_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def VIP_info(self, disable_cache: bool = False) -> dict:
+        """获取用户会员信息
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            dict: 会员信息
+        """
+        result = SimpleCache(self._VIP_info, user.GetUserVIPInfo, 
+                             {"user_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def introduction_text(self, disable_cache: bool = False) -> str:
+        """获取纯文本格式的用户简介
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str:纯文本格式的用户简介
+        """
+        result = SimpleCache(self._introduction_text, user.GetUserIntroductionText, 
+                             {"user_url", self._url}, disable_cache)
+        return result
+    
+    @property
+    def introduction_html(self, disable_cache: bool = False) -> str:
+        """获取 Html 格式的用户简介
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: Html 格式的用户简介
+        """
+        result = SimpleCache(self._introduction_html, user.GetUserIntroductionHtml, 
                             {"user_url": self._url}, disable_cache)
         return result
     
