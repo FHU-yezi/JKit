@@ -1,7 +1,8 @@
 import json
-import time
 
 import requests
+
+import datetime
 
 from assert_funcs import AssertJianshuUrl
 from convert import UserSlugToUserUrl
@@ -81,7 +82,7 @@ def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带�
         list: 对应日期的文章收益排行榜数据
     """
     if date == "latest":
-        date = time.strftime("%Y%m%d", time.localtime())
+        date = (datetime.date.today() + datetime.timedelta(days=-1)).strftime("%Y%m%d")
     params = {
         "date": date
     }
@@ -121,7 +122,7 @@ def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> list:  # TO
         list: 对应日期的用户收益排行榜数据
     """
     if date == "latest":
-        date = time.strftime("%Y%m%d", time.localtime())
+        date = (datetime.date.today() + datetime.timedelta(days=-1)).strftime("%Y%m%d")
     params = {
         "date": date, 
         "type": {
