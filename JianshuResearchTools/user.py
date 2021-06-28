@@ -278,36 +278,6 @@ def GetUserIntroductionText(user_url: str) -> str:
     result = "\n".join(result)
     return result
 
-def GetUserBasicInformation(user_url: str) -> dict:
-    # TODO: 这个名字有点难理解，应该改个名
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的基础信息
-
-    Args:
-        user_url (str): 用户个人主页 Url
-
-    Returns:
-        dict: 用户基础信息
-    """
-    AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = {
-        "name": html_obj.xpath("//a[@class='name']")[0].text, 
-        "followers_count": int(html_obj.xpath("//div[@class='info']/ul/li[1]/div[@class='meta-block']/a/p")[0].text), 
-        "fans_count": int(html_obj.xpath("//div[@class='info']/ul/li[2]/div[@class='meta-block']/a/p")[0].text), 
-        "articles_count": int(html_obj.xpath("//div[@class='info']/ul/li[3]/div[@class='meta-block']/a/p")[0].text), 
-        "words_count": int(html_obj.xpath("//div[@class='info']/ul/li[4]/div[@class='meta-block']/p")[0].text), 
-        "likes_count": int(html_obj.xpath("//div[@class='info']/ul/li[5]/div[@class='meta-block']/p")[0].text)
-    }
-    try:  # 由于资产信息有可能出现获取失败的情况，故需要单独处理
-        assets_count = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
-    except IndexError:
-        print("受简书网页展示限制，无法获取该用户的总资产。\n为保证其它数据正常获取，该错误已被屏蔽")
-    else:
-        assets_count = float(assets_count.replace(".", "").replace("w", "000"))
-        result["assets_count"] = assets_count
-    return result
-
 def GetUserNotebooksInfo(user_url: str) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文集与连载信息
 
