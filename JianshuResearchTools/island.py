@@ -20,7 +20,7 @@ def GetIslandName(island_url: str) -> str:
         str: 小岛名称
     """
     AssertIslandUrl(island_url)
-    source = requests.get(island_url, headers=PC_header).content.decode()  # TODO: 不知道为什么会出现编码问题
+    source = requests.get(island_url, headers=PC_header).text
     html_obj = etree.HTML(source)
     result = html_obj.xpath("//div[@class='nickname']/text()")[0]
     result = result.strip()
@@ -36,7 +36,7 @@ def GetIslandIntroduction(island_url: str) -> str:
         str: 小岛简介
     """
     AssertIslandUrl(island_url)
-    source = requests.get(island_url, headers=PC_header).content.decode()  # TODO: 不知道为什么会出现编码问题
+    source = requests.get(island_url, headers=PC_header).text
     html_obj = etree.HTML(source)
     result = html_obj.xpath("//div[@class='info']/text()")[0]
     result = result.strip()
@@ -52,7 +52,7 @@ def GetIslandMembersCount(island_url: str) -> int:
         int: 成员数量
     """
     AssertIslandUrl(island_url)
-    source = requests.get(island_url, headers=PC_header).content.decode()  # TODO: 不知道为什么会出现编码问题
+    source = requests.get(island_url, headers=PC_header).text
     html_obj = etree.HTML(source)
     result = html_obj.xpath("//div[@class='info']/text()")[1]
     result = re.findall(r"\d+", result)[0]
@@ -72,7 +72,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
 
         Returns:
             list: 帖子信息
-        """
+    """
     AssertIslandUrl(island_url)
     params = {
         "group_slug": IslandUrlToIslandSlug(island_url), 
