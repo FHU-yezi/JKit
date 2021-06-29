@@ -7,8 +7,8 @@ from lxml import etree
 
 from assert_funcs import AssertUserUrl
 from convert import UserUrlToUserSlug
-from exceptions import APIException
-from headers import PC_header, jianshu_request_header, mobile_header
+from exceptions import APIError
+from headers import PC_header, jianshu_request_header
 
 def GetUserName(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的昵称
@@ -139,7 +139,7 @@ def GetUserAssetsCount(user_url: str) -> float:
     try:
         result = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
     except IndexError:
-        raise APIException("受简书网页展示限制，无法获取该用户的总资产")
+        raise APIError("受简书网页展示限制，无法获取该用户的总资产")
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
@@ -158,7 +158,7 @@ def GetUserFPCount(user_url: str) -> float:
     json_obj = json.loads(source)
     result = json_obj["jsd_balance"] / 1000
     if json_obj["total_wordage"] == 0 and result == 0:
-        raise APIException("受简书限制，无法获取该用户的总资产")
+        raise APIError("受简书限制，无法获取该用户的总资产")
     return result
 
 def GetUserFTNCount(user_url: str) -> float:

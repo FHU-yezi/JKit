@@ -2,8 +2,11 @@ import json
 
 import requests
 
-from assert_funcs import *
+from assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
+                          AssertCollectionUrl, AssertIslandUrl,
+                          AssertNotebookUrl, AssertString, AssertUserUrl)
 from headers import jianshu_request_header
+
 
 def UserUrlToUserId(user_url: str) -> int:
     """该函数接收用户个人主页 Url，并将其转换成用户 Id
@@ -151,7 +154,7 @@ def NotebookSlugToNotebookUrl(notebook_slug: str) -> str:
     Returns:
         str: 文集 Url
     """
-    AssertString(notebook_url)
+    AssertString(notebook_slug)
     result = "https://www.jinshu.com/p/" + notebook_slug
     AssertNotebookUrl(result)
     return result
@@ -179,7 +182,7 @@ def CollectionSlugToCollectionUrl(collection_slug: str) -> str:
     Returns:
         str: 专题 Url
     """
-    AssertString(collection_url)
+    AssertString(collection_slug)
     result = "https://www.jinshu.com/c/" + collection_slug
     AssertCollectionUrl(result)
     return result
@@ -207,7 +210,7 @@ def IslandSlugToIslandUrl(island_slug: str) -> str:
     Returns:
         str: 小岛 Url
     """
-    AssertString(island_url)
+    AssertString(island_slug)
     result = "https://www.jinshu.com/g/" + island_slug
     AssertIslandUrl(result)
     return result

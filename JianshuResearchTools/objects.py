@@ -1,4 +1,4 @@
-import hashlib
+from hashlib import md5
 from datetime import datetime
 
 import article
@@ -7,8 +7,14 @@ import collection
 import island
 import notebook
 import user
-from assert_funcs import *
-from convert import *
+from assert_funcs import (AssertArticleUrl, AssertCollectionUrl,
+                          AssertIslandUrl, AssertNotebookUrl, AssertUserUrl)
+from convert import (ArticleSlugToArticleUrl, ArticleUrlToArticleSlug,
+                     CollectionSlugToCollectionUrl,
+                     CollectionUrlToCollectionSlug, IslandSlugToIslandUrl,
+                     IslandUrlToIslandSlug, NotebookSlugToNotebookUrl,
+                     NotebookUrlToNotebookId, NotebookUrlToNotebookSlug,
+                     UserSlugToUserUrl, UserUrlToUserSlug)
 from exceptions import InputError
 
 
@@ -19,7 +25,7 @@ def GetHash(*args: any) -> str:
         str: 哈希值前 6 位
     """
     data = "".join([str(item) for item in args])
-    result = hashlib.md5(data.encode("utf-8")).hexdigest()
+    result = md5(data.encode("utf-8")).hexdigest()
     result = result[0:7]  # 取前 6 位
     return result
 

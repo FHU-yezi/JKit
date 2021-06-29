@@ -6,7 +6,7 @@ import requests
 from lxml import etree
 
 from assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
-from headers import PC_header, jianshu_request_header, mobile_header
+from headers import PC_header, jianshu_request_header
 
 
 def GetArticleTitle(article_url: str) -> str:

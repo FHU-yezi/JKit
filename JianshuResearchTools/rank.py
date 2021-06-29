@@ -1,12 +1,10 @@
+import datetime
 import json
 
 import requests
 
-import datetime
-
-from assert_funcs import AssertJianshuUrl
 from convert import UserSlugToUserUrl
-from exceptions import APIException, ResourceError
+from exceptions import APIError, ResourceError
 from headers import jianshu_request_header
 from user import GetUserAssetsCount
 
@@ -42,7 +40,7 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:
             try:
                 item_data["Assets"] = GetUserAssetsCount(user_url)
                 item_data["FTN"] =  round(item_data["Assets"] - item_data["FP"], 3) # 处理浮点数精度问题
-            except APIException:
+            except APIError:
                 pass
         result.append(item_data)
     return result
