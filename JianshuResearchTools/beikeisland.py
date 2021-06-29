@@ -145,12 +145,17 @@ def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int = 1) -> list:
     json_obj = json.loads(source)
     result = []
     for item in json_obj["data"]["tradelist"]:
-        item_data = { # TODO: 这里应该改成双层嵌套结构
+        item_data = {
             "tradeid": item["id"], 
             "tradeslug": item["tradeno"],   # ? 我也不确定这个 no 什么意思,回来去问问
-            "bkname": item["reusername"],   # ? 还有个 nickname，不知道哪个对
+            "user":{
             "jianshuname": item["jianshuname"], 
+            "bkname": item["reusername"],   # ? 还有个 nickname，不知道哪个对
             "avatar": item["avatarurl"], 
+            "userlevelcode": item["levelnum"], 
+            "userlevel": item["userlevel"], 
+            "user_trade_count": item["tradecount"]
+            }, 
             "total": item["recount"], 
             "traded": item["recount"] - item["cantradenum"], 
             "remaining": item["cantradenum"], 
@@ -159,10 +164,7 @@ def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int = 1) -> list:
             "percentage": item["compeletper"], 
             "statuscode": item["statuscode"], 
             "status": item["statustext"], 
-            "userlevelcode": item["levelnum"], 
-            "userlevel": item["userlevel"], 
-            "user_trade_count": item["tradecount"], 
-            "release_time": item["releasetime"]
+            "publish_time": datetime.fromisoformat(item["releasetime"])
         }
         result.append(item_data)
     return result
