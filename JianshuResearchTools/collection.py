@@ -3,7 +3,6 @@ import re
 from datetime import datetime
 
 import requests
-from lxml import etree
 
 from assert_funcs import AssertCollectionUrl
 from convert import CollectionUrlToCollectionSlug
@@ -20,12 +19,29 @@ def GetCollectionName(collection_url: str) -> str:
         str: 链接对应专题的名称
     """
     AssertCollectionUrl(collection_url)
-    source = requests.get(collection_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//a[@class='name']")[0].text
+    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["title"]
     return result
 
-def GetCollectionIntroduction(collection_url: str) -> str:
+def GetCollectionImageUrl(collection_url: str) -> str:
+    """获取专题图片链接
+
+    Args:
+        collection_url (str): 专题 Url
+
+    Returns:
+        str: 专题图片链接
+    """
+    AssertCollectionUrl(collection_url)
+    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["image"]
+    return result
+
+def GetCollectionIntroductionText(collection_url: str) -> str:
     """该函数接收专题 Url，并返回该链接对应专题的简介
 
     Args:
@@ -35,10 +51,26 @@ def GetCollectionIntroduction(collection_url: str) -> str:
         str: 链接对应专题的简介
     """
     AssertCollectionUrl(collection_url)
-    source = requests.get(collection_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='description js-description']/p/text()")
-    result = "".join(result)
+    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["content_without_html"]
+    return result
+
+def GetCollectionIntroductionHtml(collection_url: str) -> str:
+    """该函数接收专题 Url，并返回该链接对应专题的简介
+
+    Args:
+        collection_url (str): 专题 Url
+
+    Returns:
+        str: 链接对应专题的简介
+    """
+    AssertCollectionUrl(collection_url)
+    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["content_in_full"]
     return result
 
 def GetCollectionArticlesCount(collection_url: str) -> int:
@@ -51,10 +83,10 @@ def GetCollectionArticlesCount(collection_url: str) -> int:
         int: 链接对应专题的收录文章数量
     """
     AssertCollectionUrl(collection_url)
-    source = requests.get(collection_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='info']")[0].text
-    result = re.findall(r"\d+", result)[0]
+    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["notes_count"]
     return result
 
 def GetCollectionSubscribersCount(collection_url: str) -> int:
@@ -67,10 +99,62 @@ def GetCollectionSubscribersCount(collection_url: str) -> int:
         int: 链接对应专题的关注者数量
     """
     AssertCollectionUrl(collection_url)
-    source = requests.get(collection_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='info']")[0].text
-    result = re.findall(r"\d+", result)[1]
+    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["subscribers_count"]
+    return result
+
+def GetCollectionUpdateTime(collection_url: str) -> datetime:
+    """获取专题文章更新时间
+
+    Args:
+        collection_url (str): 专题 Url
+
+    Returns:
+        datetime: 专题文章更新时间
+    """
+    AssertCollectionUrl(collection_url)
+    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = datetime.fromtimestamp(json_obj["newly_added_at"])
+    return result
+
+def GetCollectionInfoUpdatetime(collection_url: str) -> datetime:
+    """获取专题信息更新时间
+
+    Args:
+        collection_url (str): 专题 Url
+
+    Returns:
+        datetime: 专题信息更新时间
+    """
+    AssertCollectionUrl(collection_url)
+    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = datetime.fromtimestamp(json_obj["last_updated_at"])
+    return result
+
+def GetCollectionOwnerInfo(collection_url: str) -> dict:
+    """获取专题的所有者信息
+
+    Args:
+        collection_url (str): 专题 Url
+
+    Returns:
+        dict: 用户信息
+    """
+    AssertCollectionUrl(collection_url)
+    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = {
+        "uid": json_obj["owner"]["id"], 
+        "name": json_obj["owner"]["nickname"], 
+        "uslug": json_obj["owner"]["slug"]
+    }
     return result
 
 def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> list:
