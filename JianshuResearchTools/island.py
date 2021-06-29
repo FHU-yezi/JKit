@@ -1,9 +1,7 @@
 import json
-import re
 from datetime import datetime
 
 import requests
-from lxml import etree
 
 from assert_funcs import AssertIslandUrl
 from convert import IslandUrlToIslandSlug
@@ -20,10 +18,26 @@ def GetIslandName(island_url: str) -> str:
         str: 小岛名称
     """
     AssertIslandUrl(island_url)
-    source = requests.get(island_url, headers=PC_header).text
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='nickname']/text()")[0]
-    result = result.strip()
+    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["name"]
+    return result
+
+def GetIslandImageUrl(island_url: str) -> str:
+    """获取小岛图片链接
+
+    Args:
+        island_url (str): 小岛 Url
+
+    Returns:
+        str: 小岛图片链接
+    """
+    AssertIslandUrl(island_url)
+    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["image"]
     return result
 
 def GetIslandIntroduction(island_url: str) -> str:
@@ -36,10 +50,10 @@ def GetIslandIntroduction(island_url: str) -> str:
         str: 小岛简介
     """
     AssertIslandUrl(island_url)
-    source = requests.get(island_url, headers=PC_header).text
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='info']/text()")[0]
-    result = result.strip()
+    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["intro"]
     return result
 
 def GetIslandMembersCount(island_url: str) -> int:
@@ -52,10 +66,42 @@ def GetIslandMembersCount(island_url: str) -> int:
         int: 成员数量
     """
     AssertIslandUrl(island_url)
-    source = requests.get(island_url, headers=PC_header).text
-    html_obj = etree.HTML(source)
-    result = html_obj.xpath("//div[@class='info']/text()")[1]
-    result = re.findall(r"\d+", result)[0]
+    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["members_count"]
+    return result
+
+def GetIslandPostsCount(island_url: str) -> int:
+    """获取小岛帖子数量
+
+    Args:
+        island_url (str): 小岛 Url
+
+    Returns:
+        int: 帖子数量
+    """
+    AssertIslandUrl(island_url)
+    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["posts_count"]
+    return result
+
+def GetIslandCategory(island_url: str) -> int:
+    """获取小岛分类
+
+    Args:
+        island_url (str): 小岛 Url
+
+    Returns:
+        int: 分类
+    """
+    AssertIslandUrl(island_url)
+    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    result = json_obj["category"]["name"]
     return result
 
 def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10, 
