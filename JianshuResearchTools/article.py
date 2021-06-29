@@ -306,5 +306,5 @@ def GetArticleText(article_url: str) -> str:
     html_text = json_obj["free_content"]
     html_obj = etree.HTML(html_text)
     result = "".join(html_obj.itertext())
-    result = re.sub("\s{2,}", "", result)
+    result = re.sub(r"\s{2,}", "", result)
     return result
