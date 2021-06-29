@@ -54,7 +54,7 @@ def GetBeikeIslandTotalTradeRankData(page: int = 1) -> list:
         item_data = {
             "bkuid": item["userid"], 
             "jianshuname": item["jianshuname"], 
-            "avatar": item["avatarurl"], 
+            "avatar_url": item["avatarurl"], 
             "userurl": item["jianshupath"], 
             "uslug": UserUrlToUserSlug(item["jianshupath"]), 
             "total_trade_amount": item["totalamount"], 
@@ -84,7 +84,7 @@ def GetBeikeIslandBuyTradeRankData(page: int = 1) -> list:
         item_data = {
             "bkuid": item["userid"], 
             "jianshuname": item["jianshuname"], 
-            "avatar": item["avatarurl"], 
+            "avatar_url": item["avatarurl"], 
             "userurl": item["jianshupath"], 
             "uslug": UserUrlToUserSlug(item["jianshupath"]), 
             "total_trade_amount": item["totalamount"], 
@@ -114,7 +114,7 @@ def GetBeikeIslandSellTradeRankData(page: int = 1) -> list:
         item_data = {
             "bkuid": item["userid"], 
             "jianshuname": item["jianshuname"], 
-            "avatar": item["avatarurl"], 
+            "avatar_url": item["avatarurl"], 
             "userurl": item["jianshupath"], 
             "uslug": UserUrlToUserSlug(item["jianshupath"]), 
             "total_trade_amount": item["totalamount"], 
@@ -151,7 +151,7 @@ def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int = 1) -> list:
             "user":{
             "jianshuname": item["jianshuname"], 
             "bkname": item["reusername"],   # ? 还有个 nickname，不知道哪个对
-            "avatar": item["avatarurl"], 
+            "avatar_url": item["avatarurl"], 
             "userlevelcode": item["levelnum"], 
             "userlevel": item["userlevel"], 
             "user_trade_count": item["tradecount"]

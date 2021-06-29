@@ -986,7 +986,7 @@ class Collection():
         
         self._slug = []
         self._name = []
-        self._avatar = []
+        self._avatar_url = []
         self._introduction_text = []
         self._introduction_html = []
         self._articles_update_time = []
@@ -1038,7 +1038,7 @@ class Collection():
         return result
     
     @property
-    def avatar(self, disable_cache: bool = False) -> str:
+    def avatar_url(self, disable_cache: bool = False) -> str:
         """获取专题头像
 
         Args:

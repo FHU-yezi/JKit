@@ -326,7 +326,7 @@ def GetUserOwnCollectionsInfo(user_url: str) -> list:
             "cid": item["id"], 
             "cslug": item["slug"], 
             "name": item["title"], 
-            "avatar": item["avatar"]
+            "avatar_url": item["avatar"]
         }
         result.append(item_data)
     return result
@@ -353,7 +353,7 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
             "cid": item["id"], 
             "cslug": item["slug"], 
             "name": item["title"], 
-            "avatar": item["avatar"]
+            "avatar_url": item["avatar"]
         }
         result.append(item_data)
     return result
@@ -396,7 +396,7 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10) -> list:
                 "uid": item["object"]["data"]["user"]["id"], 
                 "name": item["object"]["data"]["user"]["nickname"], 
                 "uslug": item["object"]["data"]["user"]["slug"], 
-                "avatar": item["object"]["data"]["user"]["avatar"]
+                "avatar_url": item["object"]["data"]["user"]["avatar"]
             }, 
             "total_fp_amount": item["object"]["data"]["total_fp_amount"] / 1000, 
             "comments_count": item["object"]["data"]["public_comments_count"], 

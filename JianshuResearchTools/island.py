@@ -160,7 +160,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
                 "uid": item["user"]["id"], 
                 "uslug": item["user"]["slug"], 
                 "user_name": item["user"]["nickname"], 
-                "avatar": item["user"]["avatar"]
+                "avatar_url": item["user"]["avatar"]
                 # "badge": item["user"]["badge"]["text"]
                 # 有个 member 不知道干什么用的，没解析
             }

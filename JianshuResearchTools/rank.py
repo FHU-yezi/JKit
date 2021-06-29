@@ -61,7 +61,7 @@ def GetDailyArticleRankData() -> list:
             "ranking": item["rank"], 
             "uslug": item["slug"], 
             "name": item["nickname"], 
-            "avatar": item["avatar"], 
+            "avatar_url": item["avatar"], 
             "check_in_count": item["checkin_count"]
         }
         result.append(item_data)
@@ -97,7 +97,7 @@ def GetArticleFPRankData(date: str ="latest") -> list:  # TODO: 是不是不带�
             "aslug": item["slug"], 
             "title": item["title"], 
             "author_name": item["author_nickname"], 
-            "author_avatar": item["author_avatar"],
+            "author_avatar_url": item["author_avatar"],
             "fp_to_author": item["author_fp"] / 1000, 
             "fp_to_voter": item["voter_fp"] / 1000, 
             "total_fp": item["fp"] / 1000
@@ -141,7 +141,7 @@ def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> list:  # TO
             "ranking": ranking, 
             "uslug": item["slug"], 
             "name": item["nickname"], 
-            "avatar": item["avatar"], 
+            "avatar_url": item["avatar"], 
             "fp_from_write": item["author_fp"], 
             "fp_from_vote": item["voter_fp"]
         }

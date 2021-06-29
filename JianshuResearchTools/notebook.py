@@ -70,7 +70,7 @@ def GetNotebookAuthorInfo(notebook_url: str) -> dict:
     result = {
         "name": json_obj["user"]["nickname"], 
         "uslug": json_obj["user"]["slug"], 
-        "avatar": json_obj["user"]["avatar"]
+        "avatar_url": json_obj["user"]["avatar"]
     }
     return result
 
@@ -168,7 +168,7 @@ def GetNotebookArticlesInfo(notebook_url: str, page: int = 1,
                 "uid": item["object"]["data"]["user"]["id"], 
                 "name": item["object"]["data"]["user"]["nickname"], 
                 "uslug": item["object"]["data"]["user"]["slug"], 
-                "avatar": item["object"]["data"]["user"]["avatar"]
+                "avatar_url": item["object"]["data"]["user"]["avatar"]
             }, 
             "total_fp_amount": item["object"]["data"]["total_fp_amount"] / 1000, 
             "comments_count": item["object"]["data"]["public_comments_count"], 

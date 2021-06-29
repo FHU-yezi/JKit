@@ -178,7 +178,7 @@ def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> list:
         item_data = {
             "uslug": item["slug"], 
             "name": item["nickname"], 
-            "avatar": item["avatar_source"]
+            "avatar_url": item["avatar_source"]
         }
         result.append(item_data)
     return result
@@ -208,7 +208,7 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count
             "uid": item["id"], 
             "uslug": item["slug"], 
             "name": item["nickname"], 
-            "avatar": item["avatar_source"], 
+            "avatar_url": item["avatar_source"], 
             "collection_name": item["collection_name"], 
             "likes_count": item["total_likes_count"], 
             "words_count": item["total_wordage"]
@@ -237,7 +237,7 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int) -> list
         item_data = {
             "uslug": item["slug"], 
             "name": item["nickname"], 
-            "avatar": item["avatar_source"], 
+            "avatar_url": item["avatar_source"], 
             "sort_id": item["like_id"], 
             "subscribe_time": datetime.fromisoformat(item["subscribed_at"])
         }
@@ -289,7 +289,7 @@ def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
                 "uid": item["object"]["data"]["user"]["id"], 
                 "name": item["object"]["data"]["user"]["nickname"], 
                 "uslug": item["object"]["data"]["user"]["slug"], 
-                "avatar": item["object"]["data"]["user"]["avatar"]
+                "avatar_url": item["object"]["data"]["user"]["avatar"]
             }, 
             "total_fp_amount": item["object"]["data"]["total_fp_amount"] / 1000, 
             "comments_count": item["object"]["data"]["public_comments_count"], 
