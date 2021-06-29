@@ -986,10 +986,15 @@ class Collection():
         
         self._slug = []
         self._name = []
-        
-        self._introduction = []
+        self._avatar = []
+        self._introduction_text = []
+        self._introduction_html = []
+        self._articles_update_time = []
+        self._info_update_time = []
         self._articles_count = []
         self._subscribers_count = []
+        self._owner_info = []
+        
         self._editors_info = {}
         self._recommended_writers_info = {}
         self._subscribers_info = {}
@@ -1033,16 +1038,86 @@ class Collection():
         return result
     
     @property
-    def introduction(self, disable_cache: bool = False) -> str:
-        """获取专题简介
+    def avatar(self, disable_cache: bool = False) -> str:
+        """获取专题头像
 
         Args:
             disable_cache (bool, optional): 禁用缓存. Defaults to False.
 
         Returns:
-            str: 专题简介
+            str: 专题头像
         """
-        result = SimpleCache(self._introduction, collection.GetCollectionIntroduction, 
+        result = SimpleCache(self._name, collection.GetCollectionAvatarUrl, 
+                             {"collection_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def introduction_text(self, disable_cache: bool = False) -> str:
+        """获取纯文本格式的专题简介
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 纯文本格式的专题简介
+        """
+        result = SimpleCache(self._introduction_text, collection.GetCollectionIntroductionText, 
+                             {"collection_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def introduction_html(self, disable_cache: bool = False) -> str:
+        """获取 Html 格式的专题简介
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str:  Html 格式的专题简介
+        """
+        result = SimpleCache(self._introduction_html, collection.GetCollectionIntroductionHtml, 
+                             {"collection_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def articles_update_time(self, disable_cache: bool = False) -> datetime:
+        """获取专题文章更新时间
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            datetime: 专题文章更新时间
+        """
+        result = SimpleCache(self._articles_update_time, collection.GetCollectionArticlesUpdateTime, 
+                             {"collection_url": self._url}, disable_cache)
+        return result
+
+    @property
+    def info_update_time(self, disable_cache: bool = False) -> datetime:
+        """获取专题信息更新时间
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            datetime: 专题信息更新时间
+        """
+        result = SimpleCache(self._info_update_time, collection.GetCollectionInfoUpdateTime, 
+                             {"collection_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def owner_info(self, disable_cache: bool = False) -> dict:
+        """获取专题的所有者信息
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            dict: 用户信息
+        """
+        result = SimpleCache(self._owner_info, collection.GetCollectionOwnerInfo, 
                              {"collection_url": self._url}, disable_cache)
         return result
     
@@ -1172,10 +1247,14 @@ class Collection():
         Returns:
             str: 专题信息摘要
         """
-        result = "专题信息摘要：\n名称：{}\n文章数：{}\n关注者数：{}".format(
-            self.name, self.articles_count, self.subscribers_count
+        result = "专题信息摘要：\n名称：{}\n文章更新时间：{}\n信息更新时间：{}\n所有者：{}\n收录文章数：{}\n关注者数：{}".format(
+            self.name, self.articles_update_time, self.info_update_time, 
+            self.owner_info["name"], self.articles_count, self.subscribers_count
         )
         return result
+    
+c1 = Collection("https://www.jianshu.com/c/c022c24c31a5")
+print(c1)
 
 class Island():
     """小岛类

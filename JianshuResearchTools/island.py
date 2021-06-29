@@ -24,7 +24,7 @@ def GetIslandName(island_url: str) -> str:
     result = json_obj["name"]
     return result
 
-def GetIslandAvagarUrl(island_url: str) -> str:
+def GetIslandAvatarUrl(island_url: str) -> str:
     """获取小岛头像链接
 
     Args:

@@ -25,7 +25,7 @@ def GetCollectionName(collection_url: str) -> str:
     result = json_obj["title"]
     return result
 
-def GetCollectionAvagarUrl(collection_url: str) -> str:
+def GetCollectionAvatarUrl(collection_url: str) -> str:
     """获取专题头像链接
 
     Args:
@@ -105,7 +105,7 @@ def GetCollectionSubscribersCount(collection_url: str) -> int:
     result = json_obj["subscribers_count"]
     return result
 
-def GetCollectionUpdateTime(collection_url: str) -> datetime:
+def GetCollectionArticlesUpdateTime(collection_url: str) -> datetime:
     """获取专题文章更新时间
 
     Args:
@@ -121,7 +121,7 @@ def GetCollectionUpdateTime(collection_url: str) -> datetime:
     result = datetime.fromtimestamp(json_obj["newly_added_at"])
     return result
 
-def GetCollectionInfoUpdatetime(collection_url: str) -> datetime:
+def GetCollectionInfoUpdateTime(collection_url: str) -> datetime:
     """获取专题信息更新时间
 
     Args:
