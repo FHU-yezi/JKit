@@ -3,9 +3,9 @@ from datetime import datetime
 
 import requests
 
-from assert_funcs import AssertCollectionUrl
-from convert import CollectionUrlToCollectionSlug
-from headers import jianshu_request_header
+from .assert_funcs import AssertCollectionUrl
+from .convert import CollectionUrlToCollectionSlug
+from .headers import jianshu_request_header
 
 
 def GetCollectionName(collection_url: str) -> str:

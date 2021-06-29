@@ -5,10 +5,10 @@ from datetime import datetime
 import requests
 from lxml import etree
 
-from assert_funcs import AssertUserUrl
-from convert import UserUrlToUserSlug
-from exceptions import APIError
-from headers import PC_header, jianshu_request_header
+from .assert_funcs import AssertUserUrl
+from .convert import UserUrlToUserSlug
+from .exceptions import APIError
+from .headers import PC_header, jianshu_request_header
 
 def GetUserName(user_url: str) -> str:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的昵称

@@ -3,8 +3,8 @@ from datetime import datetime
 
 import requests
 
-from convert import UserUrlToUserSlug
-from headers import BeikeIsland_request_header
+from .convert import UserUrlToUserSlug
+from .headers import BeikeIsland_request_header
 
 
 def GetBeikeIslandTotalTradeAmount() -> int:

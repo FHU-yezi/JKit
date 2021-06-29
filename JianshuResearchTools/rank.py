@@ -3,10 +3,10 @@ import json
 
 import requests
 
-from convert import UserSlugToUserUrl
-from exceptions import APIError, ResourceError
-from headers import jianshu_request_header
-from user import GetUserAssetsCount
+from .convert import UserSlugToUserUrl
+from .exceptions import APIError, ResourceError
+from .headers import jianshu_request_header
+from .user import GetUserAssetsCount
 
 
 def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:

@@ -1,5 +1,5 @@
 import setuptools
-from JianshuResearchTools.main import __version__  # 自动获取版本号
+from .main import __version__  # 自动获取版本号
 
 with open("README.md","r",encoding = "utf-8") as file:
     long_description = file.read()

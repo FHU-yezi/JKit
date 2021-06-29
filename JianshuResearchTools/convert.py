@@ -2,10 +2,10 @@ import json
 
 import requests
 
-from assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
+from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
                           AssertCollectionUrl, AssertIslandUrl,
                           AssertNotebookUrl, AssertString, AssertUserUrl)
-from headers import jianshu_request_header
+from .headers import jianshu_request_header
 
 
 def UserUrlToUserId(user_url: str) -> int:

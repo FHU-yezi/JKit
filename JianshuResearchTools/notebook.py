@@ -3,8 +3,8 @@ from datetime import datetime
 
 import requests
 
-from assert_funcs import AssertNotebookUrl
-from headers import jianshu_request_header
+from .assert_funcs import AssertNotebookUrl
+from .headers import jianshu_request_header
 
 def GetNotebookName(notebook_url: str) -> str:
     """获取文集名称

@@ -3,9 +3,9 @@ from datetime import datetime
 
 import requests
 
-from assert_funcs import AssertIslandUrl
-from convert import IslandUrlToIslandSlug
-from headers import jianshu_request_header
+from .assert_funcs import AssertIslandUrl
+from .convert import IslandUrlToIslandSlug
+from .headers import jianshu_request_header
 
 
 def GetIslandName(island_url: str) -> str:
