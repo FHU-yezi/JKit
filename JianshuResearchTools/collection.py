@@ -25,14 +25,14 @@ def GetCollectionName(collection_url: str) -> str:
     result = json_obj["title"]
     return result
 
-def GetCollectionImageUrl(collection_url: str) -> str:
-    """获取专题图片链接
+def GetCollectionAvagarUrl(collection_url: str) -> str:
+    """获取专题头像链接
 
     Args:
         collection_url (str): 专题 Url
 
     Returns:
-        str: 专题图片链接
+        str: 专题头像链接
     """
     AssertCollectionUrl(collection_url)
     request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")

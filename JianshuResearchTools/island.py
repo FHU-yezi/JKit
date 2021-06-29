@@ -24,14 +24,14 @@ def GetIslandName(island_url: str) -> str:
     result = json_obj["name"]
     return result
 
-def GetIslandImageUrl(island_url: str) -> str:
-    """获取小岛图片链接
+def GetIslandAvagarUrl(island_url: str) -> str:
+    """获取小岛头像链接
 
     Args:
         island_url (str): 小岛 Url
 
     Returns:
-        str: 小岛图片链接
+        str: 小岛头像链接
     """
     AssertIslandUrl(island_url)
     request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")

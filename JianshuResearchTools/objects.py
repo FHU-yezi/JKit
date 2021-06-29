@@ -986,6 +986,7 @@ class Collection():
         
         self._slug = []
         self._name = []
+        
         self._introduction = []
         self._articles_count = []
         self._subscribers_count = []
