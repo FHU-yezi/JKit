@@ -88,14 +88,14 @@ def GetIslandPostsCount(island_url: str) -> int:
     result = json_obj["posts_count"]
     return result
 
-def GetIslandCategory(island_url: str) -> int:
+def GetIslandCategory(island_url: str) -> str:
     """获取小岛分类
 
     Args:
         island_url (str): 小岛 Url
 
     Returns:
-        int: 分类
+        str: 分类
     """
     AssertIslandUrl(island_url)
     request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")

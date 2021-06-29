@@ -1252,9 +1252,6 @@ class Collection():
             self.owner_info["name"], self.articles_count, self.subscribers_count
         )
         return result
-    
-c1 = Collection("https://www.jianshu.com/c/c022c24c31a5")
-print(c1)
 
 class Island():
     """小岛类
@@ -1274,8 +1271,12 @@ class Island():
         
         self._slug = []
         self._name = []
+        self._avatar_url = []
         self._introduction = []
         self._members_count = []
+        self._posts_count = []
+        self._category = []
+        
         self._posts = {}
     
     @property
@@ -1316,6 +1317,12 @@ class Island():
         return result
     
     @property
+    def avatar_url(self, disable_cache: bool = False) -> str:
+        result = SimpleCache(self._avatar_url, island.GetIslandAvatarUrl, 
+                             {"collection_url":self._url}, disable_cache)
+        return result
+    
+    @property
     def introduction(self, disable_cache: bool = False) -> str:
         """获取小岛简介
 
@@ -1340,6 +1347,34 @@ class Island():
             int: 成员数量
         """
         result = SimpleCache(self._members_count, island.GetIslandMembersCount, 
+                             {"island_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def posts_count(self, disable_cache: bool = False) -> int:
+        """获取小岛帖子数量
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            int: 帖子数量
+        """
+        result = SimpleCache(self._posts_count, island.GetIslandPostsCount, 
+                             {"island_url": self._url}, disable_cache)
+        return result
+    
+    @property
+    def category(self, disable_cache: bool = False) -> str:
+        """获取小岛分类
+
+        Args:
+            disable_cache (bool, optional): 禁用缓存. Defaults to False.
+
+        Returns:
+            str: 分类
+        """
+        result = SimpleCache(self._category, island.GetIslandCategory, 
                              {"island_url": self._url}, disable_cache)
         return result
     
@@ -1385,7 +1420,7 @@ class Island():
         Returns:
             str: 小岛信息摘要
         """
-        result = "小岛信息摘要：\n名称：{}\n成员人数：{}".format(
-            self.name, self.members_count
+        result = "小岛信息摘要：\n名称：{}\n成员数量：{}\n帖子数量：{}\n分类：{}".format(
+            self.name, self.members_count, self.posts_count,self.category
         )
         return result
