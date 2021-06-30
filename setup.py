@@ -1,5 +1,5 @@
 import setuptools
-from JianshuResearchTools.main import __version__  # 自动获取版本号
+from JianshuResearchTools import __version__
 
 with open("README.md","r",encoding = "utf-8") as file:
     long_description = file.read()
@@ -14,7 +14,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/FHU-yezi/JianshuResearchTools",
     packages=["JianshuResearchTools"],
-    install_requires=["beautifulsoup4>=4.9.3","requests>=2.25.1"],
+    install_requires=["lxml>=4.6.3","requests>=2.25.1"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
