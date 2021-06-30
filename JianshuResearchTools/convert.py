@@ -19,7 +19,7 @@ def UserUrlToUserId(user_url: str) -> int:
     """
     AssertString(user_url)
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/user/slug/")
+    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = json_obj["id"]
@@ -64,7 +64,7 @@ def UserSlugToUserUrl(user_slug: str) -> str:
         str: 用户个人主页 Url
     """
     AssertString(user_slug)
-    result = "https://www.jianshu.com/u/" + user_slug + "/"
+    result = "https://www.jianshu.com/u/" + user_slug
     AssertUserUrl(result)
     return result
 
@@ -92,7 +92,7 @@ def ArticleSlugToArticleUrl(article_slug: str) -> str:
         str: 文章 Url
     """
     AssertString(article_slug)
-    result = "https://www.jinshu.com/p/" + article_slug
+    result = "https://www.jianshu.com/p/" + article_slug
     AssertArticleUrl(result)
     return result
 
@@ -126,7 +126,7 @@ def NotebookUrlToNotebookId(notebook_url: str) -> int:
     """
     AssertString(notebook_url)
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov")
+    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
     source = requests.get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     result = json_obj["id"]
@@ -143,7 +143,7 @@ def NotebookUrlToNotebookSlug(notebook_url: str) -> str:
     """
     AssertString(notebook_url)
     AssertNotebookUrl(notebook_url)
-    return notebook_url.replace("https://www.jianshu.com/p/", "")
+    return notebook_url.replace("https://www.jianshu.com/nb/", "")
 
 def NotebookSlugToNotebookUrl(notebook_slug: str) -> str:
     """该函数接收文集 Slug，并将其转换成文集 Url
@@ -155,7 +155,7 @@ def NotebookSlugToNotebookUrl(notebook_slug: str) -> str:
         str: 文集 Url
     """
     AssertString(notebook_slug)
-    result = "https://www.jinshu.com/p/" + notebook_slug
+    result = "https://www.jianshu.com/nb/" + notebook_slug
     AssertNotebookUrl(result)
     return result
 
@@ -183,7 +183,7 @@ def CollectionSlugToCollectionUrl(collection_slug: str) -> str:
         str: 专题 Url
     """
     AssertString(collection_slug)
-    result = "https://www.jinshu.com/c/" + collection_slug
+    result = "https://www.jianshu.com/c/" + collection_slug
     AssertCollectionUrl(result)
     return result
 
@@ -211,7 +211,7 @@ def IslandSlugToIslandUrl(island_slug: str) -> str:
         str: 小岛 Url
     """
     AssertString(island_slug)
-    result = "https://www.jinshu.com/g/" + island_slug
+    result = "https://www.jianshu.com/g/" + island_slug
     AssertIslandUrl(result)
     return result
 

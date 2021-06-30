@@ -215,7 +215,7 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count
         result.append(item_data)
     return result
 
-def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int) -> list:
+def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) -> list:
     """该函数接收一个专题 ID，并返回该 ID 对应专题的关注者信息
 
     Args:

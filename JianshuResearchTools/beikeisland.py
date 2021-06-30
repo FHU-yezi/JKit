@@ -5,6 +5,7 @@ import requests
 
 from .convert import UserUrlToUserSlug
 from .headers import BeikeIsland_request_header
+from .exceptions import ResourceError
 
 
 def GetBeikeIslandTotalTradeAmount() -> int:
@@ -189,6 +190,9 @@ def GetBeikeIslandTradePrice(trade_type: str, rank: int = 1) -> float:
     source = requests.post("https://www.beikeisland.com/api/Trade/getTradeList", 
                             headers=BeikeIsland_request_header, json=data).content
     json_obj = json.loads(source)
-    rank_in_this_page = rank % 10  # 本页信息中目标交易单的位置，考虑索引下标起始值为 0 问题
-    result = json_obj["data"]["tradelist"][rank_in_this_page]["reprice"]
+    rank_in_this_page = rank % 10 - 1  # 本页信息中目标交易单的位置，考虑索引下标起始值为 0 问题
+    try:
+        result = json_obj["data"]["tradelist"][rank_in_this_page]["reprice"]
+    except IndexError:
+        raise ResourceError("没有该排名的价格")
     return result

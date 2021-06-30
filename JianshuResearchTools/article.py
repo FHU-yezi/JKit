@@ -212,7 +212,11 @@ def GetArticlePaidStatus(article_url: str) -> bool:
     json_obj = json.loads(source)
     paid_type = {
         "free": False, 
-        "paid": True
+        "fbook_free": False, 
+        "pbook_free":False, 
+        "paid": True, 
+        "fbook_paid": True, 
+        "pbook_paid":True
     }
     result = paid_type[json_obj["paid_type"]]
     return result
@@ -278,6 +282,8 @@ def GetArticleHtml(article_url: str) -> str:
     img_names = re.findall(r"\w+-\w+.[jpg | png]{3}",html_text)  # 获取图片名称
     new_img_blocks = ["".join(['<img src="https://upload-images.jianshu.io/upload_images/', \
                     img_name, '">']) for img_name in img_names]  # 拼接新的 img 标签
+    if len(old_img_blocks) == 0:
+        replaced = html_text
     for index in range(len(old_img_blocks)):
         if index == 0:
             replaced = html_text.replace(old_img_blocks[index], new_img_blocks[index])
