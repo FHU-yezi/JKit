@@ -18,26 +18,87 @@
 
 JRT 是一个简书数据获取与分析库，致力于用更简单的方式，帮助有编程基础的用户快速进行数据分析，助力社区成长。
 
-同时，它提供了一系列的接口，可以与其它数据科学库实现对接，亦可用来快速构建数据可视化应用。
+该库基于简书官方接口。
 
-该项目基于简书网页官方接口。
+# 安装
 
-# 安装与使用
+## 自动安装
 
-JRT 已上传到 PyPI，可使用以下命令一键安装：
+JRT 已上传到 PyPI，可使用以下命令自动安装：
 
 ```
 pip install JianshuResearchTools
 ```
 
-您可运行以下代码示例，确保 JRT 在您的设备上安装成功：
+## 手动安装
+
+您亦可以手动下载项目源代码，使用 `setup.py` 将其安装到您的设备上。
+
+同时，您还需要运行以下命令，下载 JRT 的依赖库：
+
+```
+pip install requests lxml
+```
+
+您可运行以下代码示例，确认 JRT 已在您的设备上正常安装：
 
 ```python
 import JianshuResearchTools as jrt
-print(jrt.GetUserName("https://www.jianshu.com/u/ea36c8d8aa30"))
+print(jrt.__version__)
 ```
 
-如果一切正常，您会看到输出“初心不变_叶子”。
+如果一切正常，您会看到 JRT 的版本号。
+
+# 快速上手
+
+## 函数调用
+
+示例一，获取用户昵称：
+
+```python
+>>> import JianshuResearchTools as jrt
+>>> jrt.user.GetUserName("https://www.jianshu.com/u/ea36c8d8aa30")
+'初心不变_叶子'
+```
+
+示例二，获取文章标题：
+
+```python
+>>> import JianshuResearchTools as jrt
+>>> jrt.article.GetArticleTitle("https://www.jianshu.com/p/2c2b76a1d0ae")
+'你好，简书贝'
+```
+
+## 面向对象
+
+示例一，获取用户昵称：
+
+```python
+>>> import JianshuResearchTools as jrt
+>>> user = jrt.objects.User("https://www.jianshu.com/u/ea36c8d8aa30") 
+>>> user.name
+'初心不变_叶子'
+```
+
+示例二，获取用户信息摘要：
+```python
+>>> import JianshuResearchTools as jrt
+>>> user = jrt.objects.User("https://www.jianshu.com/u/ea36c8d8aa30")            
+>>> print(user)
+用户信息摘要：
+用户名：初心不变_叶子
+性别：男
+关注数：325
+粉丝数：822
+文章数：120
+总字数：245295
+被点赞数：4030
+总资产：18000.0
+简书钻：10156.544
+简书贝：7843.456
+会员等级：None
+会员过期时间：None
+```
 
 # 依赖库
 
@@ -48,11 +109,7 @@ print(jrt.GetUserName("https://www.jianshu.com/u/ea36c8d8aa30"))
 
 ## 可选依赖
 
-括号中内容为依赖此库的模块名，如您不需要用到它们，可不下载这些依赖库。
-
-- (data_output) pandas：用于将数据导出到 Pandas DataFrame
-- (prediction) scikit-learn：用于进行数据预测
-- (plot) matplotlib：用于绘制图表
+- simplejson：安装后 json 解析速度将得到小幅提升
 
 # 贡献
 

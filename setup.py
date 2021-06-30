@@ -1,11 +1,12 @@
 import setuptools
+from JianshuResearchTools import __version__
 
 with open("README.md","r",encoding = "utf-8") as file:
     long_description = file.read()
 
 setuptools.setup(
     name="JianshuResearchTools",
-    version="2.0.0",
+    version=__version__,
     author="FHU-yezi",
     author_email="yehaowei20060411@qq.com",
     description="科技赋能创作星辰",
