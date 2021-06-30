@@ -1,20 +1,15 @@
-from hashlib import md5
 from datetime import datetime
+from hashlib import md5
 
-from . import article
-from . import beikeisland
-from . import collection
-from . import island
-from . import notebook
-from . import user
+from . import article, beikeisland, collection, island, notebook, user
 from .assert_funcs import (AssertArticleUrl, AssertCollectionUrl,
-                          AssertIslandUrl, AssertNotebookUrl, AssertUserUrl)
+                           AssertIslandUrl, AssertNotebookUrl, AssertUserUrl)
 from .convert import (ArticleSlugToArticleUrl, ArticleUrlToArticleSlug,
-                     CollectionSlugToCollectionUrl,
-                     CollectionUrlToCollectionSlug, IslandSlugToIslandUrl,
-                     IslandUrlToIslandSlug, NotebookSlugToNotebookUrl,
-                     NotebookUrlToNotebookId, NotebookUrlToNotebookSlug,
-                     UserSlugToUserUrl, UserUrlToUserSlug)
+                      CollectionSlugToCollectionUrl,
+                      CollectionUrlToCollectionSlug, IslandSlugToIslandUrl,
+                      IslandUrlToIslandSlug, NotebookSlugToNotebookUrl,
+                      NotebookUrlToNotebookId, NotebookUrlToNotebookSlug,
+                      UserSlugToUserUrl, UserUrlToUserSlug)
 from .exceptions import InputError
 
 

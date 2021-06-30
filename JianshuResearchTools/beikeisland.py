@@ -1,11 +1,15 @@
-import json
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 from datetime import datetime
 
 import requests
 
 from .convert import UserUrlToUserSlug
-from .headers import BeikeIsland_request_header
 from .exceptions import ResourceError
+from .headers import BeikeIsland_request_header
 
 
 def GetBeikeIslandTotalTradeAmount() -> int:

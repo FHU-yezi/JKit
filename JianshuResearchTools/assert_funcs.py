@@ -1,9 +1,13 @@
-import json
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 import requests
 
 from .exceptions import InputError, ResourceError
 from .headers import jianshu_request_header
+
 
 def AssertString(object: any) -> None:
     if isinstance(object, str) == False:

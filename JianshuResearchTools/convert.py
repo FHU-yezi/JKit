@@ -1,10 +1,13 @@
-import json
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 import requests
 
 from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
-                          AssertCollectionUrl, AssertIslandUrl,
-                          AssertNotebookUrl, AssertString, AssertUserUrl)
+                           AssertCollectionUrl, AssertIslandUrl,
+                           AssertNotebookUrl, AssertString, AssertUserUrl)
 from .headers import jianshu_request_header
 
 
