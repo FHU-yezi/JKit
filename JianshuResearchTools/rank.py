@@ -36,7 +36,8 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:
             "ranking": item["ranking"], 
             "uid": item["user"]["id"], 
             "uslug": item["user"]["slug"], 
-            "name": item["user"]["avatar"], 
+            "name": item["user"]["name"], 
+            "avatar": item["user"]["avatar"], 
             "FP": item["amount"] / 1000
         }
         if get_full == True:
