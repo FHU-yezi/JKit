@@ -37,7 +37,7 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:
             "uid": item["user"]["id"], 
             "uslug": item["user"]["slug"], 
             "name": item["user"]["nickname"], 
-            "avatar": item["user"]["avatar"], 
+            "avatar_url": item["user"]["avatar"], 
             "FP": item["amount"] / 1000
         }
         if get_full == True:
@@ -49,7 +49,6 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:
                 pass
         result.append(item_data)
     return result
-print(GetAssetsRankData())
 
 def GetDailyArticleRankData() -> list:
     """该函数返回日更排行榜的用户信息
