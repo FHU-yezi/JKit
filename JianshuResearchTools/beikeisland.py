@@ -1,15 +1,9 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
 from datetime import datetime
-
-import requests
 
 from .convert import UserUrlToUserSlug
 from .exceptions import ResourceError
 from .headers import BeikeIsland_request_header
+from .basic_apis import GetBeikeIslandTradeRankListJsonDataApi, GetBeikeIslandTradeListJsonDataApi
 
 
 def GetBeikeIslandTotalTradeAmount() -> int:
@@ -18,10 +12,8 @@ def GetBeikeIslandTotalTradeAmount() -> int:
     Returns:
         int: 总交易量
     """
-    data = {}  # 不传送数据也能正常获取，节省时间和带宽
-    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data).content
-    json_obj = json.loads(source)
+    # 不传送数据也能正常获取，节省时间和带宽
+    json_obj = GetBeikeIslandTradeRankListJsonDataApi(ranktype=None, pageIndex=None)
     result = json_obj["data"]["totalcount"]
     return result
 
@@ -31,10 +23,8 @@ def GetBeikeIslandTotalTradeCount() -> int:
     Returns:
         int: 总交易笔数
     """
-    data = {}  # 不传送数据也能正常获取，节省时间和带宽
-    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data).content
-    json_obj = json.loads(source)
+    # 不传送数据也能正常获取，节省时间和带宽
+    json_obj = GetBeikeIslandTradeRankListJsonDataApi(ranktype=None, pageIndex=None)
     result = json_obj["data"]["totaltime"]
     return result
 
@@ -47,13 +37,7 @@ def GetBeikeIslandTotalTradeRankData(page: int = 1) -> list:
     Returns:
         list: 总交易排行榜的用户数据
     """
-    data = {
-        "ranktype": 3, 
-        "pageIndex": page
-    }
-    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data).content
-    json_obj = json.loads(source)
+    json_obj = GetBeikeIslandTradeRankListJsonDataApi(ranktype=3, pageIndex=page)
     result = []
     for item in json_obj["data"]["ranklist"]:
         item_data = {
@@ -77,13 +61,7 @@ def GetBeikeIslandBuyTradeRankData(page: int = 1) -> list:
     Returns:
         list: 买贝榜的用户数据
     """
-    data = {
-        "ranktype": 1, 
-        "pageIndex": page
-    }
-    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data).content
-    json_obj = json.loads(source)
+    json_obj = GetBeikeIslandTradeRankListJsonDataApi(ranktype=1, pageIndex=page)
     result = []
     for item in json_obj["data"]["ranklist"]:
         item_data = {
@@ -107,13 +85,7 @@ def GetBeikeIslandSellTradeRankData(page: int = 1) -> list:
     Returns:
         list: 卖贝榜的用户数据
     """
-    data = {
-        "ranktype": 2, 
-        "pageIndex": page
-    }
-    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
-                            headers=BeikeIsland_request_header, json=data).content
-    json_obj = json.loads(source)
+    json_obj = GetBeikeIslandTradeRankListJsonDataApi(ranktype=2, pageIndex=page)
     result = []
     for item in json_obj["data"]["ranklist"]:
         item_data = {
@@ -138,16 +110,12 @@ def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int = 1) -> list:
     Returns:
         list: 挂单数据
     """
-    data = {
-        "pageIndex": page, 
-        "retype": {
-            "buy": 2, 
-            "sell": 1
-        }[trade_type]  # 通过 trade_type 构建 retype
-    }
-    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeList", 
-                            headers=BeikeIsland_request_header, json=data).content
-    json_obj = json.loads(source)
+    # 通过 trade_type 构建 retype
+    retype = {
+        "buy": 2, 
+        "sell": 1
+    }[trade_type]
+    json_obj = GetBeikeIslandTradeListJsonDataApi(pageIndex=page, retype=retype)
     result = []
     for item in json_obj["data"]["tradelist"]:
         item_data = {
@@ -184,16 +152,13 @@ def GetBeikeIslandTradePrice(trade_type: str, rank: int = 1) -> float:
     Returns:
         float: 交易单的价格
     """
-    data = {
-        "pageIndex": int(rank / 10),  # 确定需要请求的页码
-        "retype": {
-            "buy": 2, 
-            "sell": 1
-        }[trade_type]  # 通过 trade_type 构建 retype
-    }
-    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeList", 
-                            headers=BeikeIsland_request_header, json=data).content
-    json_obj = json.loads(source)
+    pageIndex = int(rank / 10)  # 确定需要请求的页码
+    # 通过 trade_type 构建 retype
+    retype = {
+        "buy": 2, 
+        "sell": 1
+    }[trade_type]
+    json_obj = GetBeikeIslandTradeListJsonDataApi(pageIndex=pageIndex, retype=retype)
     rank_in_this_page = rank % 10 - 1  # 本页信息中目标交易单的位置，考虑索引下标起始值为 0 问题
     try:
         result = json_obj["data"]["tradelist"][rank_in_this_page]["reprice"]

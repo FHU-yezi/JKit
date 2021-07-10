@@ -1,15 +1,8 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
 from datetime import datetime
-
-import requests
 
 from .assert_funcs import AssertIslandUrl
 from .convert import IslandUrlToIslandSlug
-from .headers import jianshu_request_header
+from .basic_apis import GetIslandJsonDataApi, GetIslandPostsJsonDataApi
 
 
 def GetIslandName(island_url: str) -> str:
@@ -22,9 +15,7 @@ def GetIslandName(island_url: str) -> str:
         str: 小岛名称
     """
     AssertIslandUrl(island_url)
-    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["name"]
     return result
 
@@ -38,9 +29,7 @@ def GetIslandAvatarUrl(island_url: str) -> str:
         str: 小岛头像链接
     """
     AssertIslandUrl(island_url)
-    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["image"]
     return result
 
@@ -54,9 +43,7 @@ def GetIslandIntroduction(island_url: str) -> str:
         str: 小岛简介
     """
     AssertIslandUrl(island_url)
-    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["intro"]
     return result
 
@@ -70,9 +57,7 @@ def GetIslandMembersCount(island_url: str) -> int:
         int: 成员数量
     """
     AssertIslandUrl(island_url)
-    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["members_count"]
     return result
 
@@ -86,9 +71,7 @@ def GetIslandPostsCount(island_url: str) -> int:
         int: 帖子数量
     """
     AssertIslandUrl(island_url)
-    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["posts_count"]
     return result
 
@@ -102,9 +85,7 @@ def GetIslandCategory(island_url: str) -> str:
         str: 分类
     """
     AssertIslandUrl(island_url)
-    request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["category"]["name"]
     return result
 
@@ -124,20 +105,13 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
             list: 帖子信息
     """
     AssertIslandUrl(island_url)
-    params = {
-        "group_slug": IslandUrlToIslandSlug(island_url), 
-        "order_by": {
-            "time": "latest", 
-            "hot": "hot", 
-            "most_valuable": "best"
-        }[sorting_method], 
-        "max_id": start_sort_id, 
-        "count": count, 
-        "topic_id": topic_id
-    }
-    source = requests.get("https://www.jianshu.com/asimov/posts", 
-                            params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    order_by = {
+        "time": "latest", 
+        "hot": "hot", 
+        "most_valuable": "best"
+    }[sorting_method], 
+    json_obj = GetIslandPostsJsonDataApi(group_slug=IslandUrlToIslandSlug(island_url), 
+                                      max_id=start_sort_id, count=count, topic_id=topic_id, order_by=order_by)
 
     result = []
     for item in json_obj:

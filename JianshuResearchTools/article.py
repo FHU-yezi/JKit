@@ -1,15 +1,10 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
 import re
 from datetime import datetime
 
-import requests
 from lxml import etree
 
 from .assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
+from .basic_apis import GetArticleHtmlJsonDataApi, GetArticleJsonDataApi
 from .headers import PC_header, jianshu_request_header
 
 
@@ -24,9 +19,7 @@ def GetArticleTitle(article_url: str) -> str:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["public_title"]
     return result
 
@@ -41,9 +34,7 @@ def GetArticleAuthorName(article_url: str) -> str:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    source = requests.get(article_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    json_obj = json.loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
+    json_obj = GetArticleHtmlJsonDataApi(article_url)
     result = json_obj["props"]["initialState"]["note"]["data"]["user"]["nickname"]
     return result
 
@@ -58,9 +49,7 @@ def GetArticleReadsCount(article_url: str) -> str:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    source = requests.get(article_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    json_obj = json.loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
+    json_obj = GetArticleHtmlJsonDataApi(article_url)
     result = json_obj["props"]["initialState"]["note"]["data"]["views_count"]
     return result
 
@@ -75,9 +64,7 @@ def GetArticleWordage(article_url: str) -> str:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    source = requests.get(article_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
-    json_obj = json.loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
+    json_obj = GetArticleHtmlJsonDataApi(article_url)
     result = json_obj["props"]["initialState"]["note"]["data"]["wordage"]
     return result
 
@@ -92,9 +79,7 @@ def GetArticleLikesCount(article_url: str) -> int:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["likes_count"]
     return result
 
@@ -109,9 +94,7 @@ def GetArticleCommentsCount(article_url: str) -> int:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["public_comment_count"]
     return result
 
@@ -126,9 +109,7 @@ def GetArticleMostValuableCommentsCount(article_url: str) -> int:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["featured_comments_count"]
     return result
 
@@ -143,9 +124,7 @@ def GetArticleTotalFPCount(article_url: str) -> int:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["total_fp_amount"] / 1000
     return result
 
@@ -160,9 +139,7 @@ def GetArticleDescription(article_url: str) -> str:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["description"]
     return result
 
@@ -177,9 +154,7 @@ def GetArticlePublishTime(article_url: str) -> datetime:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = datetime.fromisoformat(json_obj["first_shared_at"])
     return result
 
@@ -194,9 +169,7 @@ def GetArticleUpdateTime(article_url: str) -> datetime:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
@@ -211,9 +184,7 @@ def GetArticlePaidStatus(article_url: str) -> bool:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     paid_type = {
         "free": False, 
         "fbook_free": False, 
@@ -225,7 +196,7 @@ def GetArticlePaidStatus(article_url: str) -> bool:
     result = paid_type[json_obj["paid_type"]]
     return result
 
-def GetArticleReprintStatus(article_url: str) -> bool:  # TODO: 是不是要改个名？
+def GetArticleReprintStatus(article_url: str) -> bool:
     """获取文章转载声明状态
 
     Args:
@@ -236,9 +207,7 @@ def GetArticleReprintStatus(article_url: str) -> bool:  # TODO: 是不是要改�
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["reprintable"]
     return result
 
@@ -253,9 +222,7 @@ def GetArticleCommentStatus(article_url: str) -> bool:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["commentable"]
     return result
 
@@ -275,9 +242,7 @@ def GetArticleHtml(article_url: str) -> str:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     html_text = json_obj["free_content"]
     html_text = re.sub(r'\<div class="image-[\w]*" [ \w+-="]*>', "", html_text)  # 去除 image-view 和 image-container
     # TODO: 优化正则表达式，不去除 image-caption，即可保留图片描述
@@ -300,7 +265,6 @@ def GetArticleText(article_url: str) -> str:
 
     # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
     # ! 该函数不能获取需要付费的文章内容
-    # ! 文章中的换行将会丢失
 
     Args:
         article_url (str): 文章 Url
@@ -310,9 +274,7 @@ def GetArticleText(article_url: str) -> str:
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     html_text = json_obj["free_content"]
     html_obj = etree.HTML(html_text)
     result = "".join(html_obj.itertext())

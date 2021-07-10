@@ -5,12 +5,10 @@ try:
 except ImportError:
     import json
 
-import requests
-
 from .convert import UserSlugToUserUrl
 from .exceptions import APIError, ResourceError
-from .headers import jianshu_request_header
 from .user import GetUserAssetsCount
+from .basic_apis import GetAssetsRankJsonDataApi, GetDailyArticleRankListJsonDataApi, GetArticlesFPRankListJsonDataApi
 
 
 def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:
@@ -23,13 +21,8 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:
     Returns:
         list: 用户资产数据
     """
-    start_id -= 1  # 索引下标为 0
-    params = {
-        "max_id": 1000000000,   # 与官方接口数值相同
-        "since_id": start_id
-    }
-    source = requests.get("https://www.jianshu.com/asimov/fp_rankings", params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    since_id = start_id - 1  # 索引下标为 0
+    json_obj = GetAssetsRankJsonDataApi(max_id=1000000000, since_id=since_id)
     result = []
     for item in json_obj["rankings"]:
         item_data = {
@@ -56,8 +49,7 @@ def GetDailyArticleRankData() -> list:
     Returns:
         list: 日更排行榜用户信息
     """
-    source = requests.get("https://www.jianshu.com/asimov/daily_activity_participants/rank", headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetDailyArticleRankListJsonDataApi()
     result = []
     for item in json_obj["daps"]:
         item_data = {
@@ -86,11 +78,7 @@ def GetArticleFPRankData(date: str ="latest") -> list:
     """
     if date == "latest":
         date = (datetime.date.today() + datetime.timedelta(days=-1)).strftime("%Y%m%d")
-    params = {
-        "date": date
-    }
-    source = requests.get("https://www.jianshu.com/asimov/fp_rankings/voter_notes", params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticlesFPRankListJsonDataApi(date=date, type_=None)
     if json_obj["notes"] == []:
         raise ResourceError("对应日期的排行榜数据为空")
     result = []
@@ -110,6 +98,8 @@ def GetArticleFPRankData(date: str ="latest") -> list:
 
 def GetArticleFPRankBasicInfo(date: str ="latest") -> dict:
     """获取指定日期的文章收益排行榜基础信息
+    
+    目前只能获取 2020 年 6 月 20 日之后的数据。
 
     Args:
         date (str, optional): 日期，格式“YYYYMMDD”. Defaults to "latest".
@@ -122,11 +112,7 @@ def GetArticleFPRankBasicInfo(date: str ="latest") -> dict:
     """
     if date == "latest":
         date = (datetime.date.today() + datetime.timedelta(days=-1)).strftime("%Y%m%d")
-    params = {
-        "date": date
-    }
-    source = requests.get("https://www.jianshu.com/asimov/fp_rankings/voter_notes", params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticlesFPRankListJsonDataApi(date=date, type_=None)
     if json_obj["notes"] == []:
         raise ResourceError("对应日期的排行榜数据为空")
     result = {
@@ -150,18 +136,12 @@ def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> list:
     Returns:
         list: 对应日期的用户收益排行榜数据
     """
-    if date == "latest":
-        date = (datetime.date.today() + datetime.timedelta(days=-1)).strftime("%Y%m%d")
-    params = {
-        "date": date, 
-        "type": {
-            "all": None, 
-            "write": "note", 
-            "vote": "like"
-        }[rank_type]
-    }
-    source = requests.get("https://www.jianshu.com/asimov/fp_rankings/voter_users", params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    type_ = {
+        "all": None, 
+        "write": "note", 
+        "vote": "like"
+    }[rank_type]
+    json_obj = GetArticlesFPRankListJsonDataApi(date=date, type_=type_)
     if json_obj["users"] == []:
         raise ResourceError("对应日期的排行榜数据为空")
     result = []

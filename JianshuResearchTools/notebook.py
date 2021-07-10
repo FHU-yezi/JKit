@@ -1,14 +1,7 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
 from datetime import datetime
 
-import requests
-
 from .assert_funcs import AssertNotebookUrl
-from .headers import jianshu_request_header
+from .basic_apis import GetNotebookJsonDataApi, GetNotebookArticlesJsonDataApi
 
 
 def GetNotebookName(notebook_url: str) -> str:
@@ -21,9 +14,7 @@ def GetNotebookName(notebook_url: str) -> str:
         str: 文集名称
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetNotebookJsonDataApi(notebook_url)
     result = json_obj["name"]
     return result
 
@@ -37,9 +28,7 @@ def GetNotebookArticlesCount(notebook_url: str) -> int:
         int: 文章数量
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetNotebookJsonDataApi(notebook_url)
     result = json_obj["notes_count"]
     return result
 
@@ -53,9 +42,7 @@ def GetNotebookAuthorName(notebook_url: str) -> str:
         int: 作者名
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetNotebookJsonDataApi(notebook_url)
     result = json_obj["user"]["nickname"]
     return result
 
@@ -69,9 +56,7 @@ def GetNotebookAuthorInfo(notebook_url: str) -> dict:
         list: 作者信息
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetNotebookJsonDataApi(notebook_url)
     result = {
         "name": json_obj["user"]["nickname"], 
         "uslug": json_obj["user"]["slug"], 
@@ -89,9 +74,7 @@ def GetNotebookWordage(notebook_url: str) -> int:
         int: 文章总字数
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetNotebookJsonDataApi(notebook_url)
     result = json_obj["wordage"]
     return result
 
@@ -105,9 +88,7 @@ def GetNotebookSubscribersCount(notebook_url: str) -> int:
         int: 关注着数量
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetNotebookJsonDataApi(notebook_url)
     result = json_obj["subscribers_count"]
     return result
 
@@ -121,9 +102,7 @@ def GetNotebookUpdateTime(notebook_url: str) -> datetime:
         datetime: 更新时间
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetNotebookJsonDataApi(notebook_url)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
@@ -142,19 +121,13 @@ def GetNotebookArticlesInfo(notebook_url: str, page: int = 1,
         list: 文章信息
     """
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/nb/", 
-                                       "https://www.jianshu.com/asimov/notebooks/") + "/public_notes/"
-    params = {
-        "page": page, 
-        "count": count, 
-        "order_by": {
-            "time": "added_at", 
-            "comment_time": "commented_at", 
-            "hot": "top"
-        }[sorting_method]
-    }
-    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    order_by = {
+        "time": "added_at", 
+        "comment_time": "commented_at", 
+        "hot": "top"
+    }[sorting_method]
+    json_obj = GetNotebookArticlesJsonDataApi(notebook_url=notebook_url, 
+                                           page=page, count=count, order_by=order_by)
     result = []
     for item in json_obj:
         item_data  = {
@@ -162,7 +135,7 @@ def GetNotebookArticlesInfo(notebook_url: str, page: int = 1,
             "title": item["object"]["data"]["title"], 
             "aslug": item["object"]["data"]["slug"], 
             "release_time": datetime.fromisoformat(item["object"]["data"]["first_shared_at"]), 
-            "image_url": item["object"]["data"]["list_image_url"],   # TODO: 名字不太贴切
+            "first_image_url": item["object"]["data"]["list_image_url"], 
             "summary": item["object"]["data"]["public_abbr"], 
             "views_count": item["object"]["data"]["views_count"], 
             "likes_count": item["object"]["data"]["likes_count"], 

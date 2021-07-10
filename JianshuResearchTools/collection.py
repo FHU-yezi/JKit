@@ -1,13 +1,12 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
+
 
 from datetime import datetime
 
-import requests
-
 from .assert_funcs import AssertCollectionUrl
+from .basic_apis import (GetCollectionArticlesJsonDataApi,
+                         GetCollectionEditorsJsonDataApi, GetCollectionJsonDataApi,
+                         GetCollectionRecommendedWritersJsonDataApi,
+                         GetCollectionSubscribersJsonDataApi)
 from .convert import CollectionUrlToCollectionSlug
 from .headers import jianshu_request_header
 
@@ -22,9 +21,7 @@ def GetCollectionName(collection_url: str) -> str:
         str: 链接对应专题的名称
     """
     AssertCollectionUrl(collection_url)
-    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["title"]
     return result
 
@@ -38,9 +35,7 @@ def GetCollectionAvatarUrl(collection_url: str) -> str:
         str: 专题头像链接
     """
     AssertCollectionUrl(collection_url)
-    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["image"]
     return result
 
@@ -54,9 +49,7 @@ def GetCollectionIntroductionText(collection_url: str) -> str:
         str: 链接对应专题的简介
     """
     AssertCollectionUrl(collection_url)
-    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["content_without_html"]
     return result
 
@@ -70,9 +63,7 @@ def GetCollectionIntroductionHtml(collection_url: str) -> str:
         str: 链接对应专题的简介
     """
     AssertCollectionUrl(collection_url)
-    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["content_in_full"]
     return result
 
@@ -86,9 +77,7 @@ def GetCollectionArticlesCount(collection_url: str) -> int:
         int: 链接对应专题的收录文章数量
     """
     AssertCollectionUrl(collection_url)
-    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["notes_count"]
     return result
 
@@ -102,9 +91,7 @@ def GetCollectionSubscribersCount(collection_url: str) -> int:
         int: 链接对应专题的关注者数量
     """
     AssertCollectionUrl(collection_url)
-    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["subscribers_count"]
     return result
 
@@ -118,9 +105,7 @@ def GetCollectionArticlesUpdateTime(collection_url: str) -> datetime:
         datetime: 专题文章更新时间
     """
     AssertCollectionUrl(collection_url)
-    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionJsonDataApi(collection_url)
     result = datetime.fromtimestamp(json_obj["newly_added_at"])
     return result
 
@@ -134,9 +119,7 @@ def GetCollectionInfoUpdateTime(collection_url: str) -> datetime:
         datetime: 专题信息更新时间
     """
     AssertCollectionUrl(collection_url)
-    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionJsonDataApi(collection_url)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
@@ -150,9 +133,7 @@ def GetCollectionOwnerInfo(collection_url: str) -> dict:
         dict: 用户信息
     """
     AssertCollectionUrl(collection_url)
-    request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionJsonDataApi(collection_url)
     result = {
         "uid": json_obj["owner"]["id"], 
         "name": json_obj["owner"]["nickname"], 
@@ -170,12 +151,7 @@ def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> list:
     Returns:
         list: ID 对应专题的编辑信息
     """
-    request_url = "https://www.jianshu.com/collections/" + str(collection_id) + "/editors"
-    params = {
-        "page": page
-    }
-    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionEditorsJsonDataApi(collection_id, page=page)
     result = []
     for item in json_obj["editors"]:
         item_data = {
@@ -197,14 +173,7 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count
     Returns:
         list: 推荐作者信息
     """
-    params = {
-        "collection_ids": collection_id, 
-        "page": page, 
-        "count": count
-    }
-    source = requests.get("https://www.jianshu.com/collections/recommended_users", 
-                            params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionRecommendedWritersJsonDataApi(collection_id, page=page, count=count)
     result = []
     for item in json_obj["users"]:
         item_data = {
@@ -229,12 +198,7 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) 
     Returns:
         list: 关注者信息
     """
-    request_url = "https://www.jianshu.com/collection/" + str(collection_id) + "/subscribers"
-    params = {
-        "max_sort_id": start_sort_id
-    }
-    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetCollectionSubscribersJsonDataApi(collection_id, max_sort_id=start_sort_id)
     result = []
     for item in json_obj:
         item_data = {
@@ -262,19 +226,13 @@ def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
         list: 文章信息
     """
     AssertCollectionUrl(collection_url)
-    request_url = "https://www.jianshu.com/asimov/collections/slug/" + \
-        CollectionUrlToCollectionSlug(collection_url) + "/public_notes"
-    params = {
-        "page": page, 
-        "count": count, 
-        "order_by": {
-            "time": "added_at", 
-            "comment_time": "commented_at", 
-            "hot": "top"  # TODO: 是不是太直白了点
-        }[sorting_method]
-    }
-    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    order_by = {
+        "time": "added_at", 
+        "comment_time": "commented_at", 
+        "hot": "top"
+    }[sorting_method]
+    json_obj = GetCollectionArticlesJsonDataApi(CollectionUrlToCollectionSlug(collection_url), 
+                                             page=page, count=count, order_by=order_by)
     result = []
     for item in json_obj:
         item_data  = {
@@ -282,7 +240,7 @@ def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
             "title": item["object"]["data"]["title"], 
             "aslug": item["object"]["data"]["slug"], 
             "release_time": datetime.fromisoformat(item["object"]["data"]["first_shared_at"]), 
-            "image_url": item["object"]["data"]["list_image_url"],   # TODO: 名字不太贴切
+            "first_image_url": item["object"]["data"]["list_image_url"], 
             "summary": item["object"]["data"]["public_abbr"], 
             "views_count": item["object"]["data"]["views_count"], 
             "likes_count": item["object"]["data"]["likes_count"], 

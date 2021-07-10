@@ -3,7 +3,7 @@ try:
 except ImportError:
     import json
 
-import requests
+from .basic_apis import GetUserJsonDataApi, GetArticleJsonDataApi
 
 from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
                            AssertCollectionUrl, AssertIslandUrl,
@@ -22,9 +22,7 @@ def UserUrlToUserId(user_url: str) -> int:
     """
     AssertString(user_url)
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["id"]
     return result
 
@@ -111,9 +109,7 @@ def ArticleSlugToArticleId(article_url: str) -> int:
     AssertString(article_url)
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["id"]
     return result
 
@@ -129,9 +125,7 @@ def NotebookUrlToNotebookId(notebook_url: str) -> int:
     """
     AssertString(notebook_url)
     AssertNotebookUrl(notebook_url)
-    request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(notebook_url)
     result = json_obj["id"]
     return result
 
