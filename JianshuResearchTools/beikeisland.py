@@ -1,9 +1,9 @@
 from datetime import datetime
 
+from .basic_apis import (GetBeikeIslandTradeListJsonDataApi,
+                         GetBeikeIslandTradeRankListJsonDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import ResourceError
-from .headers import BeikeIsland_request_header
-from .basic_apis import GetBeikeIslandTradeRankListJsonDataApi, GetBeikeIslandTradeListJsonDataApi
 
 
 def GetBeikeIslandTotalTradeAmount() -> int:

@@ -1,5 +1,4 @@
 from datetime import datetime
-from functools import lru_cache
 
 import requests
 from lxml import etree
@@ -10,7 +9,7 @@ try:
     import simplejson as json
 except ImportError:
     import json
-    
+
 
 def GetArticleJsonDataApi(article_url: str) -> object:
     request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")

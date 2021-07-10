@@ -1,14 +1,7 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
-from .basic_apis import GetUserJsonDataApi, GetArticleJsonDataApi
-
 from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
                            AssertCollectionUrl, AssertIslandUrl,
                            AssertNotebookUrl, AssertString, AssertUserUrl)
-from .headers import jianshu_request_header
+from .basic_apis import GetArticleJsonDataApi, GetUserJsonDataApi
 
 
 def UserUrlToUserId(user_url: str) -> int:

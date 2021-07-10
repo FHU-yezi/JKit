@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from .assert_funcs import AssertNotebookUrl
-from .basic_apis import GetNotebookJsonDataApi, GetNotebookArticlesJsonDataApi
+from .basic_apis import GetNotebookArticlesJsonDataApi, GetNotebookJsonDataApi
 
 
 def GetNotebookName(notebook_url: str) -> str:

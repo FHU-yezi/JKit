@@ -1,5 +1,5 @@
-import re
 from datetime import datetime
+from re import findall, sub
 
 from lxml import etree
 
@@ -244,11 +244,11 @@ def GetArticleHtml(article_url: str) -> str:
     AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     html_text = json_obj["free_content"]
-    html_text = re.sub(r'\<div class="image-[\w]*" [ \w+-="]*>', "", html_text)  # 去除 image-view 和 image-container
+    html_text = sub(r'\<div class="image-[\w]*" [ \w+-="]*>', "", html_text)  # 去除 image-view 和 image-container
     # TODO: 优化正则表达式，不去除 image-caption，即可保留图片描述
-    html_text = re.sub(r'<div class=".+>', "", html_text)  # 去除 image-package、image-container-fill 和 image-caption
-    old_img_blocks = re.findall(r'\<img[ \w+-="]*>', html_text)  # 匹配旧的 img 标签
-    img_names = re.findall(r"\w+-\w+.[jpg | png]{3}",html_text)  # 获取图片名称
+    html_text = sub(r'<div class=".+>', "", html_text)  # 去除 image-package、image-container-fill 和 image-caption
+    old_img_blocks = findall(r'\<img[ \w+-="]*>', html_text)  # 匹配旧的 img 标签
+    img_names = findall(r"\w+-\w+.[jpg | png]{3}",html_text)  # 获取图片名称
     new_img_blocks = ["".join(['<img src="https://upload-images.jianshu.io/upload_images/', \
                     img_name, '">']) for img_name in img_names]  # 拼接新的 img 标签
     if len(old_img_blocks) == 0:
@@ -278,5 +278,5 @@ def GetArticleText(article_url: str) -> str:
     html_text = json_obj["free_content"]
     html_obj = etree.HTML(html_text)
     result = "".join(html_obj.itertext())
-    result = re.sub(r"\s{2,}", "", result)
+    result = sub(r"\s{2,}", "", result)
     return result

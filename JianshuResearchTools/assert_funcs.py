@@ -4,7 +4,6 @@ except ImportError:
     import json
 
 from .basic_apis import GetArticleJsonDataApi
-
 from .exceptions import InputError, ResourceError
 from .headers import jianshu_request_header
 

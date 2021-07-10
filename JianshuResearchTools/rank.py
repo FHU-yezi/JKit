@@ -1,14 +1,11 @@
-import datetime
+from datetime import datetime
 
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
+from .basic_apis import (GetArticlesFPRankListJsonDataApi,
+                         GetAssetsRankJsonDataApi,
+                         GetDailyArticleRankListJsonDataApi)
 from .convert import UserSlugToUserUrl
 from .exceptions import APIError, ResourceError
 from .user import GetUserAssetsCount
-from .basic_apis import GetAssetsRankJsonDataApi, GetDailyArticleRankListJsonDataApi, GetArticlesFPRankListJsonDataApi
 
 
 def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:

@@ -1,5 +1,5 @@
-import re
 from datetime import datetime
+from re import findall, sub
 
 from lxml import etree
 
@@ -394,8 +394,8 @@ def GetUserFollowingInfo(user_url: str, page:int = 1) -> list:
             "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
             "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
             "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")), 
-            "words_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
-            "likes_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[1])
+            "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
+            "likes_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_data)
     return result
@@ -424,8 +424,8 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> list:
             "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
             "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
             "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")), 
-            "words_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
-            "likes_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[1])
+            "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
+            "likes_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_data)
     return result
