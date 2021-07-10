@@ -3,8 +3,7 @@ try:
 except ImportError:
     import json
 
-import requests
-
+from .basic_apis import GetArticleJsonDataApi
 from .exceptions import InputError, ResourceError
 from .headers import jianshu_request_header
 
@@ -75,9 +74,7 @@ def AssertArticleStatusNormal(article_url: str) -> None:
         ResourceError: 文章状态不正常时抛出此错误
     """
     AssertArticleUrl(article_url)
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetArticleJsonDataApi(article_url)
     try:
         json_obj["show_ad"]
     except KeyError:

@@ -1,18 +1,16 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
-import re
 from datetime import datetime
+from re import findall, sub
 
-import requests
 from lxml import etree
 
 from .assert_funcs import AssertUserUrl
+from .basic_apis import (GetUserArticlesListJsonDataApi,
+                         GetUserCollectionsAndNotebooksJsonDataApi,
+                         GetUserFollowersListHtmlDataApi,
+                         GetUserFollowingListHtmlDataApi, GetUserJsonDataApi,
+                         GetUserPCHtmlDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import APIError
-from .headers import PC_header, jianshu_request_header
 
 
 def GetUserName(user_url: str) -> str:
@@ -25,9 +23,7 @@ def GetUserName(user_url: str) -> str:
         str: 用户昵称
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["nickname"]
     return result
 
@@ -41,9 +37,7 @@ def GetUserGender(user_url: str) -> int:
         int: 用户性别，0 为未知，1 为男，2 为女
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["gender"]
     return result
 
@@ -57,9 +51,7 @@ def GetUserFollowersCount(user_url: str) -> int:
         int: 用户关注数
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["following_users_count"]
     return result
 
@@ -73,9 +65,7 @@ def GetUserFansCount(user_url: str) -> int:
         int: 用户粉丝数
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["followers_count"]
     return result
 
@@ -89,8 +79,7 @@ def GetUserArticlesCount(user_url: str) -> int:
         int: 用户文章数
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
+    html_obj = GetUserPCHtmlDataApi(user_url)
     result = html_obj.xpath("//div[@class='info']/ul/li[3]/div[@class='meta-block']/a/p")[0].text
     result = int(result)
     return result
@@ -105,9 +94,7 @@ def GetUserWordage(user_url: str) -> int:
         int: 用户文章总字数
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["total_wordage"]
     return result
 
@@ -121,9 +108,7 @@ def GetUserLikesCount(user_url: str) -> int:
         int: 用户被喜欢数
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["total_likes_count"]
     return result
 
@@ -139,8 +124,7 @@ def GetUserAssetsCount(user_url: str) -> float:
         float: 用户总资产
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
+    html_obj = GetUserPCHtmlDataApi(user_url)
     try:
         result = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
     except IndexError:
@@ -158,9 +142,7 @@ def GetUserFPCount(user_url: str) -> float:
         float: 用户简书钻数量
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["jsd_balance"] / 1000
     if json_obj["total_wordage"] == 0 and result == 0:
         raise APIError("受简书限制，无法获取该用户的总资产")
@@ -194,8 +176,7 @@ def GetUserBadgesList(user_url: str) -> list:
         list: 用户徽章列表
     """
     AssertUserUrl(user_url)
-    source = requests.get(user_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
+    html_obj = GetUserPCHtmlDataApi(user_url)
     result = html_obj.xpath("//li[@class='badge-icon']/a/text()")
     result = [item.replace(" ", "").replace("\n", "") for item in result]  # 移除空格和换行符
     result = [item for item in result if item != ""]  # 去除空值
@@ -211,9 +192,7 @@ def GetUserLastUpdateTime(user_url: str) -> datetime:
         datetime: 用户文章最近更新时间
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
@@ -227,9 +206,7 @@ def GetUserVIPInfo(user_url: str) -> dict:
         dict: 用户会员信息
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     try:
         result = {
             "vip_type": {
@@ -257,9 +234,7 @@ def GetUserIntroductionHtml(user_url: str) -> str:
         str: Html 格式的用户个人简介
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["intro"]
     return result
 
@@ -273,9 +248,7 @@ def GetUserIntroductionText(user_url: str) -> str:
         str: 纯文本格式的用户个人简介
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
-    json_obj = json.loads(source)
+    json_obj = GetUserJsonDataApi(user_url)
     html_obj = etree.HTML(json_obj["intro"])
     result = html_obj.xpath("//*/text()")
     result = "\n".join(result)
@@ -291,12 +264,7 @@ def GetUserNotebooksInfo(user_url: str) -> list:
         list: 用户文集与连载信息
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("/u/", "/users/") + "/collections_and_notebooks"
-    params = {
-        "slug": UserUrlToUserSlug(user_url)
-    }
-    source = requests.get(request_url, headers=jianshu_request_header, params=params).content
-    json_obj = json.loads(source)
+    json_obj = GetUserCollectionsAndNotebooksJsonDataApi(user_url=user_url, user_slug=UserUrlToUserSlug(user_url))
     result = []
     for item in json_obj["notebooks"]:
         item_data = {
@@ -319,12 +287,7 @@ def GetUserOwnCollectionsInfo(user_url: str) -> list:
         list: 用户自己创建的专题信息
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("/u/", "/users/") + "/collections_and_notebooks"
-    params = {
-        "slug": UserUrlToUserSlug(user_url)
-    }
-    source = requests.get(request_url, headers=jianshu_request_header, params=params).content
-    json_obj = json.loads(source)
+    json_obj = GetUserCollectionsAndNotebooksJsonDataApi(user_url=user_url, user_slug=UserUrlToUserSlug(user_url))
     result = []
     for item in json_obj["own_collections"]:
         item_data = {
@@ -346,12 +309,7 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
         list: 用户有管理权限的专题信息
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("/u/", "/users/") + "/collections_and_notebooks"
-    params = {
-        "slug": UserUrlToUserSlug(user_url)
-    }
-    source = requests.get(request_url, headers=jianshu_request_header, params=params).content
-    json_obj = json.loads(source)
+    json_obj = GetUserCollectionsAndNotebooksJsonDataApi(user_url=user_url, user_slug=UserUrlToUserSlug(user_url))
     result = []
     for item in json_obj["manageable_collections"]:
         item_data = {
@@ -363,26 +321,28 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
         result.append(item_data)
     return result
 
-def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10) -> list:
+def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10, 
+                        sorting_method: str ="time") -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文章信息
 
     Args:
         user_url (str): 用户个人主页 Url
         page (int, optional): 页码，与网页端文章顺序相同. Defaults to 1.
         count (int, optional): 获取的文章数量. Defaults to 10.
+        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
     Returns:
         list: 用户文章信息
     """
-    # TODO: 这个函数需要加一个排序方式的参数，修改之后面向对象中相应的部分也需要调整
     AssertUserUrl(user_url)
-    request_url = user_url.replace("/u/", "/asimov/users/slug/") + "/public_notes"
-    params = {
-        "page": page, 
-        "count": count
-    }
-    source = requests.get(request_url, headers=jianshu_request_header, params=params).content
-    json_obj = json.loads(source)
+    order_by = {
+        "time": "added_at", 
+        "comment_time": "commented_at", 
+        "hot": "top"
+    }[sorting_method]
+    json_obj = GetUserArticlesListJsonDataApi(user_url=user_url, page=page, 
+                                           count=count, order_by=order_by)
     result = []
     for item in json_obj:
         item_data  = {
@@ -390,7 +350,7 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10) -> list:
             "title": item["object"]["data"]["title"], 
             "aslug": item["object"]["data"]["slug"], 
             "release_time": datetime.fromisoformat(item["object"]["data"]["first_shared_at"]), 
-            "image_url": item["object"]["data"]["list_image_url"],   # TODO: 名字不太贴切
+            "first_image_url": item["object"]["data"]["list_image_url"], 
             "summary": item["object"]["data"]["public_abbr"], 
             "views_count": item["object"]["data"]["views_count"], 
             "likes_count": item["object"]["data"]["likes_count"], 
@@ -410,7 +370,7 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10) -> list:
         result.append(item_data)
     return result
 
-def GetUserFollowersInfo(user_url: str, page:int = 1) -> list:
+def GetUserFollowingInfo(user_url: str, page:int = 1) -> list:
     """该函数接收用户个人主页 Url 和页码，并返回该用户关注列表中对应页数的用户信息
 
     Args:
@@ -421,12 +381,7 @@ def GetUserFollowersInfo(user_url: str, page:int = 1) -> list:
         list: 该用户关注列表中对应页数的用户信息
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("/u/", "/users/") + "/following"
-    params = {
-        "page": page
-    }
-    source = requests.get(request_url, headers=PC_header, params=params).content
-    html_obj = etree.HTML(source)
+    html_obj = GetUserFollowingListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
     followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
     fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
@@ -439,8 +394,8 @@ def GetUserFollowersInfo(user_url: str, page:int = 1) -> list:
             "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
             "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
             "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")), 
-            "words_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
-            "likes_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[1])
+            "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
+            "likes_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_data)
     return result
@@ -456,12 +411,7 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> list:
         list: 该用户粉丝列表中对应页数的用户信息
     """
     AssertUserUrl(user_url)
-    request_url = user_url.replace("/u/", "/users/") + "/followers"
-    params = {
-        "page": page
-    }
-    source = requests.get(request_url, headers=PC_header, params=params).content
-    html_obj = etree.HTML(source)
+    html_obj = GetUserFollowersListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
     followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
     fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
@@ -474,8 +424,8 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> list:
             "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
             "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
             "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")), 
-            "words_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
-            "likes_count": int(re.findall(r"\d+", words_and_likes_raw_data[index].text)[1])
+            "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
+            "likes_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_data)
     return result
