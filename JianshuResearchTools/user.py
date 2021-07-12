@@ -3,7 +3,7 @@ from re import findall, sub
 
 from lxml import etree
 
-from .assert_funcs import AssertUserUrl
+from .assert_funcs import AssertUserUrl, AssertUserStatusNormal
 from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserCollectionsAndNotebooksJsonDataApi,
                          GetUserFollowersListHtmlDataApi,
@@ -23,6 +23,7 @@ def GetUserName(user_url: str) -> str:
         str: 用户昵称
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["nickname"]
     return result
@@ -37,6 +38,7 @@ def GetUserGender(user_url: str) -> int:
         int: 用户性别，0 为未知，1 为男，2 为女
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["gender"]
     return result
@@ -51,6 +53,7 @@ def GetUserFollowersCount(user_url: str) -> int:
         int: 用户关注数
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["following_users_count"]
     return result
@@ -65,6 +68,7 @@ def GetUserFansCount(user_url: str) -> int:
         int: 用户粉丝数
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["followers_count"]
     return result
@@ -79,6 +83,7 @@ def GetUserArticlesCount(user_url: str) -> int:
         int: 用户文章数
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     html_obj = GetUserPCHtmlDataApi(user_url)
     result = html_obj.xpath("//div[@class='info']/ul/li[3]/div[@class='meta-block']/a/p")[0].text
     result = int(result)
@@ -94,6 +99,7 @@ def GetUserWordage(user_url: str) -> int:
         int: 用户文章总字数
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["total_wordage"]
     return result
@@ -108,6 +114,7 @@ def GetUserLikesCount(user_url: str) -> int:
         int: 用户被喜欢数
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["total_likes_count"]
     return result
@@ -124,6 +131,7 @@ def GetUserAssetsCount(user_url: str) -> float:
         float: 用户总资产
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     html_obj = GetUserPCHtmlDataApi(user_url)
     try:
         result = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
@@ -142,10 +150,11 @@ def GetUserFPCount(user_url: str) -> float:
         float: 用户简书钻数量
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["jsd_balance"] / 1000
     if json_obj["total_wordage"] == 0 and result == 0:
-        raise APIError("受简书限制，无法获取该用户的总资产")
+        raise APIError("受简书限制，无法获取该用户的简书钻数量")
     return result
 
 def GetUserFTNCount(user_url: str) -> float:
@@ -176,6 +185,7 @@ def GetUserBadgesList(user_url: str) -> list:
         list: 用户徽章列表
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     html_obj = GetUserPCHtmlDataApi(user_url)
     result = html_obj.xpath("//li[@class='badge-icon']/a/text()")
     result = [item.replace(" ", "").replace("\n", "") for item in result]  # 移除空格和换行符
@@ -192,6 +202,7 @@ def GetUserLastUpdateTime(user_url: str) -> datetime:
         datetime: 用户文章最近更新时间
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
@@ -206,6 +217,7 @@ def GetUserVIPInfo(user_url: str) -> dict:
         dict: 用户会员信息
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     try:
         result = {
@@ -234,6 +246,7 @@ def GetUserIntroductionHtml(user_url: str) -> str:
         str: Html 格式的用户个人简介
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["intro"]
     return result
@@ -248,6 +261,7 @@ def GetUserIntroductionText(user_url: str) -> str:
         str: 纯文本格式的用户个人简介
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     html_obj = etree.HTML(json_obj["intro"])
     result = html_obj.xpath("//*/text()")
@@ -264,6 +278,7 @@ def GetUserNotebooksInfo(user_url: str) -> list:
         list: 用户文集与连载信息
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserCollectionsAndNotebooksJsonDataApi(user_url=user_url, user_slug=UserUrlToUserSlug(user_url))
     result = []
     for item in json_obj["notebooks"]:
@@ -287,6 +302,7 @@ def GetUserOwnCollectionsInfo(user_url: str) -> list:
         list: 用户自己创建的专题信息
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserCollectionsAndNotebooksJsonDataApi(user_url=user_url, user_slug=UserUrlToUserSlug(user_url))
     result = []
     for item in json_obj["own_collections"]:
@@ -309,6 +325,7 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
         list: 用户有管理权限的专题信息
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     json_obj = GetUserCollectionsAndNotebooksJsonDataApi(user_url=user_url, user_slug=UserUrlToUserSlug(user_url))
     result = []
     for item in json_obj["manageable_collections"]:
@@ -336,6 +353,7 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
         list: 用户文章信息
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     order_by = {
         "time": "added_at", 
         "comment_time": "commented_at", 
@@ -381,8 +399,11 @@ def GetUserFollowingInfo(user_url: str, page:int = 1) -> list:
         list: 该用户关注列表中对应页数的用户信息
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     html_obj = GetUserFollowingListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
+    if name_raw_data == []:  # 判断该页数据是否为空
+        return []
     followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
     fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
     articles_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[3]")
@@ -411,8 +432,11 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> list:
         list: 该用户粉丝列表中对应页数的用户信息
     """
     AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
     html_obj = GetUserFollowersListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
+    if name_raw_data == []:  # 判断该页数据是否为空
+        return []
     followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
     fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
     articles_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[3]")
