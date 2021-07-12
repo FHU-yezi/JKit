@@ -3,7 +3,9 @@ try:
 except ImportError:
     import json
 
-from .basic_apis import GetArticleJsonDataApi
+from functools import lru_cache
+
+from .basic_apis import GetArticleJsonDataApi, GetUserJsonDataApi
 from .exceptions import InputError, ResourceError
 from .headers import jianshu_request_header
 
@@ -50,6 +52,14 @@ def AssertUserUrl(string: str) -> None:
         if string.find(keyword) == -1:
             raise InputError("参数" + string + "不是有效的简书用户主页 Url")
 
+@lru_cache
+def AssertUserStatusNormal(user_url: str) -> None:
+    user_json_data = GetUserJsonDataApi(user_url)
+    try:
+        user_json_data["nickname"]
+    except KeyError:
+        raise ResourceError("用户账号状态异常")
+
 def AssertArticleUrl(string: str) -> None:
     """判断是否是有效的简书文章 Url
 
@@ -64,6 +74,7 @@ def AssertArticleUrl(string: str) -> None:
         if string.find(keyword) == -1:
             raise InputError("参数" + string + "不是有效的简书文章 Url")
 
+@lru_cache
 def AssertArticleStatusNormal(article_url: str) -> None:
     """判断文章状态是否正常
 
