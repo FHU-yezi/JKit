@@ -244,9 +244,9 @@ def GetArticleHtml(article_url: str) -> str:
     AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     html_text = json_obj["free_content"]
-    html_text = sub(r'\<div class="image-[\w]*" [ \w+-="]*>', "", html_text)  # 去除 image-view 和 image-container
-    # TODO: 优化正则表达式，不去除 image-caption，即可保留图片描述
-    html_text = sub(r'<div class=".+>', "", html_text)  # 去除 image-package、image-container-fill 和 image-caption
+    html_text = sub(r'<div class="image-[\w]*" [ \w+-="]*>', "", html_text)  # 去除 image-view 和 image-container
+    html_text = sub(r'<div class="image-package">', "", html_text)  # 去除 image-package
+    html_text = sub(r'<div class="image-container-fill".+>', "", html_text)  # 去除 image-container-fill
     old_img_blocks = findall(r'\<img[ \w+-="]*>', html_text)  # 匹配旧的 img 标签
     img_names = findall(r"\w+-\w+.[jpg | png]{3}",html_text)  # 获取图片名称
     new_img_blocks = ["".join(['<img src="https://upload-images.jianshu.io/upload_images/', \

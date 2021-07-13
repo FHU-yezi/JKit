@@ -263,7 +263,7 @@ def GetUserIntroductionText(user_url: str) -> str:
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
-    if json_obj["intro"] == "":
+    if json_obj["intro"] == "":   # 简介为空
         return ""
     html_obj = etree.HTML(json_obj["intro"])
     result = html_obj.xpath("//*/text()")
