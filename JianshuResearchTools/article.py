@@ -4,7 +4,8 @@ from re import findall, sub
 from lxml import etree
 
 from .assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
-from .basic_apis import GetArticleHtmlJsonDataApi, GetArticleJsonDataApi
+from .basic_apis import (GetArticleCommentsJsonDataApi,
+                         GetArticleHtmlJsonDataApi, GetArticleJsonDataApi)
 from .headers import PC_header, jianshu_request_header
 
 
@@ -279,4 +280,92 @@ def GetArticleText(article_url: str) -> str:
     html_obj = etree.HTML(html_text)
     result = "".join(html_obj.itertext())
     result = sub(r"\s{2,}", "", result)
+    return result
+
+def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10, 
+                           author_only: bool = False, sorting_method: str = "positive") -> list:
+    """获取文章评论信息
+
+    Args:
+        article_id (int): 文章 Id
+        page (int, optional): 页码. Defaults to 1.
+        count (int, optional): 每次获取的评论数（不包含子评论）. Defaults to 10.
+        author_only (bool, optional): 为 True 时只获取作者发布的评论，包含作者发布的子评论及其父评论. Defaults to False.
+        sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
+
+    Returns:
+        list: 评论信息
+    """
+    order_by = {
+        "positive": "asc", 
+        "reverse": "desc"
+    }[sorting_method]
+    json_obj = GetArticleCommentsJsonDataApi(article_id, page, count, author_only, order_by)
+    result = []
+    for item in json_obj["comments"]:
+        item_data = {
+            "cmid": item["id"], 
+            "publish_time": datetime.fromisoformat(item["created_at"]), 
+            "content": item["compiled_content"], 
+            "floor": item["floor"], 
+            "images": [image["url"] for image in item["images"]], 
+            "likes_count": item["likes_count"], 
+            "sub_comments_count": item["children_count"], 
+            "user": {
+                "uid": item["user"]["id"], 
+                "name": item["user"]["nickname"], 
+                "uslug": item["user"]["slug"], 
+                "avatar_url": item["user"]["avatar"]
+            }
+        }
+        try:
+            item["member"]
+        except KeyError:  # 没有开通会员
+            pass
+        else:
+            item_data["user"]["vip_type"] = {
+                    "bronze": "铜牌", 
+                    "silver": "银牌", 
+                    "gold": "黄金", 
+                    "platina": "白金"
+            }[item["user"]["member"]["type"]]
+            item_data["user"]["vip_expire_date"] = datetime.fromtimestamp(item["user"]["member"]["expires_at"])
+        
+        try:
+            item["children"]
+        except KeyError:  # 没有子评论
+            pass
+        else:
+            item_data["sub_comments"] = []
+            for sub_comment in item["children"]:
+                sub_comment_data = {
+                "cmid": sub_comment["id"], 
+                "publish_time": datetime.fromisoformat(sub_comment["created_at"]), 
+                "content": sub_comment["compiled_content"], 
+                "images": [image["url"] for image in sub_comment["images"]], 
+                "parent_comment_id": sub_comment["parent_id"], 
+                "user": {
+                    "uid": sub_comment["user"]["id"], 
+                    "name": sub_comment["user"]["nickname"], 
+                    "uslug": sub_comment["user"]["slug"], 
+                    "avatar_url": sub_comment["user"]["avatar"]
+                }
+            }
+                
+                try:
+                    sub_comment["user"]["member"]
+                except KeyError:  # 没有开通会员
+                    pass
+                else:
+                    sub_comment_data["user"]["vip_type"] = {
+                            "bronze": "铜牌",
+                            "silver": "银牌" , 
+                            "gold": "黄金", 
+                            "platina": "白金"
+                    }[item["user"]["member"]["type"]]
+                    sub_comment_data["user"]["vip_expire_date"] = datetime.fromtimestamp(sub_comment["user"]["member"]["expires_at"])
+
+                item_data["sub_comments"].append(sub_comment_data)
+                    
+        result.append(item_data)
     return result

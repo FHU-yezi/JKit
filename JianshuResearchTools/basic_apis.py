@@ -23,6 +23,19 @@ def GetArticleHtmlJsonDataApi(article_url: str) -> object:
     json_obj = json.loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
     return json_obj
 
+def GetArticleCommentsJsonDataApi(article_id: int, page: int, count: int, 
+                                  author_only: bool, order_by: str) -> object:
+    params = {
+        "page": page, 
+        "count": count, 
+        "author_only": author_only, 
+        "order_by": order_by
+    }
+    request_url = "https://www.jianshu.com/shakespeare/notes/" + str(article_id) + "/comments"
+    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    return json_obj
+
 def GetBeikeIslandTradeRankListJsonDataApi(ranktype: int, pageIndex: int) -> object:
     params = {
         "ranktype": ranktype, 
