@@ -328,7 +328,7 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                     "silver": "银牌", 
                     "gold": "黄金", 
                     "platina": "白金", 
-                    "ordinary": "普通（旧会员）"
+                    "ordinary": "普通（旧会员）", 
                     "distinguished": "至尊（旧会员）"
             }[item["user"]["member"]["type"]]
             item_data["user"]["vip_expire_date"] = datetime.fromtimestamp(item["user"]["member"]["expires_at"])
