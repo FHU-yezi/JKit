@@ -327,7 +327,9 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                     "bronze": "铜牌", 
                     "silver": "银牌", 
                     "gold": "黄金", 
-                    "platina": "白金"
+                    "platina": "白金", 
+                    "ordinary": "普通（旧会员）"
+                    "distinguished": "至尊（旧会员）"
             }[item["user"]["member"]["type"]]
             item_data["user"]["vip_expire_date"] = datetime.fromtimestamp(item["user"]["member"]["expires_at"])
         
@@ -361,8 +363,10 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                             "bronze": "铜牌",
                             "silver": "银牌" , 
                             "gold": "黄金", 
-                            "platina": "白金"
-                    }[item["user"]["member"]["type"]]
+                            "platina": "白金", 
+                            "ordinary": "普通（旧会员）", 
+                            "distinguished": "至尊（旧会员）"
+                    }[sub_comment["user"]["member"]["type"]]
                     sub_comment_data["user"]["vip_expire_date"] = datetime.fromtimestamp(sub_comment["user"]["member"]["expires_at"])
 
                 item_data["sub_comments"].append(sub_comment_data)
