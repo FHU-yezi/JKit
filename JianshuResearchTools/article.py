@@ -319,7 +319,7 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
             }
         }
         try:
-            item["member"]
+            item["user"]["member"]
         except KeyError:  # 没有开通会员
             pass
         else:
