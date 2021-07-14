@@ -90,11 +90,25 @@ def ArticleSlugToArticleUrl(article_slug: str) -> str:
     AssertArticleUrl(result)
     return result
 
-def ArticleSlugToArticleId(article_url: str) -> int:
+def ArticleSlugToArticleId(article_slug: str) -> int:
     """该函数接收文章 Slug，并将其转换成文章 Id
 
     Args:
         article_slug (str): 文章 Slug
+
+    Returns:
+        int: 文章 Id
+    """
+    AssertString(article_slug)
+    json_obj = GetArticleJsonDataApi(ArticleSlugToArticleUrl(article_slug))
+    result = json_obj["id"]
+    return result
+
+def ArticleUrlToArticleId(article_url: str) -> int:
+    """该函数接收文章 Url，并将其转换成文章 Id
+
+    Args:
+        article_Url (str): 文章 Url
 
     Returns:
         int: 文章 Id
@@ -105,7 +119,6 @@ def ArticleSlugToArticleId(article_url: str) -> int:
     json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["id"]
     return result
-
 
 def NotebookUrlToNotebookId(notebook_url: str) -> int:
     """该函数接收文集 Url，并将其转换成文集 Id
