@@ -7,6 +7,7 @@ from .assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
 from .basic_apis import (GetArticleCommentsJsonDataApi,
                          GetArticleHtmlJsonDataApi, GetArticleJsonDataApi)
 from .headers import PC_header, jianshu_request_header
+from tomd import convert as html2md
 
 
 def GetArticleTitle(article_url: str) -> str:
@@ -281,6 +282,38 @@ def GetArticleText(article_url: str) -> str:
     result = "".join(html_obj.itertext())
     result = sub(r"\s{2,}", "", result)
     return result
+
+def GetArticleMarkdown(article_url: str) -> str:
+    """获取 Markdown 格式的文章内容
+
+    # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
+    # ! 该函数不能获取需要付费的文章内容
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        str:  Markdown 格式的文章内容
+    """
+    html_text = GetArticleHtml(article_url)
+    image_descriptions = [description for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述块
+    image_descriptions_text = [description.replace('class="image-caption">', "").replace("</div>", "") 
+                               for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述文本
+    for index in range(len(image_descriptions)):
+        html_text = html_text.replace(image_descriptions[index], "<p>&&" + image_descriptions_text[index] + "&&</p>")  # 将图片描述替换成带有标记符的文本
+    images = findall(r'<img src=".+">', html_text)  # 获取图片块
+    for index in range(len(images)):
+        html_text = html_text.replace(images[index], "<p>" + images[index] + "</img></p>")  # 处理图片块
+    markdown = html2md(html_text)
+    
+    md_images_and_description = findall(r'!\[.*\]\(.+\)\n\n&&.+&&', markdown)  # 获取 Markdown 中图片语法和对应描述的部分
+    md_images_url = [findall(r'https://.+\)', item)[0].replace(")", "") for item in md_images_and_description]  # 获取所有图片链接
+    md_image_descriptions = [findall(r'&&.+&&', item)[0].replace("&&", "") for item in md_images_and_description] # 获取所有图片描述
+    
+    for index, item in enumerate(md_images_and_description):
+        markdown = markdown.replace(item, "![{}]({})".format(md_image_descriptions[index], md_images_url[index]))  # 拼接 Markdown 语法并进行替换
+    
+    return markdown
 
 def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10, 
                            author_only: bool = False, sorting_method: str = "positive") -> list:
