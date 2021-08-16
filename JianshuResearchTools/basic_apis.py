@@ -213,3 +213,12 @@ def GetUserFollowersListHtmlDataApi(user_url: str, page: int):
     source = requests.get(request_url, headers=PC_header, params=params).content
     html_obj = etree.HTML(source)
     return html_obj
+
+def GetUserNextAnniversaryDayHtmlDataApi(user_slug: str):
+    request_url = "https://www.jianshu.com/mobile/u/" + user_slug + "/anniversary"
+    mobile_headers = {
+        "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.134 Mobile Safari/537.36"
+        }
+    source = requests.get(request_url, headers=mobile_headers).content
+    html_obj = etree.HTML(source)
+    return html_obj

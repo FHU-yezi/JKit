@@ -3,11 +3,12 @@ from re import findall, sub
 
 from lxml import etree
 
-from .assert_funcs import AssertUserUrl, AssertUserStatusNormal
+from .assert_funcs import AssertUserStatusNormal, AssertUserUrl
 from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserCollectionsAndNotebooksJsonDataApi,
                          GetUserFollowersListHtmlDataApi,
                          GetUserFollowingListHtmlDataApi, GetUserJsonDataApi,
+                         GetUserNextAnniversaryDayHtmlDataApi,
                          GetUserPCHtmlDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import APIError
@@ -268,6 +269,24 @@ def GetUserIntroductionText(user_url: str) -> str:
     html_obj = etree.HTML(json_obj["intro"])
     result = html_obj.xpath("//*/text()")
     result = "\n".join(result)
+    return result
+
+def GetUserNextAnniversaryDay(user_url: str) -> datetime:
+    """该函数用于获取用户的下一次简书周年纪念时间
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        datetime: 下一次简书周年纪念时间
+    """
+    AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
+    user_slug = UserUrlToUserSlug(user_url)
+    html_obj = GetUserNextAnniversaryDayHtmlDataApi(user_slug)
+    result = html_obj.xpath('//*[@id="app"]/div[1]/div/text()')[0]
+    result = findall(r"\d+", result)
+    result = datetime.fromisoformat("-".join(result))
     return result
 
 def GetUserNotebooksInfo(user_url: str) -> list:
