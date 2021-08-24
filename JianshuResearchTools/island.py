@@ -170,3 +170,23 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
             pass  # 没有话题则跳过
         result.append(item_data)
     return result
+
+def GetIslandAllBasicData(island_url: str) -> dict:
+    """获取小岛的所有基础信息
+
+    Args:
+        island_url (str): 小岛 Url
+
+    Returns:
+        dict: 小岛基础信息
+    """
+    result = {}
+    json_obj = GetIslandJsonDataApi(island_url)
+    
+    result["name"] = json_obj["name"]
+    result["avatar_url"] = json_obj["image"]
+    result["introduction"] = json_obj["intro"]
+    result["members_count"] = json_obj["members_count"]
+    result["posts_count"] = json_obj["posts_count"]
+    result["category"] = json_obj["category"]["name"]
+    return result

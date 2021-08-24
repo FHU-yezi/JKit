@@ -56,7 +56,7 @@ def GetArticleReadsCount(article_url: str) -> str:
     return result
 
 def GetArticleWordage(article_url: str) -> str:
-    """获取文章总字数
+    """获取文章字数
 
     Args:
         article_url (str): 文章 Url
@@ -405,4 +405,40 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                 item_data["sub_comments"].append(sub_comment_data)
                     
         result.append(item_data)
+    return result
+
+def GetArticleAllBasicData(article_url: str) -> dict:
+    """获取文章的所有基础信息
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        dict: 文章基础信息
+    """
+    result = {}
+    json_obj = GetArticleJsonDataApi(article_url)
+    html_json_obj = GetArticleHtmlJsonDataApi(article_url)
+    
+    result["title"] = json_obj["public_title"]
+    result["author_name"] = html_json_obj["props"]["initialState"]["note"]["data"]["user"]["nickname"]
+    result["reads_count"] = html_json_obj["props"]["initialState"]["note"]["data"]["views_count"]
+    result["likes_count"] = json_obj["likes_count"]
+    result["comments_count"] = json_obj["public_comment_count"]
+    result["most_valuable_comments_count"] = json_obj["featured_comments_count"]
+    result["wordage"] = html_json_obj["props"]["initialState"]["note"]["data"]["wordage"]
+    result["FP_count"] = json_obj["total_fp_amount"] / 1000
+    result["description"] = json_obj["description"]
+    result["publish_time"] = datetime.fromisoformat(json_obj["first_shared_at"])
+    result["update_time"] = datetime.fromtimestamp(json_obj["last_updated_at"])
+    result["paid_status"] = {
+        "free": False, 
+        "fbook_free": False, 
+        "pbook_free":False, 
+        "paid": True, 
+        "fbook_paid": True, 
+        "pbook_paid":True
+    }[json_obj["paid_type"]]
+    result["reprintstatus"] = json_obj["reprintable"]
+    result["comment_status"] = json_obj["commentable"]
     return result
