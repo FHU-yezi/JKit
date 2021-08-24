@@ -51,7 +51,7 @@ class TestArticleModule():
     
     def test_GetArticleCommentsCount(self):
         assert isinstance(jrt.article.GetArticleCommentsCount("https://www.jianshu.com/p/52698676395f"), int)
-        assert 50 > jrt.article.GetArticleCommentsCount("https://www.jianshu.com/p/52698676395f") > 13
+        assert 50 > jrt.article.GetArticleCommentsCount("https://www.jianshu.com/p/52698676395f") >= 13
         assert 500 > jrt.article.GetArticleCommentsCount("https://www.jianshu.com/p/2c2b76a1d0ae") > 350
         assert 200 > jrt.article.GetArticleCommentsCount("https://www.jianshu.com/p/0589bd2ac952") > 40
         with pytest.raises(ResourceError):
