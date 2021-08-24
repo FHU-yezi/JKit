@@ -107,7 +107,7 @@ def GetCollectionArticlesUpdateTime(collection_url: str) -> datetime:
     result = datetime.fromtimestamp(json_obj["newly_added_at"])
     return result
 
-def GetCollectionInfoUpdateTime(collection_url: str) -> datetime:
+def GetCollectionInformationUpdateTime(collection_url: str) -> datetime:
     """获取专题信息更新时间
 
     Args:
@@ -255,4 +255,31 @@ def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
             "rewards_count": item["object"]["data"]["total_rewards_count"]
         }
         result.append(item_data)
+    return result
+
+def GetCollectionAllBasicData(collection_url: str) -> dict:
+    """获取专题的所有基础信息
+
+    Args:
+        collection_url (str): 专题 Url
+
+    Returns:
+        dict: 专题基础信息
+    """
+    result = {}
+    json_obj = GetCollectionJsonDataApi(collection_url)
+    
+    result["name"] = json_obj["title"]
+    result["avatar_url"] = json_obj["image"]
+    result["introduction_text"] = json_obj["content_without_html"]
+    result["introduction_html"] = json_obj["content_in_full"]
+    result["articles_count"] = json_obj["notes_count"]
+    result["subscribers_count"] = json_obj["subscribers_count"]
+    result["articles_update_time"] = datetime.fromtimestamp(json_obj["newly_added_at"])
+    result["information_update_time"] = datetime.fromtimestamp(json_obj["last_updated_at"])
+    result["owner_info"] = {
+        "uid": json_obj["owner"]["id"], 
+        "name": json_obj["owner"]["nickname"], 
+        "uslug": json_obj["owner"]["slug"]
+    }
     return result

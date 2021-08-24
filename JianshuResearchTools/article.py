@@ -7,6 +7,7 @@ from .assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
 from .basic_apis import (GetArticleCommentsJsonDataApi,
                          GetArticleHtmlJsonDataApi, GetArticleJsonDataApi)
 from .headers import PC_header, jianshu_request_header
+from tomd import convert as html2md
 
 
 def GetArticleTitle(article_url: str) -> str:
@@ -55,7 +56,7 @@ def GetArticleReadsCount(article_url: str) -> str:
     return result
 
 def GetArticleWordage(article_url: str) -> str:
-    """获取文章总字数
+    """获取文章字数
 
     Args:
         article_url (str): 文章 Url
@@ -282,6 +283,38 @@ def GetArticleText(article_url: str) -> str:
     result = sub(r"\s{2,}", "", result)
     return result
 
+def GetArticleMarkdown(article_url: str) -> str:
+    """获取 Markdown 格式的文章内容
+
+    # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
+    # ! 该函数不能获取需要付费的文章内容
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        str:  Markdown 格式的文章内容
+    """
+    html_text = GetArticleHtml(article_url)
+    image_descriptions = [description for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述块
+    image_descriptions_text = [description.replace('class="image-caption">', "").replace("</div>", "") 
+                               for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述文本
+    for index in range(len(image_descriptions)):
+        html_text = html_text.replace(image_descriptions[index], "<p>&&" + image_descriptions_text[index] + "&&</p>")  # 将图片描述替换成带有标记符的文本
+    images = findall(r'<img src=".+">', html_text)  # 获取图片块
+    for index in range(len(images)):
+        html_text = html_text.replace(images[index], "<p>" + images[index] + "</img></p>")  # 处理图片块
+    markdown = html2md(html_text)
+    
+    md_images_and_description = findall(r'!\[.*\]\(.+\)\n\n&&.+&&', markdown)  # 获取 Markdown 中图片语法和对应描述的部分
+    md_images_url = [findall(r'https://.+\)', item)[0].replace(")", "") for item in md_images_and_description]  # 获取所有图片链接
+    md_image_descriptions = [findall(r'&&.+&&', item)[0].replace("&&", "") for item in md_images_and_description] # 获取所有图片描述
+    
+    for index, item in enumerate(md_images_and_description):
+        markdown = markdown.replace(item, "![{}]({})".format(md_image_descriptions[index], md_images_url[index]))  # 拼接 Markdown 语法并进行替换
+    
+    return markdown
+
 def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10, 
                            author_only: bool = False, sorting_method: str = "positive") -> list:
     """获取文章评论信息
@@ -372,4 +405,40 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                 item_data["sub_comments"].append(sub_comment_data)
                     
         result.append(item_data)
+    return result
+
+def GetArticleAllBasicData(article_url: str) -> dict:
+    """获取文章的所有基础信息
+
+    Args:
+        article_url (str): 文章 Url
+
+    Returns:
+        dict: 文章基础信息
+    """
+    result = {}
+    json_obj = GetArticleJsonDataApi(article_url)
+    html_json_obj = GetArticleHtmlJsonDataApi(article_url)
+    
+    result["title"] = json_obj["public_title"]
+    result["author_name"] = html_json_obj["props"]["initialState"]["note"]["data"]["user"]["nickname"]
+    result["reads_count"] = html_json_obj["props"]["initialState"]["note"]["data"]["views_count"]
+    result["likes_count"] = json_obj["likes_count"]
+    result["comments_count"] = json_obj["public_comment_count"]
+    result["most_valuable_comments_count"] = json_obj["featured_comments_count"]
+    result["wordage"] = html_json_obj["props"]["initialState"]["note"]["data"]["wordage"]
+    result["FP_count"] = json_obj["total_fp_amount"] / 1000
+    result["description"] = json_obj["description"]
+    result["publish_time"] = datetime.fromisoformat(json_obj["first_shared_at"])
+    result["update_time"] = datetime.fromtimestamp(json_obj["last_updated_at"])
+    result["paid_status"] = {
+        "free": False, 
+        "fbook_free": False, 
+        "pbook_free":False, 
+        "paid": True, 
+        "fbook_paid": True, 
+        "pbook_paid":True
+    }[json_obj["paid_type"]]
+    result["reprintstatus"] = json_obj["reprintable"]
+    result["comment_status"] = json_obj["commentable"]
     return result

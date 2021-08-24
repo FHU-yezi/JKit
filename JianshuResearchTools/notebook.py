@@ -32,20 +32,6 @@ def GetNotebookArticlesCount(notebook_url: str) -> int:
     result = json_obj["notes_count"]
     return result
 
-def GetNotebookAuthorName(notebook_url: str) -> str:
-    """获取文集的作者名
-
-    Args:
-        notebook_url (str): 文集 Url
-
-    Returns:
-        int: 作者名
-    """
-    AssertNotebookUrl(notebook_url)
-    json_obj = GetNotebookJsonDataApi(notebook_url)
-    result = json_obj["user"]["nickname"]
-    return result
-
 def GetNotebookAuthorInfo(notebook_url: str) -> dict:
     """获取文集作者的信息
 
@@ -153,4 +139,28 @@ def GetNotebookArticlesInfo(notebook_url: str, page: int = 1,
             "rewards_count": item["object"]["data"]["total_rewards_count"]
         }
         result.append(item_data)
+    return result
+
+def GetNotebookAllBasicData(notebook_url: str) -> dict:
+    """获取文集的所有基础信息
+
+    Args:
+        notebook_url (str): 文集 Url
+
+    Returns:
+        dict: 文集基础信息
+    """
+    result = {}
+    json_obj = GetNotebookJsonDataApi(notebook_url)
+    
+    result["name"] = json_obj["name"]
+    result["author_info"] = {
+        "name": json_obj["user"]["nickname"], 
+        "uslug": json_obj["user"]["slug"], 
+        "avatar_url": json_obj["user"]["avatar"]
+    }
+    result["articles_count"] = json_obj["notes_count"]
+    result["wordage"] = json_obj["wordage"]
+    result["subscribers_count"] = json_obj["subscribers_count"]
+    result["update_time"] = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result

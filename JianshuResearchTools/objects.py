@@ -1320,7 +1320,7 @@ class Island():
     @property
     def avatar_url(self, disable_cache: bool = False) -> str:
         result = SimpleCache(self._avatar_url, island.GetIslandAvatarUrl, 
-                             {"collection_url":self._url}, disable_cache)
+                             {"island_url":self._url}, disable_cache)
         return result
     
     @property

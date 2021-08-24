@@ -3,11 +3,12 @@ from re import findall, sub
 
 from lxml import etree
 
-from .assert_funcs import AssertUserUrl, AssertUserStatusNormal
+from .assert_funcs import AssertUserStatusNormal, AssertUserUrl
 from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserCollectionsAndNotebooksJsonDataApi,
                          GetUserFollowersListHtmlDataApi,
                          GetUserFollowingListHtmlDataApi, GetUserJsonDataApi,
+                         GetUserNextAnniversaryDayHtmlDataApi,
                          GetUserPCHtmlDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import APIError
@@ -270,6 +271,24 @@ def GetUserIntroductionText(user_url: str) -> str:
     result = "\n".join(result)
     return result
 
+def GetUserNextAnniversaryDay(user_url: str) -> datetime:
+    """该函数用于获取用户的下一次简书周年纪念时间
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        datetime: 下一次简书周年纪念时间
+    """
+    AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
+    user_slug = UserUrlToUserSlug(user_url)
+    html_obj = GetUserNextAnniversaryDayHtmlDataApi(user_slug)
+    result = html_obj.xpath('//*[@id="app"]/div[1]/div/text()')[0]
+    result = findall(r"\d+", result)
+    result = datetime.fromisoformat("-".join(result))
+    return result
+
 def GetUserNotebooksInfo(user_url: str) -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文集与连载信息
 
@@ -454,4 +473,70 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> list:
             "likes_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_data)
+    return result
+
+def GetUserAllBasicData(user_url: str) -> dict:
+    """获取用户的所有基础信息
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Returns:
+        dict: 用户基础信息
+    """
+    
+    result = {}
+    json_obj = GetUserJsonDataApi(user_url)
+    html_obj = GetUserPCHtmlDataApi(user_url)
+    anniversary_day_html_obj = GetUserNextAnniversaryDayHtmlDataApi(UserUrlToUserSlug(user_url))
+    
+    result["name"] = json_obj["nickname"]
+    result["url"] = user_url
+    result["uslug"] = UserUrlToUserSlug(user_url)
+    result["gender"] = json_obj["gender"]
+    result["followers_count"] = json_obj["following_users_count"]
+    result["fans_count"] = json_obj["followers_count"]
+    result["articles_count"] = json_obj
+    result["wordage"] = json_obj["total_wordage"]
+    result["likes_count"] = json_obj["total_likes_count"]
+    try:
+        result["assets_count"] = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
+        result["assets_count"] = float(result["assets_count"].replace(".", "").replace("w", "000"))
+    except IndexError:
+        result["assets_count"] = None
+    if json_obj["total_wordage"] == 0 and json_obj["jsd_balance"] == 0:
+        result["FP_count"] = None
+    else:
+        result["FP_count"] = json_obj["jsd_balance"] / 1000
+    if result["assets_count"] and result["FP_count"]:
+        result["FTN_count"] = result["assets_count"] - result["FP_count"]
+        result["FTN_count"] = round(abs(result["FTN_count"]), 3)
+    else:
+        result["FTN_count"] = None
+    result["badges_list"] = html_obj.xpath("//li[@class='badge-icon']/a/text()")
+    result["badges_list"] = [item.replace(" ", "").replace("\n", "") for item in result["badges_list"]]  # 移除空格和换行符
+    result["badges_list"] = [item for item in result["badges_list"] if item != ""]  # 去除空值
+    result["last_update_time"] = datetime.fromtimestamp(json_obj["last_updated_at"])
+    try:
+        result["vip_info"] = {
+            "vip_type": {
+                    "bronze": "铜牌",
+                    "silver": "银牌" , 
+                    "gold": "黄金", 
+                    "platina": "白金"
+                }[json_obj["member"]["type"]], 
+                "expire_date": datetime.fromtimestamp(json_obj["member"]["expires_at"])
+            }
+    except KeyError:
+        result["vip_info"] = {
+            "vip_type": None, 
+            "expire_date": None
+        }
+    result["introduction_html"] = json_obj["intro"]
+    if not result["introduction_html"]:
+        result["introduction_text"] = ""
+    else:
+        result["introduction_text"] = "\n".join(etree.HTML(result["introduction_html"]).xpath("//*/text()"))
+    result["next_anniversary_day"] = anniversary_day_html_obj.xpath('//*[@id="app"]/div[1]/div/text()')[0]
+    result["next_anniversary_day"] = datetime.fromisoformat("-".join(findall(r"\d+", result["next_anniversary_day"])))
     return result
