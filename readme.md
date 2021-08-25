@@ -110,6 +110,7 @@ print(jrt.__version__)
 ## 可选依赖
 
 - simplejson：安装后 json 解析速度将得到小幅提升
+- tomd：安装后可以使用`jrt.article.GetArticleMarkdown()`函数获取 Markdown 格式的文章内容
 
 # 贡献
 
