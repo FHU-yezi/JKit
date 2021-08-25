@@ -65,13 +65,13 @@ def GetNotebookWordage(notebook_url: str) -> int:
     return result
 
 def GetNotebookSubscribersCount(notebook_url: str) -> int:
-    """获取文集的关注着数量
+    """获取文集的关注者数量
 
     Args:
         notebook_url (str): 文集 Url
 
     Returns:
-        int: 关注着数量
+        int: 关注者数量
     """
     AssertNotebookUrl(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)

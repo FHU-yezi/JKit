@@ -797,13 +797,13 @@ class Notebook():
     
     @property
     def id(self, disable_cache: bool = False) -> int:
-        """获取文集 Id
+        """获取文集 ID
 
         Args:
             disable_cache (bool, optional): 禁用缓存. Defaults to False.
 
         Returns:
-            int: 文集 Id
+            int: 文集 ID
         """
         result = SimpleCache(self._id, NotebookUrlToNotebookId, 
                              {"notebook_url": self._url}, disable_cache)
@@ -975,7 +975,7 @@ class Collection():
 
         Args:
             source (str): 文集 Url 或文集 Slug
-            id (int): 专题 Id，如不传入将无法获取编辑、推荐作者和关注者信息
+            id (int): 专题 ID，如不传入将无法获取编辑、推荐作者和关注者信息
         """
         try:
             AssertCollectionUrl(source)
@@ -1158,13 +1158,13 @@ class Collection():
             disable_cache (bool, optional): 禁用缓存. Defaults to False.
 
         Raises:
-            InputError: 因缺少 Id 参数而无法获取结果时抛出此异常
+            InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
 
         Returns:
             list: 编辑信息
         """
         if self._id == None:
-            raise InputError("实例化该专题对象时未传入 Id 参数，无法获取编辑信息")
+            raise InputError("实例化该专题对象时未传入 ID 参数，无法获取编辑信息")
         result = HashCache(self._editors_info, collection.GetCollectionEditorsInfo, 
                            {"collection_id": self._id, "page": page}, disable_cache)
         return result
@@ -1177,13 +1177,13 @@ class Collection():
             disable_cache (bool, optional): 禁用缓存. Defaults to False.
 
         Raises:
-            InputError: 因缺少 Id 参数而无法获取结果时抛出此异常
+            InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
 
         Returns:
             list: 推荐作者信息
         """
         if self._id == None:
-            raise InputError("实例化该专题对象时未传入 Id 参数，无法获取推荐作者信息")
+            raise InputError("实例化该专题对象时未传入 ID 参数，无法获取推荐作者信息")
         result = HashCache(self._recommended_writers_info, collection.GetCollectionRecommendedWritersInfo, 
                            {"collection_id": self._id}, disable_cache)
         return result
@@ -1196,13 +1196,13 @@ class Collection():
             disable_cache (bool, optional): 禁用缓存. Defaults to False.
 
         Raises:
-            InputError: 因缺少 Id 参数而无法获取结果时抛出此异常
+            InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
 
         Returns:
             list: 关注者信息
         """
         if self._id == None:
-            raise InputError("实例化该专题对象时未传入 Id 参数，无法获取关注着信息")
+            raise InputError("实例化该专题对象时未传入 ID 参数，无法获取关注者信息")
         result = HashCache(self._subscribers_info, collection.GetCollectionSubscribersInfo, 
                            {"collection_id": self._id, "start_sort_id": start_sort_id}, disable_cache)
         return result
@@ -1386,7 +1386,7 @@ class Island():
         Args:
             start_sort_id (int, optional): 起始序号，等于上一条数据的序号. Defaults to None.
             count (int, optional): 每次返回的数据数量. Defaults to 10.
-            topic_id (int, optional): 话题 Id. Defaults to None.
+            topic_id (int, optional): 话题 ID. Defaults to None.
             sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
             disable_cache (bool, optional): 禁用缓存. Defaults to False.

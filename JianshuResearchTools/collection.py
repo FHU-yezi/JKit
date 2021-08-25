@@ -328,13 +328,13 @@ def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) 
             break
 
 def GetCollectionAllSubscribersInfo(collection_id: int) -> list:
-    """获取专题的所有关注着信息
+    """获取专题的所有关注者信息
 
     Args:
         collection_id (int): 专题 ID
 
     Returns:
-        list: 专题的所有关注着信息
+        list: 专题的所有关注者信息
 
     Yields:
         Iterator[list]: 当前页关注者信息
