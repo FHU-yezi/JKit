@@ -90,14 +90,14 @@ def GetIslandCategory(island_url: str) -> str:
     return result
 
 def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10, 
-                    topic_id: int = None, sorting_method: str ="time") -> list:
+                    topic_id: int = None, sorting_method: str = "time") -> list:
     """获取小岛帖子信息
 
         Args:
             island_url (str): 小岛 Url
             start_sort_id (int, optional): 起始序号，等于上一条数据的序号. Defaults to None.
             count (int, optional): 每次返回的数据数量. Defaults to 10.
-            topic_id (int, optional): 话题 Id. Defaults to None.
+            topic_id (int, optional): 话题 ID. Defaults to None.
             sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
@@ -190,3 +190,29 @@ def GetIslandAllBasicData(island_url: str) -> dict:
     result["posts_count"] = json_obj["posts_count"]
     result["category"] = json_obj["category"]["name"]
     return result
+
+def GetIslandAllPostsData(island_url: str, count: int = 10, 
+                          topic_id: int = None, sorting_method: str = "time") -> list:
+    """获取小岛的所有帖子信息
+
+    Args:
+        island_url (str): 小岛 Url
+        count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
+        topic_id (int, optional): 话题 ID. Defaults to None.
+        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+
+    Returns:
+        list: 小岛的所有帖子信息
+
+    Yields:
+        Iterator[list]: 当前页帖子信息
+    """
+    start_sort_id = None
+    while True:
+        result = GetIslandPosts(island_url, start_sort_id, count, topic_id, sorting_method)
+        if result:
+            yield result
+            start_sort_id = result[-1]["sorted_id"]
+        else:
+            break
