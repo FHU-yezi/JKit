@@ -360,7 +360,7 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
     return result
 
 def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10, 
-                        sorting_method: str ="time") -> list:
+                        sorting_method: str = "time") -> list:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文章信息
 
     Args:
@@ -541,7 +541,7 @@ def GetUserAllBasicData(user_url: str) -> dict:
     result["next_anniversary_day"] = datetime.fromisoformat("-".join(findall(r"\d+", result["next_anniversary_day"])))
     return result
 
-def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str ="time") -> list:
+def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time") -> list:
     """获取用户的所有文章信息
 
     Args:

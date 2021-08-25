@@ -921,7 +921,7 @@ class Notebook():
                              {"notebook_url": self._url}, disable_cache)
         return result
     
-    def articles_info(self, page: int = 1, count: int = 10, sorting_method: str ="time", disable_cache: bool = False) -> list:
+    def articles_info(self, page: int = 1, count: int = 10, sorting_method: str = "time", disable_cache: bool = False) -> list:
         """获取文集中的文章信息
 
         Args:
@@ -1208,7 +1208,7 @@ class Collection():
         return result
     
     def articles_info(self, page: int = 1, count: int = 10, 
-                      sorting_method: str ="time", disable_cache: bool = False) -> list:
+                      sorting_method: str = "time", disable_cache: bool = False) -> list:
         """获取专题文章信息
 
         Args:
@@ -1380,7 +1380,7 @@ class Island():
         return result
     
     def posts(self, start_sort_id: int = None, count: int = 10, 
-              topic_id: int = None, sorting_method: str ="time", disable_cache: bool = False) -> list:
+              topic_id: int = None, sorting_method: str = "time", disable_cache: bool = False) -> list:
         """获取小岛帖子信息
 
         Args:
