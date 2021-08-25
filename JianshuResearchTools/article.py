@@ -439,6 +439,6 @@ def GetArticleAllBasicData(article_url: str) -> dict:
         "fbook_paid": True, 
         "pbook_paid":True
     }[json_obj["paid_type"]]
-    result["reprintstatus"] = json_obj["reprintable"]
+    result["reprint_status"] = json_obj["reprintable"]
     result["comment_status"] = json_obj["commentable"]
     return result
