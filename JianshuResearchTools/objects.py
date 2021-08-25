@@ -407,7 +407,7 @@ class User():
         Returns:
             list: 关注者信息
         """
-        result = HashCache(self._followers_info, user.GetUserFollowersInfo, 
+        result = HashCache(self._followers_info, user.GetUserFollowingInfo, 
                             {"user_url": self._url, "page": page}, disable_cache)
         return result
 
@@ -861,9 +861,9 @@ class Notebook():
         Returns:
             str: 作者名
         """
-        result = SimpleCache(self._author_name, notebook.GetNotebookAuthorName, 
+        result = SimpleCache(self._author_name, notebook.GetNotebookAuthorInfo, 
                              {"notebook_url": self._url}, disable_cache)
-        return result
+        return result["name"]
     
     @property
     def author_info(self, disable_cache: bool = False) -> dict:
@@ -1104,7 +1104,7 @@ class Collection():
         Returns:
             datetime: 专题信息更新时间
         """
-        result = SimpleCache(self._info_update_time, collection.GetCollectionInfoUpdateTime, 
+        result = SimpleCache(self._info_update_time, collection.GetCollectionInformationUpdateTime, 
                              {"collection_url": self._url}, disable_cache)
         return result
     
