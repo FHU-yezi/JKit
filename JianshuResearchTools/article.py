@@ -7,8 +7,10 @@ from .assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
 from .basic_apis import (GetArticleCommentsJsonDataApi,
                          GetArticleHtmlJsonDataApi, GetArticleJsonDataApi)
 from .headers import PC_header, jianshu_request_header
-from tomd import convert as html2md
-
+try:
+    from tomd import convert as html2md
+except ImportError:
+    pass
 
 def GetArticleTitle(article_url: str) -> str:
     """获取文章标题
@@ -295,6 +297,10 @@ def GetArticleMarkdown(article_url: str) -> str:
     Returns:
         str:  Markdown 格式的文章内容
     """
+    try:
+        html2md
+    except NameError:
+        raise ImportError("未安装 html2md 模块，该函数不可用")
     html_text = GetArticleHtml(article_url)
     image_descriptions = [description for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述块
     image_descriptions_text = [description.replace('class="image-caption">', "").replace("</div>", "") 
