@@ -93,7 +93,7 @@ def GetNotebookUpdateTime(notebook_url: str) -> datetime:
     return result
 
 def GetNotebookArticlesInfo(notebook_url: str, page: int = 1, 
-                            count: int = 10, sorting_method: str ="time") -> list:
+                            count: int = 10, sorting_method: str = "time") -> list:
     """获取文集中的文章信息
 
     Args:
@@ -164,3 +164,28 @@ def GetNotebookAllBasicData(notebook_url: str) -> dict:
     result["subscribers_count"] = json_obj["subscribers_count"]
     result["update_time"] = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
+
+def GetNotebookAllArticlesInfo(notebook_url: str, count: int = 10, 
+                               sorting_method: str = "time") -> list:
+    """获取文集中的全部文章信息
+
+    Args:
+        notebook_url (str): 文集 Url
+        count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
+        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+
+    Returns:
+        list: 文集中的全部文章信息
+
+    Yields:
+        Iterator[list]: 当前页文章信息
+    """
+    page = 1
+    while True:
+        result = GetNotebookArticlesInfo(notebook_url, page, count, sorting_method)
+        if result:
+            yield result
+            page += 1
+        else:
+            break
