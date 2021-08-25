@@ -210,7 +210,7 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) 
     return result
 
 def GetCollectionArticlesInfo(collection_url: str, page: int = 1, 
-                                count: int = 10, sorting_method: str ="time") -> list:
+                                count: int = 10, sorting_method: str = "time") -> list:
     """该函数接收专题 Url ，并返回该 Url 对应专题的文章信息
 
     Args:
@@ -283,3 +283,92 @@ def GetCollectionAllBasicData(collection_url: str) -> dict:
         "uslug": json_obj["owner"]["slug"]
     }
     return result
+
+def GetCollectionAllEditorsInfo(collection_id: int) -> list:
+    """获取专题的所有编辑信息
+
+    Args:
+        collection_id (int): 专题 ID
+
+    Returns:
+        list: 专题的所有编辑信息
+
+    Yields:
+        Iterator[list]: 当前页编辑信息
+    """
+    page = 1
+    while True:
+        result = GetCollectionEditorsInfo(collection_id, page)
+        if result:
+            yield result
+            page += 1
+        else:
+            break
+
+def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) -> list:
+    """获取专题的所有推荐作者信息
+
+    Args:
+        collection_id (int): 专题 ID
+        count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 20.
+
+    Returns:
+        list: 专题的所有推荐作者信息
+
+    Yields:
+        Iterator[list]: 当前页推荐作者信息
+    """
+    page = 1
+    while True:
+        result = GetCollectionRecommendedWritersInfo(collection_id)
+        if result:
+            yield result
+            page += 1
+        else:
+            break
+
+def GetCollectionAllSubscribersInfo(collection_id: int) -> list:
+    """获取专题的所有关注着信息
+
+    Args:
+        collection_id (int): 专题 ID
+
+    Returns:
+        list: 专题的所有关注着信息
+
+    Yields:
+        Iterator[list]: 当前页关注者信息
+    """
+    start_sort_id = None
+    while True:
+        result = GetCollectionSubscribersInfo(collection_id, start_sort_id)
+        if result:
+            yield result
+            start_sort_id = result[-1]["sort_id"]
+        else:
+            break
+
+def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10, 
+                                 sorting_method: str = "time") -> list:
+    """获取专题的所有文章信息
+
+    Args:
+        collection_url (str): 专题 Url
+        count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
+        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+
+    Returns:
+        list: 专题的所有文章信息
+
+    Yields:
+        Iterator[list]: 当前页文章信息
+    """
+    page = 1
+    while True:
+        result = GetCollectionArticlesInfo(collection_url, page, count, sorting_method)
+        if result:
+            yield result
+            page += 1
+        else:
+            break
