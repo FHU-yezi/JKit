@@ -326,7 +326,7 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
     """获取文章评论信息
 
     Args:
-        article_id (int): 文章 Id
+        article_id (int): 文章 ID
         page (int, optional): 页码. Defaults to 1.
         count (int, optional): 每次获取的评论数（不包含子评论）. Defaults to 10.
         author_only (bool, optional): 为 True 时只获取作者发布的评论，包含作者发布的子评论及其父评论. Defaults to False.
@@ -448,3 +448,30 @@ def GetArticleAllBasicData(article_url: str) -> dict:
     result["reprint_status"] = json_obj["reprintable"]
     result["comment_status"] = json_obj["commentable"]
     return result
+
+def GetArticleAllCommentsData(article_id: int, count: int = 10, 
+                              author_only: bool = False, sorting_method: str = "positive") -> list:
+    """获取文章的全部评论信息
+
+    Args:
+        article_id (int): 文章 ID
+        count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
+        author_only (bool, optional): 为 True 时只获取作者发布的评论，包含作者发布的子评论及其父评论. Defaults to False.
+        sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
+
+    Returns:
+        list: 文章的全部评论信息
+
+    Yields:
+        Iterator[list]: 当前页文章信息
+    """
+    
+
+    page = 1
+    while True:
+        result = GetArticleCommentsData(article_id, page, count, author_only, sorting_method)
+        if result:
+            yield result
+            page += 1
+        else:
+            break
