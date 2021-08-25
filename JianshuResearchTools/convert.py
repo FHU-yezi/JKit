@@ -2,16 +2,17 @@ from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
                            AssertCollectionUrl, AssertIslandUrl,
                            AssertNotebookUrl, AssertString, AssertUserUrl)
 from .basic_apis import GetArticleJsonDataApi, GetUserJsonDataApi
+from .basic_apis import GetCollectionJsonDataApi
 
 
 def UserUrlToUserId(user_url: str) -> int:
-    """该函数接收用户个人主页 Url，并将其转换成用户 Id
+    """该函数接收用户个人主页 Url，并将其转换成用户 ID
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        int: 用户 Id
+        int: 用户 ID
     """
     AssertString(user_url)
     AssertUserUrl(user_url)
@@ -20,13 +21,13 @@ def UserUrlToUserId(user_url: str) -> int:
     return result
 
 def UserSlugToUserId(user_slug: str) -> int:
-    """该函数接收用户 Slug，并将其转换成用户 Id
+    """该函数接收用户 Slug，并将其转换成用户 ID
 
     Args:
         user_url (str): 用户 Slug
 
     Returns:
-        int: 用户 Id
+        int: 用户 ID
     """
     AssertString(user_slug)
     user_url = UserSlugToUserUrl(user_slug)
@@ -91,13 +92,13 @@ def ArticleSlugToArticleUrl(article_slug: str) -> str:
     return result
 
 def ArticleSlugToArticleId(article_slug: str) -> int:
-    """该函数接收文章 Slug，并将其转换成文章 Id
+    """该函数接收文章 Slug，并将其转换成文章 ID
 
     Args:
         article_slug (str): 文章 Slug
 
     Returns:
-        int: 文章 Id
+        int: 文章 ID
     """
     AssertString(article_slug)
     json_obj = GetArticleJsonDataApi(ArticleSlugToArticleUrl(article_slug))
@@ -105,13 +106,13 @@ def ArticleSlugToArticleId(article_slug: str) -> int:
     return result
 
 def ArticleUrlToArticleId(article_url: str) -> int:
-    """该函数接收文章 Url，并将其转换成文章 Id
+    """该函数接收文章 Url，并将其转换成文章 ID
 
     Args:
         article_Url (str): 文章 Url
 
     Returns:
-        int: 文章 Id
+        int: 文章 ID
     """
     AssertString(article_url)
     AssertArticleUrl(article_url)
@@ -121,13 +122,13 @@ def ArticleUrlToArticleId(article_url: str) -> int:
     return result
 
 def NotebookUrlToNotebookId(notebook_url: str) -> int:
-    """该函数接收文集 Url，并将其转换成文集 Id
+    """该函数接收文集 Url，并将其转换成文集 ID
 
     Args:
         notebook_url (str): 文集 Url
 
     Returns:
-        int: 文集 Id
+        int: 文集 ID
     """
     AssertString(notebook_url)
     AssertNotebookUrl(notebook_url)
@@ -189,6 +190,21 @@ def CollectionSlugToCollectionUrl(collection_slug: str) -> str:
     result = "https://www.jianshu.com/c/" + collection_slug
     AssertCollectionUrl(result)
     return result
+
+def CollectionUrlToCollectionId(collection_url: str) -> int:
+    """该函数接收专题 Url，并将其转换成专题 ID
+
+    Args:
+        collection_url (str): 专题 Url
+
+    Returns:
+        int: 专题 ID
+    """
+    AssertString(collection_url)
+    AssertCollectionUrl(collection_url)
+    result = GetCollectionJsonDataApi(collection_url)["id"]
+    return result
+    
 
 
 def IslandUrlToIslandSlug(island_url: str) -> str:
