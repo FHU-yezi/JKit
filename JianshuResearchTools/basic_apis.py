@@ -222,3 +222,9 @@ def GetUserNextAnniversaryDayHtmlDataApi(user_slug: str):
     source = requests.get(request_url, headers=mobile_headers).content
     html_obj = etree.HTML(source)
     return html_obj
+
+def GetIslandPostJsonDataApi(post_slug: str):
+    request_url = "https://www.jianshu.com/asimov/posts/" + post_slug
+    source = requests.get(request_url, headers=jianshu_request_header).content
+    json_obj = json.loads(source)
+    return json_obj

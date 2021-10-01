@@ -1,8 +1,9 @@
 from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
-                           AssertCollectionUrl, AssertIslandUrl,
-                           AssertNotebookUrl, AssertString, AssertUserUrl)
-from .basic_apis import GetArticleJsonDataApi, GetUserJsonDataApi
-from .basic_apis import GetCollectionJsonDataApi
+                           AssertCollectionUrl, AssertIslandPostUrl,
+                           AssertIslandUrl, AssertNotebookUrl, AssertString,
+                           AssertUserUrl)
+from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
+                         GetUserJsonDataApi)
 
 
 def UserUrlToUserId(user_url: str) -> int:
@@ -284,4 +285,32 @@ def CollectionUrlToCollectionUrlScheme(collection_url: str) -> str:
     AssertString(collection_url)
     AssertCollectionUrl(collection_url)
     result = collection_url.replace("https://www.jianshu.com/c/", "jianshu://c/")
+    return result
+
+def IslandPostUrlToIslandPostSlug(post_url: str) -> str:
+    """该函数接收小岛帖子 Url，并将其转换成小岛帖子 Slug
+
+    Args:
+        island_url (str): 小岛帖子 Url
+
+    Returns:
+        str: 小岛帖子 Slug
+    """
+    AssertString(post_url)
+    AssertIslandPostUrl(post_url)
+    result = post_url.replace("https://www.jianshu.com/gp/", "")
+    return result
+
+def IslandPostSlugToIslandPostUrl(post_slug: str) -> str:
+    """该函数接收小岛帖子 Slug，并将其转换成小岛帖子 Url
+
+    Args:
+        island_url (str): 小岛帖子 Slug
+
+    Returns:
+        str: 小岛帖子 Url
+    """
+    AssertString(post_slug)
+    result =  "https://www.jianshu.com/gp/" + post_slug
+    AssertIslandPostUrl(result)
     return result
