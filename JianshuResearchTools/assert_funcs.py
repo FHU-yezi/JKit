@@ -133,3 +133,17 @@ def AssertIslandUrl(string: str) -> None:
     for keyword in keyword_to_find:
         if string.find(keyword) == -1:
             raise InputError("参数" + string + "不是有效的简书小岛 Url")
+        
+def AssertIslandPostUrl(string: str) -> None:
+    """判断是否是有效的简书小岛帖子 Url
+
+    Args:
+        string (str): 需要进行判断的字符串
+
+    Raises:
+        InputError: 传入的参数不是有效的简书小岛帖子 Url 时抛出此错误
+    """
+    keyword_to_find = ["https://", "www.jianshu.com", "/gp/"]
+    for keyword in keyword_to_find:
+        if string.find(keyword) == -1:
+            raise InputError("参数" + string + "不是有效的简书小岛帖子 Url")
