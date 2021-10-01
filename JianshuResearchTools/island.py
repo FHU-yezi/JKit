@@ -106,7 +106,7 @@ def GetIslandPostFullConetnt(post_url: str) -> str:
     return result
     
 def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10, 
-                    topic_id: int = None, sorting_method: str = "time", get_full_content: str = False) -> list:
+                    topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> list:
     """获取小岛帖子信息
 
         Args:
@@ -212,7 +212,8 @@ def GetIslandAllBasicData(island_url: str) -> dict:
     return result
 
 def GetIslandAllPostsData(island_url: str, count: int = 10, 
-                          topic_id: int = None, sorting_method: str = "time") -> list:
+                          topic_id: int = None, sorting_method: str = "time", 
+                          get_full_content: bool = False) -> list:
     """获取小岛的所有帖子信息
 
     Args:
@@ -221,6 +222,8 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
         topic_id (int, optional): 话题 ID. Defaults to None.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+        get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
+    自动调用 GetIslandPostFullConetnt 函数获取完整内容并返回. Defaults to False.
 
     Returns:
         list: 小岛的所有帖子信息
@@ -230,7 +233,7 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
     """
     start_sort_id = None
     while True:
-        result = GetIslandPosts(island_url, start_sort_id, count, topic_id, sorting_method)
+        result = GetIslandPosts(island_url, start_sort_id, count, topic_id, sorting_method, get_full_content)
         if result:
             yield result
             start_sort_id = result[-1]["sorted_id"]
