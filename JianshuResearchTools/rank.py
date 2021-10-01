@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .basic_apis import (GetArticlesFPRankListJsonDataApi,
                          GetAssetsRankJsonDataApi,
@@ -74,14 +74,14 @@ def GetArticleFPRankData(date: str ="latest") -> list:
         list: 对应日期的文章收益排行榜数据
     """
     if date == "latest":
-        date = (datetime.date.today() + datetime.timedelta(days=-1)).strftime("%Y%m%d")
+        date = (datetime.today() + timedelta(days=-1)).strftime("%Y%m%d")
     json_obj = GetArticlesFPRankListJsonDataApi(date=date, type_=None)
     if json_obj["notes"] == []:
         raise ResourceError("对应日期的排行榜数据为空")
     result = []
     for ranking, item in enumerate(json_obj["notes"]):
         item_data = {
-            "ranking": ranking, 
+            "ranking": ranking + 1, 
             "aslug": item["slug"], 
             "title": item["title"], 
             "author_name": item["author_nickname"], 
