@@ -4,21 +4,22 @@ except ImportError:
     import json
 
 from functools import lru_cache
+from typing import Any
 
 from .basic_apis import GetArticleJsonDataApi, GetUserJsonDataApi
 from .exceptions import InputError, ResourceError
 from .headers import jianshu_request_header
 
 
-def AssertString(object: any) -> None:
+def AssertString(object: Any) -> None:
     if isinstance(object, str) == False:
         raise TypeError("传入的数据不是字符串")
 
-def AssertInt(object: any) -> None:
+def AssertInt(object: Any) -> None:
     if isinstance(object, int) == False:
         raise TypeError("传入的数据不是整数")
 
-def AssertFloat(object: any) -> None:
+def AssertFloat(object: Any) -> None:
     if isinstance(object, float) == False:
         raise TypeError("传入的数据不是浮点数")
 
