@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 
 from httpx import get as httpx_get
 from httpx import post as httpx_post
@@ -37,7 +38,7 @@ def GetArticleCommentsJsonDataApi(article_id: int, page: int, count: int,
     json_obj = json.loads(source)
     return json_obj
 
-def GetBeikeIslandTradeRankListJsonDataApi(ranktype: int, pageIndex: int) -> object:
+def GetBeikeIslandTradeRankListJsonDataApi(ranktype: Union[int, None], pageIndex: Union[int, None]) -> object:
     params = {
         "ranktype": ranktype, 
         "pageIndex": pageIndex
