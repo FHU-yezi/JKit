@@ -424,7 +424,7 @@ def GetUserFollowingInfo(user_url: str, page:int = 1) -> List:
     AssertUserStatusNormal(user_url)
     html_obj = GetUserFollowingListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
-    if name_raw_data == []:  # 判断该页数据是否为空
+    if not name_raw_data:  # 判断该页数据是否为空
         return []
     followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
     fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
@@ -457,7 +457,7 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> List:
     AssertUserStatusNormal(user_url)
     html_obj = GetUserFollowersListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
-    if name_raw_data == []:  # 判断该页数据是否为空
+    if not name_raw_data:  # 判断该页数据是否为空
         return []
     followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
     fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
