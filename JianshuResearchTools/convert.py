@@ -60,7 +60,7 @@ def UserSlugToUserUrl(user_slug: str) -> str:
         str: 用户个人主页 Url
     """
     AssertType(user_slug, str)
-    result = "https://www.jianshu.com/u/" + user_slug
+    result = f"https://www.jianshu.com/u/{user_slug}"
     AssertUserUrl(result)
     return result
 
@@ -88,7 +88,7 @@ def ArticleSlugToArticleUrl(article_slug: str) -> str:
         str: 文章 Url
     """
     AssertType(article_slug, str)
-    result = "https://www.jianshu.com/p/" + article_slug
+    result = f"https://www.jianshu.com/p/{article_slug}"
     AssertArticleUrl(result)
     return result
 
@@ -160,7 +160,7 @@ def NotebookSlugToNotebookUrl(notebook_slug: str) -> str:
         str: 文集 Url
     """
     AssertType(notebook_slug, str)
-    result = "https://www.jianshu.com/nb/" + notebook_slug
+    result = f"https://www.jianshu.com/nb/{notebook_slug}"
     AssertNotebookUrl(result)
     return result
 
@@ -188,7 +188,7 @@ def CollectionSlugToCollectionUrl(collection_slug: str) -> str:
         str: 专题 Url
     """
     AssertType(collection_slug, str)
-    result = "https://www.jianshu.com/c/" + collection_slug
+    result = f"https://www.jianshu.com/c/{collection_slug}"
     AssertCollectionUrl(result)
     return result
 
@@ -231,7 +231,7 @@ def IslandSlugToIslandUrl(island_slug: str) -> str:
         str: 小岛 Url
     """
     AssertType(island_slug, str)
-    result = "https://www.jianshu.com/g/" + island_slug
+    result = f"https://www.jianshu.com/g/{island_slug}"
     AssertIslandUrl(result)
     return result
 
@@ -311,6 +311,6 @@ def IslandPostSlugToIslandPostUrl(post_slug: str) -> str:
         str: 小岛帖子 Url
     """
     AssertType(post_slug, str)
-    result =  "https://www.jianshu.com/gp/" + post_slug
+    result =  f"https://www.jianshu.com/gp/{post_slug}"
     AssertIslandPostUrl(result)
     return result

@@ -33,7 +33,7 @@ def GetArticleCommentsJsonDataApi(article_id: int, page: int, count: int,
         "author_only": author_only, 
         "order_by": order_by
     }
-    request_url = "https://www.jianshu.com/shakespeare/notes/" + str(article_id) + "/comments"
+    request_url = f"https://www.jianshu.com/shakespeare/notes/{article_id}/comments"
     source = httpx_get(request_url, params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
@@ -65,7 +65,7 @@ def GetCollectionJsonDataApi(collection_url: str) -> object:
     return json_obj
 
 def GetCollectionEditorsJsonDataApi(collection_id: int, page: int) -> object:
-    request_url = "https://www.jianshu.com/collections/" + str(collection_id) + "/editors"
+    request_url = f"https://www.jianshu.com/collections/{collection_id}/editors"
     params = {
         "page": page
     }
@@ -94,7 +94,7 @@ def GetCollectionSubscribersJsonDataApi(collection_id: int, max_sort_id: int) ->
     return json_obj
 
 def GetCollectionArticlesJsonDataApi(collection_slug: str, page: int, count: int, order_by: str) -> object:
-    request_url = "https://www.jianshu.com/asimov/collections/slug/" + collection_slug + "/public_notes"
+    request_url = f"https://www.jianshu.com/asimov/collections/slug/{collection_slug}/public_notes"
     params = {
         "page": page, 
         "count": count, 
@@ -217,7 +217,7 @@ def GetUserFollowersListHtmlDataApi(user_url: str, page: int):
     return html_obj
 
 def GetUserNextAnniversaryDayHtmlDataApi(user_slug: str):
-    request_url = "https://www.jianshu.com/mobile/u/" + user_slug + "/anniversary"
+    request_url = f"https://www.jianshu.com/mobile/u/{user_slug}/anniversary"
     mobile_headers = {
         "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.134 Mobile Safari/537.36"
         }
@@ -226,7 +226,7 @@ def GetUserNextAnniversaryDayHtmlDataApi(user_slug: str):
     return html_obj
 
 def GetIslandPostJsonDataApi(post_slug: str):
-    request_url = "https://www.jianshu.com/asimov/posts/" + post_slug
+    request_url = f"https://www.jianshu.com/asimov/posts/{post_slug}"
     source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
