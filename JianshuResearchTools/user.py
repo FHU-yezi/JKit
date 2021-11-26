@@ -1,5 +1,6 @@
 from datetime import datetime
 from re import findall, sub
+from typing import Dict, Generator, List
 
 from lxml import etree
 
@@ -12,7 +13,6 @@ from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserPCHtmlDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import APIError
-from typing import Generator, List
 
 
 def GetUserName(user_url: str) -> str:
@@ -177,7 +177,7 @@ def GetUserFTNCount(user_url: str) -> float:
     result = round(result, 3)  # 处理浮点数精度问题
     return result
 
-def GetUserBadgesList(user_url: str) -> list:
+def GetUserBadgesList(user_url: str) -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的徽章列表
 
     Args:
@@ -209,7 +209,7 @@ def GetUserLastUpdateTime(user_url: str) -> datetime:
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
-def GetUserVIPInfo(user_url: str) -> dict:
+def GetUserVIPInfo(user_url: str) -> Dict:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的会员信息
 
     Args:
@@ -290,7 +290,7 @@ def GetUserNextAnniversaryDay(user_url: str) -> datetime:
     result = datetime.fromisoformat("-".join(result))
     return result
 
-def GetUserNotebooksInfo(user_url: str) -> list:
+def GetUserNotebooksInfo(user_url: str) -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文集与连载信息
 
     Args:
@@ -314,7 +314,7 @@ def GetUserNotebooksInfo(user_url: str) -> list:
         result.append(item_data)
     return result
 
-def GetUserOwnCollectionsInfo(user_url: str) -> list:
+def GetUserOwnCollectionsInfo(user_url: str) -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户自己创建的专题信息
 
     Args:
@@ -337,7 +337,7 @@ def GetUserOwnCollectionsInfo(user_url: str) -> list:
         result.append(item_data)
     return result
 
-def GetUserManageableCollectionsInfo(user_url: str) -> list:
+def GetUserManageableCollectionsInfo(user_url: str) -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户有管理权限的专题信息
 
     Args:
@@ -361,7 +361,7 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
     return result
 
 def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10, 
-                        sorting_method: str = "time") -> list:
+                        sorting_method: str = "time") -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文章信息
 
     Args:
@@ -410,7 +410,7 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
         result.append(item_data)
     return result
 
-def GetUserFollowingInfo(user_url: str, page:int = 1) -> list:
+def GetUserFollowingInfo(user_url: str, page:int = 1) -> List:
     """该函数接收用户个人主页 Url 和页码，并返回该用户关注列表中对应页数的用户信息
 
     Args:
@@ -443,7 +443,7 @@ def GetUserFollowingInfo(user_url: str, page:int = 1) -> list:
         result.append(item_data)
     return result
 
-def GetUserFansInfo(user_url: str, page:int = 1) -> list:
+def GetUserFansInfo(user_url: str, page:int = 1) -> List:
     """该函数接收用户个人主页 Url 和页码，并返回该用户粉丝列表中对应页数的用户信息
 
     Args:
@@ -476,7 +476,7 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> list:
         result.append(item_data)
     return result
 
-def GetUserAllBasicData(user_url: str) -> dict:
+def GetUserAllBasicData(user_url: str) -> Dict:
     """获取用户的所有基础信息
 
     Args:

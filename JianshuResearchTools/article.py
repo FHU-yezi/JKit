@@ -1,6 +1,6 @@
 from datetime import datetime
 from re import findall, sub
-from typing import Generator, List
+from typing import Dict, Generator, List
 
 from lxml import etree
 
@@ -319,7 +319,7 @@ def GetArticleMarkdown(article_url: str) -> str:
     return markdown
 
 def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10, 
-                           author_only: bool = False, sorting_method: str = "positive") -> list:
+                           author_only: bool = False, sorting_method: str = "positive") -> List:
     """获取文章评论信息
 
     Args:
@@ -410,7 +410,7 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
         result.append(item_data)
     return result
 
-def GetArticleAllBasicData(article_url: str) -> dict:
+def GetArticleAllBasicData(article_url: str) -> Dict:
     """获取文章的所有基础信息
 
     Args:

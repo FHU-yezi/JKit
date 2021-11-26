@@ -1,8 +1,8 @@
 from datetime import datetime
+from typing import Dict, Generator, List
 
 from .assert_funcs import AssertNotebookUrl
 from .basic_apis import GetNotebookArticlesJsonDataApi, GetNotebookJsonDataApi
-from typing import Generator, List
 
 
 def GetNotebookName(notebook_url: str) -> str:
@@ -33,7 +33,7 @@ def GetNotebookArticlesCount(notebook_url: str) -> int:
     result = json_obj["notes_count"]
     return result
 
-def GetNotebookAuthorInfo(notebook_url: str) -> dict:
+def GetNotebookAuthorInfo(notebook_url: str) -> Dict:
     """获取文集作者的信息
 
     Args:
@@ -94,7 +94,7 @@ def GetNotebookUpdateTime(notebook_url: str) -> datetime:
     return result
 
 def GetNotebookArticlesInfo(notebook_url: str, page: int = 1, 
-                            count: int = 10, sorting_method: str = "time") -> list:
+                            count: int = 10, sorting_method: str = "time") -> List:
     """获取文集中的文章信息
 
     Args:
@@ -142,7 +142,7 @@ def GetNotebookArticlesInfo(notebook_url: str, page: int = 1,
         result.append(item_data)
     return result
 
-def GetNotebookAllBasicData(notebook_url: str) -> dict:
+def GetNotebookAllBasicData(notebook_url: str) -> Dict:
     """获取文集的所有基础信息
 
     Args:

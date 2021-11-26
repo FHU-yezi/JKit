@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Dict, List
 
 from .basic_apis import (GetArticlesFPRankListJsonDataApi,
                          GetAssetsRankJsonDataApi,
@@ -8,7 +9,7 @@ from .exceptions import APIError, ResourceError
 from .user import GetUserAssetsCount
 
 
-def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:
+def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> List:
     """该函数接收一个起始位置参数和一个获取全部数据的布尔值，并返回自该位置后 20 名用户的资产数据
 
     Args:
@@ -40,7 +41,7 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> list:
         result.append(item_data)
     return result
 
-def GetDailyArticleRankData() -> list:
+def GetDailyArticleRankData() -> List:
     """该函数返回日更排行榜的用户信息
 
     Returns:
@@ -59,7 +60,7 @@ def GetDailyArticleRankData() -> list:
         result.append(item_data)
     return result
 
-def GetArticleFPRankData(date: str ="latest") -> list:
+def GetArticleFPRankData(date: str ="latest") -> List:
     """该函数接收一个日期，并返回对应日期的文章收益排行榜数据
 
     目前只能获取 2020 年 6 月 20 日之后的数据。
@@ -93,7 +94,7 @@ def GetArticleFPRankData(date: str ="latest") -> list:
         result.append(item_data)
     return result
 
-def GetArticleFPRankBasicInfo(date: str ="latest") -> dict:
+def GetArticleFPRankBasicInfo(date: str ="latest") -> Dict:
     """获取指定日期的文章收益排行榜基础信息
     
     目前只能获取 2020 年 6 月 20 日之后的数据。
@@ -119,7 +120,7 @@ def GetArticleFPRankBasicInfo(date: str ="latest") -> dict:
     }
     return result
 
-def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> list:
+def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> List:
     """该函数接收一个日期，并返回对应日期的用户收益排行榜数据
 
     目前只能获取 2020 年 6 月 20 日之后的数据。

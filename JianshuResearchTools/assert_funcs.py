@@ -10,6 +10,7 @@ from .basic_apis import GetArticleJsonDataApi, GetUserJsonDataApi
 from .exceptions import InputError, ResourceError
 from .headers import jianshu_request_header
 
+
 def AssertType(object: Any, type_obj: object) -> None:
     """判断对象是否是指定类型
 

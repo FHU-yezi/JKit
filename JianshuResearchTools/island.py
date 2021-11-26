@@ -1,11 +1,11 @@
 from datetime import datetime
+from typing import Dict, Generator, List
 
 from .assert_funcs import AssertIslandPostUrl, AssertIslandUrl
 from .basic_apis import (GetIslandJsonDataApi, GetIslandPostJsonDataApi,
                          GetIslandPostsJsonDataApi)
 from .convert import (IslandPostSlugToIslandPostUrl,
                       IslandPostUrlToIslandPostSlug, IslandUrlToIslandSlug)
-from typing import Generator, List
 
 
 def GetIslandName(island_url: str) -> str:
@@ -107,7 +107,7 @@ def GetIslandPostFullConetnt(post_url: str) -> str:
     return result
     
 def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10, 
-                    topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> list:
+                    topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> List:
     """获取小岛帖子信息
 
         Args:
@@ -192,7 +192,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
         result.append(item_data)
     return result
 
-def GetIslandAllBasicData(island_url: str) -> dict:
+def GetIslandAllBasicData(island_url: str) -> Dict:
     """获取小岛的所有基础信息
 
     Args:

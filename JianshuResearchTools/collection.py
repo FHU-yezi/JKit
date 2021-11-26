@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Dict, Generator, List
 
 from .assert_funcs import AssertCollectionUrl
 from .basic_apis import (GetCollectionArticlesJsonDataApi,
@@ -7,7 +8,6 @@ from .basic_apis import (GetCollectionArticlesJsonDataApi,
                          GetCollectionRecommendedWritersJsonDataApi,
                          GetCollectionSubscribersJsonDataApi)
 from .convert import CollectionUrlToCollectionSlug
-from typing import Generator, List
 
 
 def GetCollectionName(collection_url: str) -> str:
@@ -122,7 +122,7 @@ def GetCollectionInformationUpdateTime(collection_url: str) -> datetime:
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
-def GetCollectionOwnerInfo(collection_url: str) -> dict:
+def GetCollectionOwnerInfo(collection_url: str) -> Dict:
     """获取专题的所有者信息
 
     Args:
@@ -140,7 +140,7 @@ def GetCollectionOwnerInfo(collection_url: str) -> dict:
     }
     return result
 
-def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> list:
+def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> List:
     """该函数接收专题 ID，并返回 ID 对应专题的编辑信息
 
     Args:
@@ -161,7 +161,7 @@ def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> list:
         result.append(item_data)
     return result
 
-def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count: int = 20) -> list:
+def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count: int = 20) -> List:
     """该函数接收一个专题 ID，并返回该 ID 对应专题的推荐作者信息
 
     Args:
@@ -187,7 +187,7 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count
         result.append(item_data)
     return result
 
-def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) -> list:
+def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) -> List:
     """该函数接收一个专题 ID，并返回该 ID 对应专题的关注者信息
 
     Args:
@@ -211,7 +211,7 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) 
     return result
 
 def GetCollectionArticlesInfo(collection_url: str, page: int = 1, 
-                                count: int = 10, sorting_method: str = "time") -> list:
+                                count: int = 10, sorting_method: str = "time") -> List:
     """该函数接收专题 Url ，并返回该 Url 对应专题的文章信息
 
     Args:
@@ -258,7 +258,7 @@ def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
         result.append(item_data)
     return result
 
-def GetCollectionAllBasicData(collection_url: str) -> dict:
+def GetCollectionAllBasicData(collection_url: str) -> Dict:
     """获取专题的所有基础信息
 
     Args:

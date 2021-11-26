@@ -1,5 +1,6 @@
 from datetime import datetime
 from hashlib import md5
+from typing import Any, Dict, List
 
 from . import article, beikeisland, collection, island, notebook, user
 from .assert_funcs import (AssertArticleUrl, AssertCollectionUrl,
@@ -13,7 +14,7 @@ from .convert import (ArticleSlugToArticleUrl, ArticleUrlToArticleSlug,
 from .exceptions import InputError
 
 
-def GetHash(*args: any) -> str:
+def GetHash(*args: Any) -> str:
     """获取任意数量参数的哈希值
 
     Returns:
@@ -24,13 +25,13 @@ def GetHash(*args: any) -> str:
     result = result[0:7]  # 取前 6 位
     return result
 
-def SimpleCache(cache_obj: list, getting_func: object, args: dict, disable_cache: bool = False) -> any:
+def SimpleCache(cache_obj: List, getting_func: object, args: Dict, disable_cache: bool = False) -> Any:
     """基本缓存
 
     Args:
-        cache_obj (list): 缓存信息储存对象
+        cache_obj (List): 缓存信息储存对象
         getting_func (object): 信息获取函数
-        args (dict): 信息获取函数的参数
+        args (Dict): 信息获取函数的参数
         disable_cache (bool, optional): 禁用缓存. Defaults to False.
 
     Returns:
@@ -43,13 +44,13 @@ def SimpleCache(cache_obj: list, getting_func: object, args: dict, disable_cache
         cache_obj.append(result)
         return result
 
-def HashCache(cache_obj: dict, getting_func: object, args: dict, disable_cache: bool = False) -> any:
+def HashCache(cache_obj: Dict, getting_func: object, args: Dict, disable_cache: bool = False) -> any:
     """基于哈希值的缓存
 
     Args:
-        cache_obj (dict): 缓存信息储存对象
+        cache_obj (Dict): 缓存信息储存对象
         getting_func (object): 信息获取函数
-        args (dict): 信息获取函数的参数
+        args (Dict): 信息获取函数的参数
         disable_cache (bool, optional): 禁用缓存. Defaults to False.
 
     Returns:
@@ -269,7 +270,7 @@ class User():
         return result
     
     @property
-    def badges(self, disable_cache: bool = False) -> list:
+    def badges(self, disable_cache: bool = False) -> List:
         """获取徽章列表
 
         Args:
@@ -297,7 +298,7 @@ class User():
         return result
     
     @property
-    def VIP_info(self, disable_cache: bool = False) -> dict:
+    def VIP_info(self, disable_cache: bool = False) -> Dict:
         """获取用户会员信息
 
         Args:
@@ -339,7 +340,7 @@ class User():
         return result
     
     @property
-    def notebooks(self, disable_cache: bool = False) -> list:
+    def notebooks(self, disable_cache: bool = False) -> List:
         """获取用户文集信息
 
         Args:
@@ -353,7 +354,7 @@ class User():
         return result
     
     @property
-    def own_collections(self, disable_cache: bool = False) -> list:
+    def own_collections(self, disable_cache: bool = False) -> List:
         """获取自己创建的专题信息
 
         Args:
@@ -367,7 +368,7 @@ class User():
         return result
     
     @property
-    def manageable_collections(self, disable_cache: bool = False) -> list:
+    def manageable_collections(self, disable_cache: bool = False) -> List:
         """获取有管理权的专题信息
 
         Args:
@@ -381,7 +382,7 @@ class User():
         return result
     
     def articles_info(self, page: int = 1, count: int = 10, 
-                        disable_cache: bool = False) -> list:
+                        disable_cache: bool = False) -> List:
         """获取文章信息
 
         Args:
@@ -397,7 +398,7 @@ class User():
                             disable_cache)
         return result
 
-    def followers_info(self, page: int = 1, disable_cache: bool = False) -> list:
+    def followers_info(self, page: int = 1, disable_cache: bool = False) -> List:
         """获取关注者信息
 
         Args:
@@ -411,7 +412,7 @@ class User():
                             {"user_url": self._url, "page": page}, disable_cache)
         return result
 
-    def fans_info(self, page: int = 1, disable_cache: bool = False) -> list:
+    def fans_info(self, page: int = 1, disable_cache: bool = False) -> List:
         """获取粉丝信息
 
         Args:
@@ -866,7 +867,7 @@ class Notebook():
         return result["name"]
     
     @property
-    def author_info(self, disable_cache: bool = False) -> dict:
+    def author_info(self, disable_cache: bool = False) -> Dict:
         """获取文集的作者信息
 
         Args:
@@ -921,7 +922,7 @@ class Notebook():
                              {"notebook_url": self._url}, disable_cache)
         return result
     
-    def articles_info(self, page: int = 1, count: int = 10, sorting_method: str = "time", disable_cache: bool = False) -> list:
+    def articles_info(self, page: int = 1, count: int = 10, sorting_method: str = "time", disable_cache: bool = False) -> List:
         """获取文集中的文章信息
 
         Args:
@@ -1109,7 +1110,7 @@ class Collection():
         return result
     
     @property
-    def owner_info(self, disable_cache: bool = False) -> dict:
+    def owner_info(self, disable_cache: bool = False) -> Dict:
         """获取专题的所有者信息
 
         Args:
@@ -1150,7 +1151,7 @@ class Collection():
                              {"collection_url": self._url}, disable_cache)
         return result
     
-    def editors_info(self, page: int = 1, disable_cache: bool = False) -> list:
+    def editors_info(self, page: int = 1, disable_cache: bool = False) -> List:
         """获取专题编辑信息
 
         Args:
@@ -1169,7 +1170,7 @@ class Collection():
                            {"collection_id": self._id, "page": page}, disable_cache)
         return result
 
-    def recommended_writers_info(self, page: int = False, disable_cache: bool = False) -> list:
+    def recommended_writers_info(self, page: int = False, disable_cache: bool = False) -> List:
         """获取专题推荐作者信息
 
         Args:
@@ -1188,7 +1189,7 @@ class Collection():
                            {"collection_id": self._id}, disable_cache)
         return result
     
-    def subscribers_info(self, start_sort_id: int, disable_cache: bool = False) -> list:
+    def subscribers_info(self, start_sort_id: int, disable_cache: bool = False) -> List:
         """获取专题关注者信息
 
         Args:
@@ -1208,7 +1209,7 @@ class Collection():
         return result
     
     def articles_info(self, page: int = 1, count: int = 10, 
-                      sorting_method: str = "time", disable_cache: bool = False) -> list:
+                      sorting_method: str = "time", disable_cache: bool = False) -> List:
         """获取专题文章信息
 
         Args:
@@ -1380,7 +1381,7 @@ class Island():
         return result
     
     def posts(self, start_sort_id: int = None, count: int = 10, 
-              topic_id: int = None, sorting_method: str = "time", disable_cache: bool = False) -> list:
+              topic_id: int = None, sorting_method: str = "time", disable_cache: bool = False) -> List:
         """获取小岛帖子信息
 
         Args:
