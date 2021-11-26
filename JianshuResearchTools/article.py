@@ -1,5 +1,6 @@
 from datetime import datetime
 from re import findall, sub
+from typing import Generator, List
 
 from lxml import etree
 
@@ -446,7 +447,7 @@ def GetArticleAllBasicData(article_url: str) -> dict:
     return result
 
 def GetArticleAllCommentsData(article_id: int, count: int = 10, 
-                              author_only: bool = False, sorting_method: str = "positive") -> list:
+                              author_only: bool = False, sorting_method: str = "positive") -> Generator[List, None, None]:
     """获取文章的全部评论信息
 
     Args:
@@ -455,11 +456,8 @@ def GetArticleAllCommentsData(article_id: int, count: int = 10,
         author_only (bool, optional): 为 True 时只获取作者发布的评论，包含作者发布的子评论及其父评论. Defaults to False.
         sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
 
-    Returns:
-        list: 文章的全部评论信息
-
     Yields:
-        Iterator[list]: 当前页文章信息
+        Iterator[List, None, None]: 当前页文章信息
     """
     
 

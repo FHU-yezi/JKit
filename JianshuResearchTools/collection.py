@@ -7,7 +7,7 @@ from .basic_apis import (GetCollectionArticlesJsonDataApi,
                          GetCollectionRecommendedWritersJsonDataApi,
                          GetCollectionSubscribersJsonDataApi)
 from .convert import CollectionUrlToCollectionSlug
-from typing import Generator
+from typing import Generator, List
 
 
 def GetCollectionName(collection_url: str) -> str:
@@ -285,14 +285,14 @@ def GetCollectionAllBasicData(collection_url: str) -> dict:
     }
     return result
 
-def GetCollectionAllEditorsInfo(collection_id: int) -> Generator:
+def GetCollectionAllEditorsInfo(collection_id: int) -> Generator[List, None, None]:
     """获取专题的所有编辑信息
 
     Args:
         collection_id (int): 专题 ID
 
     Yields:
-        Iterator[list]: 当前页编辑信息
+        Iterator[List, None, None]: 当前页编辑信息
     """
     page = 1
     while True:
@@ -303,7 +303,7 @@ def GetCollectionAllEditorsInfo(collection_id: int) -> Generator:
         else:
             break
 
-def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) -> Generator:
+def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) -> Generator[List, None, None]:
     """获取专题的所有推荐作者信息
 
     Args:
@@ -311,7 +311,7 @@ def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) 
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 20.
 
     Yields:
-        Iterator[list]: 当前页推荐作者信息
+        Iterator[List, None, None]: 当前页推荐作者信息
     """
     page = 1
     while True:
@@ -322,14 +322,14 @@ def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) 
         else:
             break
 
-def GetCollectionAllSubscribersInfo(collection_id: int) -> Generator:
+def GetCollectionAllSubscribersInfo(collection_id: int) -> Generator[List, None, None]:
     """获取专题的所有关注者信息
 
     Args:
         collection_id (int): 专题 ID
 
     Yields:
-        Iterator[list]: 当前页关注者信息
+        Iterator[List, None, None]: 当前页关注者信息
     """
     start_sort_id = None
     while True:
@@ -341,7 +341,7 @@ def GetCollectionAllSubscribersInfo(collection_id: int) -> Generator:
             break
 
 def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10, 
-                                 sorting_method: str = "time") -> Generator:
+                                 sorting_method: str = "time") -> Generator[List, None, None]:
     """获取专题的所有文章信息
 
     Args:
@@ -351,7 +351,7 @@ def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10,
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
     Yields:
-        Iterator[list]: 当前页文章信息
+        Iterator[List, None, None]: 当前页文章信息
     """
     page = 1
     while True:

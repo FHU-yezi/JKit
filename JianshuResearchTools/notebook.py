@@ -2,6 +2,7 @@ from datetime import datetime
 
 from .assert_funcs import AssertNotebookUrl
 from .basic_apis import GetNotebookArticlesJsonDataApi, GetNotebookJsonDataApi
+from typing import Generator, List
 
 
 def GetNotebookName(notebook_url: str) -> str:
@@ -166,7 +167,7 @@ def GetNotebookAllBasicData(notebook_url: str) -> dict:
     return result
 
 def GetNotebookAllArticlesInfo(notebook_url: str, count: int = 10, 
-                               sorting_method: str = "time") -> list:
+                               sorting_method: str = "time") -> Generator[List, None, None]:
     """获取文集中的全部文章信息
 
     Args:
@@ -175,11 +176,8 @@ def GetNotebookAllArticlesInfo(notebook_url: str, count: int = 10,
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
-    Returns:
-        list: 文集中的全部文章信息
-
     Yields:
-        Iterator[list]: 当前页文章信息
+        Iterator[List, None, None]: 当前页文章信息
     """
     page = 1
     while True:

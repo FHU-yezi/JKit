@@ -5,6 +5,7 @@ from .basic_apis import (GetIslandJsonDataApi, GetIslandPostJsonDataApi,
                          GetIslandPostsJsonDataApi)
 from .convert import (IslandPostSlugToIslandPostUrl,
                       IslandPostUrlToIslandPostSlug, IslandUrlToIslandSlug)
+from typing import Generator, List
 
 
 def GetIslandName(island_url: str) -> str:
@@ -213,7 +214,7 @@ def GetIslandAllBasicData(island_url: str) -> dict:
 
 def GetIslandAllPostsData(island_url: str, count: int = 10, 
                           topic_id: int = None, sorting_method: str = "time", 
-                          get_full_content: bool = False) -> list:
+                          get_full_content: bool = False) -> Generator[List, None, None]:
     """获取小岛的所有帖子信息
 
     Args:
@@ -225,11 +226,8 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
         get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
     自动调用 GetIslandPostFullConetnt 函数获取完整内容并返回. Defaults to False.
 
-    Returns:
-        list: 小岛的所有帖子信息
-
     Yields:
-        Iterator[list]: 当前页帖子信息
+        Iterator[List, None, None]: 当前页帖子信息
     """
     start_sort_id = None
     while True:

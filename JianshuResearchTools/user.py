@@ -12,6 +12,7 @@ from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserPCHtmlDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import APIError
+from typing import Generator, List
 
 
 def GetUserName(user_url: str) -> str:
@@ -541,7 +542,7 @@ def GetUserAllBasicData(user_url: str) -> dict:
     result["next_anniversary_day"] = datetime.fromisoformat("-".join(findall(r"\d+", result["next_anniversary_day"])))
     return result
 
-def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time") -> list:
+def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time") -> Generator[List, None, None]:
     """获取用户的所有文章信息
 
     Args:
@@ -550,11 +551,8 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
-    Returns:
-        list: 用户的所有文章信息
-
     Yields:
-        Iterator[list]: 当前页文章信息
+        Iterator[List, None, None]: 当前页文章信息
     """
     page = 1
     while True:
@@ -565,17 +563,14 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
         else:
             break
 
-def GetUserAllFollowingInfo(user_url: str) -> list:
+def GetUserAllFollowingInfo(user_url: str) -> Generator[List, None, None]:
     """获取用户的所有关注者信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
-    Returns:
-        list: 用户的所有关注者信息
-
     Yields:
-        Iterator[list]: 当前页关注者信息
+        Iterator[List, None, None]: 当前页关注者信息
     """
     page = 1
     while True:
@@ -586,17 +581,14 @@ def GetUserAllFollowingInfo(user_url: str) -> list:
         else:
             break
 
-def GetUserAllFansInfo(user_url: str) -> list:
+def GetUserAllFansInfo(user_url: str) -> Generator[List, None, None]:
     """获取用户的所有粉丝信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
-    Returns:
-        list: 用户的所有粉丝信息
-
     Yields:
-        Iterator[list]: 当前页粉丝信息
+        Iterator[List, None, None]: 当前页粉丝信息
     """
     page = 1
     while True:
