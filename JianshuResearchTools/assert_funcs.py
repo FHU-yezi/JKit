@@ -69,7 +69,7 @@ def AssertUserUrl(string: str) -> None:
         if string.find(keyword) == -1:
             raise InputError("参数" + string + "不是有效的简书用户主页 Url")
 
-@lru_cache
+@lru_cache(maxsize=64)
 def AssertUserStatusNormal(user_url: str) -> None:
     user_json_data = GetUserJsonDataApi(user_url)
     try:
@@ -91,7 +91,7 @@ def AssertArticleUrl(string: str) -> None:
         if string.find(keyword) == -1:
             raise InputError("参数" + string + "不是有效的简书文章 Url")
 
-@lru_cache
+@lru_cache(maxsize=64)
 def AssertArticleStatusNormal(article_url: str) -> None:
     """判断文章状态是否正常
 
