@@ -1,24 +1,25 @@
 from datetime import datetime
 
-import requests
+from httpx import get as httpx_get
+from httpx import post as httpx_post
 from lxml import etree
 
 from .headers import *
 
 try:
-    import simplejson as json
+    import ujson as json
 except ImportError:
     import json
 
 
 def GetArticleJsonDataApi(article_url: str) -> object:
     request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
+    source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
 def GetArticleHtmlJsonDataApi(article_url: str) -> object:
-    source = requests.get(article_url, headers=PC_header).content
+    source = httpx_get(article_url, headers=PC_header).content
     html_obj = etree.HTML(source)
     json_obj = json.loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
     return json_obj
@@ -32,7 +33,7 @@ def GetArticleCommentsJsonDataApi(article_id: int, page: int, count: int,
         "order_by": order_by
     }
     request_url = "https://www.jianshu.com/shakespeare/notes/" + str(article_id) + "/comments"
-    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
+    source = httpx_get(request_url, params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -41,7 +42,7 @@ def GetBeikeIslandTradeRankListJsonDataApi(ranktype: int, pageIndex: int) -> obj
         "ranktype": ranktype, 
         "pageIndex": pageIndex
     }
-    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
+    source = httpx_post("https://www.beikeisland.com/api/Trade/getTradeRankList", 
                             headers=BeikeIsland_request_header, json=params).content
     json_obj = json.loads(source)
     return json_obj
@@ -51,14 +52,14 @@ def GetBeikeIslandTradeListJsonDataApi(pageIndex: int, retype: int):
         "pageIndex": pageIndex, 
         "retype": retype
     }
-    source = requests.post("https://www.beikeisland.com/api/Trade/getTradeList", 
+    source = httpx_post("https://www.beikeisland.com/api/Trade/getTradeList", 
                             headers=BeikeIsland_request_header, json=params).content
     json_obj = json.loads(source)
     return json_obj
 
 def GetCollectionJsonDataApi(collection_url: str) -> object:
     request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
+    source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -67,7 +68,7 @@ def GetCollectionEditorsJsonDataApi(collection_id: int, page: int) -> object:
     params = {
         "page": page
     }
-    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
+    source = httpx_get(request_url, params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -77,7 +78,7 @@ def GetCollectionRecommendedWritersJsonDataApi(collection_id: int, page: int, co
         "page": page, 
         "count": count
     }
-    source = requests.get("https://www.jianshu.com/collections/recommended_users", 
+    source = httpx_get("https://www.jianshu.com/collections/recommended_users", 
                             params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
@@ -87,7 +88,7 @@ def GetCollectionSubscribersJsonDataApi(collection_id: int, max_sort_id: int) ->
     params = {
         "max_sort_id": max_sort_id
     }
-    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
+    source = httpx_get(request_url, params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -98,13 +99,13 @@ def GetCollectionArticlesJsonDataApi(collection_slug: str, page: int, count: int
         "count": count, 
         "order_by": order_by
     }
-    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
+    source = httpx_get(request_url, params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
 def GetIslandJsonDataApi(island_url: str) -> object:
     request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
+    source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -117,14 +118,14 @@ def GetIslandPostsJsonDataApi(group_slug: str, max_id: int,
         "count": count, 
         "topic_id": topic_id
     }
-    source = requests.get("https://www.jianshu.com/asimov/posts", 
+    source = httpx_get("https://www.jianshu.com/asimov/posts", 
                             params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
 def GetNotebookJsonDataApi(notebook_url: str) -> object:
     request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
+    source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -137,7 +138,7 @@ def GetNotebookArticlesJsonDataApi(notebook_url: str, page: int,
         "count": count, 
         "order_by": order_by
     }
-    source = requests.get(request_url, params=params, headers=jianshu_request_header).content
+    source = httpx_get(request_url, params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -146,12 +147,12 @@ def GetAssetsRankJsonDataApi(max_id: int, since_id: int) -> object:
         "max_id": max_id, 
         "since_id": since_id
     }
-    source = requests.get("https://www.jianshu.com/asimov/fp_rankings", params=params, headers=jianshu_request_header).content
+    source = httpx_get("https://www.jianshu.com/asimov/fp_rankings", params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
 def GetDailyArticleRankListJsonDataApi() -> object:
-    source = requests.get("https://www.jianshu.com/asimov/daily_activity_participants/rank", headers=jianshu_request_header).content
+    source = httpx_get("https://www.jianshu.com/asimov/daily_activity_participants/rank", headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -160,18 +161,18 @@ def GetArticlesFPRankListJsonDataApi(date: str, type_: str) -> object:  # 避免
         "date": date, 
         "type": type_
     }
-    source = requests.get("https://www.jianshu.com/asimov/fp_rankings/voter_notes", params=params, headers=jianshu_request_header).content
+    source = httpx_get("https://www.jianshu.com/asimov/fp_rankings/voter_notes", params=params, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
 def GetUserJsonDataApi(user_url: str) -> object:
     request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
-    source = requests.get(request_url, headers=jianshu_request_header).content
+    source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
 def GetUserPCHtmlDataApi(user_url: str) -> object:
-    source = requests.get(user_url, headers=PC_header).content
+    source = httpx_get(user_url, headers=PC_header).content
     html_obj = etree.HTML(source)
     return html_obj
 
@@ -180,7 +181,7 @@ def GetUserCollectionsAndNotebooksJsonDataApi(user_url: str, user_slug: str) -> 
     params = {
         "slug": user_slug
     }
-    source = requests.get(request_url, headers=jianshu_request_header, params=params).content
+    source = httpx_get(request_url, headers=jianshu_request_header, params=params).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -192,7 +193,7 @@ def GetUserArticlesListJsonDataApi(user_url: str, page: int,
         "count": count, 
         "order_by": order_by
     }
-    source = requests.get(request_url, headers=jianshu_request_header, params=params).content
+    source = httpx_get(request_url, headers=jianshu_request_header, params=params).content
     json_obj = json.loads(source)
     return json_obj
 
@@ -201,7 +202,7 @@ def GetUserFollowingListHtmlDataApi(user_url: str, page: int):
     params = {
         "page": page
     }
-    source = requests.get(request_url, headers=PC_header, params=params).content
+    source = httpx_get(request_url, headers=PC_header, params=params).content
     html_obj = etree.HTML(source)
     return html_obj
 
@@ -210,7 +211,7 @@ def GetUserFollowersListHtmlDataApi(user_url: str, page: int):
     params = {
         "page": page
     }
-    source = requests.get(request_url, headers=PC_header, params=params).content
+    source = httpx_get(request_url, headers=PC_header, params=params).content
     html_obj = etree.HTML(source)
     return html_obj
 
@@ -219,12 +220,12 @@ def GetUserNextAnniversaryDayHtmlDataApi(user_slug: str):
     mobile_headers = {
         "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.134 Mobile Safari/537.36"
         }
-    source = requests.get(request_url, headers=mobile_headers).content
+    source = httpx_get(request_url, headers=mobile_headers).content
     html_obj = etree.HTML(source)
     return html_obj
 
 def GetIslandPostJsonDataApi(post_slug: str):
     request_url = "https://www.jianshu.com/asimov/posts/" + post_slug
-    source = requests.get(request_url, headers=jianshu_request_header).content
+    source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
