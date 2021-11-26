@@ -144,31 +144,31 @@ class TestArticleModule():
 
 class TestAssertFuncsModule():
     def test_AssertString(self):
-        assert AssertString("test") == None
-        assert AssertString("1234567890") == None
-        assert AssertString("52698676395f") == None
+        assert AssertType("test", str) == None
+        assert AssertType("1234567890", str) == None
+        assert AssertType("52698676395f", str) == None
         with pytest.raises(TypeError):
-            assert AssertString(1234567890) == None
+            assert AssertType(1234567890, str) == None
         with pytest.raises(TypeError):
-            assert AssertString(100.0) == None
+            assert AssertType(100.0, str) == None
             
     def test_AssertInt(self):
-        assert AssertInt(1234567890) == None
-        assert AssertInt(0) == None
-        assert AssertInt(-1) == None
+        assert AssertType(1234567890, int) == None
+        assert AssertType(0, int) == None
+        assert AssertType(-1, int) == None
         with pytest.raises(TypeError):
-            assert AssertInt("1234567890") == None
+            assert AssertType("1234567890", int) == None
         with pytest.raises(TypeError):
-            assert AssertInt("test") == None
+            assert AssertType("test", int) == None
             
     def test_AssertFloat(self):
-        assert AssertFloat(1234567890.0) == None
-        assert AssertFloat(0.0) == None
-        assert AssertFloat(-1.0) == None
+        assert AssertType(1234567890.0, float) == None
+        assert AssertType(0.0, float) == None
+        assert AssertType(-1.0, float) == None
         with pytest.raises(TypeError):
-            assert AssertFloat("1234567890") == None
+            assert AssertType("1234567890", float) == None
         with pytest.raises(TypeError):
-            assert AssertFloat(1234567890)  == None
+            assert AssertType(1234567890, float) == None
     
     def test_AssertJianshuUrl(self):
         assert AssertJianshuUrl("https://www.jianshu.com") == None

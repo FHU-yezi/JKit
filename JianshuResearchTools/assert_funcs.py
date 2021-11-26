@@ -10,18 +10,34 @@ from .basic_apis import GetArticleJsonDataApi, GetUserJsonDataApi
 from .exceptions import InputError, ResourceError
 from .headers import jianshu_request_header
 
+def AssertType(object: Any, type_obj: object) -> None:
+    """判断对象是否是指定类型
+
+    Args:
+        object (Any): 需要进行判断的对象
+        type_obj (object): 需要判断的类型
+
+    Raises:
+        TypeError: 传入的对象不是指定类型时抛出此错误
+    """
+    if isinstance(object, type_obj) == False:
+        raise TypeError(f"传入的对象不是 {type_obj.__name__} 类型")
+    
 
 def AssertString(object: Any) -> None:
     if isinstance(object, str) == False:
         raise TypeError("传入的数据不是字符串")
+    raise DeprecationWarning("该函数已过时，将在下个版本中移除，请使用 AssertType 函数")
 
 def AssertInt(object: Any) -> None:
     if isinstance(object, int) == False:
         raise TypeError("传入的数据不是整数")
+    raise DeprecationWarning("该函数已过时，将在下个版本中移除，请使用 AssertType 函数")
 
 def AssertFloat(object: Any) -> None:
     if isinstance(object, float) == False:
         raise TypeError("传入的数据不是浮点数")
+    raise DeprecationWarning("该函数已过时，将在下个版本中移除，请使用 AssertType 函数")
 
 
 def AssertJianshuUrl(string: str) -> None:
