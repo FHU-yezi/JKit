@@ -7,6 +7,7 @@ from .basic_apis import (GetCollectionArticlesJsonDataApi,
                          GetCollectionRecommendedWritersJsonDataApi,
                          GetCollectionSubscribersJsonDataApi)
 from .convert import CollectionUrlToCollectionSlug
+from typing import Generator
 
 
 def GetCollectionName(collection_url: str) -> str:
@@ -284,14 +285,11 @@ def GetCollectionAllBasicData(collection_url: str) -> dict:
     }
     return result
 
-def GetCollectionAllEditorsInfo(collection_id: int) -> list:
+def GetCollectionAllEditorsInfo(collection_id: int) -> Generator:
     """获取专题的所有编辑信息
 
     Args:
         collection_id (int): 专题 ID
-
-    Returns:
-        list: 专题的所有编辑信息
 
     Yields:
         Iterator[list]: 当前页编辑信息
@@ -305,15 +303,12 @@ def GetCollectionAllEditorsInfo(collection_id: int) -> list:
         else:
             break
 
-def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) -> list:
+def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) -> Generator:
     """获取专题的所有推荐作者信息
 
     Args:
         collection_id (int): 专题 ID
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 20.
-
-    Returns:
-        list: 专题的所有推荐作者信息
 
     Yields:
         Iterator[list]: 当前页推荐作者信息
@@ -327,14 +322,11 @@ def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) 
         else:
             break
 
-def GetCollectionAllSubscribersInfo(collection_id: int) -> list:
+def GetCollectionAllSubscribersInfo(collection_id: int) -> Generator:
     """获取专题的所有关注者信息
 
     Args:
         collection_id (int): 专题 ID
-
-    Returns:
-        list: 专题的所有关注者信息
 
     Yields:
         Iterator[list]: 当前页关注者信息
@@ -349,7 +341,7 @@ def GetCollectionAllSubscribersInfo(collection_id: int) -> list:
             break
 
 def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10, 
-                                 sorting_method: str = "time") -> list:
+                                 sorting_method: str = "time") -> Generator:
     """获取专题的所有文章信息
 
     Args:
@@ -357,9 +349,6 @@ def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10,
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
-
-    Returns:
-        list: 专题的所有文章信息
 
     Yields:
         Iterator[list]: 当前页文章信息
