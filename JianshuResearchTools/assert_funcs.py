@@ -51,8 +51,8 @@ def AssertJianshuUrl(string: str) -> None:
     """
     keyword_to_find = ["https://", "www.jianshu.com"]
     for keyword in keyword_to_find:
-        if string.find(keyword) == -1:
-            raise InputError("参数" + string + "不是有效的简书 Url")
+        if keyword not in string:
+            raise InputError(f"参数 {string} 不是有效的简书 Url")
 
 
 def AssertUserUrl(string: str) -> None:
@@ -66,8 +66,8 @@ def AssertUserUrl(string: str) -> None:
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/u/"]
     for keyword in keyword_to_find:
-        if string.find(keyword) == -1:
-            raise InputError("参数" + string + "不是有效的简书用户主页 Url")
+        if keyword not in string:
+            raise InputError(f"参数 {string} 不是有效的简书用户主页 Url")
 
 @lru_cache(maxsize=64)
 def AssertUserStatusNormal(user_url: str) -> None:
@@ -88,8 +88,8 @@ def AssertArticleUrl(string: str) -> None:
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/p/"]
     for keyword in keyword_to_find:
-        if string.find(keyword) == -1:
-            raise InputError("参数" + string + "不是有效的简书文章 Url")
+        if keyword not in string:
+            raise InputError(f"参数 {string} 不是有效的简书文章 Url")
 
 @lru_cache(maxsize=64)
 def AssertArticleStatusNormal(article_url: str) -> None:
@@ -119,8 +119,8 @@ def AssertNotebookUrl(string: str) -> None:
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/nb/"]
     for keyword in keyword_to_find:
-        if string.find(keyword) == -1:
-            raise InputError("参数" + string + "不是有效的简书文集 Url")
+        if keyword not in string:
+            raise InputError(f"参数 {string} 不是有效的简书文集 Url")
         
 def AssertCollectionUrl(string: str) -> None:
     """判断是否是有效的简书专题 Url
@@ -133,8 +133,8 @@ def AssertCollectionUrl(string: str) -> None:
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/c/"]
     for keyword in keyword_to_find:
-        if string.find(keyword) == -1:
-            raise InputError("参数" + string + "不是有效的简书专题 Url")
+        if keyword not in string:
+            raise InputError(f"参数 {string} 不是有效的简书专题 Url")
 
 
 def AssertIslandUrl(string: str) -> None:
@@ -148,8 +148,8 @@ def AssertIslandUrl(string: str) -> None:
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/g/"]
     for keyword in keyword_to_find:
-        if string.find(keyword) == -1:
-            raise InputError("参数" + string + "不是有效的简书小岛 Url")
+        if keyword not in string:
+            raise InputError(f"参数 {string} 不是有效的简书小岛 Url")
         
 def AssertIslandPostUrl(string: str) -> None:
     """判断是否是有效的简书小岛帖子 Url
@@ -162,5 +162,5 @@ def AssertIslandPostUrl(string: str) -> None:
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/gp/"]
     for keyword in keyword_to_find:
-        if string.find(keyword) == -1:
-            raise InputError("参数" + string + "不是有效的简书小岛帖子 Url")
+        if keyword not in string:
+            raise InputError(f"参数 {string} 不是有效的简书小岛帖子 Url")
