@@ -7,6 +7,7 @@ from .assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
 from .basic_apis import (GetArticleCommentsJsonDataApi,
                          GetArticleHtmlJsonDataApi, GetArticleJsonDataApi)
 from .headers import PC_header, jianshu_request_header
+
 try:
     from tomd import convert as html2md
 except ImportError:
@@ -190,12 +191,12 @@ def GetArticlePaidStatus(article_url: str) -> bool:
     AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     paid_type = {
-        "free": False, 
-        "fbook_free": False, 
-        "pbook_free":False, 
-        "paid": True, 
-        "fbook_paid": True, 
-        "pbook_paid":True
+        "free": False,   # 免费文章
+        "fbook_free": False,   # 免费连载中的免费文章
+        "pbook_free":False,   # 付费连载中的免费文章
+        "paid": True,   # 付费文章
+        "fbook_paid": True,   # 免费连载中的付费文章
+        "pbook_paid":True   # 付费连载中的付费文章
     }
     result = paid_type[json_obj["paid_type"]]
     return result
@@ -236,7 +237,6 @@ def GetArticleHtml(article_url: str) -> str:
 
     # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
     # ! 该函数不能获取需要付费的文章内容
-    # ! 文章中的图片描述将会丢失
 
     Args:
         article_url (str): 文章 Url
@@ -253,16 +253,13 @@ def GetArticleHtml(article_url: str) -> str:
     html_text = sub(r'<div class="image-container-fill".+>', "", html_text)  # 去除 image-container-fill
     old_img_blocks = findall(r'\<img[ \w+-="]*>', html_text)  # 匹配旧的 img 标签
     img_names = findall(r"\w+-\w+.[jpg | png]{3}",html_text)  # 获取图片名称
-    new_img_blocks = ["".join(['<img src="https://upload-images.jianshu.io/upload_images/', \
-                    img_name, '">']) for img_name in img_names]  # 拼接新的 img 标签
-    if len(old_img_blocks) == 0:
-        replaced = html_text
-    for index in range(len(old_img_blocks)):
-        if index == 0:
-            replaced = html_text.replace(old_img_blocks[index], new_img_blocks[index])
-        else:
-            replaced = replaced.replace(old_img_blocks[index], new_img_blocks[index])  # 替换 img 标签
-    return replaced
+    new_img_blocks = [f'<img src="https://upload-images.jianshu.io/upload_images/{img_name}">'
+                      for img_name in img_names]  # 拼接新的 img 标签
+    if len(old_img_blocks) == 0:  # 文章中没有图片块
+        return html_text
+    for old_img_block, new_img_block in zip(old_img_blocks, new_img_blocks):
+        html_text = html_text.replace(old_img_block, new_img_block)  # 替换 img 标签
+    return html_text
 
 def GetArticleText(article_url: str) -> str:
     """获取纯文本格式的文章内容
@@ -279,10 +276,9 @@ def GetArticleText(article_url: str) -> str:
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    html_text = json_obj["free_content"]
-    html_obj = etree.HTML(html_text)
+    html_obj = etree.HTML(json_obj["free_content"])
     result = "".join(html_obj.itertext())
-    result = sub(r"\s{2,}", "", result)
+    result = sub(r"\s{3,}", "", result)  # 去除多余的空行
     return result
 
 def GetArticleMarkdown(article_url: str) -> str:
@@ -308,16 +304,16 @@ def GetArticleMarkdown(article_url: str) -> str:
     for index in range(len(image_descriptions)):
         html_text = html_text.replace(image_descriptions[index], "<p>&&" + image_descriptions_text[index] + "&&</p>")  # 将图片描述替换成带有标记符的文本
     images = findall(r'<img src=".+">', html_text)  # 获取图片块
-    for index in range(len(images)):
-        html_text = html_text.replace(images[index], "<p>" + images[index] + "</img></p>")  # 处理图片块
-    markdown = html2md(html_text)
+    for image in images:
+        html_text = html_text.replace(image, f"<p>{image}</img></p>")  # 处理图片块
+    markdown = html2md(html_text)  # 将 HTML 格式的文章转换成 Markdown 格式
     
     md_images_and_description = findall(r'!\[.*\]\(.+\)\n\n&&.+&&', markdown)  # 获取 Markdown 中图片语法和对应描述的部分
     md_images_url = [findall(r'https://.+\)', item)[0].replace(")", "") for item in md_images_and_description]  # 获取所有图片链接
     md_image_descriptions = [findall(r'&&.+&&', item)[0].replace("&&", "") for item in md_images_and_description] # 获取所有图片描述
     
     for index, item in enumerate(md_images_and_description):
-        markdown = markdown.replace(item, "![{}]({})".format(md_image_descriptions[index], md_images_url[index]))  # 拼接 Markdown 语法并进行替换
+        markdown = markdown.replace(item, f"![{md_image_descriptions[index]}]({md_images_url[index]})")  # 拼接 Markdown 语法并进行替换
     
     return markdown
 
@@ -336,8 +332,8 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
         list: 评论信息
     """
     order_by = {
-        "positive": "asc", 
-        "reverse": "desc"
+        "positive": "asc",   # 正序
+        "reverse": "desc"  # 倒序
     }[sorting_method]
     json_obj = GetArticleCommentsJsonDataApi(article_id, page, count, author_only, order_by)
     result = []
