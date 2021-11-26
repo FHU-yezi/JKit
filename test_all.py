@@ -441,16 +441,16 @@ class TestConvertModule():
         assert ArticleUrlToArticleSlug("https://www.jianshu.com/p/0589bd2ac952") == "0589bd2ac952"
     
     def test_ArticleSlugToArticleUrl(self):
-        assert isinstance(ArticleSlugToArticleUrl("https://www.jianshu.com/p/52698676395f"), str)
+        assert isinstance(ArticleSlugToArticleUrl("52698676395f"), str)
         assert ArticleSlugToArticleUrl("52698676395f") == "https://www.jianshu.com/p/52698676395f"
         assert ArticleSlugToArticleUrl("2c2b76a1d0ae") == "https://www.jianshu.com/p/2c2b76a1d0ae"
         assert ArticleSlugToArticleUrl("0589bd2ac952") == "https://www.jianshu.com/p/0589bd2ac952"
     
     def test_ArticleSlugToArticleId(self):
-        assert isinstance(ArticleSlugToArticleId("https://www.jianshu.com/p/52698676395f"), int)
-        assert ArticleSlugToArticleId("https://www.jianshu.com/p/52698676395f") == 87256893
-        assert ArticleSlugToArticleId("https://www.jianshu.com/p/2c2b76a1d0ae") == 37330600
-        assert ArticleSlugToArticleId("https://www.jianshu.com/p/0589bd2ac952") == 54170136
+        assert isinstance(ArticleSlugToArticleId("52698676395f"), int)
+        assert ArticleSlugToArticleId("52698676395f") == 87256893
+        assert ArticleSlugToArticleId("2c2b76a1d0ae") == 37330600
+        assert ArticleSlugToArticleId("0589bd2ac952") == 54170136
         
     def test_NotebookUrlToNotebookId(self):
         assert isinstance(NotebookUrlToNotebookId("https://www.jianshu.com/nb/40458256"), int)
