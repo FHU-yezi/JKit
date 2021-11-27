@@ -10,7 +10,7 @@ from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserFollowersListHtmlDataApi,
                          GetUserFollowingListHtmlDataApi, GetUserJsonDataApi,
                          GetUserNextAnniversaryDayHtmlDataApi,
-                         GetUserPCHtmlDataApi)
+                         GetUserPCHtmlDataApi, GetUserTimelineHtmlDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import APIError
 
@@ -43,6 +43,8 @@ def GetUserGender(user_url: str) -> int:
     AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["gender"]
+    if result == 3:  # 某些未设置性别的账号性别值为 3，怀疑为简书系统遗留问题
+        result = 0  # 3 也代表性别未知
     return result
 
 def GetUserFollowersCount(user_url: str) -> int:
