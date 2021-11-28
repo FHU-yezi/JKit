@@ -230,3 +230,12 @@ def GetIslandPostJsonDataApi(post_slug: str):
     source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
+
+def GetUserTimelineHtmlDataApi(uslug: str, max_id: int) -> object:
+    request_url = f"https://www.jianshu.com/users/{uslug}/timeline"
+    params = {
+        max_id: max_id
+    }
+    source = httpx_get(request_url, headers=PC_header, params=params).content
+    html_obj = etree.HTML(source)
+    return html_obj
