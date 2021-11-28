@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Union
+from typing import Dict, Union
 
 from httpx import get as httpx_get
 from httpx import post as httpx_post
@@ -13,20 +13,20 @@ except ImportError:
     import json
 
 
-def GetArticleJsonDataApi(article_url: str) -> object:
+def GetArticleJsonDataApi(article_url: str) -> Dict:
     request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
     source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
-def GetArticleHtmlJsonDataApi(article_url: str) -> object:
+def GetArticleHtmlJsonDataApi(article_url: str) -> Dict:
     source = httpx_get(article_url, headers=PC_header).content
     html_obj = etree.HTML(source)
     json_obj = json.loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
     return json_obj
 
 def GetArticleCommentsJsonDataApi(article_id: int, page: int, count: int, 
-                                  author_only: bool, order_by: str) -> object:
+                                  author_only: bool, order_by: str) -> Dict:
     params = {
         "page": page, 
         "count": count, 
@@ -38,7 +38,7 @@ def GetArticleCommentsJsonDataApi(article_id: int, page: int, count: int,
     json_obj = json.loads(source)
     return json_obj
 
-def GetBeikeIslandTradeRankListJsonDataApi(ranktype: Union[int, None], pageIndex: Union[int, None]) -> object:
+def GetBeikeIslandTradeRankListJsonDataApi(ranktype: Union[int, None], pageIndex: Union[int, None]) -> Dict:
     params = {
         "ranktype": ranktype, 
         "pageIndex": pageIndex
@@ -58,13 +58,13 @@ def GetBeikeIslandTradeListJsonDataApi(pageIndex: int, retype: int):
     json_obj = json.loads(source)
     return json_obj
 
-def GetCollectionJsonDataApi(collection_url: str) -> object:
+def GetCollectionJsonDataApi(collection_url: str) -> Dict:
     request_url = collection_url.replace("https://www.jianshu.com/c/", "https://www.jianshu.com/asimov/collections/slug/")
     source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
-def GetCollectionEditorsJsonDataApi(collection_id: int, page: int) -> object:
+def GetCollectionEditorsJsonDataApi(collection_id: int, page: int) -> Dict:
     request_url = f"https://www.jianshu.com/collections/{collection_id}/editors"
     params = {
         "page": page
@@ -73,7 +73,7 @@ def GetCollectionEditorsJsonDataApi(collection_id: int, page: int) -> object:
     json_obj = json.loads(source)
     return json_obj
 
-def GetCollectionRecommendedWritersJsonDataApi(collection_id: int, page: int, count: int) -> object:
+def GetCollectionRecommendedWritersJsonDataApi(collection_id: int, page: int, count: int) -> Dict:
     params = {
         "collection_id": collection_id, 
         "page": page, 
@@ -84,7 +84,7 @@ def GetCollectionRecommendedWritersJsonDataApi(collection_id: int, page: int, co
     json_obj = json.loads(source)
     return json_obj
 
-def GetCollectionSubscribersJsonDataApi(collection_id: int, max_sort_id: int) -> object:
+def GetCollectionSubscribersJsonDataApi(collection_id: int, max_sort_id: int) -> Dict:
     request_url = "https://www.jianshu.com/collection/" + str(collection_id) + "/subscribers"
     params = {
         "max_sort_id": max_sort_id
@@ -93,7 +93,7 @@ def GetCollectionSubscribersJsonDataApi(collection_id: int, max_sort_id: int) ->
     json_obj = json.loads(source)
     return json_obj
 
-def GetCollectionArticlesJsonDataApi(collection_slug: str, page: int, count: int, order_by: str) -> object:
+def GetCollectionArticlesJsonDataApi(collection_slug: str, page: int, count: int, order_by: str) -> Dict:
     request_url = f"https://www.jianshu.com/asimov/collections/slug/{collection_slug}/public_notes"
     params = {
         "page": page, 
@@ -104,7 +104,7 @@ def GetCollectionArticlesJsonDataApi(collection_slug: str, page: int, count: int
     json_obj = json.loads(source)
     return json_obj
 
-def GetIslandJsonDataApi(island_url: str) -> object:
+def GetIslandJsonDataApi(island_url: str) -> Dict:
     request_url = island_url.replace("https://www.jianshu.com/g/", "https://www.jianshu.com/asimov/groups/")
     source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
@@ -124,14 +124,14 @@ def GetIslandPostsJsonDataApi(group_slug: str, max_id: int,
     json_obj = json.loads(source)
     return json_obj
 
-def GetNotebookJsonDataApi(notebook_url: str) -> object:
+def GetNotebookJsonDataApi(notebook_url: str) -> Dict:
     request_url = notebook_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
     source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
 def GetNotebookArticlesJsonDataApi(notebook_url: str, page: int, 
-                                count: int, order_by: str) -> object:
+                                count: int, order_by: str) -> Dict:
     request_url = notebook_url.replace("https://www.jianshu.com/nb/", 
             "https://www.jianshu.com/asimov/notebooks/") + "/public_notes/"
     params = {
@@ -143,7 +143,7 @@ def GetNotebookArticlesJsonDataApi(notebook_url: str, page: int,
     json_obj = json.loads(source)
     return json_obj
 
-def GetAssetsRankJsonDataApi(max_id: int, since_id: int) -> object:
+def GetAssetsRankJsonDataApi(max_id: int, since_id: int) -> Dict:
     params = {
         "max_id": max_id, 
         "since_id": since_id
@@ -152,12 +152,12 @@ def GetAssetsRankJsonDataApi(max_id: int, since_id: int) -> object:
     json_obj = json.loads(source)
     return json_obj
 
-def GetDailyArticleRankListJsonDataApi() -> object:
+def GetDailyArticleRankListJsonDataApi() -> Dict:
     source = httpx_get("https://www.jianshu.com/asimov/daily_activity_participants/rank", headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
-def GetArticlesFPRankListJsonDataApi(date: str, type_: str) -> object:  # 避免覆盖内置函数
+def GetArticlesFPRankListJsonDataApi(date: str, type_: str) -> Dict:  # 避免覆盖内置函数
     params = {
         "date": date, 
         "type": type_
@@ -166,18 +166,18 @@ def GetArticlesFPRankListJsonDataApi(date: str, type_: str) -> object:  # 避免
     json_obj = json.loads(source)
     return json_obj
 
-def GetUserJsonDataApi(user_url: str) -> object:
+def GetUserJsonDataApi(user_url: str) -> Dict:
     request_url = user_url.replace("https://www.jianshu.com/u/", "https://www.jianshu.com/asimov/users/slug/")
     source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json.loads(source)
     return json_obj
 
-def GetUserPCHtmlDataApi(user_url: str) -> object:
+def GetUserPCHtmlDataApi(user_url: str) -> Dict:
     source = httpx_get(user_url, headers=PC_header).content
     html_obj = etree.HTML(source)
     return html_obj
 
-def GetUserCollectionsAndNotebooksJsonDataApi(user_url: str, user_slug: str) -> object:
+def GetUserCollectionsAndNotebooksJsonDataApi(user_url: str, user_slug: str) -> Dict:
     request_url = user_url.replace("/u/", "/users/") + "/collections_and_notebooks"
     params = {
         "slug": user_slug
@@ -187,7 +187,7 @@ def GetUserCollectionsAndNotebooksJsonDataApi(user_url: str, user_slug: str) -> 
     return json_obj
 
 def GetUserArticlesListJsonDataApi(user_url: str, page: int, 
-                                count: int, order_by: str) -> object :
+                                count: int, order_by: str) -> Dict :
     request_url = user_url.replace("/u/", "/asimov/users/slug/") + "/public_notes"
     params = {
         "page": page, 
@@ -231,7 +231,7 @@ def GetIslandPostJsonDataApi(post_slug: str):
     json_obj = json.loads(source)
     return json_obj
 
-def GetUserTimelineHtmlDataApi(uslug: str, max_id: int) -> object:
+def GetUserTimelineHtmlDataApi(uslug: str, max_id: int) -> Dict:
     request_url = f"https://www.jianshu.com/users/{uslug}/timeline"
     params = {
         max_id: max_id
