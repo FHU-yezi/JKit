@@ -1,6 +1,8 @@
 from datetime import datetime
+from typing import Dict, Generator, List
 
-from .assert_funcs import AssertIslandPostUrl, AssertIslandUrl
+from .assert_funcs import (AssertIslandPostUrl, AssertIslandStatusNormal,
+                           AssertIslandUrl)
 from .basic_apis import (GetIslandJsonDataApi, GetIslandPostJsonDataApi,
                          GetIslandPostsJsonDataApi)
 from .convert import (IslandPostSlugToIslandPostUrl,
@@ -17,6 +19,7 @@ def GetIslandName(island_url: str) -> str:
         str: 小岛名称
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["name"]
     return result
@@ -31,6 +34,7 @@ def GetIslandAvatarUrl(island_url: str) -> str:
         str: 小岛头像链接
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["image"]
     return result
@@ -45,6 +49,7 @@ def GetIslandIntroduction(island_url: str) -> str:
         str: 小岛简介
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["intro"]
     return result
@@ -59,6 +64,7 @@ def GetIslandMembersCount(island_url: str) -> int:
         int: 成员数量
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["members_count"]
     return result
@@ -73,6 +79,7 @@ def GetIslandPostsCount(island_url: str) -> int:
         int: 帖子数量
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["posts_count"]
     return result
@@ -87,6 +94,7 @@ def GetIslandCategory(island_url: str) -> str:
         str: 分类
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["category"]["name"]
     return result
@@ -101,12 +109,13 @@ def GetIslandPostFullConetnt(post_url: str) -> str:
         str: 小岛帖子完整内容
     """
     AssertIslandPostUrl(post_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandPostJsonDataApi(IslandPostUrlToIslandPostSlug(post_url))
     result = json_obj["content"]
     return result
     
 def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10, 
-                    topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> list:
+                    topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> List:
     """获取小岛帖子信息
 
         Args:
@@ -123,6 +132,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
             list: 帖子信息
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     order_by = {
         "time": "latest", 
         "hot": "hot", 
@@ -191,7 +201,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
         result.append(item_data)
     return result
 
-def GetIslandAllBasicData(island_url: str) -> dict:
+def GetIslandAllBasicData(island_url: str) -> Dict:
     """获取小岛的所有基础信息
 
     Args:
@@ -213,7 +223,7 @@ def GetIslandAllBasicData(island_url: str) -> dict:
 
 def GetIslandAllPostsData(island_url: str, count: int = 10, 
                           topic_id: int = None, sorting_method: str = "time", 
-                          get_full_content: bool = False) -> list:
+                          get_full_content: bool = False) -> Generator[List, None, None]:
     """获取小岛的所有帖子信息
 
     Args:
@@ -225,11 +235,8 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
         get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
     自动调用 GetIslandPostFullConetnt 函数获取完整内容并返回. Defaults to False.
 
-    Returns:
-        list: 小岛的所有帖子信息
-
     Yields:
-        Iterator[list]: 当前页帖子信息
+        Iterator[List, None, None]: 当前页帖子信息
     """
     start_sort_id = None
     while True:

@@ -1,5 +1,6 @@
 from datetime import datetime
 from re import findall, sub
+from typing import Dict, Generator, List
 
 from lxml import etree
 
@@ -9,7 +10,7 @@ from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserFollowersListHtmlDataApi,
                          GetUserFollowingListHtmlDataApi, GetUserJsonDataApi,
                          GetUserNextAnniversaryDayHtmlDataApi,
-                         GetUserPCHtmlDataApi)
+                         GetUserPCHtmlDataApi, GetUserTimelineHtmlDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import APIError
 
@@ -42,6 +43,8 @@ def GetUserGender(user_url: str) -> int:
     AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["gender"]
+    if result == 3:  # 某些未设置性别的账号性别值为 3，怀疑为简书系统遗留问题
+        result = 0  # 3 也代表性别未知
     return result
 
 def GetUserFollowersCount(user_url: str) -> int:
@@ -176,7 +179,7 @@ def GetUserFTNCount(user_url: str) -> float:
     result = round(result, 3)  # 处理浮点数精度问题
     return result
 
-def GetUserBadgesList(user_url: str) -> list:
+def GetUserBadgesList(user_url: str) -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的徽章列表
 
     Args:
@@ -208,7 +211,7 @@ def GetUserLastUpdateTime(user_url: str) -> datetime:
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
-def GetUserVIPInfo(user_url: str) -> dict:
+def GetUserVIPInfo(user_url: str) -> Dict:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的会员信息
 
     Args:
@@ -289,7 +292,7 @@ def GetUserNextAnniversaryDay(user_url: str) -> datetime:
     result = datetime.fromisoformat("-".join(result))
     return result
 
-def GetUserNotebooksInfo(user_url: str) -> list:
+def GetUserNotebooksInfo(user_url: str) -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文集与连载信息
 
     Args:
@@ -313,7 +316,7 @@ def GetUserNotebooksInfo(user_url: str) -> list:
         result.append(item_data)
     return result
 
-def GetUserOwnCollectionsInfo(user_url: str) -> list:
+def GetUserOwnCollectionsInfo(user_url: str) -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户自己创建的专题信息
 
     Args:
@@ -336,7 +339,7 @@ def GetUserOwnCollectionsInfo(user_url: str) -> list:
         result.append(item_data)
     return result
 
-def GetUserManageableCollectionsInfo(user_url: str) -> list:
+def GetUserManageableCollectionsInfo(user_url: str) -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户有管理权限的专题信息
 
     Args:
@@ -360,7 +363,7 @@ def GetUserManageableCollectionsInfo(user_url: str) -> list:
     return result
 
 def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10, 
-                        sorting_method: str = "time") -> list:
+                        sorting_method: str = "time") -> List:
     """该函数接收用户个人主页 Url，并返回该链接对应用户的文章信息
 
     Args:
@@ -409,7 +412,7 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
         result.append(item_data)
     return result
 
-def GetUserFollowingInfo(user_url: str, page:int = 1) -> list:
+def GetUserFollowingInfo(user_url: str, page:int = 1) -> List:
     """该函数接收用户个人主页 Url 和页码，并返回该用户关注列表中对应页数的用户信息
 
     Args:
@@ -423,7 +426,7 @@ def GetUserFollowingInfo(user_url: str, page:int = 1) -> list:
     AssertUserStatusNormal(user_url)
     html_obj = GetUserFollowingListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
-    if name_raw_data == []:  # 判断该页数据是否为空
+    if not name_raw_data:  # 判断该页数据是否为空
         return []
     followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
     fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
@@ -442,7 +445,7 @@ def GetUserFollowingInfo(user_url: str, page:int = 1) -> list:
         result.append(item_data)
     return result
 
-def GetUserFansInfo(user_url: str, page:int = 1) -> list:
+def GetUserFansInfo(user_url: str, page:int = 1) -> List:
     """该函数接收用户个人主页 Url 和页码，并返回该用户粉丝列表中对应页数的用户信息
 
     Args:
@@ -456,7 +459,7 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> list:
     AssertUserStatusNormal(user_url)
     html_obj = GetUserFollowersListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
-    if name_raw_data == []:  # 判断该页数据是否为空
+    if not name_raw_data:  # 判断该页数据是否为空
         return []
     followers_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[1]")
     fans_raw_data = html_obj.xpath("//div[@class='meta'][1]/span[2]")
@@ -475,7 +478,7 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> list:
         result.append(item_data)
     return result
 
-def GetUserAllBasicData(user_url: str) -> dict:
+def GetUserAllBasicData(user_url: str) -> Dict:
     """获取用户的所有基础信息
 
     Args:
@@ -541,7 +544,7 @@ def GetUserAllBasicData(user_url: str) -> dict:
     result["next_anniversary_day"] = datetime.fromisoformat("-".join(findall(r"\d+", result["next_anniversary_day"])))
     return result
 
-def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time") -> list:
+def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time") -> Generator[List, None, None]:
     """获取用户的所有文章信息
 
     Args:
@@ -550,11 +553,8 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
-    Returns:
-        list: 用户的所有文章信息
-
     Yields:
-        Iterator[list]: 当前页文章信息
+        Iterator[List, None, None]: 当前页文章信息
     """
     page = 1
     while True:
@@ -565,17 +565,14 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
         else:
             break
 
-def GetUserAllFollowingInfo(user_url: str) -> list:
+def GetUserAllFollowingInfo(user_url: str) -> Generator[List, None, None]:
     """获取用户的所有关注者信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
-    Returns:
-        list: 用户的所有关注者信息
-
     Yields:
-        Iterator[list]: 当前页关注者信息
+        Iterator[List, None, None]: 当前页关注者信息
     """
     page = 1
     while True:
@@ -586,17 +583,14 @@ def GetUserAllFollowingInfo(user_url: str) -> list:
         else:
             break
 
-def GetUserAllFansInfo(user_url: str) -> list:
+def GetUserAllFansInfo(user_url: str) -> Generator[List, None, None]:
     """获取用户的所有粉丝信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
-    Returns:
-        list: 用户的所有粉丝信息
-
     Yields:
-        Iterator[list]: 当前页粉丝信息
+        Iterator[List, None, None]: 当前页粉丝信息
     """
     page = 1
     while True:

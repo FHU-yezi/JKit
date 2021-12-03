@@ -104,12 +104,12 @@ print(jrt.__version__)
 
 ## 必须依赖
 
-- requests：用于实现网络请求
+- httpx：用于实现网络请求
 - lxml：用于实现基于 Xpath 的 HTML 解析
 
 ## 可选依赖
 
-- simplejson：安装后 json 解析速度将得到小幅提升
+- ujson：安装后在大量数据获取场景将获得一定性能提升
 - tomd：安装后可以使用`jrt.article.GetArticleMarkdown()`函数获取 Markdown 格式的文章内容
 
 # 贡献

@@ -1,6 +1,6 @@
 from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
                            AssertCollectionUrl, AssertIslandPostUrl,
-                           AssertIslandUrl, AssertNotebookUrl, AssertString,
+                           AssertIslandUrl, AssertNotebookUrl, AssertType,
                            AssertUserUrl)
 from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
                          GetUserJsonDataApi)
@@ -15,7 +15,7 @@ def UserUrlToUserId(user_url: str) -> int:
     Returns:
         int: 用户 ID
     """
-    AssertString(user_url)
+    AssertType(user_url, str)
     AssertUserUrl(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["id"]
@@ -30,7 +30,7 @@ def UserSlugToUserId(user_slug: str) -> int:
     Returns:
         int: 用户 ID
     """
-    AssertString(user_slug)
+    AssertType(user_slug, str)
     user_url = UserSlugToUserUrl(user_slug)
     AssertUserUrl(user_url)
     result = UserUrlToUserId(user_url)
@@ -46,7 +46,7 @@ def UserUrlToUserSlug(user_url: str) -> str:
     Returns:
         str: 用户 Slug
     """
-    AssertString(user_url)
+    AssertType(user_url, str)
     AssertUserUrl(user_url)
     return user_url.replace("https://www.jianshu.com/u/", "").replace("/", "")
 
@@ -59,8 +59,8 @@ def UserSlugToUserUrl(user_slug: str) -> str:
     Returns:
         str: 用户个人主页 Url
     """
-    AssertString(user_slug)
-    result = "https://www.jianshu.com/u/" + user_slug
+    AssertType(user_slug, str)
+    result = f"https://www.jianshu.com/u/{user_slug}"
     AssertUserUrl(result)
     return result
 
@@ -74,7 +74,7 @@ def ArticleUrlToArticleSlug(article_url: str) -> str:
     Returns:
         str: 文章 Slug
     """
-    AssertString(article_url)
+    AssertType(article_url, str)
     AssertArticleUrl(article_url)
     return article_url.replace("https://www.jianshu.com/p/", "")
 
@@ -87,8 +87,8 @@ def ArticleSlugToArticleUrl(article_slug: str) -> str:
     Returns:
         str: 文章 Url
     """
-    AssertString(article_slug)
-    result = "https://www.jianshu.com/p/" + article_slug
+    AssertType(article_slug, str)
+    result = f"https://www.jianshu.com/p/{article_slug}"
     AssertArticleUrl(result)
     return result
 
@@ -101,7 +101,7 @@ def ArticleSlugToArticleId(article_slug: str) -> int:
     Returns:
         int: 文章 ID
     """
-    AssertString(article_slug)
+    AssertType(article_slug, str)
     json_obj = GetArticleJsonDataApi(ArticleSlugToArticleUrl(article_slug))
     result = json_obj["id"]
     return result
@@ -115,7 +115,7 @@ def ArticleUrlToArticleId(article_url: str) -> int:
     Returns:
         int: 文章 ID
     """
-    AssertString(article_url)
+    AssertType(article_url, str)
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
@@ -131,7 +131,7 @@ def NotebookUrlToNotebookId(notebook_url: str) -> int:
     Returns:
         int: 文集 ID
     """
-    AssertString(notebook_url)
+    AssertType(notebook_url, str)
     AssertNotebookUrl(notebook_url)
     json_obj = GetArticleJsonDataApi(notebook_url)
     result = json_obj["id"]
@@ -146,7 +146,7 @@ def NotebookUrlToNotebookSlug(notebook_url: str) -> str:
     Returns:
         str: 文集 Slug
     """
-    AssertString(notebook_url)
+    AssertType(notebook_url, str)
     AssertNotebookUrl(notebook_url)
     return notebook_url.replace("https://www.jianshu.com/nb/", "")
 
@@ -159,8 +159,8 @@ def NotebookSlugToNotebookUrl(notebook_slug: str) -> str:
     Returns:
         str: 文集 Url
     """
-    AssertString(notebook_slug)
-    result = "https://www.jianshu.com/nb/" + notebook_slug
+    AssertType(notebook_slug, str)
+    result = f"https://www.jianshu.com/nb/{notebook_slug}"
     AssertNotebookUrl(result)
     return result
 
@@ -174,7 +174,7 @@ def CollectionUrlToCollectionSlug(collection_url: str) -> str:
     Returns:
         str: 专题 Slug
     """
-    AssertString(collection_url)
+    AssertType(collection_url, str)
     AssertCollectionUrl(collection_url)
     return collection_url.replace("https://www.jianshu.com/c/", "")
 
@@ -187,8 +187,8 @@ def CollectionSlugToCollectionUrl(collection_slug: str) -> str:
     Returns:
         str: 专题 Url
     """
-    AssertString(collection_slug)
-    result = "https://www.jianshu.com/c/" + collection_slug
+    AssertType(collection_slug, str)
+    result = f"https://www.jianshu.com/c/{collection_slug}"
     AssertCollectionUrl(result)
     return result
 
@@ -201,7 +201,7 @@ def CollectionUrlToCollectionId(collection_url: str) -> int:
     Returns:
         int: 专题 ID
     """
-    AssertString(collection_url)
+    AssertType(collection_url, str)
     AssertCollectionUrl(collection_url)
     result = GetCollectionJsonDataApi(collection_url)["id"]
     return result
@@ -217,7 +217,7 @@ def IslandUrlToIslandSlug(island_url: str) -> str:
     Returns:
         str: 小岛 Slug
     """
-    AssertString(island_url)
+    AssertType(island_url, str)
     AssertIslandUrl(island_url)
     return island_url.replace("https://www.jianshu.com/g/", "")
 
@@ -230,8 +230,8 @@ def IslandSlugToIslandUrl(island_slug: str) -> str:
     Returns:
         str: 小岛 Url
     """
-    AssertString(island_slug)
-    result = "https://www.jianshu.com/g/" + island_slug
+    AssertType(island_slug, str)
+    result = f"https://www.jianshu.com/g/{island_slug}"
     AssertIslandUrl(result)
     return result
 
@@ -243,7 +243,7 @@ def UserUrlToUserUrlScheme(user_url: str) -> str:
     Returns:
         str: 跳转到简书 App 中对应用户的 Url Scheme
     """
-    AssertString(user_url)
+    AssertType(user_url, str)
     AssertUserUrl(user_url)
     result = user_url.replace("https://www.jianshu.com/u/", "jianshu://u/")
     return result
@@ -256,7 +256,7 @@ def ArticleUrlToArticleUrlScheme(article_url: str) -> str:
     Returns:
         str: 跳转到简书 App 中对应文章的 Url Scheme
     """
-    AssertString(article_url)
+    AssertType(article_url, str)
     AssertArticleUrl(article_url)
     result = article_url.replace("https://www.jianshu.com/p/", "jianshu://notes/")
     return result
@@ -269,7 +269,7 @@ def NotebookUrlToNotebookUrlScheme(notebook_url: str) -> str:
     Returns:
         str: 跳转到简书 App 中对应文集的 Url Scheme
     """
-    AssertString(notebook_url)
+    AssertType(notebook_url, str)
     AssertNotebookUrl(notebook_url)
     result = notebook_url.replace("https://www.jianshu.com/nb/", "jianshu://nb/")
     return result
@@ -282,7 +282,7 @@ def CollectionUrlToCollectionUrlScheme(collection_url: str) -> str:
     Returns:
         str: 跳转到简书 App 中对应专题的 Url Scheme
     """
-    AssertString(collection_url)
+    AssertType(collection_url, str)
     AssertCollectionUrl(collection_url)
     result = collection_url.replace("https://www.jianshu.com/c/", "jianshu://c/")
     return result
@@ -296,7 +296,7 @@ def IslandPostUrlToIslandPostSlug(post_url: str) -> str:
     Returns:
         str: 小岛帖子 Slug
     """
-    AssertString(post_url)
+    AssertType(post_url, str)
     AssertIslandPostUrl(post_url)
     result = post_url.replace("https://www.jianshu.com/gp/", "")
     return result
@@ -310,7 +310,7 @@ def IslandPostSlugToIslandPostUrl(post_slug: str) -> str:
     Returns:
         str: 小岛帖子 Url
     """
-    AssertString(post_slug)
-    result =  "https://www.jianshu.com/gp/" + post_slug
+    AssertType(post_slug, str)
+    result =  f"https://www.jianshu.com/gp/{post_slug}"
     AssertIslandPostUrl(result)
     return result
