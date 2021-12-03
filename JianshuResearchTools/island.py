@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import Dict, Generator, List
 
-from .assert_funcs import AssertIslandPostUrl, AssertIslandUrl
+from .assert_funcs import (AssertIslandPostUrl, AssertIslandStatusNormal,
+                           AssertIslandUrl)
 from .basic_apis import (GetIslandJsonDataApi, GetIslandPostJsonDataApi,
                          GetIslandPostsJsonDataApi)
 from .convert import (IslandPostSlugToIslandPostUrl,
@@ -18,6 +19,7 @@ def GetIslandName(island_url: str) -> str:
         str: 小岛名称
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["name"]
     return result
@@ -32,6 +34,7 @@ def GetIslandAvatarUrl(island_url: str) -> str:
         str: 小岛头像链接
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["image"]
     return result
@@ -46,6 +49,7 @@ def GetIslandIntroduction(island_url: str) -> str:
         str: 小岛简介
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["intro"]
     return result
@@ -60,6 +64,7 @@ def GetIslandMembersCount(island_url: str) -> int:
         int: 成员数量
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["members_count"]
     return result
@@ -74,6 +79,7 @@ def GetIslandPostsCount(island_url: str) -> int:
         int: 帖子数量
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["posts_count"]
     return result
@@ -88,6 +94,7 @@ def GetIslandCategory(island_url: str) -> str:
         str: 分类
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["category"]["name"]
     return result
@@ -102,6 +109,7 @@ def GetIslandPostFullConetnt(post_url: str) -> str:
         str: 小岛帖子完整内容
     """
     AssertIslandPostUrl(post_url)
+    AssertIslandStatusNormal(island_url)
     json_obj = GetIslandPostJsonDataApi(IslandPostUrlToIslandPostSlug(post_url))
     result = json_obj["content"]
     return result
@@ -124,6 +132,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
             list: 帖子信息
     """
     AssertIslandUrl(island_url)
+    AssertIslandStatusNormal(island_url)
     order_by = {
         "time": "latest", 
         "hot": "hot", 

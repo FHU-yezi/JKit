@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, Generator, List
 
-from .assert_funcs import AssertCollectionUrl
+from .assert_funcs import AssertCollectionStatusNormal, AssertCollectionUrl
 from .basic_apis import (GetCollectionArticlesJsonDataApi,
                          GetCollectionEditorsJsonDataApi,
                          GetCollectionJsonDataApi,
@@ -20,6 +20,7 @@ def GetCollectionName(collection_url: str) -> str:
         str: 链接对应专题的名称
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["title"]
     return result
@@ -34,6 +35,7 @@ def GetCollectionAvatarUrl(collection_url: str) -> str:
         str: 专题头像链接
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["image"]
     return result
@@ -48,6 +50,7 @@ def GetCollectionIntroductionText(collection_url: str) -> str:
         str: 链接对应专题的简介
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["content_without_html"]
     return result
@@ -62,6 +65,7 @@ def GetCollectionIntroductionHtml(collection_url: str) -> str:
         str: 链接对应专题的简介
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["content_in_full"]
     return result
@@ -76,6 +80,7 @@ def GetCollectionArticlesCount(collection_url: str) -> int:
         int: 链接对应专题的收录文章数量
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["notes_count"]
     return result
@@ -90,6 +95,7 @@ def GetCollectionSubscribersCount(collection_url: str) -> int:
         int: 链接对应专题的关注者数量
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
     result = json_obj["subscribers_count"]
     return result
@@ -104,6 +110,7 @@ def GetCollectionArticlesUpdateTime(collection_url: str) -> datetime:
         datetime: 专题文章更新时间
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
     result = datetime.fromtimestamp(json_obj["newly_added_at"])
     return result
@@ -118,6 +125,7 @@ def GetCollectionInformationUpdateTime(collection_url: str) -> datetime:
         datetime: 专题信息更新时间
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
@@ -132,6 +140,7 @@ def GetCollectionOwnerInfo(collection_url: str) -> Dict:
         dict: 用户信息
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
     result = {
         "uid": json_obj["owner"]["id"], 
@@ -225,6 +234,7 @@ def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
         list: 文章信息
     """
     AssertCollectionUrl(collection_url)
+    AssertCollectionStatusNormal(collection_url)
     order_by = {
         "time": "added_at", 
         "comment_time": "commented_at", 

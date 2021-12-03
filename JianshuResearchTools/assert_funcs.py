@@ -6,7 +6,8 @@ except ImportError:
 from functools import lru_cache
 from typing import Any
 
-from .basic_apis import GetArticleJsonDataApi, GetUserJsonDataApi
+from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
+                         GetIslandJsonDataApi, GetUserJsonDataApi)
 from .exceptions import InputError, ResourceError
 from .headers import jianshu_request_header
 
@@ -137,6 +138,14 @@ def AssertCollectionUrl(string: str) -> None:
         if keyword not in string:
             raise InputError(f"参数 {string} 不是有效的简书专题 Url")
 
+@lru_cache(maxsize=64)
+def AssertCollectionStatusNormal(collection_url: str) -> None:
+    collection_json_data = GetCollectionJsonDataApi(collection_url)
+    try:
+        collection_json_data["title"]
+    except KeyError:
+        raise ResourceError("专题状态异常")
+
 
 def AssertIslandUrl(string: str) -> None:
     """判断是否是有效的简书小岛 Url
@@ -152,6 +161,14 @@ def AssertIslandUrl(string: str) -> None:
         if keyword not in string:
             raise InputError(f"参数 {string} 不是有效的简书小岛 Url")
         
+@lru_cache(maxsize=64)
+def AssertIslandStatusNormal(island_url: str) -> None:
+    island_json_data = GetIslandJsonDataApi(island_url)
+    try:
+        island_json_data["name"]
+    except KeyError:
+        raise ResourceError("小岛状态异常")
+
 def AssertIslandPostUrl(string: str) -> None:
     """判断是否是有效的简书小岛帖子 Url
 
