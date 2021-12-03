@@ -14,7 +14,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/FHU-yezi/JianshuResearchTools",
     packages=["JianshuResearchTools"],
-    install_requires=["lxml>=4.6.3","requests>=2.25.1"],
+    install_requires=["lxml==4.6.3","httpx==0.19.0"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
