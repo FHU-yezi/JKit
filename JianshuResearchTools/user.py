@@ -1,5 +1,5 @@
 from datetime import datetime
-from re import findall, sub
+from re import findall
 from typing import Dict, Generator, List
 
 from lxml import etree
@@ -10,7 +10,7 @@ from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserFollowersListHtmlDataApi,
                          GetUserFollowingListHtmlDataApi, GetUserJsonDataApi,
                          GetUserNextAnniversaryDayHtmlDataApi,
-                         GetUserPCHtmlDataApi, GetUserTimelineHtmlDataApi)
+                         GetUserPCHtmlDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import APIError
 

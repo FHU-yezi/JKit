@@ -7,7 +7,6 @@ from lxml import etree
 from .assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
 from .basic_apis import (GetArticleCommentsJsonDataApi,
                          GetArticleHtmlJsonDataApi, GetArticleJsonDataApi)
-from .headers import PC_header, jianshu_request_header
 
 try:
     from tomd import convert as html2md
@@ -253,10 +252,11 @@ def GetArticleHtml(article_url: str) -> str:
     html_text = sub(r'<div class="image-package">', "", html_text)  # 去除 image-package
     html_text = sub(r'<div class="image-container-fill".+>', "", html_text)  # 去除 image-container-fill
     old_img_blocks = findall(r'\<img[ \w+-="]*>', html_text)  # 匹配旧的 img 标签
-    img_names = findall(r"\w+-\w+.[jpg | png]{3}",html_text)  # 获取图片名称
+    img_names = findall(r"\w+-\w+.jpg|\w+-\w+.png",html_text)  # 获取图片名称
+    print(img_names)
     new_img_blocks = [f'<img src="https://upload-images.jianshu.io/upload_images/{img_name}">'
                       for img_name in img_names]  # 拼接新的 img 标签
-    if len(old_img_blocks) == 0:  # 文章中没有图片块
+    if not old_img_blocks:  # 文章中没有图片块
         return html_text
     for old_img_block, new_img_block in zip(old_img_blocks, new_img_blocks):
         html_text = html_text.replace(old_img_block, new_img_block)  # 替换 img 标签

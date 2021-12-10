@@ -2,7 +2,7 @@ from datetime import datetime
 from hashlib import md5
 from typing import Any, Dict, List
 
-from . import article, beikeisland, collection, island, notebook, user
+from . import article, collection, island, notebook, user
 from .assert_funcs import (AssertArticleUrl, AssertCollectionUrl,
                            AssertIslandUrl, AssertNotebookUrl, AssertUserUrl)
 from .convert import (ArticleSlugToArticleUrl, ArticleUrlToArticleSlug,
@@ -1164,7 +1164,7 @@ class Collection():
         Returns:
             list: 编辑信息
         """
-        if self._id == None:
+        if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取编辑信息")
         result = HashCache(self._editors_info, collection.GetCollectionEditorsInfo, 
                            {"collection_id": self._id, "page": page}, disable_cache)
@@ -1183,7 +1183,7 @@ class Collection():
         Returns:
             list: 推荐作者信息
         """
-        if self._id == None:
+        if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取推荐作者信息")
         result = HashCache(self._recommended_writers_info, collection.GetCollectionRecommendedWritersInfo, 
                            {"collection_id": self._id}, disable_cache)
@@ -1202,7 +1202,7 @@ class Collection():
         Returns:
             list: 关注者信息
         """
-        if self._id == None:
+        if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取关注者信息")
         result = HashCache(self._subscribers_info, collection.GetCollectionSubscribersInfo, 
                            {"collection_id": self._id, "start_sort_id": start_sort_id}, disable_cache)

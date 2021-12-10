@@ -9,10 +9,9 @@ from typing import Any
 from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
                          GetIslandJsonDataApi, GetUserJsonDataApi)
 from .exceptions import InputError, ResourceError
-from .headers import jianshu_request_header
 
 
-def AssertType(object: Any, type_obj: object) -> None:
+def AssertType(object: Any, type_obj: Any) -> None:
     """判断对象是否是指定类型
 
     Args:
