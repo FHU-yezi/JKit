@@ -1,16 +1,13 @@
 from datetime import datetime
-from functools import lru_cache
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from . import article, collection, island, notebook, user
 from .assert_funcs import (AssertArticleUrl, AssertCollectionUrl,
                            AssertIslandUrl, AssertNotebookUrl, AssertUserUrl)
-from .convert import (ArticleSlugToArticleUrl, ArticleUrlToArticleSlug,
-                      CollectionSlugToCollectionUrl,
-                      CollectionUrlToCollectionSlug, IslandSlugToIslandUrl,
-                      IslandUrlToIslandSlug, NotebookSlugToNotebookUrl,
-                      NotebookUrlToNotebookId, NotebookUrlToNotebookSlug,
-                      UserSlugToUserUrl, UserUrlToUserId, UserUrlToUserSlug)
+from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
+                      IslandSlugToIslandUrl, IslandUrlToIslandSlug,
+                      NotebookSlugToNotebookUrl, UserSlugToUserUrl,
+                      UserUrlToUserSlug)
 from .exceptions import InputError
 
 DISABLE_CACHE = False
@@ -282,6 +279,7 @@ class User():
         """
         return user.GetUserFollowersInfo(self._url, page)
 
+    @cache_result
     def fans_info(self, page: int = 1) -> List:
         """获取粉丝信息
 
