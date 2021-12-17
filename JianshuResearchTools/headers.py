@@ -8,7 +8,7 @@ jianshu_request_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x6
                           }
 
 BeikeIsland_request_header = {"Host": "www.beikeisland.com",
-                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
-                            "Content-Type": "application/json",
-                            "Version": "v2.0"
-                            }
+                              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.57",
+                              "Content-Type": "application/json",
+                              "Version": "v2.0"
+                              }

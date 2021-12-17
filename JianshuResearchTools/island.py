@@ -24,6 +24,7 @@ def GetIslandName(island_url: str) -> str:
     result = json_obj["name"]
     return result
 
+
 def GetIslandAvatarUrl(island_url: str) -> str:
     """获取小岛头像链接
 
@@ -38,6 +39,7 @@ def GetIslandAvatarUrl(island_url: str) -> str:
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["image"]
     return result
+
 
 def GetIslandIntroduction(island_url: str) -> str:
     """获取小岛简介
@@ -54,6 +56,7 @@ def GetIslandIntroduction(island_url: str) -> str:
     result = json_obj["intro"]
     return result
 
+
 def GetIslandMembersCount(island_url: str) -> int:
     """获取小岛成员数量
 
@@ -68,6 +71,7 @@ def GetIslandMembersCount(island_url: str) -> int:
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["members_count"]
     return result
+
 
 def GetIslandPostsCount(island_url: str) -> int:
     """获取小岛帖子数量
@@ -84,6 +88,7 @@ def GetIslandPostsCount(island_url: str) -> int:
     result = json_obj["posts_count"]
     return result
 
+
 def GetIslandCategory(island_url: str) -> str:
     """获取小岛分类
 
@@ -99,6 +104,7 @@ def GetIslandCategory(island_url: str) -> str:
     result = json_obj["category"]["name"]
     return result
 
+
 def GetIslandPostFullConetnt(post_url: str) -> str:
     """获取小岛帖子完整内容
 
@@ -109,13 +115,14 @@ def GetIslandPostFullConetnt(post_url: str) -> str:
         str: 小岛帖子完整内容
     """
     AssertIslandPostUrl(post_url)
-    AssertIslandStatusNormal(island_url)
+    AssertIslandStatusNormal(post_url)
     json_obj = GetIslandPostJsonDataApi(IslandPostUrlToIslandPostSlug(post_url))
     result = json_obj["content"]
     return result
-    
-def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10, 
-                    topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> List:
+
+
+def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
+                   topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> List:
     """获取小岛帖子信息
 
         Args:
@@ -134,45 +141,45 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
     AssertIslandUrl(island_url)
     AssertIslandStatusNormal(island_url)
     order_by = {
-        "time": "latest", 
-        "hot": "hot", 
+        "time": "latest",
+        "hot": "hot",
         "most_valuable": "best"
-    }[sorting_method], 
-    json_obj = GetIslandPostsJsonDataApi(group_slug=IslandUrlToIslandSlug(island_url), 
-                                      max_id=start_sort_id, count=count, topic_id=topic_id, order_by=order_by)
+    }[sorting_method],
+    json_obj = GetIslandPostsJsonDataApi(group_slug=IslandUrlToIslandSlug(island_url),
+                                         max_id=start_sort_id, count=count, topic_id=topic_id, order_by=order_by)
 
     result = []
     for item in json_obj:
         item_data = {
-            "sorted_id": item["sorted_id"], 
-            "pid": item["id"], 
-            "pslug": item["slug"], 
-            "title": item["title"], 
-            "content": item["content"], 
+            "sorted_id": item["sorted_id"],
+            "pid": item["id"],
+            "pslug": item["slug"],
+            "title": item["title"],
+            "content": item["content"],
             # "images": item["images"]
-            "likes_count": item["likes_count"], 
-            "comments_count": item["comments_count"], 
-            "release_time": datetime.fromtimestamp(item["created_at"]), 
-            "is_hot": item["is_hot"], 
-            "is_most_valuable": item["is_best"], 
-            "is_topped": item["is_top"], 
-            "is_new": item["is_new"], 
+            "likes_count": item["likes_count"],
+            "comments_count": item["comments_count"],
+            "release_time": datetime.fromtimestamp(item["created_at"]),
+            "is_hot": item["is_hot"],
+            "is_most_valuable": item["is_best"],
+            "is_topped": item["is_top"],
+            "is_new": item["is_new"],
             "island": {
-                "iid": item["group"]["id"], 
-                "islug": item["group"]["slug"], 
+                "iid": item["group"]["id"],
+                "islug": item["group"]["slug"],
                 "island_name": item["group"]["name"]
-            }, 
+            },
             "user": {
-                "uid": item["user"]["id"], 
-                "uslug": item["user"]["slug"], 
-                "user_name": item["user"]["nickname"], 
+                "uid": item["user"]["id"],
+                "uslug": item["user"]["slug"],
+                "user_name": item["user"]["nickname"],
                 "avatar_url": item["user"]["avatar"]
                 # "badge": item["user"]["badge"]["text"]
                 # 有个 member 不知道干什么用的，没解析
             }
             # "topic": {
-            #     "tid": item["topic"]["id"], 
-            #     "tslug": item["topic"]["slug"], 
+            #     "tid": item["topic"]["id"],
+            #     "tslug": item["topic"]["slug"],
             #     "topic_name": item["topic"]["name"]
             #     # 有个 group_role 不知道干什么用的，没解析
             # }
@@ -183,14 +190,14 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
                 image_urls.append(image["url"])
         except KeyError:
             pass  # 没有图片则跳过
-        try: 
+        try:
             item_data["user"]["badge"] = item["user"]["badge"]["text"]
         except KeyError:
             pass  # 没有徽章则跳过
         try:
             item_data["topic"] = {
-                "tid": item["topic"]["id"], 
-                "tslug": item["topic"]["slug"], 
+                "tid": item["topic"]["id"],
+                "tslug": item["topic"]["slug"],
                 "topic_name": item["topic"]["name"]
                 # 有个 group_role 不知道干什么用的，没解析
             }
@@ -200,6 +207,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
             item_data["content"] = GetIslandPostFullConetnt(IslandPostSlugToIslandPostUrl(item_data["pslug"]))
         result.append(item_data)
     return result
+
 
 def GetIslandAllBasicData(island_url: str) -> Dict:
     """获取小岛的所有基础信息
@@ -212,7 +220,7 @@ def GetIslandAllBasicData(island_url: str) -> Dict:
     """
     result = {}
     json_obj = GetIslandJsonDataApi(island_url)
-    
+
     result["name"] = json_obj["name"]
     result["avatar_url"] = json_obj["image"]
     result["introduction"] = json_obj["intro"]
@@ -221,8 +229,9 @@ def GetIslandAllBasicData(island_url: str) -> Dict:
     result["category"] = json_obj["category"]["name"]
     return result
 
-def GetIslandAllPostsData(island_url: str, count: int = 10, 
-                          topic_id: int = None, sorting_method: str = "time", 
+
+def GetIslandAllPostsData(island_url: str, count: int = 10,
+                          topic_id: int = None, sorting_method: str = "time",
                           get_full_content: bool = False) -> Generator[List, None, None]:
     """获取小岛的所有帖子信息
 

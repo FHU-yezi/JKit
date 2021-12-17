@@ -12,9 +12,11 @@ from .exceptions import InputError
 
 DISABLE_CACHE = False
 
+
 def cache_result(func):
     """缓存函数的返回值"""
     cache_dict = {}
+
     def wrapper(*args, **kwargs):
         print(args)
         print(kwargs)
@@ -54,7 +56,7 @@ class User():
             self._url = user_url
         else:
             raise InputError("请至少传入一个参数")
-        
+
     @property
     def url(self) -> str:
         """获取用户主页 Url
@@ -63,7 +65,7 @@ class User():
             str: 用户主页 Url
         """
         return self._url
-    
+
     @property
     @cache_result
     def slug(self) -> str:
@@ -73,7 +75,7 @@ class User():
             str: 用户 Slug
         """
         return UserUrlToUserSlug(self._url)
-    
+
     @property
     @cache_result
     def name(self) -> str:
@@ -88,22 +90,22 @@ class User():
     @cache_result
     def gender(self) -> int:
         """获取用户性别
-        
+
         Returns:
             int: 用户性别，0 为未知，1 为男，2 为女
         """
         return user.GetUserGender(self._url)
-    
+
     @property
     @cache_result
     def followers_count(self) -> int:
         """获取用户关注数
-        
+
         Returns:
             int: 关注数
         """
         return user.GetUserFollowingCount(self._url)
-    
+
     @property
     @cache_result
     def fans_count(self) -> int:
@@ -113,7 +115,7 @@ class User():
             int: 粉丝数
         """
         return user.GetUserFansCount(self._url)
-    
+
     @property
     @cache_result
     def articles_count(self) -> int:
@@ -123,7 +125,7 @@ class User():
             int: 文章数
         """
         return user.GetUserArticlesCount(self._url)
-    
+
     @property
     @cache_result
     def wordage(self) -> int:
@@ -133,7 +135,7 @@ class User():
             int: 总字数
         """
         return user.GetUserWordage(self._url)
-    
+
     @property
     @cache_result
     def likes_count(self) -> int:
@@ -153,7 +155,7 @@ class User():
             int: 资产量
         """
         return user.GetUserAssetsCount(self._url)
-    
+
     @property
     @cache_result
     def FP_count(self) -> float:
@@ -163,7 +165,7 @@ class User():
             int: 简书钻数量
         """
         return user.GetUserFPCount(self._url)
-    
+
     @property
     @cache_result
     def FTN_count(self) -> float:
@@ -173,7 +175,7 @@ class User():
             int: 简书贝数量
         """
         return user.GetUserFTNCount(self._url)
-    
+
     @property
     @cache_result
     def badges(self) -> List:
@@ -183,7 +185,7 @@ class User():
             list: 徽章列表
         """
         return user.GetUserBadges(self._url)
-    
+
     @property
     @cache_result
     def last_update_time(self) -> datetime:
@@ -193,7 +195,7 @@ class User():
             datetime: 最近更新时间
         """
         return user.GetUserLastUpdateTime(self._url)
-    
+
     @property
     @cache_result
     def VIP_info(self) -> Dict:
@@ -203,7 +205,7 @@ class User():
             dict: 会员信息
         """
         return user.GetUserVIPInfo(self._url)
-    
+
     @property
     @cache_result
     def introduction_text(self) -> str:
@@ -213,7 +215,7 @@ class User():
             str:纯文本格式的用户简介
         """
         return user.GetUserIntroductionText(self._url)
-    
+
     @property
     @cache_result
     def introduction_html(self) -> str:
@@ -223,7 +225,7 @@ class User():
             str: Html 格式的用户简介
         """
         return user.GetUserIntroductionHtml(self._url)
-    
+
     @property
     @cache_result
     def notebooks(self) -> List:
@@ -233,7 +235,7 @@ class User():
             list: 文集信息
         """
         return user.GetUserNotebooksInfo(self._url)
-    
+
     @property
     @cache_result
     def own_collections(self) -> List:
@@ -243,7 +245,7 @@ class User():
             list: 自己创建的专题信息
         """
         return user.GetUserOwnCollectionsInfo(self._url)
-    
+
     @property
     @cache_result
     def manageable_collections(self) -> List:
@@ -253,7 +255,7 @@ class User():
             list: 有管理权的专题信息
         """
         return user.GetUserManageableCollectionsInfo(self._url)
-    
+
     @cache_result
     def articles_info(self, page: int = 1, count: int = 10) -> List:
         """获取文章信息
@@ -290,7 +292,7 @@ class User():
             list: 粉丝信息
         """
         return user.GetUserFansInfo(self._url, page)
-    
+
     def __eq__(self, other: object) -> bool:
         """判断是否是同一个用户
 
@@ -300,7 +302,7 @@ class User():
         Returns:
             bool: 判断结果
         """
-        if isinstance(other, User) == False:
+        if not isinstance(other, User):
             return False  # 不是由用户类构建的必定不相等
         if self._url == other._url:
             return True
@@ -315,11 +317,12 @@ class User():
         """
         # TODO: 重写 __str__ 方法
         result = "用户信息摘要：\n用户名：{}\n性别：{}\n关注数：{}\n粉丝数：{}\n文章数：{}\n总字数：{}\n被点赞数：{}\n总资产：{}\n简书钻：{}\n简书贝：{}\n会员等级：{}\n会员过期时间：{}".format(
-            self.name, {0: "未知", 1: "男", 2: "女"}[self.gender], self.followers_count, 
-            self.fans_count, self.articles_count, self.wordage, self.likes_count, self.assets_count, 
+            self.name, {0: "未知", 1: "男", 2: "女"}[self.gender], self.followers_count,
+            self.fans_count, self.articles_count, self.wordage, self.likes_count, self.assets_count,
             self.FP_count, self.FTN_count, self.VIP_info["vip_type"], self.VIP_info["expire_date"]
         )
         return result
+
 
 class Article():
     """文章类
@@ -343,7 +346,7 @@ class Article():
             self._url = article_url
         else:
             raise InputError("请至少传入一个参数")
-    
+
     @property
     def url(self) -> str:
         """获取文章 Url
@@ -352,7 +355,7 @@ class Article():
             str: 文章 Url
         """
         return self._url
-    
+
     @property
     @cache_result
     def slug(self) -> str:
@@ -362,7 +365,7 @@ class Article():
             str: 文章 Slug
         """
         return article.GetArticleSlug(self._url)
-    
+
     @property
     @cache_result
     def title(self) -> str:
@@ -372,7 +375,7 @@ class Article():
             str: 标题
         """
         return article.GetArticleTitle(self._url)
-    
+
     @property
     @cache_result
     def author_name(self) -> str:
@@ -382,7 +385,7 @@ class Article():
             str: 作者名
         """
         return article.GetArticleAuthorName(self._url)
-    
+
     @property
     @cache_result
     def wordage(self) -> int:
@@ -392,7 +395,7 @@ class Article():
             int: 总字数
         """
         return article.GetArticleWordage(self._url)
-    
+
     @property
     @cache_result
     def reads_count(self) -> int:
@@ -402,7 +405,7 @@ class Article():
             int: 阅读量
         """
         return article.GetArticleReadsCount(self._url)
-    
+
     @property
     @cache_result
     def likes_count(self) -> int:
@@ -412,7 +415,7 @@ class Article():
             int: 文章点赞量
         """
         return article.GetArticleLikesCount(self._url)
-    
+
     @property
     @cache_result
     def comments_count(self) -> int:
@@ -422,7 +425,7 @@ class Article():
             int: 文章评论量
         """
         return article.GetArticleCommentsCount(self._url)
-    
+
     @property
     @cache_result
     def most_valuable_comments_count(self) -> int:
@@ -432,7 +435,7 @@ class Article():
             int: 文章精选评论量
         """
         return article.GetArticleMostValuableCommentsCount(self._url)
-    
+
     @property
     @cache_result
     def total_FP_count(self) -> float:
@@ -452,7 +455,7 @@ class Article():
             str: 文章摘要
         """
         return article.GetArticleDescription(self._url)
-    
+
     @property
     @cache_result
     def publish_time(self) -> datetime:
@@ -462,7 +465,7 @@ class Article():
             datetime: 文章发布时间
         """
         return article.GetArticlePublishTime(self._url)
-    
+
     @property
     @cache_result
     def update_time(self) -> datetime:
@@ -492,7 +495,7 @@ class Article():
             bool: 文章转载状态
         """
         return article.GetArticleReprintStatus(self._url)
-    
+
     @property
     @cache_result
     def comment_status(self) -> bool:
@@ -502,7 +505,7 @@ class Article():
             bool: 文章评论状态
         """
         return article.GetArticleCommentStatus(self._url)
-    
+
     @property
     @cache_result
     def html(self) -> str:
@@ -512,7 +515,7 @@ class Article():
             str: Html 格式的文章内容
         """
         return article.GetArticleHtml(self._url)
-    
+
     @property
     @cache_result
     def text(self) -> str:
@@ -522,7 +525,7 @@ class Article():
             str: 纯文本格式的文章内容
         """
         return article.GetArticleText(self._url)
-    
+
     def __eq__(self, other: object) -> bool:
         """判断是否是同一篇文章
 
@@ -532,20 +535,21 @@ class Article():
         Returns:
             bool: 判断结果
         """
-        if isinstance(other, Article) == False:
+        if not isinstance(other, Article):
             return False  # 不是由文章类构建的必定不相等
         if self._url == other._url:
             return True
         else:
             return False
-    
+
     def __str__(self) -> str:
         # TODO: 重写 __str__ 方法
         result = "文章信息摘要：\n标题：{}\n作者：{}\n获钻量：{}\n发布时间：{}\n更新时间：{}\n字数：{}\n阅读量：{}\n点赞量：{}\n评论量：{}".format(
-            self.title, self.author_name, self.total_FP_count, self.publish_time, \
+            self.title, self.author_name, self.total_FP_count, self.publish_time,
             self.update_time, self.wordage, self.reads_count, self.likes_count, self.comments_count
         )
         return result
+
 
 class Notebook():
     """文集类
@@ -569,7 +573,7 @@ class Notebook():
             self._url = notebook_url
         else:
             raise InputError("请至少传入一个参数")
-        
+
     @property
     def url(self) -> str:
         """获取文集 Url
@@ -578,7 +582,7 @@ class Notebook():
             str: 文集 Url
         """
         return self._url
-    
+
     @property
     @cache_result
     def id(self) -> int:
@@ -588,7 +592,7 @@ class Notebook():
             int: 文集 ID
         """
         return notebook.GetNotebookId(self._url)
-    
+
     @property
     @cache_result
     def slug(self) -> str:
@@ -608,7 +612,7 @@ class Notebook():
             str: 文集名称
         """
         return notebook.GetNotebookName(self._url)
-    
+
     @property
     @cache_result
     def articles_count(self) -> int:
@@ -628,7 +632,7 @@ class Notebook():
             str: 作者名
         """
         return notebook.GetNotebookAuthorName(self._url)
-    
+
     @property
     @cache_result
     def author_info(self) -> Dict:
@@ -638,7 +642,7 @@ class Notebook():
             dict: 作者信息
         """
         return notebook.GetNotebookAuthorInfo(self._url)
-    
+
     @property
     @cache_result
     def wordage(self) -> int:
@@ -648,7 +652,7 @@ class Notebook():
             int: 文集总字数
         """
         return notebook.GetNotebookWordage(self._url)
-    
+
     @property
     @cache_result
     def subscribers_count(self) -> int:
@@ -658,7 +662,7 @@ class Notebook():
             int: 关注者数量
         """
         return notebook.GetNotebookSubscribersCount(self._url)
-    
+
     @property
     @cache_result
     def update_time(self) -> datetime:
@@ -668,7 +672,7 @@ class Notebook():
             datetime: 更新时间
         """
         return notebook.GetNotebookUpdateTime(self._url)
-    
+
     @cache_result
     def articles_info(self, page: int = 1, count: int = 10, sorting_method: str = "time") -> List:
         """获取文集中的文章信息
@@ -693,13 +697,13 @@ class Notebook():
         Returns:
             bool: 判断结果
         """
-        if isinstance(other, Notebook) == False:
+        if not isinstance(other, Notebook):
             return False  # 不是由文集类构建的必定不相等
         if self._url == other._url:
             return True
         else:
             return False
-        
+
     def __str__(self) -> str:
         """输出文集信息摘要
 
@@ -708,15 +712,16 @@ class Notebook():
         """
         # TODO: 重写 __str__ 方法
         result = "文集信息摘要：\n名称：{}\n作者：{}\n文章数：{}\n总字数：{}\n关注者数量：{}\n更新时间：{}".format(
-            self.name, self.author_name, self.articles_count, self.wordage, 
+            self.name, self.author_name, self.articles_count, self.wordage,
             self.subscribers_count, self.update_time
         )
         return result
-    
+
+
 class Collection():
     """专题类
     """
-    def __init__(self, collection_url: str = None, collection_slug: str = None, 
+    def __init__(self, collection_url: str = None, collection_slug: str = None,
                  collection_id: int = None):
         """初始化专题类
 
@@ -737,13 +742,12 @@ class Collection():
             self._url = collection_url
         else:
             raise InputError("请至少传入一个参数")
-        
+
         if collection_id:
             self._id = collection_id
         else:
             self._id = None
-        
-           
+
     @property
     def url(self) -> str:
         """获取专题 Url
@@ -752,7 +756,7 @@ class Collection():
             str: 专题 Url
         """
         return self._url
-    
+
     @property
     @cache_result
     def slug(self) -> str:
@@ -762,7 +766,7 @@ class Collection():
             str: 专题 Slug
         """
         return collection.GetCollectionSlug(self._url)
-    
+
     @property
     @cache_result
     def name(self) -> str:
@@ -772,7 +776,7 @@ class Collection():
             str: 专题名称
         """
         return collection.GetCollectionName(self._url)
-    
+
     @property
     @cache_result
     def avatar_url(self) -> str:
@@ -782,7 +786,7 @@ class Collection():
             str: 专题头像链接
         """
         return collection.GetCollectionAvatarUrl(self._url)
-    
+
     @property
     @cache_result
     def introduction_text(self) -> str:
@@ -792,7 +796,7 @@ class Collection():
             str: 纯文本格式的专题简介
         """
         return collection.GetCollectionIntroductionText(self._url)
-    
+
     @property
     @cache_result
     def introduction_html(self) -> str:
@@ -802,7 +806,7 @@ class Collection():
             str:  Html 格式的专题简介
         """
         return collection.GetCollectionIntroductionHtml(self._url)
-    
+
     @property
     @cache_result
     def articles_update_time(self) -> datetime:
@@ -822,7 +826,7 @@ class Collection():
             datetime: 专题信息更新时间
         """
         return collection.GetCollectionInfoUpdateTime(self._url)
-    
+
     @property
     @cache_result
     def owner_info(self) -> Dict:
@@ -832,7 +836,7 @@ class Collection():
             dict: 用户信息
         """
         return collection.GetCollectionOwnerInfo(self._url)
-    
+
     @property
     @cache_result
     def articles_count(self) -> int:
@@ -842,7 +846,7 @@ class Collection():
             int: 专题文章数
         """
         return collection.GetCollectionArticlesCount(self._url)
-    
+
     @property
     @cache_result
     def subscribers_count(self) -> int:
@@ -852,13 +856,13 @@ class Collection():
             int: 专题关注者数
         """
         return collection.GetCollectionSubscribersCount(self._url)
-    
+
     @cache_result
     def editors_info(self, page: int = 1) -> List:
         """获取专题编辑信息
 
         Args:
-            page (int, optional): 页码. Defau
+            page (int, optional): 页码. Defause to 1.
 
         Raises:
             InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
@@ -875,7 +879,7 @@ class Collection():
         """获取专题推荐作者信息
 
         Args:
-            page (int, optional): 页码. Defaults 
+            page (int, optional): 页码. Defaults to False.
 
         Raises:
             InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
@@ -886,13 +890,13 @@ class Collection():
         if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取推荐作者信息")
         return collection.GetCollectionRecommendedWritersInfo(self._id, page)
-    
+
     @cache_result
     def subscribers_info(self, start_sort_id: int) -> List:
         """获取专题关注者信息
 
         Args:
-            start_sort_id (int): 起始序号，等
+            start_sort_id (int): 起始序号，等于上一条数据的序号
 
         Raises:
             InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
@@ -903,9 +907,9 @@ class Collection():
         if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取关注者信息")
         return collection.GetCollectionSubscribersInfo(self._id, start_sort_id)
-    
+
     @cache_result
-    def articles_info(self, page: int = 1, count: int = 10, 
+    def articles_info(self, page: int = 1, count: int = 10,
                       sorting_method: str = "time") -> List:
         """获取专题文章信息
 
@@ -919,7 +923,7 @@ class Collection():
             list: 文章信息
         """
         return collection.GetCollectionArticlesInfo(self._url, page, count, sorting_method)
-    
+
     def __eq__(self, other: object) -> bool:
         """判断是否是同一个专题
 
@@ -929,13 +933,13 @@ class Collection():
         Returns:
             bool: 判断结果
         """
-        if isinstance(other, Collection) == False:
+        if not isinstance(other, Collection):
             return False  # 不是由专题类构建的必定不相等
         if self._url == other._url:
             return True
         else:
             return False
-    
+
     def __str__(self) -> str:
         """输出专题信息摘要
 
@@ -944,10 +948,11 @@ class Collection():
         """
         # TODO: 重写 __str__ 方法
         result = "专题信息摘要：\n名称：{}\n文章更新时间：{}\n信息更新时间：{}\n所有者：{}\n收录文章数：{}\n关注者数：{}".format(
-            self.name, self.articles_update_time, self.info_update_time, 
+            self.name, self.articles_update_time, self.info_update_time,
             self.owner_info["name"], self.articles_count, self.subscribers_count
         )
         return result
+
 
 class Island():
     """小岛类
@@ -964,7 +969,7 @@ class Island():
             self._url = island_url
         else:
             raise InputError("请至少传入一个参数")
-        
+
     @property
     def url(self) -> str:
         """获取小岛 Url
@@ -973,7 +978,7 @@ class Island():
             str: 小岛 Url
         """
         return self._url
-    
+
     @property
     @cache_result
     def slug(self) -> str:
@@ -983,7 +988,7 @@ class Island():
             str: 小岛 Slug
         """
         return IslandUrlToIslandSlug(self._url)
-    
+
     @property
     @cache_result
     def name(self) -> str:
@@ -993,7 +998,7 @@ class Island():
             str: 小岛名称
         """
         return island.GetIslandName(self._url)
-    
+
     @property
     @cache_result
     def avatar_url(self) -> str:
@@ -1003,7 +1008,7 @@ class Island():
             str: 小岛头像链接
         """
         return island.GetIslandAvatarUrl(self._url)
-    
+
     @property
     @cache_result
     def introduction(self) -> str:
@@ -1013,7 +1018,7 @@ class Island():
             str: 小岛简介
         """
         return island.GetIslandIntroduction(self._url)
-    
+
     @property
     @cache_result
     def members_count(self) -> int:
@@ -1023,7 +1028,7 @@ class Island():
             int: 成员数量
         """
         return island.GetIslandMembersCount(self._url)
-    
+
     @property
     @cache_result
     def posts_count(self) -> int:
@@ -1033,7 +1038,7 @@ class Island():
             int: 帖子数量
         """
         return island.GetIslandPostsCount(self._url)
-    
+
     @property
     @cache_result
     def category(self) -> str:
@@ -1043,9 +1048,9 @@ class Island():
             str: 分类
         """
         return island.GetIslandCategory(self._url)
-    
+
     @cache_result
-    def posts(self, start_sort_id: int = None, count: int = 10, 
+    def posts(self, start_sort_id: int = None, count: int = 10,
               topic_id: int = None, sorting_method: str = "time") -> List:
         """获取小岛帖子信息
 
@@ -1060,7 +1065,7 @@ class Island():
             list: 帖子信息
         """
         return island.GetIslandPosts(self._url, start_sort_id, count, topic_id, sorting_method)
-    
+
     def __eq__(self, other: object) -> bool:
         """判断是否是同一个小岛
 
@@ -1070,13 +1075,13 @@ class Island():
         Returns:
             bool: 判断结果
         """
-        if isinstance(other, Collection) == False:
+        if not isinstance(other, Collection):
             return False  # 不是由小岛类构建的必定不相等
         if self._url == other._url:
             return True
         else:
             return False
-    
+
     def __str__(self) -> str:
         """输出小岛信息摘要
 
@@ -1085,6 +1090,6 @@ class Island():
         """
         # TODO: 重写 __str__ 方法
         result = "小岛信息摘要：\n名称：{}\n成员数量：{}\n帖子数量：{}\n分类：{}".format(
-            self.name, self.members_count, self.posts_count,self.category
+            self.name, self.members_count, self.posts_count, self.category
         )
         return result

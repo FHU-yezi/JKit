@@ -24,22 +24,23 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> List:
     result = []
     for item in json_obj["rankings"]:
         item_data = {
-            "ranking": item["ranking"], 
-            "uid": item["user"]["id"], 
-            "uslug": item["user"]["slug"], 
-            "name": item["user"]["nickname"], 
-            "avatar_url": item["user"]["avatar"], 
+            "ranking": item["ranking"],
+            "uid": item["user"]["id"],
+            "uslug": item["user"]["slug"],
+            "name": item["user"]["nickname"],
+            "avatar_url": item["user"]["avatar"],
             "FP": item["amount"] / 1000
         }
-        if get_full == True:
+        if get_full:
             user_url = UserSlugToUserUrl(item_data["uslug"])
             try:
                 item_data["Assets"] = GetUserAssetsCount(user_url)
-                item_data["FTN"] =  round(item_data["Assets"] - item_data["FP"], 3) # 处理浮点数精度问题
+                item_data["FTN"] = round(item_data["Assets"] - item_data["FP"], 3)  # 处理浮点数精度问题
             except APIError:
                 pass
         result.append(item_data)
     return result
+
 
 def GetDailyArticleRankData() -> List:
     """该函数返回日更排行榜的用户信息
@@ -51,16 +52,17 @@ def GetDailyArticleRankData() -> List:
     result = []
     for item in json_obj["daps"]:
         item_data = {
-            "ranking": item["rank"], 
-            "uslug": item["slug"], 
-            "name": item["nickname"], 
-            "avatar_url": item["avatar"], 
+            "ranking": item["rank"],
+            "uslug": item["slug"],
+            "name": item["nickname"],
+            "avatar_url": item["avatar"],
             "check_in_count": item["checkin_count"]
         }
         result.append(item_data)
     return result
 
-def GetArticleFPRankData(date: str ="latest") -> List:
+
+def GetArticleFPRankData(date: str = "latest") -> List:
     """该函数接收一个日期，并返回对应日期的文章收益排行榜数据
 
     目前只能获取 2020 年 6 月 20 日之后的数据。
@@ -82,21 +84,22 @@ def GetArticleFPRankData(date: str ="latest") -> List:
     result = []
     for ranking, item in enumerate(json_obj["notes"]):
         item_data = {
-            "ranking": ranking + 1, 
-            "aslug": item["slug"], 
-            "title": item["title"], 
-            "author_name": item["author_nickname"], 
+            "ranking": ranking + 1,
+            "aslug": item["slug"],
+            "title": item["title"],
+            "author_name": item["author_nickname"],
             "author_avatar_url": item["author_avatar"],
-            "fp_to_author": item["author_fp"] / 1000, 
-            "fp_to_voter": item["voter_fp"] / 1000, 
+            "fp_to_author": item["author_fp"] / 1000,
+            "fp_to_voter": item["voter_fp"] / 1000,
             "total_fp": item["fp"] / 1000
         }
         result.append(item_data)
     return result
 
-def GetArticleFPRankBasicInfo(date: str ="latest") -> Dict:
+
+def GetArticleFPRankBasicInfo(date: str = "latest") -> Dict:
     """获取指定日期的文章收益排行榜基础信息
-    
+
     目前只能获取 2020 年 6 月 20 日之后的数据。
 
     Args:
@@ -114,13 +117,14 @@ def GetArticleFPRankBasicInfo(date: str ="latest") -> Dict:
     if json_obj["notes"] == []:
         raise ResourceError("对应日期的排行榜数据为空")
     result = {
-        "total_fp": json_obj["fp"], 
-        "fp_to_author": json_obj["author_fp"], 
+        "total_fp": json_obj["fp"],
+        "fp_to_author": json_obj["author_fp"],
         "fp_to_voter": json_obj["voter_fp"]
     }
     return result
 
-def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> List:
+
+def GetUserFPRankData(date: str = "latest", rank_type: str = "all") -> List:
     """该函数接收一个日期，并返回对应日期的用户收益排行榜数据
 
     目前只能获取 2020 年 6 月 20 日之后的数据。
@@ -135,8 +139,8 @@ def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> List:
         list: 对应日期的用户收益排行榜数据
     """
     type_ = {
-        "all": None, 
-        "write": "note", 
+        "all": None,
+        "write": "note",
         "vote": "like"
     }[rank_type]
     json_obj = GetArticlesFPRankListJsonDataApi(date=date, type_=type_)
@@ -145,11 +149,11 @@ def GetUserFPRankData(date: str ="latest", rank_type: str ="all") -> List:
     result = []
     for ranking, item in enumerate(json_obj["users"]):
         item_data = {
-            "ranking": ranking, 
-            "uslug": item["slug"], 
-            "name": item["nickname"], 
-            "avatar_url": item["avatar"], 
-            "fp_from_write": item["author_fp"], 
+            "ranking": ranking,
+            "uslug": item["slug"],
+            "name": item["nickname"],
+            "avatar_url": item["avatar"],
+            "fp_from_write": item["author_fp"],
             "fp_from_vote": item["voter_fp"]
         }
         result.append(item_data)
