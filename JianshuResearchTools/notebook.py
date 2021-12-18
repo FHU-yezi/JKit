@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, Generator, List
 
-from .assert_funcs import AssertNotebookUrl
+from .assert_funcs import AssertNotebookStatusNormal, AssertNotebookUrl
 from .basic_apis import GetNotebookArticlesJsonDataApi, GetNotebookJsonDataApi
 
 
@@ -15,6 +15,7 @@ def GetNotebookName(notebook_url: str) -> str:
         str: 文集名称
     """
     AssertNotebookUrl(notebook_url)
+    AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
     result = json_obj["name"]
     return result
@@ -30,6 +31,7 @@ def GetNotebookArticlesCount(notebook_url: str) -> int:
         int: 文章数量
     """
     AssertNotebookUrl(notebook_url)
+    AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
     result = json_obj["notes_count"]
     return result
@@ -45,6 +47,7 @@ def GetNotebookAuthorInfo(notebook_url: str) -> Dict:
         list: 作者信息
     """
     AssertNotebookUrl(notebook_url)
+    AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
     result = {
         "name": json_obj["user"]["nickname"],
@@ -64,6 +67,7 @@ def GetNotebookWordage(notebook_url: str) -> int:
         int: 文章总字数
     """
     AssertNotebookUrl(notebook_url)
+    AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
     result = json_obj["wordage"]
     return result
@@ -79,6 +83,7 @@ def GetNotebookSubscribersCount(notebook_url: str) -> int:
         int: 关注者数量
     """
     AssertNotebookUrl(notebook_url)
+    AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
     result = json_obj["subscribers_count"]
     return result
@@ -94,6 +99,7 @@ def GetNotebookUpdateTime(notebook_url: str) -> datetime:
         datetime: 更新时间
     """
     AssertNotebookUrl(notebook_url)
+    AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
@@ -114,6 +120,7 @@ def GetNotebookArticlesInfo(notebook_url: str, page: int = 1,
         list: 文章信息
     """
     AssertNotebookUrl(notebook_url)
+    AssertNotebookStatusNormal(notebook_url)
     order_by = {
         "time": "added_at",
         "comment_time": "commented_at",
@@ -158,6 +165,8 @@ def GetNotebookAllBasicData(notebook_url: str) -> Dict:
     Returns:
         dict: 文集基础信息
     """
+    AssertNotebookUrl(notebook_url)
+    AssertNotebookStatusNormal(notebook_url)
     result = {}
     json_obj = GetNotebookJsonDataApi(notebook_url)
 

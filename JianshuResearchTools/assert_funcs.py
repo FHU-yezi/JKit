@@ -2,7 +2,8 @@ from functools import lru_cache
 from typing import Any
 
 from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
-                         GetIslandJsonDataApi, GetUserJsonDataApi)
+                         GetIslandJsonDataApi, GetNotebookJsonDataApi,
+                         GetUserJsonDataApi)
 from .exceptions import InputError, ResourceError
 
 
@@ -123,6 +124,23 @@ def AssertNotebookUrl(string: str) -> None:
     for keyword in keyword_to_find:
         if keyword not in string:
             raise InputError(f"参数 {string} 不是有效的简书文集 Url")
+
+
+def AssertNotebookStatusNormal(notebook_url: str) -> None:
+    """判断文集状态是否正常
+
+    Args:
+        notebook_url (str): 文集 Url
+
+    Raises:
+        ResourceError: 文集状态不正常时抛出此错误
+    """
+    AssertNotebookUrl(notebook_url)
+    json_obj = GetNotebookJsonDataApi(notebook_url)
+    try:
+        json_obj["name"]
+    except KeyError:
+        raise ResourceError("文集状态异常")
 
 
 def AssertCollectionUrl(string: str) -> None:
