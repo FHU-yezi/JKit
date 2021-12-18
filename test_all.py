@@ -58,7 +58,7 @@ def AssertListCase(value: List[T], case: List[T]):
     assert set(case).issubset(set(value))
 
 
-with open("test_case.json", "r", encoding="utf-8") as f:
+with open("test_cases.json", "r", encoding="utf-8") as f:
     test_cases = json_load(f)
 
 

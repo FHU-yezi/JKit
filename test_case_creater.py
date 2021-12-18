@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-test_case = {
+test_cases = {
     "type_cases": [
         {
             "type": "<class 'str'>",
@@ -351,7 +351,7 @@ test_case = {
     }
 }
 
-with open("test_case.json",  "w",  encoding="utf-8") as f:
-    json.dump(test_case, f, indent=4, ensure_ascii=False)
+with open("test_cases.json",  "w",  encoding="utf-8") as f:
+    json.dump(test_cases, f, indent=4, ensure_ascii=False)
 
 print("测试用例生成成功！")
