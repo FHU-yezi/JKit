@@ -1,4 +1,4 @@
-import json
+from yaml import dump as yaml_dump
 from datetime import datetime
 
 test_cases = {
@@ -351,7 +351,7 @@ test_cases = {
     }
 }
 
-with open("test_cases.json",  "w",  encoding="utf-8") as f:
-    json.dump(test_cases, f, indent=4, ensure_ascii=False)
+with open("test_cases.yaml",  "w",  encoding="utf-8") as f:
+    yaml_dump(test_cases, f, indent=4, allow_unicode=True)
 
 print("测试用例生成成功！")

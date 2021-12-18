@@ -1,8 +1,9 @@
 from datetime import datetime
-from json import load as json_load
 from typing import List, T, Union
 
 import pytest
+from yaml import FullLoader
+from yaml import load as yaml_load
 
 import JianshuResearchTools as jrt
 from JianshuResearchTools.assert_funcs import (AssertFloat, AssertInt,
@@ -58,8 +59,8 @@ def AssertListCase(value: List[T], case: List[T]):
     assert set(case).issubset(set(value))
 
 
-with open("test_cases.json", "r", encoding="utf-8") as f:
-    test_cases = json_load(f)
+with open("test_cases.yaml", "r", encoding="utf-8") as f:
+    test_cases = yaml_load(f, Loader=FullLoader)
 
 
 class TestEggs():  # 测试彩蛋内容
