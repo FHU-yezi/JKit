@@ -5,9 +5,22 @@ from typing import List, T, Union
 import pytest
 
 import JianshuResearchTools as jrt
-from JianshuResearchTools.assert_funcs import *
-from JianshuResearchTools.convert import *
-from JianshuResearchTools.exceptions import *
+from JianshuResearchTools.assert_funcs import (AssertFloat, AssertInt,
+                                               AssertString)
+from JianshuResearchTools.convert import (ArticleSlugToArticleId,
+                                          ArticleSlugToArticleUrl,
+                                          ArticleUrlToArticleId,
+                                          ArticleUrlToArticleSlug,
+                                          CollectionSlugToCollectionUrl,
+                                          CollectionUrlToCollectionId,
+                                          CollectionUrlToCollectionSlug,
+                                          IslandSlugToIslandUrl,
+                                          IslandUrlToIslandSlug,
+                                          NotebookSlugToNotebookUrl,
+                                          NotebookUrlToNotebookSlug,
+                                          UserSlugToUserId, UserSlugToUserUrl,
+                                          UserUrlToUserId, UserUrlToUserSlug)
+from JianshuResearchTools.exceptions import APIError, InputError, ResourceError
 
 error_text_to_obj = {
     "InputError": InputError,
@@ -453,5 +466,63 @@ class TestIslandModule():
                 jrt.island.GetIslandCategory(case["url"])
 
 
+class TestNotebookModule():
+    def test_GetNotebookName(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertNormalCase(jrt.notebook.GetNotebookName(case["url"]), case["name"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookName(case["url"])
+
+    def test_GetNotebookArticlesCount(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertRangeCase(jrt.notebook.GetNotebookArticlesCount(case["url"]), case["articles_count"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookArticlesCount(case["url"])
+
+    def test_GetNotebookAuthorName(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertNormalCase(jrt.notebook.GetNotebookAuthorInfo(case["url"])["name"], case["author_name"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookAuthorInfo(case["url"])["name"]
+
+    def test_GetNotebookAuthorAvatarUrl(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertNormalCase(jrt.notebook.GetNotebookAuthorInfo(case["url"])["avatar_url"], case["author_avatar_url"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookAuthorInfo(case["url"])["author_avatar_url"]
+
+    def test_GetNotebookWordage(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertRangeCase(jrt.notebook.GetNotebookWordage(case["url"]), case["wordage"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookWordage(case["url"])
+
+    def test_GetNotebookSubscribersCount(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertRangeCase(jrt.notebook.GetNotebookSubscribersCount(case["url"]), case["subscribers_count"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookSubscribersCount(case["url"])
+
+    def test_GetNotebookUpdateTime(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertDatetimeCase(jrt.notebook.GetNotebookUpdateTime(case["url"]), case["update_time"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookUpdateTime(case["url"])
+
+
 if __name__ == "__main__":
-    pytest.main(args=["-n 6"])  # 运行测试
+    pytest.main(args=["-n 4"])  # 运行测试

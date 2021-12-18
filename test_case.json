@@ -495,5 +495,37 @@
                 "uslug": "6187f99def472f5e"
             }
         ]
+    },
+    "notebook_cases": {
+        "success_cases": [
+            {
+                "url": "https://www.jianshu.com/nb/36131833",
+                "slug": "36131833",
+                "name": "公告",
+                "articles_count": [
+                    25,
+                    40
+                ],
+                "author_name": "简书",
+                "author_uslug": "yZq3ZV",
+                "author_avatar_url": "https://upload.jianshu.io/users/upload_avatars/259/5210859b-fc54-4cf8-908f-830f0237926a.png",
+                "wordage": [
+                    9000,
+                    20000
+                ],
+                "subscribers_count": [
+                    0,
+                    50
+                ],
+                "update_time": 1555318070.0
+            }
+        ],
+        "fail_cases": [
+            {
+                "exception_name": "ResourceError",
+                "url": "https://www.jianshu.com/nb/12345678",
+                "uslug": "12345678"
+            }
+        ]
     }
 }
