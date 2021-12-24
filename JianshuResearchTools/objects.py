@@ -10,7 +10,7 @@ from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
                       UserUrlToUserSlug)
 from .exceptions import InputError
 
-DISABLE_CACHE = False
+DISABLE_CACHE = False  # 禁用缓存
 
 
 def cache_result(func):
@@ -23,12 +23,10 @@ def cache_result(func):
         args_hash = hash(tuple(args[1:]) + tuple(kwargs.items()))
         cache_result = cache_dict.get(args_hash)
         if cache_result and not DISABLE_CACHE:
-            print("返回缓存结果")
             return cache_result
         else:
             result = func(*args, **kwargs)
             if not DISABLE_CACHE:
-                print("保存新缓存")
                 cache_dict[args_hash] = result
             return result
     return wrapper
