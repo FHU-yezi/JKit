@@ -340,7 +340,7 @@ def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) 
     """
     page = 1
     while True:
-        result = GetCollectionRecommendedWritersInfo(collection_id)
+        result = GetCollectionRecommendedWritersInfo(collection_id, page, count)
         if result:
             yield result
             page += 1
