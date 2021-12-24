@@ -44,7 +44,7 @@ def GetNotebookAuthorInfo(notebook_url: str) -> Dict:
         notebook_url (str): 文集 Url
 
     Returns:
-        list: 作者信息
+        Dict: 作者信息
     """
     AssertNotebookUrl(notebook_url)
     AssertNotebookStatusNormal(notebook_url)
@@ -64,7 +64,7 @@ def GetNotebookWordage(notebook_url: str) -> int:
         notebook_url (str): 文集 Url
 
     Returns:
-        int: 文章总字数
+        int: 文集中的文章总字数
     """
     AssertNotebookUrl(notebook_url)
     AssertNotebookStatusNormal(notebook_url)
@@ -74,13 +74,13 @@ def GetNotebookWordage(notebook_url: str) -> int:
 
 
 def GetNotebookSubscribersCount(notebook_url: str) -> int:
-    """获取文集的关注者数量
+    """获取文集的订阅者数量
 
     Args:
         notebook_url (str): 文集 Url
 
     Returns:
-        int: 关注者数量
+        int: 文集订阅者数量
     """
     AssertNotebookUrl(notebook_url)
     AssertNotebookStatusNormal(notebook_url)
@@ -106,18 +106,18 @@ def GetNotebookUpdateTime(notebook_url: str) -> datetime:
 
 
 def GetNotebookArticlesInfo(notebook_url: str, page: int = 1,
-                            count: int = 10, sorting_method: str = "time") -> List:
+                            count: int = 10, sorting_method: str = "time") -> List[Dict]:
     """获取文集中的文章信息
 
     Args:
         notebook_url (str): 文集 Url
         page (int, optional): 页码. Defaults to 1.
         count (int, optional): 每次返回的数据数量. Defaults to 10.
-        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
-        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+        sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
 
     Returns:
-        list: 文章信息
+        List[Dict]: 文章信息
     """
     AssertNotebookUrl(notebook_url)
     AssertNotebookStatusNormal(notebook_url)
@@ -163,7 +163,7 @@ def GetNotebookAllBasicData(notebook_url: str) -> Dict:
         notebook_url (str): 文集 Url
 
     Returns:
-        dict: 文集基础信息
+        Dict: 文集基础信息
     """
     AssertNotebookUrl(notebook_url)
     AssertNotebookStatusNormal(notebook_url)
@@ -184,7 +184,7 @@ def GetNotebookAllBasicData(notebook_url: str) -> Dict:
 
 
 def GetNotebookAllArticlesInfo(notebook_url: str, count: int = 10,
-                               sorting_method: str = "time") -> Generator[List, None, None]:
+                               sorting_method: str = "time") -> Generator[List[Dict], None, None]:
     """获取文集中的全部文章信息
 
     Args:
@@ -194,7 +194,7 @@ def GetNotebookAllArticlesInfo(notebook_url: str, count: int = 10,
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
     Yields:
-        Iterator[List, None, None]: 当前页文章信息
+        Iterator[List[Dict], None, None]: 当前页文章信息
     """
     page = 1
     while True:

@@ -1,11 +1,11 @@
-from typing import Dict, Union
+from typing import Dict, List, Union
 
 from httpx import get as httpx_get
 from httpx import post as httpx_post
 from lxml import etree
 
 from .headers import (BeikeIsland_request_header, PC_header,
-                      jianshu_request_header)
+                      jianshu_request_header, mobile_header)
 
 try:
     from ujson import loads as json_loads
@@ -93,7 +93,7 @@ def GetCollectionRecommendedWritersJsonDataApi(collection_id: int, page: int, co
 
 
 def GetCollectionSubscribersJsonDataApi(collection_id: int, max_sort_id: int) -> Dict:
-    request_url = "https://www.jianshu.com/collection/" + str(collection_id) + "/subscribers"
+    request_url = f"https://www.jianshu.com/collection/{collection_id}/subscribers"
     params = {
         "max_sort_id": max_sort_id
     }
@@ -241,15 +241,12 @@ def GetUserFollowersListHtmlDataApi(user_url: str, page: int):
 
 def GetUserNextAnniversaryDayHtmlDataApi(user_slug: str):
     request_url = f"https://www.jianshu.com/mobile/u/{user_slug}/anniversary"
-    mobile_headers = {
-        "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.134 Mobile Safari/537.36"
-        }
-    source = httpx_get(request_url, headers=mobile_headers).content
+    source = httpx_get(request_url, headers=mobile_header).content
     html_obj = etree.HTML(source)
     return html_obj
 
 
-def GetIslandPostJsonDataApi(post_slug: str):
+def GetIslandPostJsonDataApi(post_slug: str) -> List[Dict]:
     request_url = f"https://www.jianshu.com/asimov/posts/{post_slug}"
     source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json_loads(source)

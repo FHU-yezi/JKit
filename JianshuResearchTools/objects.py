@@ -15,19 +15,19 @@ DISABLE_CACHE = False  # 禁用缓存
 
 def cache_result(func):
     """缓存函数的返回值"""
-    cache_dict = {}
+    cache_Dict = {}
 
     def wrapper(*args, **kwargs):
         print(args)
         print(kwargs)
         args_hash = hash(tuple(args[1:]) + tuple(kwargs.items()))
-        cache_result = cache_dict.get(args_hash)
+        cache_result = cache_Dict.get(args_hash)
         if cache_result and not DISABLE_CACHE:
             return cache_result
         else:
             result = func(*args, **kwargs)
             if not DISABLE_CACHE:
-                cache_dict[args_hash] = result
+                cache_Dict[args_hash] = result
             return result
     return wrapper
 
@@ -180,7 +180,7 @@ class User():
         """获取徽章列表
 
         Returns:
-            list: 徽章列表
+            List: 徽章列表
         """
         return user.GetUserBadges(self._url)
 
@@ -200,7 +200,7 @@ class User():
         """获取用户会员信息
 
         Returns:
-            dict: 会员信息
+            Dict: 会员信息
         """
         return user.GetUserVIPInfo(self._url)
 
@@ -210,7 +210,7 @@ class User():
         """获取纯文本格式的用户简介
 
         Returns:
-            str:纯文本格式的用户简介
+            str: 纯文本格式的用户简介
         """
         return user.GetUserIntroductionText(self._url)
 
@@ -230,7 +230,7 @@ class User():
         """获取用户文集信息
 
         Returns:
-            list: 文集信息
+            List: 文集信息
         """
         return user.GetUserNotebooksInfo(self._url)
 
@@ -240,7 +240,7 @@ class User():
         """获取自己创建的专题信息
 
         Returns:
-            list: 自己创建的专题信息
+            List: 自己创建的专题信息
         """
         return user.GetUserOwnCollectionsInfo(self._url)
 
@@ -250,12 +250,12 @@ class User():
         """获取用户有管理权的专题信息
 
         Returns:
-            list: 有管理权的专题信息
+            List: 有管理权的专题信息
         """
         return user.GetUserManageableCollectionsInfo(self._url)
 
     @cache_result
-    def articles_info(self, page: int = 1, count: int = 10) -> List:
+    def articles_info(self, page: int = 1, count: int = 10) -> List[Dict]:
         """获取文章信息
 
         Args:
@@ -263,31 +263,31 @@ class User():
             count (int, optional): 每次获取的文章信息数量. Defaults to 1.
 
         Returns:
-            list: 文章信息
+            List[Dict]: 文章信息
         """
         return user.GetUserArticlesInfo(self._url, page, count)
 
     @cache_result
-    def followers_info(self, page: int = 1) -> List:
+    def followers_info(self, page: int = 1) -> List[Dict]:
         """获取关注者信息
 
         Args:
             page (int, optional): 页码. Defaults to 1.
 
         Returns:
-            list: 关注者信息
+            List[Dict]: 关注者信息
         """
         return user.GetUserFollowersInfo(self._url, page)
 
     @cache_result
-    def fans_info(self, page: int = 1) -> List:
+    def fans_info(self, page: int = 1) -> List[Dict]:
         """获取粉丝信息
 
         Args:
             page (int, optional): 页码. Defaults to 1.
 
         Returns:
-            list: 粉丝信息
+            List[Dict]: 粉丝信息
         """
         return user.GetUserFansInfo(self._url, page)
 
@@ -637,7 +637,7 @@ class Notebook():
         """获取文集的作者信息
 
         Returns:
-            dict: 作者信息
+            Dict: 作者信息
         """
         return notebook.GetNotebookAuthorInfo(self._url)
 
@@ -672,7 +672,7 @@ class Notebook():
         return notebook.GetNotebookUpdateTime(self._url)
 
     @cache_result
-    def articles_info(self, page: int = 1, count: int = 10, sorting_method: str = "time") -> List:
+    def articles_info(self, page: int = 1, count: int = 10, sorting_method: str = "time") -> List[Dict]:
         """获取文集中的文章信息
 
         Args:
@@ -682,7 +682,7 @@ class Notebook():
             comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
         Returns:
-            list: 文章信息
+            List[Dict]: 文章信息
         """
         return notebook.GetNotebookArticlesInfo(self._url, page, count, sorting_method)
 
@@ -831,7 +831,7 @@ class Collection():
         """获取专题的所有者信息
 
         Returns:
-            dict: 用户信息
+            Dict: 用户信息
         """
         return collection.GetCollectionOwnerInfo(self._url)
 
@@ -856,7 +856,7 @@ class Collection():
         return collection.GetCollectionSubscribersCount(self._url)
 
     @cache_result
-    def editors_info(self, page: int = 1) -> List:
+    def editors_info(self, page: int = 1) -> List[Dict]:
         """获取专题编辑信息
 
         Args:
@@ -866,14 +866,14 @@ class Collection():
             InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
 
         Returns:
-            list: 编辑信息
+            List[Dict]: 编辑信息
         """
         if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取编辑信息")
         return collection.GetCollectionEditorsInfo(self._id, page)
 
     @cache_result
-    def recommended_writers_info(self, page: int = False) -> List:
+    def recommended_writers_info(self, page: int = False) -> List[Dict]:
         """获取专题推荐作者信息
 
         Args:
@@ -883,7 +883,7 @@ class Collection():
             InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
 
         Returns:
-            list: 推荐作者信息
+            List[Dict]: 推荐作者信息
         """
         if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取推荐作者信息")
@@ -900,7 +900,7 @@ class Collection():
             InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
 
         Returns:
-            list: 关注者信息
+            List: 关注者信息
         """
         if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取关注者信息")
@@ -908,7 +908,7 @@ class Collection():
 
     @cache_result
     def articles_info(self, page: int = 1, count: int = 10,
-                      sorting_method: str = "time") -> List:
+                      sorting_method: str = "time") -> List[Dict]:
         """获取专题文章信息
 
         Args:
@@ -918,7 +918,7 @@ class Collection():
             comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
         Returns:
-            list: 文章信息
+            List[Dict]: 专题中的文章信息
         """
         return collection.GetCollectionArticlesInfo(self._url, page, count, sorting_method)
 
@@ -1049,7 +1049,7 @@ class Island():
 
     @cache_result
     def posts(self, start_sort_id: int = None, count: int = 10,
-              topic_id: int = None, sorting_method: str = "time") -> List:
+              topic_id: int = None, sorting_method: str = "time") -> List[Dict]:
         """获取小岛帖子信息
 
         Args:
@@ -1060,7 +1060,7 @@ class Island():
             comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
         Returns:
-            list: 帖子信息
+            List[Dict]: 帖子信息
         """
         return island.GetIslandPosts(self._url, start_sort_id, count, topic_id, sorting_method)
 

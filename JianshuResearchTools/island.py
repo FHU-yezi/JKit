@@ -122,7 +122,7 @@ def GetIslandPostFullConetnt(post_url: str) -> str:
 
 
 def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
-                   topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> List:
+                   topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> List[Dict]:
     """获取小岛帖子信息
 
         Args:
@@ -130,13 +130,13 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
             start_sort_id (int, optional): 起始序号，等于上一条数据的序号. Defaults to None.
             count (int, optional): 每次返回的数据数量. Defaults to 10.
             topic_id (int, optional): 话题 ID. Defaults to None.
-            sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
-        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+            sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
             get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
-        自动调用 GetIslandPostFullConetnt 函数获取完整内容并返回. Defaults to False.
+        自动调用 GetIslandPostFullConetnt 函数获取完整内容并替换. Defaults to False.
 
         Returns:
-            list: 帖子信息
+            List[Dict]: 帖子信息
     """
     AssertIslandUrl(island_url)
     AssertIslandStatusNormal(island_url)
@@ -216,7 +216,7 @@ def GetIslandAllBasicData(island_url: str) -> Dict:
         island_url (str): 小岛 Url
 
     Returns:
-        dict: 小岛基础信息
+        Dict: 小岛基础信息
     """
     result = {}
     json_obj = GetIslandJsonDataApi(island_url)
@@ -232,7 +232,7 @@ def GetIslandAllBasicData(island_url: str) -> Dict:
 
 def GetIslandAllPostsData(island_url: str, count: int = 10,
                           topic_id: int = None, sorting_method: str = "time",
-                          get_full_content: bool = False) -> Generator[List, None, None]:
+                          get_full_content: bool = False) -> Generator[List[Dict], None, None]:
     """获取小岛的所有帖子信息
 
     Args:
@@ -242,10 +242,10 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
         get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
-    自动调用 GetIslandPostFullConetnt 函数获取完整内容并返回. Defaults to False.
+    自动调用 GetIslandPostFullConetnt 函数获取完整内容并替换. Defaults to False.
 
     Yields:
-        Iterator[List, None, None]: 当前页帖子信息
+        Iterator[List[Dict], None, None]: 当前页帖子信息
     """
     start_sort_id = None
     while True:

@@ -12,13 +12,13 @@ def AssertType(object: Any, type_obj: Any) -> None:
 
     Args:
         object (Any): 需要进行判断的对象
-        type_obj (object): 需要判断的类型
+        type_obj (object): 目标类型
 
     Raises:
-        TypeError: 传入的对象不是指定类型时抛出此错误
+        TypeError: 对象类型错误时抛出此错误
     """
     if not isinstance(object, type_obj):
-        raise TypeError(f"传入的对象不是 {type_obj.__name__} 类型")
+        raise TypeError(f"{object} 不是 {type_obj.__name__} 类型，而是 { type(object).__name__ } 类型")
 
 
 def AssertString(object: Any) -> None:
@@ -40,37 +40,45 @@ def AssertFloat(object: Any) -> None:
 
 
 def AssertJianshuUrl(string: str) -> None:
-    """判断是否是有效的简书 Url
+    """判断字符串是否是有效的简书 Url
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 传入的参数不是有效的简书 Url 时抛出此错误
+        InputError: 字符串不是有效的简书 Url 时抛出此错误
     """
     keyword_to_find = ["https://", "www.jianshu.com"]
     for keyword in keyword_to_find:
         if keyword not in string:
-            raise InputError(f"参数 {string} 不是有效的简书 Url")
+            raise InputError(f"{string} 不是有效的简书 Url")
 
 
 def AssertUserUrl(string: str) -> None:
-    """判断是否是有效的简书用户主页 Url
+    """判断字符串是否是有效的简书用户主页 Url
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 传入的参数不是有效的简书用户主页 Url 时抛出此错误
+        InputError: 字符串不是有效的简书用户主页 Url 时抛出此错误
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/u/"]
     for keyword in keyword_to_find:
         if keyword not in string:
-            raise InputError(f"参数 {string} 不是有效的简书用户主页 Url")
+            raise InputError(f"{string} 不是有效的简书用户主页 Url")
 
 
 @lru_cache(maxsize=64)
 def AssertUserStatusNormal(user_url: str) -> None:
+    """判断用户账号状态是否正常
+
+    Args:
+        user_url (str): 用户主页 Url
+
+    Raises:
+        ResourceError: 用户账号状态异常时抛出此错误
+    """
     user_json_data = GetUserJsonDataApi(user_url)
     try:
         user_json_data["nickname"]
@@ -79,18 +87,18 @@ def AssertUserStatusNormal(user_url: str) -> None:
 
 
 def AssertArticleUrl(string: str) -> None:
-    """判断是否是有效的简书文章 Url
+    """判断字符串是否是有效的简书文章 Url
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 传入的参数不是有效的简书文章 Url 时抛出此错误
+        InputError: 字符串不是有效的简书文章 Url 时抛出此错误
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/p/"]
     for keyword in keyword_to_find:
         if keyword not in string:
-            raise InputError(f"参数 {string} 不是有效的简书文章 Url")
+            raise InputError(f"{string} 不是有效的简书文章 Url")
 
 
 @lru_cache(maxsize=64)
@@ -101,7 +109,7 @@ def AssertArticleStatusNormal(article_url: str) -> None:
         article_url (str): 文章 Url
 
     Raises:
-        ResourceError: 文章状态不正常时抛出此错误
+        ResourceError: 文章状态异常时抛出此错误
     """
     AssertArticleUrl(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
@@ -112,18 +120,18 @@ def AssertArticleStatusNormal(article_url: str) -> None:
 
 
 def AssertNotebookUrl(string: str) -> None:
-    """判断是否是有效的简书文集 Url
+    """判断字符串是否是有效的简书文集 Url
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 传入的参数不是有效的简书文集 Url 时抛出此错误
+        InputError: 字符串不是有效的简书文集 Url 时抛出此错误
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/nb/"]
     for keyword in keyword_to_find:
         if keyword not in string:
-            raise InputError(f"参数 {string} 不是有效的简书文集 Url")
+            raise InputError(f"{string} 不是有效的简书文集 Url")
 
 
 def AssertNotebookStatusNormal(notebook_url: str) -> None:
@@ -133,7 +141,7 @@ def AssertNotebookStatusNormal(notebook_url: str) -> None:
         notebook_url (str): 文集 Url
 
     Raises:
-        ResourceError: 文集状态不正常时抛出此错误
+        ResourceError: 文集状态异常时抛出此错误
     """
     AssertNotebookUrl(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
@@ -144,22 +152,30 @@ def AssertNotebookStatusNormal(notebook_url: str) -> None:
 
 
 def AssertCollectionUrl(string: str) -> None:
-    """判断是否是有效的简书专题 Url
+    """判断字符串是否是有效的简书专题 Url
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 传入的参数不是有效的简书专题 Url 时抛出此错误
+        InputError: 字符串不是有效的简书专题 Url 时抛出此错误
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/c/"]
     for keyword in keyword_to_find:
         if keyword not in string:
-            raise InputError(f"参数 {string} 不是有效的简书专题 Url")
+            raise InputError(f"{string} 不是有效的简书专题 Url")
 
 
 @lru_cache(maxsize=64)
 def AssertCollectionStatusNormal(collection_url: str) -> None:
+    """判断专题状态是否正常
+
+    Args:
+        collection_url (str): 专题 Url
+
+    Raises:
+        ResourceError: 专题状态异常时抛出此错误
+    """
     collection_json_data = GetCollectionJsonDataApi(collection_url)
     try:
         collection_json_data["title"]
@@ -168,18 +184,18 @@ def AssertCollectionStatusNormal(collection_url: str) -> None:
 
 
 def AssertIslandUrl(string: str) -> None:
-    """判断是否是有效的简书小岛 Url
+    """判断字符串是否是有效的简书小岛 Url
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 传入的参数不是有效的简书小岛 Url 时抛出此错误
+        InputError: 字符串不是有效的简书小岛 Url 时抛出此错误
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/g/"]
     for keyword in keyword_to_find:
         if keyword not in string:
-            raise InputError(f"参数 {string} 不是有效的简书小岛 Url")
+            raise InputError(f"{string} 不是有效的简书小岛 Url")
 
 
 @lru_cache(maxsize=64)
@@ -192,15 +208,15 @@ def AssertIslandStatusNormal(island_url: str) -> None:
 
 
 def AssertIslandPostUrl(string: str) -> None:
-    """判断是否是有效的简书小岛帖子 Url
+    """判断字符串是否是有效的简书小岛帖子 Url
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 传入的参数不是有效的简书小岛帖子 Url 时抛出此错误
+        InputError: 字符串不是有效的简书小岛帖子 Url 时抛出此错误
     """
     keyword_to_find = ["https://", "www.jianshu.com", "/gp/"]
     for keyword in keyword_to_find:
         if keyword not in string:
-            raise InputError(f"参数 {string} 不是有效的简书小岛帖子 Url")
+            raise InputError(f"{string} 不是有效的简书小岛帖子 Url")

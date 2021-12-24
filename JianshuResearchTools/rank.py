@@ -9,15 +9,15 @@ from .exceptions import APIError, ResourceError
 from .user import GetUserAssetsCount
 
 
-def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> List:
-    """该函数接收一个起始位置参数和一个获取全部数据的布尔值，并返回自该位置后 20 名用户的资产数据
+def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> List[Dict]:
+    """获取资产排行榜信息
 
     Args:
         start_id (int, optional): 起始位置. Defaults to 1.
-        get_full (bool, optional): 为 True 时获取简书贝和总资产数据，为 False 时不获取. Defaults to False.
+        get_full (bool, optional): 为 True 时获取简书贝和总资产数据. Defaults to False.
 
     Returns:
-        list: 用户资产数据
+        List[Dict]: 资产排行榜信息
     """
     since_id = start_id - 1  # 索引下标为 0
     json_obj = GetAssetsRankJsonDataApi(max_id=1000000000, since_id=since_id)
@@ -42,11 +42,11 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> List:
     return result
 
 
-def GetDailyArticleRankData() -> List:
-    """该函数返回日更排行榜的用户信息
+def GetDailyArticleRankData() -> List[Dict]:
+    """获取日更排行榜信息
 
     Returns:
-        list: 日更排行榜用户信息
+        List[Dict]: 日更排行榜信息
     """
     json_obj = GetDailyArticleRankListJsonDataApi()
     result = []
@@ -62,8 +62,8 @@ def GetDailyArticleRankData() -> List:
     return result
 
 
-def GetArticleFPRankData(date: str = "latest") -> List:
-    """该函数接收一个日期，并返回对应日期的文章收益排行榜数据
+def GetArticleFPRankData(date: str = "latest") -> List[Dict]:
+    """获取文章收益排行榜信息
 
     目前只能获取 2020 年 6 月 20 日之后的数据。
 
@@ -71,13 +71,13 @@ def GetArticleFPRankData(date: str = "latest") -> List:
         date (str, optional): 日期，格式“YYYYMMDD”. Defaults to "latest".
 
     Raises:
-        ResourceError: 对应日期的排行榜数据为空时会抛出此异常
+        ResourceError: 对应日期的排行榜数据为空时抛出此异常
 
     Returns:
-        list: 对应日期的文章收益排行榜数据
+        List[Dict]: 文章收益排行榜信息
     """
     if date == "latest":
-        date = (datetime.today() + timedelta(days=-1)).strftime("%Y%m%d")
+        date = (datetime.today() + timedelta(days=-1)).strftime(r"%Y%m%d")
     json_obj = GetArticlesFPRankListJsonDataApi(date=date, type_=None)
     if json_obj["notes"] == []:
         raise ResourceError("对应日期的排行榜数据为空")
@@ -98,7 +98,7 @@ def GetArticleFPRankData(date: str = "latest") -> List:
 
 
 def GetArticleFPRankBasicInfo(date: str = "latest") -> Dict:
-    """获取指定日期的文章收益排行榜基础信息
+    """获取文章收益排行榜信息
 
     目前只能获取 2020 年 6 月 20 日之后的数据。
 
@@ -106,10 +106,10 @@ def GetArticleFPRankBasicInfo(date: str = "latest") -> Dict:
         date (str, optional): 日期，格式“YYYYMMDD”. Defaults to "latest".
 
     Raises:
-        ResourceError: 对应日期的排行榜数据为空时会抛出此异常
+        ResourceError: 对应日期的排行榜数据为空时抛出此异常
 
     Returns:
-        dict: 文章收益排行榜基础信息
+        Dict: 文章收益排行榜基础信息
     """
     if date == "latest":
         date = (datetime.date.today() + datetime.timedelta(days=-1)).strftime("%Y%m%d")
@@ -124,8 +124,8 @@ def GetArticleFPRankBasicInfo(date: str = "latest") -> Dict:
     return result
 
 
-def GetUserFPRankData(date: str = "latest", rank_type: str = "all") -> List:
-    """该函数接收一个日期，并返回对应日期的用户收益排行榜数据
+def GetUserFPRankData(date: str = "latest", rank_type: str = "all") -> List[Dict]:
+    """获取用户收益排行榜信息
 
     目前只能获取 2020 年 6 月 20 日之后的数据。
 
@@ -133,10 +133,10 @@ def GetUserFPRankData(date: str = "latest", rank_type: str = "all") -> List:
         date (str, optional): 日期，格式“YYYYMMDD”. Defaults to "latest".
 
     Raises:
-        ResourceError: 对应日期的排行榜数据为空时会抛出此异常
+        ResourceError: 对应日期的排行榜数据为空时抛出此异常
 
     Returns:
-        list: 对应日期的用户收益排行榜数据
+        List[Dict]: 用户收益排行榜信息
     """
     type_ = {
         "all": None,

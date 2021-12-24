@@ -12,3 +12,5 @@ BeikeIsland_request_header = {"Host": "www.beikeisland.com",
                               "Content-Type": "application/json",
                               "Version": "v2.0"
                               }
+
+mobile_header = {"User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.134 Mobile Safari/537.36"}

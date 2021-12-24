@@ -46,7 +46,7 @@ def GetArticleAuthorName(article_url: str) -> str:
     return result
 
 
-def GetArticleReadsCount(article_url: str) -> str:
+def GetArticleReadsCount(article_url: str) -> int:
     """获取文章阅读量
 
     Args:
@@ -62,14 +62,14 @@ def GetArticleReadsCount(article_url: str) -> str:
     return result
 
 
-def GetArticleWordage(article_url: str) -> str:
+def GetArticleWordage(article_url: str) -> int:
     """获取文章字数
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        str: 文章总字数
+        str: 文章字数
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -95,13 +95,13 @@ def GetArticleLikesCount(article_url: str) -> int:
 
 
 def GetArticleCommentsCount(article_url: str) -> int:
-    """获取文章评论量
+    """获取文章评论数量
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        int: 文章评论量
+        int: 文章评论数量
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -111,13 +111,13 @@ def GetArticleCommentsCount(article_url: str) -> int:
 
 
 def GetArticleMostValuableCommentsCount(article_url: str) -> int:
-    """获取文章精选评论量
+    """获取文章精选评论数量
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        int: 文章精选评论量
+        int: 文章精选评论数量
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -126,7 +126,7 @@ def GetArticleMostValuableCommentsCount(article_url: str) -> int:
     return result
 
 
-def GetArticleTotalFPCount(article_url: str) -> int:
+def GetArticleTotalFPCount(article_url: str) -> float:
     """获取文章总获钻量
 
     Args:
@@ -231,13 +231,13 @@ def GetArticleReprintStatus(article_url: str) -> bool:
 
 
 def GetArticleCommentStatus(article_url: str) -> bool:
-    """获取文章评论状态
+    """获取文章评论区状态
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        bool: 文章评论状态，True 为开启评论，False 为关闭评论
+        bool: 文章评论区状态，True 为开启评论，False 为关闭评论
     """
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
@@ -249,8 +249,8 @@ def GetArticleCommentStatus(article_url: str) -> bool:
 def GetArticleHtml(article_url: str) -> str:
     """获取 Html 格式的文章内容
 
-    # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
-    # ! 该函数不能获取需要付费的文章内容
+    # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险您需自行承担
+    # ! 该函数不能获取文章付费部分的内容
 
     Args:
         article_url (str): 文章 Url
@@ -280,8 +280,8 @@ def GetArticleHtml(article_url: str) -> str:
 def GetArticleText(article_url: str) -> str:
     """获取纯文本格式的文章内容
 
-    # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
-    # ! 该函数不能获取需要付费的文章内容
+    # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险您需自行承担
+    # ! 该函数不能获取文章付费部分的内容
 
     Args:
         article_url (str): 文章 Url
@@ -301,14 +301,14 @@ def GetArticleText(article_url: str) -> str:
 def GetArticleMarkdown(article_url: str) -> str:
     """获取 Markdown 格式的文章内容
 
-    # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险由您自行承担
-    # ! 该函数不能获取需要付费的文章内容
+    # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险您需自行承担
+    # ! 该函数不能获取文章付费部分的内容
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        str:  Markdown 格式的文章内容
+        str: Markdown 格式的文章内容
     """
     try:
         html2md
@@ -336,7 +336,7 @@ def GetArticleMarkdown(article_url: str) -> str:
 
 
 def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
-                           author_only: bool = False, sorting_method: str = "positive") -> List:
+                           author_only: bool = False, sorting_method: str = "positive") -> List[Dict]:
     """获取文章评论信息
 
     Args:
@@ -347,7 +347,7 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
         sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
 
     Returns:
-        list: 评论信息
+        List[Dict]: 文章评论信息
     """
     order_by = {
         "positive": "asc",   # 正序
@@ -429,13 +429,13 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
 
 
 def GetArticleAllBasicData(article_url: str) -> Dict:
-    """获取文章的所有基础信息
+    """获取文章的全部基础信息
 
     Args:
         article_url (str): 文章 Url
 
     Returns:
-        dict: 文章基础信息
+        Dict: 文章基础信息
     """
     result = {}
     json_obj = GetArticleJsonDataApi(article_url)
@@ -466,7 +466,7 @@ def GetArticleAllBasicData(article_url: str) -> Dict:
 
 
 def GetArticleAllCommentsData(article_id: int, count: int = 10,
-                              author_only: bool = False, sorting_method: str = "positive") -> Generator[List, None, None]:
+                              author_only: bool = False, sorting_method: str = "positive") -> Generator[List[Dict], None, None]:
     """获取文章的全部评论信息
 
     Args:
@@ -476,7 +476,7 @@ def GetArticleAllCommentsData(article_id: int, count: int = 10,
         sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
 
     Yields:
-        Iterator[List, None, None]: 当前页文章信息
+        Iterator[List[Dict], None, None]: 当前页文章信息
     """
 
     page = 1

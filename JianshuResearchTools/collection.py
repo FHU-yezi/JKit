@@ -11,13 +11,13 @@ from .convert import CollectionUrlToCollectionSlug
 
 
 def GetCollectionName(collection_url: str) -> str:
-    """该函数接收专题 Url，并返回该链接对应专题的名称
+    """获取专题名称
 
     Args:
         collection_url (str): 专题 Url
 
     Returns:
-        str: 链接对应专题的名称
+        str: 专题名称
     """
     AssertCollectionUrl(collection_url)
     AssertCollectionStatusNormal(collection_url)
@@ -43,13 +43,13 @@ def GetCollectionAvatarUrl(collection_url: str) -> str:
 
 
 def GetCollectionIntroductionText(collection_url: str) -> str:
-    """该函数接收专题 Url，并返回该链接对应专题的简介
+    """获取纯文本格式的专题简介
 
     Args:
         collection_url (str): 专题 Url
 
     Returns:
-        str: 链接对应专题的简介
+        str: 纯文本格式的专题简介
     """
     AssertCollectionUrl(collection_url)
     AssertCollectionStatusNormal(collection_url)
@@ -59,13 +59,13 @@ def GetCollectionIntroductionText(collection_url: str) -> str:
 
 
 def GetCollectionIntroductionHtml(collection_url: str) -> str:
-    """该函数接收专题 Url，并返回该链接对应专题的简介
+    """获取 Html 格式的专题简介
 
     Args:
         collection_url (str): 专题 Url
 
     Returns:
-        str: 链接对应专题的简介
+        str: Html 格式的专题简介
     """
     AssertCollectionUrl(collection_url)
     AssertCollectionStatusNormal(collection_url)
@@ -75,13 +75,13 @@ def GetCollectionIntroductionHtml(collection_url: str) -> str:
 
 
 def GetCollectionArticlesCount(collection_url: str) -> int:
-    """该函数接收专题 Url，并返回该链接对应专题的收录文章数量
+    """获取专题中的文章数量
 
     Args:
         collection_url (str): 专题 Url
 
     Returns:
-        int: 链接对应专题的收录文章数量
+        int: 专题中的文章数量
     """
     AssertCollectionUrl(collection_url)
     AssertCollectionStatusNormal(collection_url)
@@ -91,13 +91,13 @@ def GetCollectionArticlesCount(collection_url: str) -> int:
 
 
 def GetCollectionSubscribersCount(collection_url: str) -> int:
-    """该函数接收专题 Url，并返回该链接对应专题的关注者数量
+    """获取专题的订阅者数量
 
     Args:
         collection_url (str): 专题 Url
 
     Returns:
-        int: 链接对应专题的关注者数量
+        int: 专题的订阅者数量
     """
     AssertCollectionUrl(collection_url)
     AssertCollectionStatusNormal(collection_url)
@@ -145,7 +145,7 @@ def GetCollectionOwnerInfo(collection_url: str) -> Dict:
         collection_url (str): 专题 Url
 
     Returns:
-        dict: 用户信息
+        Dict: 用户信息
     """
     AssertCollectionUrl(collection_url)
     AssertCollectionStatusNormal(collection_url)
@@ -158,15 +158,15 @@ def GetCollectionOwnerInfo(collection_url: str) -> Dict:
     return result
 
 
-def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> List:
-    """该函数接收专题 ID，并返回 ID 对应专题的编辑信息
+def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> List[Dict]:
+    """获取专题编辑信息
 
     Args:
         collection_id (int): 专题 ID
         page (int, optional): 页码. Defaults to 1.
 
     Returns:
-        list: ID 对应专题的编辑信息
+        List[Dict]: 专题编辑信息
     """
     json_obj = GetCollectionEditorsJsonDataApi(collection_id, page=page)
     result = []
@@ -180,16 +180,16 @@ def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> List:
     return result
 
 
-def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count: int = 20) -> List:
-    """该函数接收一个专题 ID，并返回该 ID 对应专题的推荐作者信息
+def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count: int = 20) -> List[Dict]:
+    """获取专题推荐作者信息
 
     Args:
         collection_id (int): 专题 ID
         page (int, optional): 页码. Defaults to 1.
-        count (int, optional): 每次返回的数量. Defaults to 20.
+        count (int, optional): 每次返回的结果数量. Defaults to 20.
 
     Returns:
-        list: 推荐作者信息
+        List[Dict]: 专题推荐作者信息
     """
     json_obj = GetCollectionRecommendedWritersJsonDataApi(collection_id, page=page, count=count)
     result = []
@@ -207,7 +207,7 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count
     return result
 
 
-def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) -> List:
+def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) -> List[Dict]:
     """该函数接收一个专题 ID，并返回该 ID 对应专题的关注者信息
 
     Args:
@@ -215,7 +215,7 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) 
         start_sort_id (int): 起始序号，等于上一条数据的序号
 
     Returns:
-        list: 关注者信息
+        List[Dict]: 关注者信息
     """
     json_obj = GetCollectionSubscribersJsonDataApi(collection_id, max_sort_id=start_sort_id)
     result = []
@@ -232,18 +232,18 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) 
 
 
 def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
-                              count: int = 10, sorting_method: str = "time") -> List:
+                              count: int = 10, sorting_method: str = "time") -> List[Dict]:
     """该函数接收专题 Url ，并返回该 Url 对应专题的文章信息
 
     Args:
         collection_url (str): 专题 Url
         page (int, optional): 页码. Defaults to 1.
         count (int, optional): 每次返回的数据数量. Defaults to 10.
-        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
-        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+        sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
 
     Returns:
-        list: 文章信息
+        List[Dict]: 文章信息
     """
     AssertCollectionUrl(collection_url)
     AssertCollectionStatusNormal(collection_url)
@@ -309,14 +309,14 @@ def GetCollectionAllBasicData(collection_url: str) -> Dict:
     return result
 
 
-def GetCollectionAllEditorsInfo(collection_id: int) -> Generator[List, None, None]:
+def GetCollectionAllEditorsInfo(collection_id: int) -> Generator[List[Dict], None, None]:
     """获取专题的所有编辑信息
 
     Args:
         collection_id (int): 专题 ID
 
     Yields:
-        Iterator[List, None, None]: 当前页编辑信息
+        Iterator[List[Dict], None, None]: 当前页编辑信息
     """
     page = 1
     while True:
@@ -328,7 +328,7 @@ def GetCollectionAllEditorsInfo(collection_id: int) -> Generator[List, None, Non
             break
 
 
-def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) -> Generator[List, None, None]:
+def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) -> Generator[List[Dict], None, None]:
     """获取专题的所有推荐作者信息
 
     Args:
@@ -336,7 +336,7 @@ def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) 
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 20.
 
     Yields:
-        Iterator[List, None, None]: 当前页推荐作者信息
+        Iterator[List[Dict], None, None]: 当前页推荐作者信息
     """
     page = 1
     while True:
@@ -348,14 +348,14 @@ def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) 
             break
 
 
-def GetCollectionAllSubscribersInfo(collection_id: int) -> Generator[List, None, None]:
+def GetCollectionAllSubscribersInfo(collection_id: int) -> Generator[List[Dict], None, None]:
     """获取专题的所有关注者信息
 
     Args:
         collection_id (int): 专题 ID
 
     Yields:
-        Iterator[List, None, None]: 当前页关注者信息
+        Iterator[List[Dict], None, None]: 当前页关注者信息
     """
     start_sort_id = None
     while True:
@@ -368,17 +368,17 @@ def GetCollectionAllSubscribersInfo(collection_id: int) -> Generator[List, None,
 
 
 def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10,
-                                 sorting_method: str = "time") -> Generator[List, None, None]:
+                                 sorting_method: str = "time") -> Generator[List[Dict], None, None]:
     """获取专题的所有文章信息
 
     Args:
         collection_url (str): 专题 Url
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
-        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
-        comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+        sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
 
     Yields:
-        Iterator[List, None, None]: 当前页文章信息
+        Iterator[List[Dict], None, None]: 当前页文章信息
     """
     page = 1
     while True:
