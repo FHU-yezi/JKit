@@ -18,8 +18,6 @@ def cache_result(func):
     cache_Dict = {}
 
     def wrapper(*args, **kwargs):
-        print(args)
-        print(kwargs)
         args_hash = hash(tuple(args[1:]) + tuple(kwargs.items()))
         cache_result = cache_Dict.get(args_hash)
         if cache_result and not DISABLE_CACHE:
@@ -102,7 +100,7 @@ class User():
         Returns:
             int: 关注数
         """
-        return user.GetUserFollowingCount(self._url)
+        return user.GetUserFollowersCount(self._url)
 
     @property
     @cache_result
@@ -182,7 +180,7 @@ class User():
         Returns:
             List: 徽章列表
         """
-        return user.GetUserBadges(self._url)
+        return user.GetUserBadgesList(self._url)
 
     @property
     @cache_result
@@ -313,12 +311,22 @@ class User():
         Returns:
             str: 用户信息摘要
         """
-        # TODO: 重写 __str__ 方法
-        result = "用户信息摘要：\n用户名：{}\n性别：{}\n关注数：{}\n粉丝数：{}\n文章数：{}\n总字数：{}\n被点赞数：{}\n总资产：{}\n简书钻：{}\n简书贝：{}\n会员等级：{}\n会员过期时间：{}".format(
-            self.name, {0: "未知", 1: "男", 2: "女"}[self.gender], self.followers_count,
-            self.fans_count, self.articles_count, self.wordage, self.likes_count, self.assets_count,
-            self.FP_count, self.FTN_count, self.VIP_info["vip_type"], self.VIP_info["expire_date"]
-        )
+        result = f"""用户信息摘要：
+昵称：{self.name}
+Url：{self.url}
+性别：{self.gender}
+关注者数：{self.followers_count}
+粉丝数：{self.fans_count}
+文章数：{self.articles_count}
+总字数：{self.wordage}
+简书钻：{self.FP_count}
+简书贝：{self.FTN_count}
+总资产：{self.assets_count}
+徽章：{' '.join(self.badges)}
+最后更新时间：{self.last_update_time}
+会员等级：{self.VIP_info['vip_type']}
+会员过期时间：{self.VIP_info['expire_date']}
+个人简介：\n{self.introduction_text}"""
         return result
 
 
@@ -541,11 +549,22 @@ class Article():
             return False
 
     def __str__(self) -> str:
-        # TODO: 重写 __str__ 方法
-        result = "文章信息摘要：\n标题：{}\n作者：{}\n获钻量：{}\n发布时间：{}\n更新时间：{}\n字数：{}\n阅读量：{}\n点赞量：{}\n评论量：{}".format(
-            self.title, self.author_name, self.total_FP_count, self.publish_time,
-            self.update_time, self.wordage, self.reads_count, self.likes_count, self.comments_count
-        )
+        result = f"""文章信息摘要：
+标题：{self.title}
+Url: {self.url}
+作者名：{self.author_name}
+字数：{self.wordage}
+阅读量：{self.reads_count}
+点赞数：{self.likes_count}
+评论数：{self.comments_count}
+精选评论数：{self.most_valuable_comments_count}
+总获钻量：{self.total_FP_count}
+发布时间：{self.publish_time}
+更新时间：{self.update_time}
+需付费：{self.paid_status}
+可转载：{self.reprint_status}
+可评论：{self.comment_status}
+摘要：\n{self.description}"""
         return result
 
 
@@ -629,7 +648,7 @@ class Notebook():
         Returns:
             str: 作者名
         """
-        return notebook.GetNotebookAuthorName(self._url)
+        return notebook.GetNotebookAuthorInfo(self._url)["name"]
 
     @property
     @cache_result
@@ -708,11 +727,15 @@ class Notebook():
         Returns:
             str: 文集信息摘要
         """
-        # TODO: 重写 __str__ 方法
-        result = "文集信息摘要：\n名称：{}\n作者：{}\n文章数：{}\n总字数：{}\n关注者数量：{}\n更新时间：{}".format(
-            self.name, self.author_name, self.articles_count, self.wordage,
-            self.subscribers_count, self.update_time
-        )
+        result = f"""文集信息摘要：
+名称：{self.name}
+Url：{self.url}
+作者名：{self.author_name}
+文章数：{self.articles_count}
+总字数：{self.wordage}
+关注者数：{self.subscribers_count}
+更新时间：{self.update_time}"""
+
         return result
 
 
@@ -944,11 +967,18 @@ class Collection():
         Returns:
             str: 专题信息摘要
         """
-        # TODO: 重写 __str__ 方法
-        result = "专题信息摘要：\n名称：{}\n文章更新时间：{}\n信息更新时间：{}\n所有者：{}\n收录文章数：{}\n关注者数：{}".format(
-            self.name, self.articles_update_time, self.info_update_time,
-            self.owner_info["name"], self.articles_count, self.subscribers_count
-        )
+        result = f"""
+专题信息摘要：
+专题名：{self.name}
+Url：{self.url}
+主编名：{self.owner_info["name"]}
+图片链接：{self.avatar_url}
+文章数：{self.articles_count}
+关注者数：{self.subscribers_count}
+文章更新时间：{self.articles_update_time}
+信息更新时间：{self.info_update_time}
+简介：\n{self.introduction_text}"""
+
         return result
 
 
@@ -1086,8 +1116,12 @@ class Island():
         Returns:
             str: 小岛信息摘要
         """
-        # TODO: 重写 __str__ 方法
-        result = "小岛信息摘要：\n名称：{}\n成员数量：{}\n帖子数量：{}\n分类：{}".format(
-            self.name, self.members_count, self.posts_count, self.category
-        )
+        result = f"""小岛信息摘要：
+小岛名：{self.name}
+Url：{self.url}
+分类：{self.category}
+成员数：{self.members_count}
+帖子数：{self.posts_count}
+简介：\n{self.introduction}"""
+
         return result

@@ -138,7 +138,7 @@ def GetUserAssetsCount(user_url: str) -> float:
 
     Args:
         user_url (str): 用户个人主页 Url
-    
+
     Raises:
         APIError: 由于用户没有文章导致无法获取总资产信息时抛出此异常
 
@@ -158,12 +158,12 @@ def GetUserAssetsCount(user_url: str) -> float:
 
 def GetUserFPCount(user_url: str) -> float:
     """获取用户简书钻数量
-    
+
     # ! 当用户没有文章时，该函数将抛出 APIError 异常
 
     Args:
         user_url (str): 用户个人主页 Url
-    
+
     Raises:
         APIError: 由于用户没有文章导致无法获取总资产信息时抛出此异常
 
