@@ -15,6 +15,10 @@ setuptools.setup(
     url="https://github.com/FHU-yezi/JianshuResearchTools",
     packages=["JianshuResearchTools"],
     install_requires=["lxml==4.7.1", "httpx==0.19.0"],
+    extras_require={
+        "md-convert": ["tomd==0.1.3"],
+        "high-perf": ["ujson==4.3.0"]
+        },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
