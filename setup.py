@@ -14,10 +14,11 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/FHU-yezi/JianshuResearchTools",
     packages=["JianshuResearchTools"],
-    install_requires=["lxml==4.7.1", "httpx==0.19.0"],
+    install_requires=["lxml==4.7.1", "httpx==0.21.1"],
     extras_require={
         "md-convert": ["tomd==0.1.3"],
-        "high-perf": ["ujson==4.3.0"]
+        "high-perf": ["ujson==4.3.0"],
+        "full": ["tomd==0.1.3", "ujson==4.3.0"]
         },
     classifiers=[
         "Programming Language :: Python :: 3",
