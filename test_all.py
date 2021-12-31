@@ -6,8 +6,8 @@ from yaml import FullLoader
 from yaml import load as yaml_load
 
 import JianshuResearchTools as jrt
-from JianshuResearchTools.assert_funcs import (AssertFloat, AssertInt,
-                                               AssertString)
+# from JianshuResearchTools.assert_funcs import (AssertFloat, AssertInt,
+#                                                AssertString)
 from JianshuResearchTools.convert import (ArticleSlugToArticleId,
                                           ArticleSlugToArticleUrl,
                                           ArticleUrlToArticleId,
@@ -68,37 +68,37 @@ class TestEggs():  # 测试彩蛋内容
         jrt.future()
 
 
-class TestAssertFuncsModule():
-    def test_AssertType(self):
-        for case in test_cases["type_cases"]:
-            assert type(case["value"]) == type_text_to_obj[case["type"]]
+# class TestAssertFuncsModule():
+#     def test_AssertType(self):
+#         for case in test_cases["type_cases"]:
+#             assert type(case["value"]) == type_text_to_obj[case["type"]]
 
-    def test_AssertString(self):
-        for case in test_cases["type_cases"]:
-            if case["type"] == "<class 'str'>":
-                with pytest.raises(DeprecationWarning):
-                    AssertString(case["value"])
-            else:
-                with pytest.raises(TypeError):
-                    AssertString(case["value"])
+#     def test_AssertString(self):
+#         for case in test_cases["type_cases"]:
+#             if case["type"] == "<class 'str'>":
+#                 with pytest.raises(DeprecationWarning):
+#                     AssertString(case["value"])
+#             else:
+#                 with pytest.raises(TypeError):
+#                     AssertString(case["value"])
 
-    def test_AssertInt(self):
-        for case in test_cases["type_cases"]:
-            if case["type"] == "<class 'int'>":
-                with pytest.raises(DeprecationWarning):
-                    AssertInt(case["value"])
-            else:
-                with pytest.raises(TypeError):
-                    AssertInt(case["value"])
+#     def test_AssertInt(self):
+#         for case in test_cases["type_cases"]:
+#             if case["type"] == "<class 'int'>":
+#                 with pytest.raises(DeprecationWarning):
+#                     AssertInt(case["value"])
+#             else:
+#                 with pytest.raises(TypeError):
+#                     AssertInt(case["value"])
 
-    def test_AssertFloat(self):
-        for case in test_cases["type_cases"]:
-            if case["type"] == "<class 'float'>":
-                with pytest.raises(DeprecationWarning):
-                    AssertFloat(case["value"])
-            else:
-                with pytest.raises(TypeError):
-                    AssertFloat(case["value"])
+#     def test_AssertFloat(self):
+#         for case in test_cases["type_cases"]:
+#             if case["type"] == "<class 'float'>":
+#                 with pytest.raises(DeprecationWarning):
+#                     AssertFloat(case["value"])
+#             else:
+#                 with pytest.raises(TypeError):
+#                     AssertFloat(case["value"])
 
 
 class TestConvertModule():

@@ -21,24 +21,6 @@ def AssertType(object: Any, type_obj: Any) -> None:
         raise TypeError(f"{object} 不是 {type_obj.__name__} 类型，而是 { type(object).__name__ } 类型")
 
 
-def AssertString(object: Any) -> None:
-    if not isinstance(object, str):
-        raise TypeError("传入的数据不是字符串")
-    raise DeprecationWarning("该函数已过时，将在下个版本中移除，请使用 AssertType 函数")
-
-
-def AssertInt(object: Any) -> None:
-    if not isinstance(object, int):
-        raise TypeError("传入的数据不是整数")
-    raise DeprecationWarning("该函数已过时，将在下个版本中移除，请使用 AssertType 函数")
-
-
-def AssertFloat(object: Any) -> None:
-    if not isinstance(object, float):
-        raise TypeError("传入的数据不是浮点数")
-    raise DeprecationWarning("该函数已过时，将在下个版本中移除，请使用 AssertType 函数")
-
-
 def AssertJianshuUrl(string: str) -> None:
     """判断字符串是否是有效的简书 Url
 

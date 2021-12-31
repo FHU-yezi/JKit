@@ -2,36 +2,36 @@ from yaml import dump as yaml_dump
 from datetime import datetime
 
 test_cases = {
-    "type_cases": [
-        {
-            "type": "<class 'str'>",
-            "value": "string"
-        },
-        {
-            "type": "<class 'str'>",
-            "value": "123"
-        },
-        {
-            "type": "<class 'int'>",
-            "value": 0
-        },
-        {
-            "type": "<class 'int'>",
-            "value": -1
-        },
-        {
-            "type": "<class 'float'>",
-            "value": 0.0
-        },
-        {
-            "type": "<class 'float'>",
-            "value": 1.0
-        },
-        {
-            "type": "<class 'float'>",
-            "value": -1.0
-        },
-    ],
+    # "type_cases": [
+    #     {
+    #         "type": "<class 'str'>",
+    #         "value": "string"
+    #     },
+    #     {
+    #         "type": "<class 'str'>",
+    #         "value": "123"
+    #     },
+    #     {
+    #         "type": "<class 'int'>",
+    #         "value": 0
+    #     },
+    #     {
+    #         "type": "<class 'int'>",
+    #         "value": -1
+    #     },
+    #     {
+    #         "type": "<class 'float'>",
+    #         "value": 0.0
+    #     },
+    #     {
+    #         "type": "<class 'float'>",
+    #         "value": 1.0
+    #     },
+    #     {
+    #         "type": "<class 'float'>",
+    #         "value": -1.0
+    #     },
+    # ],
     "convert_cases": {
         "article_convert_cases": [
             {

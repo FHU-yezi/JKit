@@ -226,21 +226,6 @@ notebook_cases:
         wordage: !!python/tuple
         - 9000
         - 20000
-type_cases:
--   type: <class 'str'>
-    value: string
--   type: <class 'str'>
-    value: '123'
--   type: <class 'int'>
-    value: 0
--   type: <class 'int'>
-    value: -1
--   type: <class 'float'>
-    value: 0.0
--   type: <class 'float'>
-    value: 1.0
--   type: <class 'float'>
-    value: -1.0
 user_cases:
     fail_cases:
     -   exception_name: ResourceError
