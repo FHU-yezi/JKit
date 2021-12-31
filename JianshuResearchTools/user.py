@@ -1,5 +1,5 @@
 from datetime import datetime
-from re import findall, sub
+from re import findall
 from typing import Dict, Generator, List
 
 from lxml import etree
@@ -10,13 +10,13 @@ from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserFollowersListHtmlDataApi,
                          GetUserFollowingListHtmlDataApi, GetUserJsonDataApi,
                          GetUserNextAnniversaryDayHtmlDataApi,
-                         GetUserPCHtmlDataApi, GetUserTimelineHtmlDataApi)
+                         GetUserPCHtmlDataApi)
 from .convert import UserUrlToUserSlug
 from .exceptions import APIError
 
 
 def GetUserName(user_url: str) -> str:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的昵称
+    """获取用户昵称
 
     Args:
         user_url (str): 用户个人主页 Url
@@ -30,8 +30,9 @@ def GetUserName(user_url: str) -> str:
     result = json_obj["nickname"]
     return result
 
+
 def GetUserGender(user_url: str) -> int:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的性别
+    """获取用户性别
 
     Args:
         user_url (str): 用户个人主页 Url
@@ -47,14 +48,15 @@ def GetUserGender(user_url: str) -> int:
         result = 0  # 3 也代表性别未知
     return result
 
+
 def GetUserFollowersCount(user_url: str) -> int:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的关注数
+    """获取用户关注人数
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        int: 用户关注数
+        int: 用户关注人数
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -62,8 +64,9 @@ def GetUserFollowersCount(user_url: str) -> int:
     result = json_obj["following_users_count"]
     return result
 
+
 def GetUserFansCount(user_url: str) -> int:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的粉丝数
+    """获取用户粉丝数
 
     Args:
         user_url (str): 用户个人主页 Url
@@ -77,8 +80,9 @@ def GetUserFansCount(user_url: str) -> int:
     result = json_obj["followers_count"]
     return result
 
+
 def GetUserArticlesCount(user_url: str) -> int:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的文章数
+    """获取用户文章数
 
     Args:
         user_url (str): 用户个人主页 Url
@@ -93,8 +97,9 @@ def GetUserArticlesCount(user_url: str) -> int:
     result = int(result)
     return result
 
+
 def GetUserWordage(user_url: str) -> int:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的文章总字数
+    """获取用户文章总字数
 
     Args:
         user_url (str): 用户个人主页 Url
@@ -108,8 +113,9 @@ def GetUserWordage(user_url: str) -> int:
     result = json_obj["total_wordage"]
     return result
 
+
 def GetUserLikesCount(user_url: str) -> int:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的被喜欢数
+    """获取用户被喜欢数
 
     Args:
         user_url (str): 用户个人主页 Url
@@ -123,13 +129,18 @@ def GetUserLikesCount(user_url: str) -> int:
     result = json_obj["total_likes_count"]
     return result
 
+
 def GetUserAssetsCount(user_url: str) -> float:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的总资产
-    
+    """获取用户总资产
+
     # ! 当用户资产大于 10000 时，结果的精确度将下降到 1000
+    # ! 当用户没有文章时，该函数将抛出 APIError 异常
 
     Args:
         user_url (str): 用户个人主页 Url
+
+    Raises:
+        APIError: 由于用户没有文章导致无法获取总资产信息时抛出此异常
 
     Returns:
         float: 用户总资产
@@ -140,15 +151,21 @@ def GetUserAssetsCount(user_url: str) -> float:
     try:
         result = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
     except IndexError:
-        raise APIError("受简书网页展示限制，无法获取该用户的总资产")
+        raise APIError("受 API 限制（用户无文章时无法获取总资产信息），无法获取该用户的总资产")
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
+
 def GetUserFPCount(user_url: str) -> float:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的简书钻数量
+    """获取用户简书钻数量
+
+    # ! 当用户没有文章时，该函数将抛出 APIError 异常
 
     Args:
         user_url (str): 用户个人主页 Url
+
+    Raises:
+        APIError: 由于用户没有文章导致无法获取总资产信息时抛出此异常
 
     Returns:
         float: 用户简书钻数量
@@ -158,11 +175,12 @@ def GetUserFPCount(user_url: str) -> float:
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["jsd_balance"] / 1000
     if json_obj["total_wordage"] == 0 and result == 0:
-        raise APIError("受简书限制，无法获取该用户的简书钻数量")
+        raise APIError("受 API 限制（用户无文章时无法获取总资产信息），无法获取该用户的简书钻数量")
     return result
 
+
 def GetUserFTNCount(user_url: str) -> float:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的简书贝数量
+    """获取用户简书贝数量
 
     # ! 视用户资产配置情况不同，该函数获取到的数值会有不大于 1000 的偏差
 
@@ -179,14 +197,15 @@ def GetUserFTNCount(user_url: str) -> float:
     result = round(result, 3)  # 处理浮点数精度问题
     return result
 
-def GetUserBadgesList(user_url: str) -> List:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的徽章列表
+
+def GetUserBadgesList(user_url: str) -> List[str]:
+    """获取用户徽章列表
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        list: 用户徽章列表
+        List[str]: 用户徽章列表
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -196,14 +215,15 @@ def GetUserBadgesList(user_url: str) -> List:
     result = [item for item in result if item != ""]  # 去除空值
     return result
 
+
 def GetUserLastUpdateTime(user_url: str) -> datetime:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的文章最近更新时间
+    """获取用户文章最后更新时间
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        datetime: 用户文章最近更新时间
+        datetime: 用户文章最后更新时间
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -211,14 +231,15 @@ def GetUserLastUpdateTime(user_url: str) -> datetime:
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
+
 def GetUserVIPInfo(user_url: str) -> Dict:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的会员信息
+    """获取用户会员信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        dict: 用户会员信息
+        Dict: 用户会员信息
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -227,21 +248,22 @@ def GetUserVIPInfo(user_url: str) -> Dict:
         result = {
             "vip_type": {
                 "bronze": "铜牌",
-                "silver": "银牌" , 
-                "gold": "黄金", 
+                "silver": "银牌",
+                "gold": "黄金",
                 "platina": "白金"
-            }[json_obj["member"]["type"]], 
+            }[json_obj["member"]["type"]],
             "expire_date": datetime.fromtimestamp(json_obj["member"]["expires_at"])
         }
     except KeyError:
         result = {
-            "vip_type": None, 
+            "vip_type": None,
             "expire_date": None
         }
     return result
 
+
 def GetUserIntroductionHtml(user_url: str) -> str:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的个人简介
+    """获取 Html 格式的用户简介
 
     Args:
         user_url (str): 用户个人主页 Url
@@ -255,8 +277,9 @@ def GetUserIntroductionHtml(user_url: str) -> str:
     result = json_obj["intro"]
     return result
 
+
 def GetUserIntroductionText(user_url: str) -> str:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的个人简介
+    """获取纯文本格式的用户简介
 
     Args:
         user_url (str): 用户个人主页 Url
@@ -274,14 +297,15 @@ def GetUserIntroductionText(user_url: str) -> str:
     result = "\n".join(result)
     return result
 
+
 def GetUserNextAnniversaryDay(user_url: str) -> datetime:
-    """该函数用于获取用户的下一次简书周年纪念时间
+    """获取用户的下一次简书周年纪念日
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        datetime: 下一次简书周年纪念时间
+        datetime: 用户的下一次简书周年纪念日
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -292,14 +316,15 @@ def GetUserNextAnniversaryDay(user_url: str) -> datetime:
     result = datetime.fromisoformat("-".join(result))
     return result
 
-def GetUserNotebooksInfo(user_url: str) -> List:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的文集与连载信息
+
+def GetUserNotebooksInfo(user_url: str) -> List[Dict]:
+    """获取用户文集与连载信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        list: 用户文集与连载信息
+        List[Dict]: 用户文集与连载信息
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -307,23 +332,24 @@ def GetUserNotebooksInfo(user_url: str) -> List:
     result = []
     for item in json_obj["notebooks"]:
         item_data = {
-            "nid": item["id"], 
-            "name": item["name"], 
+            "nid": item["id"],
+            "name": item["name"],
             "is_book": item["book"]
         }
-        if item["book"] == True:
+        if item["book"]:
             item_data["is_paid_book"] = item["paid_book"]  # 如果是连载，则判断是否是付费连载
         result.append(item_data)
     return result
 
-def GetUserOwnCollectionsInfo(user_url: str) -> List:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户自己创建的专题信息
+
+def GetUserOwnCollectionsInfo(user_url: str) -> List[Dict]:
+    """获取用户自己创建的专题信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        list: 用户自己创建的专题信息
+        List[Dict]: 用户自己创建的专题信息
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -331,22 +357,23 @@ def GetUserOwnCollectionsInfo(user_url: str) -> List:
     result = []
     for item in json_obj["own_collections"]:
         item_data = {
-            "cid": item["id"], 
-            "cslug": item["slug"], 
-            "name": item["title"], 
+            "cid": item["id"],
+            "cslug": item["slug"],
+            "name": item["title"],
             "avatar_url": item["avatar"]
         }
         result.append(item_data)
     return result
 
-def GetUserManageableCollectionsInfo(user_url: str) -> List:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户有管理权限的专题信息
+
+def GetUserManageableCollectionsInfo(user_url: str) -> List[Dict]:
+    """获取用户管理的专题信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        list: 用户有管理权限的专题信息
+        List[Dict]: 用户管理的专题信息
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -354,17 +381,18 @@ def GetUserManageableCollectionsInfo(user_url: str) -> List:
     result = []
     for item in json_obj["manageable_collections"]:
         item_data = {
-            "cid": item["id"], 
-            "cslug": item["slug"], 
-            "name": item["title"], 
+            "cid": item["id"],
+            "cslug": item["slug"],
+            "name": item["title"],
             "avatar_url": item["avatar"]
         }
         result.append(item_data)
     return result
 
-def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10, 
-                        sorting_method: str = "time") -> List:
-    """该函数接收用户个人主页 Url，并返回该链接对应用户的文章信息
+
+def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
+                        sorting_method: str = "time") -> List[Dict]:
+    """获取用户文章信息
 
     Args:
         user_url (str): 用户个人主页 Url
@@ -374,53 +402,54 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
     Returns:
-        list: 用户文章信息
+        List[Dict]: 用户文章信息
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
     order_by = {
-        "time": "added_at", 
-        "comment_time": "commented_at", 
+        "time": "added_at",
+        "comment_time": "commented_at",
         "hot": "top"
     }[sorting_method]
-    json_obj = GetUserArticlesListJsonDataApi(user_url=user_url, page=page, 
-                                           count=count, order_by=order_by)
+    json_obj = GetUserArticlesListJsonDataApi(user_url=user_url, page=page,
+                                              count=count, order_by=order_by)
     result = []
     for item in json_obj:
-        item_data  = {
-            "aid": item["object"]["data"]["id"], 
-            "title": item["object"]["data"]["title"], 
-            "aslug": item["object"]["data"]["slug"], 
-            "release_time": datetime.fromisoformat(item["object"]["data"]["first_shared_at"]), 
-            "first_image_url": item["object"]["data"]["list_image_url"], 
-            "summary": item["object"]["data"]["public_abbr"], 
-            "views_count": item["object"]["data"]["views_count"], 
-            "likes_count": item["object"]["data"]["likes_count"], 
-            "is_top": item["object"]["data"]["is_top"], 
-            "paid": item["object"]["data"]["paid"], 
-            "commentable": item["object"]["data"]["commentable"], 
+        item_data = {
+            "aid": item["object"]["data"]["id"],
+            "title": item["object"]["data"]["title"],
+            "aslug": item["object"]["data"]["slug"],
+            "release_time": datetime.fromisoformat(item["object"]["data"]["first_shared_at"]),
+            "first_image_url": item["object"]["data"]["list_image_url"],
+            "summary": item["object"]["data"]["public_abbr"],
+            "views_count": item["object"]["data"]["views_count"],
+            "likes_count": item["object"]["data"]["likes_count"],
+            "is_top": item["object"]["data"]["is_top"],
+            "paid": item["object"]["data"]["paid"],
+            "commentable": item["object"]["data"]["commentable"],
             "user": {
-                "uid": item["object"]["data"]["user"]["id"], 
-                "name": item["object"]["data"]["user"]["nickname"], 
-                "uslug": item["object"]["data"]["user"]["slug"], 
+                "uid": item["object"]["data"]["user"]["id"],
+                "name": item["object"]["data"]["user"]["nickname"],
+                "uslug": item["object"]["data"]["user"]["slug"],
                 "avatar_url": item["object"]["data"]["user"]["avatar"]
-            }, 
-            "total_fp_amount": item["object"]["data"]["total_fp_amount"] / 1000, 
-            "comments_count": item["object"]["data"]["public_comments_count"], 
+            },
+            "total_fp_amount": item["object"]["data"]["total_fp_amount"] / 1000,
+            "comments_count": item["object"]["data"]["public_comments_count"],
             "rewards_count": item["object"]["data"]["total_rewards_count"]
         }
         result.append(item_data)
     return result
 
-def GetUserFollowingInfo(user_url: str, page:int = 1) -> List:
-    """该函数接收用户个人主页 Url 和页码，并返回该用户关注列表中对应页数的用户信息
+
+def GetUserFollowingInfo(user_url: str, page: int = 1) -> List[Dict]:
+    """获取用户关注者信息
 
     Args:
         user_url (str): 用户个人主页 Url
         page (int, optional): 关注列表页码. Defaults to 1.
 
     Returns:
-        list: 该用户关注列表中对应页数的用户信息
+        List[Dict]: 用户关注者信息
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -435,25 +464,26 @@ def GetUserFollowingInfo(user_url: str, page:int = 1) -> List:
     result = []
     for index in range(8):
         item_data = {
-            "name": name_raw_data[index].text, 
-            "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
-            "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
-            "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")), 
+            "name": name_raw_data[index].text,
+            "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")),
+            "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")),
+            "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")),
             "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
             "likes_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_data)
     return result
 
-def GetUserFansInfo(user_url: str, page:int = 1) -> List:
-    """该函数接收用户个人主页 Url 和页码，并返回该用户粉丝列表中对应页数的用户信息
+
+def GetUserFansInfo(user_url: str, page: int = 1) -> List[Dict]:
+    """获取用户粉丝信息
 
     Args:
         user_url (str): 用户个人主页 Url
         page (int, optional): 粉丝列表页码. Defaults to 1.
 
     Returns:
-        list: 该用户粉丝列表中对应页数的用户信息
+        List[Dict]: 用户粉丝信息
     """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
@@ -468,15 +498,16 @@ def GetUserFansInfo(user_url: str, page:int = 1) -> List:
     result = []
     for index in range(8):
         item_data = {
-            "name": name_raw_data[index].text, 
-            "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")), 
-            "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")), 
-            "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")), 
+            "name": name_raw_data[index].text,
+            "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")),
+            "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")),
+            "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")),
             "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
             "likes_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_data)
     return result
+
 
 def GetUserAllBasicData(user_url: str) -> Dict:
     """获取用户的所有基础信息
@@ -485,14 +516,14 @@ def GetUserAllBasicData(user_url: str) -> Dict:
         user_url (str): 用户个人主页 Url
 
     Returns:
-        dict: 用户基础信息
+        Dict: 用户基础信息
     """
-    
+
     result = {}
     json_obj = GetUserJsonDataApi(user_url)
     html_obj = GetUserPCHtmlDataApi(user_url)
     anniversary_day_html_obj = GetUserNextAnniversaryDayHtmlDataApi(UserUrlToUserSlug(user_url))
-    
+
     result["name"] = json_obj["nickname"]
     result["url"] = user_url
     result["uslug"] = UserUrlToUserSlug(user_url)
@@ -524,15 +555,15 @@ def GetUserAllBasicData(user_url: str) -> Dict:
         result["vip_info"] = {
             "vip_type": {
                     "bronze": "铜牌",
-                    "silver": "银牌" , 
-                    "gold": "黄金", 
+                    "silver": "银牌",
+                    "gold": "黄金",
                     "platina": "白金"
-                }[json_obj["member"]["type"]], 
-                "expire_date": datetime.fromtimestamp(json_obj["member"]["expires_at"])
-            }
+                }[json_obj["member"]["type"]],
+            "expire_date": datetime.fromtimestamp(json_obj["member"]["expires_at"])
+        }
     except KeyError:
         result["vip_info"] = {
-            "vip_type": None, 
+            "vip_type": None,
             "expire_date": None
         }
     result["introduction_html"] = json_obj["intro"]
@@ -544,7 +575,8 @@ def GetUserAllBasicData(user_url: str) -> Dict:
     result["next_anniversary_day"] = datetime.fromisoformat("-".join(findall(r"\d+", result["next_anniversary_day"])))
     return result
 
-def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time") -> Generator[List, None, None]:
+
+def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time") -> Generator[List[Dict], None, None]:
     """获取用户的所有文章信息
 
     Args:
@@ -554,7 +586,7 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
 
     Yields:
-        Iterator[List, None, None]: 当前页文章信息
+        Iterator[List[Dict], None, None]: 当前页文章信息
     """
     page = 1
     while True:
@@ -565,14 +597,15 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
         else:
             break
 
-def GetUserAllFollowingInfo(user_url: str) -> Generator[List, None, None]:
+
+def GetUserAllFollowingInfo(user_url: str) -> Generator[List[Dict], None, None]:
     """获取用户的所有关注者信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Yields:
-        Iterator[List, None, None]: 当前页关注者信息
+        Iterator[List[Dict], None, None]: 当前页关注者信息
     """
     page = 1
     while True:
@@ -583,14 +616,15 @@ def GetUserAllFollowingInfo(user_url: str) -> Generator[List, None, None]:
         else:
             break
 
-def GetUserAllFansInfo(user_url: str) -> Generator[List, None, None]:
+
+def GetUserAllFansInfo(user_url: str) -> Generator[List[Dict], None, None]:
     """获取用户的所有粉丝信息
 
     Args:
         user_url (str): 用户个人主页 Url
 
     Yields:
-        Iterator[List, None, None]: 当前页粉丝信息
+        Iterator[List[Dict], None, None]: 当前页粉丝信息
     """
     page = 1
     while True:

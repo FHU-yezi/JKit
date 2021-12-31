@@ -1,13 +1,27 @@
 from datetime import datetime
-from json import load as json_load
 from typing import List, T, Union
 
 import pytest
+from yaml import FullLoader
+from yaml import load as yaml_load
 
 import JianshuResearchTools as jrt
-from JianshuResearchTools.assert_funcs import *
-from JianshuResearchTools.convert import *
-from JianshuResearchTools.exceptions import *
+# from JianshuResearchTools.assert_funcs import (AssertFloat, AssertInt,
+#                                                AssertString)
+from JianshuResearchTools.convert import (ArticleSlugToArticleId,
+                                          ArticleSlugToArticleUrl,
+                                          ArticleUrlToArticleId,
+                                          ArticleUrlToArticleSlug,
+                                          CollectionSlugToCollectionUrl,
+                                          CollectionUrlToCollectionId,
+                                          CollectionUrlToCollectionSlug,
+                                          IslandSlugToIslandUrl,
+                                          IslandUrlToIslandSlug,
+                                          NotebookSlugToNotebookUrl,
+                                          NotebookUrlToNotebookSlug,
+                                          UserSlugToUserId, UserSlugToUserUrl,
+                                          UserUrlToUserId, UserUrlToUserSlug)
+from JianshuResearchTools.exceptions import APIError, InputError, ResourceError
 
 error_text_to_obj = {
     "InputError": InputError,
@@ -21,84 +35,93 @@ type_text_to_obj = {
     "<class 'float'>": float
 }
 
+
 class NumberNotInRangeError(Exception):
     """内容不在数值范围内时抛出此异常"""
     pass
+
 
 def AssertNormalCase(value: T, case: T) -> None:
     assert type(value) == type(case)
     assert value == case
 
+
 def AssertDatetimeCase(value: datetime, case: float) -> None:
     assert value.timestamp() >= case
+
 
 def AssertRangeCase(value: Union[int, float], case: List[Union[int, float]]) -> None:
     if not case[0] <= value <= case[1]:
         raise NumberNotInRangeError(f"{value} 不在范围 {case} 中")
 
+
 def AssertListCase(value: List[T], case: List[T]):
     assert set(case).issubset(set(value))
 
-with open("test_case.json", "r", encoding="utf-8") as f:
-    test_cases = json_load(f)
+
+with open("test_cases.yaml", "r", encoding="utf-8") as f:
+    test_cases = yaml_load(f, Loader=FullLoader)
+
 
 class TestEggs():  # 测试彩蛋内容
     def TestFuture(self):
         jrt.future()
 
-class TestAssertFuncsModule():
-    def test_AssertType(self):
-        for case in test_cases["type_cases"]:
-            assert type(case["value"]) == type_text_to_obj[case["type"]]
 
-    def test_AssertString(self):
-        for case in test_cases["type_cases"]:
-            if case["type"] == "<class 'str'>":
-                with pytest.raises(DeprecationWarning):
-                    AssertString(case["value"])
-            else:
-                with pytest.raises(TypeError):
-                    AssertString(case["value"])
+# class TestAssertFuncsModule():
+#     def test_AssertType(self):
+#         for case in test_cases["type_cases"]:
+#             assert type(case["value"]) == type_text_to_obj[case["type"]]
 
-    def test_AssertInt(self):
-        for case in test_cases["type_cases"]:
-            if case["type"] == "<class 'int'>":
-                with pytest.raises(DeprecationWarning):
-                    AssertInt(case["value"])
-            else:
-                with pytest.raises(TypeError):
-                    AssertInt(case["value"])
+#     def test_AssertString(self):
+#         for case in test_cases["type_cases"]:
+#             if case["type"] == "<class 'str'>":
+#                 with pytest.raises(DeprecationWarning):
+#                     AssertString(case["value"])
+#             else:
+#                 with pytest.raises(TypeError):
+#                     AssertString(case["value"])
 
-    def test_AssertFloat(self):
-        for case in test_cases["type_cases"]:
-            if case["type"] == "<class 'float'>":
-                with pytest.raises(DeprecationWarning):
-                    AssertFloat(case["value"])
-            else:
-                with pytest.raises(TypeError):
-                    AssertFloat(case["value"])
-                    
+#     def test_AssertInt(self):
+#         for case in test_cases["type_cases"]:
+#             if case["type"] == "<class 'int'>":
+#                 with pytest.raises(DeprecationWarning):
+#                     AssertInt(case["value"])
+#             else:
+#                 with pytest.raises(TypeError):
+#                     AssertInt(case["value"])
+
+#     def test_AssertFloat(self):
+#         for case in test_cases["type_cases"]:
+#             if case["type"] == "<class 'float'>":
+#                 with pytest.raises(DeprecationWarning):
+#                     AssertFloat(case["value"])
+#             else:
+#                 with pytest.raises(TypeError):
+#                     AssertFloat(case["value"])
+
+
 class TestConvertModule():
     def test_UserUrlToUserId(self):
         for case in test_cases["convert_cases"]["user_convert_cases"]:
             AssertNormalCase(UserUrlToUserId(case["url"]), case["uid"])
-    
+
     def test_UserSlugToUserId(self):
         for case in test_cases["convert_cases"]["user_convert_cases"]:
             AssertNormalCase(UserSlugToUserId(case["uslug"]), case["uid"])
-    
+
     def test_UserUrlToUserSlug(self):
         for case in test_cases["convert_cases"]["user_convert_cases"]:
             AssertNormalCase(UserUrlToUserSlug(case["url"]), case["uslug"])
-    
+
     def test_UserSlugToUserUrl(self):
         for case in test_cases["convert_cases"]["user_convert_cases"]:
             AssertNormalCase(UserSlugToUserUrl(case["uslug"]), case["url"])
-    
+
     def test_ArticleUrlToArticleSlug(self):
         for case in test_cases["convert_cases"]["article_convert_cases"]:
             AssertNormalCase(ArticleUrlToArticleSlug(case["url"]), case["aslug"])
-    
+
     def test_ArticleSlugToArticleUrl(self):
         for case in test_cases["convert_cases"]["article_convert_cases"]:
             AssertNormalCase(ArticleSlugToArticleUrl(case["aslug"]), case["url"])
@@ -106,35 +129,35 @@ class TestConvertModule():
     def test_ArticleSlugToArticleId(self):
         for case in test_cases["convert_cases"]["article_convert_cases"]:
             AssertNormalCase(ArticleSlugToArticleId(case["aslug"]), case["aid"])
-    
+
     def test_ArticleUrlToArticleId(self):
         for case in test_cases["article_cases"]["success_cases"]:
             AssertNormalCase(ArticleUrlToArticleId(case["url"]), case["aid"])
-    
+
     def test_NotebookUrlToNotebookSlug(self):
         for case in test_cases["convert_cases"]["notebook_convert_cases"]:
             AssertNormalCase(NotebookUrlToNotebookSlug(case["url"]), case["nslug"])
-    
+
     def test_NotebookSlugToNotebookUrl(self):
         for case in test_cases["convert_cases"]["notebook_convert_cases"]:
             AssertNormalCase(NotebookSlugToNotebookUrl(case["nslug"]), case["url"])
-    
+
     def test_CollectionUrlToCollectionSlug(self):
         for case in test_cases["convert_cases"]["collection_convert_cases"]:
             AssertNormalCase(CollectionUrlToCollectionSlug(case["url"]), case["cslug"])
-    
+
     def test_CollectionSlugToCollectionUrl(self):
         for case in test_cases["convert_cases"]["collection_convert_cases"]:
             AssertNormalCase(CollectionSlugToCollectionUrl(case["cslug"]), case["url"])
-    
+
     def test_CollectionUrlToCollectionId(self):
         for case in test_cases["convert_cases"]["collection_convert_cases"]:
             AssertNormalCase(CollectionUrlToCollectionId(case["url"]), case["cid"])
-    
+
     def test_IslandUrlToIslandSlug(self):
         for case in test_cases["convert_cases"]["island_convert_cases"]:
             AssertNormalCase(IslandUrlToIslandSlug(case["url"]), case["islug"])
-    
+
     def test_IslandSlugToIslandUrl(self):
         for case in test_cases["convert_cases"]["island_convert_cases"]:
             AssertNormalCase(IslandSlugToIslandUrl(case["islug"]), case["url"])
@@ -253,6 +276,7 @@ class TestArticleModule():
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
                 jrt.article.GetArticleCommentStatus(case["url"])
 
+
 class TestUserModule():
     def test_GetUserName(self):
         for case in test_cases["user_cases"]["success_cases"]:
@@ -358,6 +382,7 @@ class TestUserModule():
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
                 jrt.user.GetUserNextAnniversaryDay(case["url"])
 
+
 class TestCollectionModule():
     def test_GetCollectionAvatarUrl(self):
         for case in test_cases["collection_cases"]["success_cases"]:
@@ -398,36 +423,37 @@ class TestCollectionModule():
         for case in test_cases["collection_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
                 jrt.collection.GetCollectionInformationUpdateTime(case["url"])
-    
+
+
 class TestIslandModule():
     def test_GetArticleName(self):
         for case in test_cases["island_cases"]["success_cases"]:
             AssertNormalCase(jrt.island.GetIslandName(case["url"]), case["name"])
-        
+
         for case in test_cases["island_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
                 jrt.island.GetIslandName(case["url"])
-    
+
     def test_GetIslandAvatarUrl(self):
         for case in test_cases["island_cases"]["success_cases"]:
             AssertNormalCase(jrt.island.GetIslandAvatarUrl(case["url"]), case["avatar_url"])
-        
+
         for case in test_cases["island_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
                 jrt.island.GetIslandAvatarUrl(case["url"])
-    
+
     def test_GetIslandMembersCount(self):
         for case in test_cases["island_cases"]["success_cases"]:
             AssertRangeCase(jrt.island.GetIslandMembersCount(case["url"]), case["members_count"])
-        
+
         for case in test_cases["island_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
                 jrt.island.GetIslandMembersCount(case["url"])
-    
+
     def test_GetIslandPostsCount(self):
         for case in test_cases["island_cases"]["success_cases"]:
             AssertRangeCase(jrt.island.GetIslandPostsCount(case["url"]), case["posts_count"])
-        
+
         for case in test_cases["island_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
                 jrt.island.GetIslandPostsCount(case["url"])
@@ -435,7 +461,69 @@ class TestIslandModule():
     def test_GetIslandCategory(self):
         for case in test_cases["island_cases"]["success_cases"]:
             AssertNormalCase(jrt.island.GetIslandCategory(case["url"]), case["category"])
-        
+
         for case in test_cases["island_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
                 jrt.island.GetIslandCategory(case["url"])
+
+
+class TestNotebookModule():
+    def test_GetNotebookName(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertNormalCase(jrt.notebook.GetNotebookName(case["url"]), case["name"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookName(case["url"])
+
+    def test_GetNotebookArticlesCount(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertRangeCase(jrt.notebook.GetNotebookArticlesCount(case["url"]), case["articles_count"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookArticlesCount(case["url"])
+
+    def test_GetNotebookAuthorName(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertNormalCase(jrt.notebook.GetNotebookAuthorInfo(case["url"])["name"], case["author_name"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookAuthorInfo(case["url"])["name"]
+
+    def test_GetNotebookAuthorAvatarUrl(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertNormalCase(jrt.notebook.GetNotebookAuthorInfo(case["url"])["avatar_url"], case["author_avatar_url"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookAuthorInfo(case["url"])["author_avatar_url"]
+
+    def test_GetNotebookWordage(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertRangeCase(jrt.notebook.GetNotebookWordage(case["url"]), case["wordage"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookWordage(case["url"])
+
+    def test_GetNotebookSubscribersCount(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertRangeCase(jrt.notebook.GetNotebookSubscribersCount(case["url"]), case["subscribers_count"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookSubscribersCount(case["url"])
+
+    def test_GetNotebookUpdateTime(self):
+        for case in test_cases["notebook_cases"]["success_cases"]:
+            AssertDatetimeCase(jrt.notebook.GetNotebookUpdateTime(case["url"]), case["update_time"])
+
+        for case in test_cases["notebook_cases"]["fail_cases"]:
+            with pytest.raises(error_text_to_obj[case["exception_name"]]):
+                jrt.notebook.GetNotebookUpdateTime(case["url"])
+
+
+if __name__ == "__main__":
+    pytest.main(args=["-n 4"])  # 运行测试

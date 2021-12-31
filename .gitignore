@@ -2,6 +2,7 @@
 *.csv
 *.html
 *.ipynb
+.venv/
 __pycache__/
 JianshuResearchTools/__pycache__/
 .vscode/

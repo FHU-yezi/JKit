@@ -1,0 +1,351 @@
+article_cases:
+    fail_cases:
+    -   aslug: 1b9ad61ade73
+        exception_name: ResourceError
+        url: https://www.jianshu.com/p/1b9ad61ade73
+    success_cases:
+    -   aid: 87256893
+        aslug: 52698676395f
+        author_name: 初心不变_叶子
+        comment_status: true
+        comments_count: &id001 !!python/tuple
+        - 15
+        - 30
+        description: 我们一直在想，当简书的一切都可以数据化，晦涩难懂的术语变为一张张图表，展现着创作背后的法则...... 当复杂的数据获取过程简化成一个函数调用，一行代码，一百毫秒.........
+        likes_count: !!python/tuple
+        - 40
+        - 100
+        most_valuable_comments_count: !!python/tuple
+        - 0
+        - 3
+        paid_status: false
+        publish_time: 1619840059.0
+        reads_count: &id003 !!python/tuple
+        - 1000
+        - 3000
+        reprint_status: true
+        title: 科技赋能创作星辰，简书分析工具集 JRT 发布
+        total_FP_count: &id005 !!python/tuple
+        - 80
+        - 120
+        update_time: 1619840059.0
+        url: https://www.jianshu.com/p/52698676395f
+        wordage: 1068
+    -   aid: 89748991
+        aslug: 11dfce54cd7c
+        author_name: 初心不变_叶子
+        comment_status: true
+        comments_count: *id001
+        description: 两个月前，我们发布了 JRT 的第一个正式版本。 自此，这一工具在社区的专业领域有了一定知名度，在 PyPI 上获得了 307
+            的月下载量。同时，我们也收到了来自不同行业用户...
+        likes_count: !!python/tuple
+        - 85
+        - 120
+        most_valuable_comments_count: !!python/tuple
+        - 2
+        - 5
+        paid_status: false
+        publish_time: 1625108400.0
+        reads_count: !!python/tuple
+        - 1600
+        - 3000
+        reprint_status: true
+        title: JRT 2.0，星辰赋能，创作未来
+        total_FP_count: !!python/tuple
+        - 100
+        - 150
+        update_time: 1625207736.0
+        url: https://www.jianshu.com/p/11dfce54cd7c
+        wordage: 1093
+    -   aid: 76734617
+        aslug: b3cd0fee6325
+        author_name: 简叔
+        comment_status: true
+        comments_count: &id004 !!python/tuple
+        - 25
+        - 40
+        description: ''
+        likes_count: !!python/tuple
+        - 350
+        - 400
+        most_valuable_comments_count: !!python/tuple
+        - 20
+        - 30
+        paid_status: true
+        publish_time: 1599137490.0
+        reads_count: !!python/tuple
+        - 10000
+        - 12000
+        reprint_status: true
+        title: 要有爱，不要白嫖
+        total_FP_count: !!python/tuple
+        - 300
+        - 350
+        update_time: 1599137488.0
+        url: https://www.jianshu.com/p/b3cd0fee6325
+        wordage: 0
+    -   aid: 78722940
+        aslug: 09c5bf171574
+        author_name: 简书钻首席小管家
+        comment_status: false
+        comments_count: &id002 !!python/tuple
+        - 0
+        - 0
+        description: 在过去的一段时间，简书社区对全站内容进行了全面审核，三位热心用户参与其中，帮助简书尽快完成审核工作。感谢各位热心用户的辛勤付出。
+            社区守护者徽章颁奖如下：任真[https:/...
+        likes_count: !!python/tuple
+        - 65
+        - 120
+        most_valuable_comments_count: *id002
+        paid_status: false
+        publish_time: 1603099326.0
+        reads_count: !!python/tuple
+        - 3500
+        - 5000
+        reprint_status: true
+        title: 简书社区守护者徽章奖励公告
+        total_FP_count: !!python/tuple
+        - 65
+        - 100
+        update_time: 1608784710.0
+        url: https://www.jianshu.com/p/09c5bf171574
+        wordage: 185
+collection_cases:
+    fail_cases:
+    -   exception_name: ResourceError
+        url: https://www.jianshu.com/c/a335661c66d0
+        uslug: a335661c66d0
+    success_cases:
+    -   articles_count: !!python/tuple
+        - 320000
+        - 380000
+        articles_update_time: 1638461749.0
+        avatar_url: https://upload.jianshu.io/collections/images/95/1.jpg
+        cid: 95
+        cslug: fcd7a62be697
+        information_update_time: 1634746868.0
+        subscribers_count: !!python/tuple
+        - 2300000
+        - 2800000
+        url: https://www.jianshu.com/c/fcd7a62be697
+    -   articles_count: !!python/tuple
+        - 41000
+        - 50000
+        articles_update_time: 1638369615.0
+        avatar_url: https://upload.jianshu.io/collections/images/14/6249340_194140034135_2.jpg
+        cid: 14
+        cslug: V2CqjW
+        information_update_time: 1615542417.0
+        subscribers_count: !!python/tuple
+        - 2500000
+        - 3000000
+        url: https://www.jianshu.com/c/V2CqjW
+    -   articles_count: !!python/tuple
+        - 3200
+        - 4500
+        articles_update_time: 1638482542.0
+        avatar_url: https://upload.jianshu.io/collections/images/1938174/crop1611215330383.jpg
+        cid: 1938174
+        cslug: a335661c66d9
+        information_update_time: 1611819642.0
+        subscribers_count: *id003
+        url: https://www.jianshu.com/c/a335661c66d9
+convert_cases:
+    article_convert_cases:
+    -   aid: 87256893
+        aslug: 52698676395f
+        url: https://www.jianshu.com/p/52698676395f
+    -   aid: 89748991
+        aslug: 11dfce54cd7c
+        url: https://www.jianshu.com/p/11dfce54cd7c
+    -   aid: 76734617
+        aslug: b3cd0fee6325
+        url: https://www.jianshu.com/p/b3cd0fee6325
+    collection_convert_cases:
+    -   cid: 95
+        cslug: fcd7a62be697
+        url: https://www.jianshu.com/c/fcd7a62be697
+    -   cid: 14
+        cslug: V2CqjW
+        url: https://www.jianshu.com/c/V2CqjW
+    -   cid: 1938174
+        cslug: a335661c66d9
+        url: https://www.jianshu.com/c/a335661c66d9
+    island_convert_cases:
+    -   islug: 6187f99def472f5e
+        url: https://www.jianshu.com/g/6187f99def472f5e
+    notebook_convert_cases:
+    -   nslug: '36960761'
+        url: https://www.jianshu.com/nb/36960761
+    -   nslug: '36131833'
+        url: https://www.jianshu.com/nb/36131833
+    user_convert_cases:
+    -   uid: 19867175
+        url: https://www.jianshu.com/u/ea36c8d8aa30
+        uslug: ea36c8d8aa30
+    -   uid: 19302450
+        url: https://www.jianshu.com/u/f8c2072f9afe
+        uslug: f8c2072f9afe
+    -   uid: 14715425
+        url: https://www.jianshu.com/u/c5a2ce84f60b
+        uslug: c5a2ce84f60b
+island_cases:
+    fail_cases:
+    -   exception_name: ResourceError
+        url: https://www.jianshu.com/g/6187f99def472f5f
+        uslug: 6187f99def472f5e
+    success_cases:
+    -   avatar_url: https://upload.jianshu.io/group_image/18454410/6b6138a6-685a-4f12-80a7-5e731b5fc935
+        category: 生活
+        members_count: !!python/tuple
+        - 50000
+        - 70000
+        name: 简友动态广场
+        posts_count: !!python/tuple
+        - 140000
+        - 160000
+        slug: 6187f99def472f5e
+        url: https://www.jianshu.com/g/6187f99def472f5e
+notebook_cases:
+    fail_cases:
+    -   exception_name: ResourceError
+        url: https://www.jianshu.com/nb/12345678
+        uslug: '12345678'
+    success_cases:
+    -   articles_count: *id004
+        author_avatar_url: https://upload.jianshu.io/users/upload_avatars/259/5210859b-fc54-4cf8-908f-830f0237926a.png
+        author_name: 简书
+        author_uslug: yZq3ZV
+        name: 公告
+        slug: '36131833'
+        subscribers_count: !!python/tuple
+        - 0
+        - 50
+        update_time: 1555318070.0
+        url: https://www.jianshu.com/nb/36131833
+        wordage: !!python/tuple
+        - 9000
+        - 20000
+user_cases:
+    fail_cases:
+    -   exception_name: ResourceError
+        url: https://www.jianshu.com/u/ea36c8d8aa31
+        uslug: ea36c8d8aa31
+    success_cases:
+    -   FP_count: !!python/tuple
+        - 10000
+        - 20000
+        FTN_count: !!python/tuple
+        - 8200
+        - 12000
+        VIP_info:
+            expire_date: null
+            vip_type: null
+        articles_count: !!python/tuple
+        - 130
+        - 180
+        assets_count: !!python/tuple
+        - 17000
+        - 30000
+        badges_list:
+        - 简书创作者
+        - 岛主
+        - 社区守护者
+        fans_count: !!python/tuple
+        - 800
+        - 1200
+        followers_count: !!python/tuple
+        - 200
+        - 500
+        gender: 1
+        last_update_time: 1627743976.0
+        likes_count: !!python/tuple
+        - 4300
+        - 7000
+        name: 初心不变_叶子
+        next_anniversary_day: 1666281600.0
+        uid: 19867175
+        url: https://www.jianshu.com/u/ea36c8d8aa30
+        uslug: ea36c8d8aa30
+        wordage: !!python/tuple
+        - 270000
+        - 800000
+    -   FP_count: !!python/tuple
+        - 150000
+        - 200000
+        FTN_count: !!python/tuple
+        - 380000
+        - 500000
+        VIP_info:
+            expire_date: 1648266974.0
+            vip_type: 铜牌
+        articles_count: !!python/tuple
+        - 35
+        - 60
+        assets_count: !!python/tuple
+        - 500000
+        - 700000
+        badges_list:
+        - 简书员工
+        - 鼠年大吉
+        - 锦鲤
+        - 幸运四叶草
+        - 怦然心动
+        - 岛主
+        - 简书铜牌会员
+        fans_count: !!python/tuple
+        - 8000
+        - 12000
+        followers_count: *id005
+        gender: 0
+        last_update_time: 1616126174.0
+        likes_count: !!python/tuple
+        - 9500
+        - 13000
+        name: 小岛管理局局长
+        next_anniversary_day: 1660838400.0
+        uid: 19302450
+        url: https://www.jianshu.com/u/f8c2072f9afe
+        uslug: f8c2072f9afe
+        wordage: !!python/tuple
+        - 18000
+        - 30000
+    -   FP_count: !!python/tuple
+        - 700
+        - 1500
+        FTN_count: !!python/tuple
+        - 180000
+        - 250000
+        VIP_info:
+            expire_date: null
+            vip_type: null
+        articles_count: !!python/tuple
+        - 450
+        - 600
+        assets_count: !!python/tuple
+        - 190000
+        - 250000
+        badges_list:
+        - 简书创作者
+        - 鼠年大吉
+        - 二〇一九新春快乐~
+        - 简书员工
+        fans_count: !!python/tuple
+        - 160000
+        - 200000
+        followers_count: !!python/tuple
+        - 10
+        - 30
+        gender: 0
+        last_update_time: 1602239916.0
+        likes_count: !!python/tuple
+        - 110000
+        - 150000
+        name: 简书钻首席小管家
+        next_anniversary_day: 1666972800.0
+        uid: 14715425
+        url: https://www.jianshu.com/u/c5a2ce84f60b
+        uslug: c5a2ce84f60b
+        wordage: !!python/tuple
+        - 450000
+        - 600000

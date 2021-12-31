@@ -2,6 +2,8 @@
 
 ![许可证 Badge](https://img.shields.io/github/license/fhu-yezi/JianshuResearchTools?color=%234263eb&label=%E8%AE%B8%E5%8F%AF%E8%AF%81)
 
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/FHU-yezi/JianshuResearchTools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/FHU-yezi/JianshuResearchTools/context:python)
+
 ![代码库大小 Badge](https://img.shields.io/github/repo-size/fhu-yezi/JianshuResearchTools?color=%2352c41a&label=%E4%BB%A3%E7%A0%81%E5%BA%93%E5%A4%A7%E5%B0%8F)
 
 ![GitHub 最新版本 Badge](https://img.shields.io/github/v/release/fhu-yezi/JianshuResearchTools?color=%233339af0&label=GitHub%20%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC)
@@ -37,7 +39,7 @@ pip install JianshuResearchTools
 同时，您还需要运行以下命令，下载 JRT 的依赖库：
 
 ```
-pip install requests lxml
+pip install httpx lxml
 ```
 
 您可运行以下代码示例，确认 JRT 已在您的设备上正常安装：
