@@ -256,7 +256,7 @@ def GetIslandPostJsonDataApi(post_slug: str) -> List[Dict]:
 def GetUserTimelineHtmlDataApi(uslug: str, max_id: int) -> Dict:
     request_url = f"https://www.jianshu.com/users/{uslug}/timeline"
     params = {
-        max_id: max_id
+        "max_id": max_id
     }
     source = httpx_get(request_url, headers=PC_header, params=params).content
     html_obj = etree.HTML(source)

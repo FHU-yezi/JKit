@@ -10,8 +10,10 @@ from .basic_apis import (GetUserArticlesListJsonDataApi,
                          GetUserFollowersListHtmlDataApi,
                          GetUserFollowingListHtmlDataApi, GetUserJsonDataApi,
                          GetUserNextAnniversaryDayHtmlDataApi,
-                         GetUserPCHtmlDataApi)
-from .convert import UserUrlToUserSlug
+                         GetUserPCHtmlDataApi, GetUserTimelineHtmlDataApi)
+from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
+                      NotebookSlugToNotebookUrl, UserSlugToUserUrl,
+                      UserUrlToUserSlug)
 from .exceptions import APIError
 
 
@@ -573,6 +575,93 @@ def GetUserAllBasicData(user_url: str) -> Dict:
         result["introduction_text"] = "\n".join(etree.HTML(result["introduction_html"]).xpath("//*/text()"))
     result["next_anniversary_day"] = anniversary_day_html_obj.xpath('//*[@id="app"]/div[1]/div/text()')[0]
     result["next_anniversary_day"] = datetime.fromisoformat("-".join(findall(r"\d+", result["next_anniversary_day"])))
+    return result
+
+
+def GetUserTimelineInfo(user_url: str) -> List[Dict]:
+    AssertUserUrl(user_url)
+    AssertUserStatusNormal(user_url)
+    user_slug = UserUrlToUserSlug(user_url)
+    html_obj = GetUserTimelineHtmlDataApi(user_slug, 806966195)
+    blocks = [x.__copy__() for x in html_obj.xpath("//li[starts-with(@id, 'feed-')]")]
+    result = []
+
+    for block in blocks:
+        item_data = {}
+        item_data["operation_id"] = int(block.xpath("//li/@id")[0][5:])
+        item_data["operation_type"] = block.xpath("//span[starts-with(@data-datetime, '20')]/@data-type")[0]
+        item_data["operation_time"] = datetime.fromisoformat(block.xpath("//span[starts-with(@data-datetime, '20')]/@data-datetime")[0])
+
+        if item_data["operation_type"] == "like_note":  # 对文章点赞
+            item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
+            item_data["operator_url"] = UserSlugToUserUrl(block.xpath("//a[@class='nickname']/@href")[0][3:])
+            item_data["operator_avatar_url"] = block.xpath("//a[@class='avatar']/img/@src")[0]
+            item_data["target_article_title"] = block.xpath("//a[@class='title']/text()")[0]
+            item_data["target_article_url"] = ArticleSlugToArticleUrl(block.xpath("//a[@class='title']/@href")[0][3:])
+            item_data["target_article_description"] = block.xpath("//p[@class='abstract']/text()")[0]
+            item_data["target_user_name"] = block.xpath("//div[@class='origin-author']/a/text()")[0]
+            item_data["target_user_url"] = UserSlugToUserUrl(block.xpath("//div[@class='meta']/a/@href")[0][3:])
+            item_data["target_article_reads_count"] = int(block.xpath("//div[@class='meta']/a/text()")[1])
+            item_data["target_article_likes_count"] = int(block.xpath("//div[@class='meta']/span/text()")[0])
+            item_data["target_article_comments_count"] = int(block.xpath("//div[@class='meta']/a/text()")[3])
+
+        elif item_data["operation_type"] == "like_comment":  # 对评论点赞
+            item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
+            item_data["operator_url"] = UserSlugToUserUrl(block.xpath("//a[@class='nickname']/@href")[0][3:])
+            item_data["operator_avatar_url"] = block.xpath("//a[@class='avatar']/img/@src")[0]
+            item_data["comment_content"] = "\n".join(block.xpath("//p[@class='comment']/text()"))
+            item_data["target_article_title"] = block.xpath("//blockquote/div/span/a/text()")[0]
+            item_data["target_article_url"] = ArticleSlugToArticleUrl(block.xpath("//blockquote/div/span/a/@href")[0][3:])
+            item_data["target_user_name"] = block.xpath("//blockquote/div/a/text()")[0]
+            item_data["target_user_url"] = UserSlugToUserUrl(block.xpath("//blockquote/div/a/@href")[0][3:])
+
+        elif item_data["operation_type"] == "comment_note":  # 发表评论
+            item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
+            item_data["operator_url"] = UserSlugToUserUrl(block.xpath("//a[@class='nickname']/@href")[0][3:])
+            item_data["operator_avatar_url"] = block.xpath("//a[@class='avatar']/img/@src")[0]
+            item_data["comment_content"] = "\n".join(block.xpath("//p[@class='comment']/text()"))
+            item_data["target_article_title"] = block.xpath("//a[@class='title']/text()")[0]
+            item_data["target_article_url"] = ArticleSlugToArticleUrl(block.xpath("//a[@class='title']/@href")[0][3:])
+            item_data["target_article_description"] = block.xpath("//p[@class='abstract']/text()")[0]
+            item_data["target_user_name"] = block.xpath("//div[@class='origin-author']/a/text()")[0]
+            item_data["target_user_url"] = UserSlugToUserUrl(block.xpath("//div[@class='meta']/a/@href")[0][3:])
+            item_data["target_article_reads_count"] = int(block.xpath("//div[@class='meta']/a/text()")[1])
+            item_data["target_article_likes_count"] = int(block.xpath("//div[@class='meta']/span/text()")[0])
+            item_data["target_article_comments_count"] = int(block.xpath("//div[@class='meta']/a/text()")[3])
+            try:
+                item_data["target_article_rewards_count"] = int(block.xpath("//div[@class='meta']/span/text()")[1])
+            except IndexError:  # 没有赞赏数据
+                item_data["target_article_rewards_count"] = 0
+
+        elif item_data["operation_type"] == "like_notebook":  # 关注文集
+            item_data["operation_type"] = "follow_notebook"  # 鬼知道谁把关注文集写成 like_notebook 的
+            item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
+            item_data["operator_url"] = UserSlugToUserUrl(block.xpath("//a[@class='nickname']/@href")[0][4:])
+            item_data["operator_avatar_url"] = block.xpath("//a[@class='avatar']/img/@src")[0]
+            item_data["target_notebook_title"] = block.xpath("//a[@class='title']/text()")[0]
+            item_data["target_notebook_url"] = NotebookSlugToNotebookUrl(block.xpath("//a[@class='title']/@href")[0][3:])
+            item_data["target_notebook_avatar_url"] = block.xpath("//div[@class='follow-detail']/div/a/img/@src")[0]
+            item_data["target_user_name"] = block.xpath("//a[@class='creater']/text()")[0]
+            item_data["target_user_url"] = UserSlugToUserUrl(block.xpath("//a[@class='creater']/@href")[0][3:])
+            item_data["target_notebook_articles_count"] = int(findall(r"\d+", block.xpath("//div[@class='info'][1]/p/text()")[1])[0])
+            item_data["target_notebook_subscribers_count"] = int(findall(r"\d+", block.xpath("//div[@class='info'][1]/p/text()")[1])[1])
+
+        elif item_data["operation_type"] == "like_collection":  # 关注专题
+            item_data["operator_type"] = "follow_collection"  # 鬼知道谁把关注专题写成 like_collection 的
+            item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
+            item_data["operator_url"] = UserSlugToUserUrl(block.xpath("//a[@class='nickname']/@href")[0][4:])
+            item_data["operator_avatar_url"] = block.xpath("//a[@class='avatar']/img/@src")[0]
+            item_data["target_collecton_title"] = block.xpath("//a[@class='title']/text()")[0]
+            item_data["target_collecton_url"] = CollectionSlugToCollectionUrl(block.xpath("//a[@class='title']/@href")[0][3:])
+            item_data["target_collecton_avatar_url"] = block.xpath("//div[@class='follow-detail']/div/a/img/@src")[0]
+            item_data["target_user_name"] = block.xpath("//a[@class='creater']/text()")[0]
+            item_data["target_user_url"] = UserSlugToUserUrl(block.xpath("//a[@class='creater']/@href")[0][3:])
+            item_data["target_collecton_articles_count"] = int(findall(r"\d+", block.xpath("//div[@class='info'][1]/p/text()")[1])[0])
+            item_data["target_collecton_subscribers_count"] = int(findall(r"\d+", block.xpath("//div[@class='info'][1]/p/text()")[1])[1])
+
+        else:
+            raise NotImplementedError(item_data["operation_type"])
+        result.append(item_data)
     return result
 
 
