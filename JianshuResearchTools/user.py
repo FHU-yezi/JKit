@@ -802,3 +802,24 @@ def GetUserAllFansInfo(user_url: str) -> Generator[List[Dict], None, None]:
             page += 1
         else:
             break
+
+def GetUserAllTimelineInfo(user_url: str) -> Generator[List[Dict], None, None]:
+    """获取用户的所有动态信息
+
+    Args:
+        user_url (str): 用户个人主页 Url
+
+    Yields:
+        Iterator[List[Dict], None, None]: 当前页动态信息
+    """
+    max_id = None
+    while True:
+        if max_id:
+            result = GetUserTimelineInfo(user_url, max_id)
+        else:
+            result = GetUserTimelineInfo(user_url)
+        if not result:
+            break
+        else:
+            yield result
+            max_id = result[-1]["operation_id"]
