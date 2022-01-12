@@ -580,6 +580,17 @@ def GetUserAllBasicData(user_url: str) -> Dict:
 
 
 def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000) -> List[Dict]:
+    """获取用户动态信息
+
+    ！在极少数情况下可能会遇到不在可解析列表中的动态类型，此时程序会跳过这条动态，不会抛出异常
+
+    Args:
+        user_url (str): 用户个人主页 Url
+        max_id (int, optional): 最大 id，值等于上一次获取到的数据中最后一项的 operation_id. Defaults to 1000000000.
+
+    Returns:
+        List[Dict]: [description]
+    """
     AssertUserUrl(user_url)
     AssertUserStatusNormal(user_url)
     user_slug = UserUrlToUserSlug(user_url)
@@ -729,8 +740,6 @@ def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000) -> List[Dict]:
             item_data["operator_url"] = UserSlugToUserUrl(block.xpath("//a[@class='nickname']/@href")[0][4:])
             item_data["operator_avatar_url"] = block.xpath("//a[@class='avatar']/img/@src")[0]
 
-        else:
-            raise NotImplementedError(item_data["operation_type"])
         result.append(item_data)
     return result
 
