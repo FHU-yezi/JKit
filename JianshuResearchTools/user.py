@@ -1,4 +1,3 @@
-from ast import Index
 from datetime import datetime
 from re import findall
 from typing import Dict, Generator, List
@@ -710,7 +709,7 @@ def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000) -> List[Dict]:
             item_data["target_user_fans_count"] = int(findall(r"\d+", block.xpath("//div[@class='follow-detail']/div[@class='info']/p/text()")[0])[1])
             item_data["target_user_likes_count"] = int(findall(r"\d+", block.xpath("//div[@class='follow-detail']/div[@class='info']/p/text()")[0])[2])
             item_data["target_user_description"] = "\n".join(block.xpath("//div[@class='signature']/text()"))
-        
+
         elif item_data["operation_type"] == "reward_note":  # 赞赏文章
             item_data["operation_type"] = "reward_article"  # 鬼知道谁把赞赏文章写成 reward_note 的
             item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
@@ -734,7 +733,7 @@ def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000) -> List[Dict]:
                 item_data["target_article_rewards_count"] = int(block.xpath("//div[@class='meta']/span/text()")[1])
             except IndexError:  # 没有赞赏数据
                 item_data["target_article_rewards_count"] = 0
-        
+
         elif item_data["operation_type"] == "join_jianshu":  # 加入简书
             item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
             item_data["operator_url"] = UserSlugToUserUrl(block.xpath("//a[@class='nickname']/@href")[0][4:])
@@ -802,6 +801,7 @@ def GetUserAllFansInfo(user_url: str) -> Generator[List[Dict], None, None]:
             page += 1
         else:
             break
+
 
 def GetUserAllTimelineInfo(user_url: str) -> Generator[List[Dict], None, None]:
     """获取用户的所有动态信息
