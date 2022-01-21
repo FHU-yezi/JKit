@@ -232,7 +232,7 @@ def GetIslandAllBasicData(island_url: str) -> Dict:
 
 def GetIslandAllPostsData(island_url: str, count: int = 10,
                           topic_id: int = None, sorting_method: str = "time",
-                          get_full_content: bool = False) -> Generator[List[Dict], None, None]:
+                          get_full_content: bool = False, max_count: int = None) -> Generator[Dict, None, None]:
     """获取小岛的所有帖子信息
 
     Args:
@@ -243,15 +243,22 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
         get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
     自动调用 GetIslandPostFullConetnt 函数获取完整内容并替换. Defaults to False.
+        max_count (int, optional): 获取的小岛帖子信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页帖子信息
+        Iterator[Dict], None, None]: 帖子信息
     """
     start_sort_id = None
+    now_count = 0
     while True:
         result = GetIslandPosts(island_url, start_sort_id, count, topic_id, sorting_method, get_full_content)
         if result:
-            yield result
             start_sort_id = result[-1]["sorted_id"]
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return

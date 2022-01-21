@@ -184,7 +184,7 @@ def GetNotebookAllBasicData(notebook_url: str) -> Dict:
 
 
 def GetNotebookAllArticlesInfo(notebook_url: str, count: int = 10,
-                               sorting_method: str = "time") -> Generator[List[Dict], None, None]:
+                               sorting_method: str = "time", max_count: int = None) -> Generator[Dict, None, None]:
     """获取文集中的全部文章信息
 
     Args:
@@ -192,15 +192,22 @@ def GetNotebookAllArticlesInfo(notebook_url: str, count: int = 10,
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+        max_count (int, optional): 获取的文集文章信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页文章信息
+        Iterator[Dict], None, None]: 文章信息
     """
     page = 1
+    now_count = 0
     while True:
         result = GetNotebookArticlesInfo(notebook_url, page, count, sorting_method)
         if result:
-            yield result
             page += 1
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if max_count == now_count:
+                    return

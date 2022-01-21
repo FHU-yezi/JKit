@@ -208,7 +208,7 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count
 
 
 def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) -> List[Dict]:
-    """该函数接收一个专题 ID，并返回该 ID 对应专题的关注者信息
+    """获取专题关注者信息
 
     Args:
         collection_id (int): 专题 ID
@@ -233,7 +233,7 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) 
 
 def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
                               count: int = 10, sorting_method: str = "time") -> List[Dict]:
-    """该函数接收专题 Url ，并返回该 Url 对应专题的文章信息
+    """获取专题文章信息
 
     Args:
         collection_url (str): 专题 Url
@@ -309,66 +309,87 @@ def GetCollectionAllBasicData(collection_url: str) -> Dict:
     return result
 
 
-def GetCollectionAllEditorsInfo(collection_id: int) -> Generator[List[Dict], None, None]:
+def GetCollectionAllEditorsInfo(collection_id: int, max_count: int = None) -> Generator[Dict, None, None]:
     """获取专题的所有编辑信息
 
     Args:
         collection_id (int): 专题 ID
+        max_count (int, optional): 获取的专题编辑信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页编辑信息
+        Iterator[Dict], None, None]: 编辑信息
     """
     page = 1
+    now_count = 0
     while True:
         result = GetCollectionEditorsInfo(collection_id, page)
         if result:
-            yield result
             page += 1
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return
 
 
-def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20) -> Generator[List[Dict], None, None]:
+def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20, max_count: int = None) -> Generator[Dict, None, None]:
     """获取专题的所有推荐作者信息
 
     Args:
         collection_id (int): 专题 ID
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 20.
+        max_count (int, optional): 获取的专题推荐作者信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页推荐作者信息
+        Iterator[Dict], None, None]: 推荐作者信息
     """
     page = 1
+    now_count = 0
     while True:
         result = GetCollectionRecommendedWritersInfo(collection_id, page, count)
         if result:
-            yield result
             page += 1
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return
 
 
-def GetCollectionAllSubscribersInfo(collection_id: int) -> Generator[List[Dict], None, None]:
+def GetCollectionAllSubscribersInfo(collection_id: int, max_count: int = None) -> Generator[Dict, None, None]:
     """获取专题的所有关注者信息
 
     Args:
         collection_id (int): 专题 ID
+        max_count (int, optional): 获取的专题关注者信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页关注者信息
+        Iterator[Dict], None, None]: 关注者信息
     """
     start_sort_id = None
+    now_count = 0
     while True:
         result = GetCollectionSubscribersInfo(collection_id, start_sort_id)
         if result:
-            yield result
             start_sort_id = result[-1]["sort_id"]
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return
 
 
 def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10,
-                                 sorting_method: str = "time") -> Generator[List[Dict], None, None]:
+                                 sorting_method: str = "time", max_count: int = None) -> Generator[Dict, None, None]:
     """获取专题的所有文章信息
 
     Args:
@@ -376,15 +397,22 @@ def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10,
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
         "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
+        max_count (int, optional): 获取的专题文章信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页文章信息
+        Iterator[Dict], None, None]: 文章信息
     """
     page = 1
+    now_count = 0
     while True:
         result = GetCollectionArticlesInfo(collection_url, page, count, sorting_method)
         if result:
-            yield result
             page += 1
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return

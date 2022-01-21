@@ -465,8 +465,8 @@ def GetArticleAllBasicData(article_url: str) -> Dict:
     return result
 
 
-def GetArticleAllCommentsData(article_id: int, count: int = 10,
-                              author_only: bool = False, sorting_method: str = "positive") -> Generator[List[Dict], None, None]:
+def GetArticleAllCommentsData(article_id: int, count: int = 10, author_only: bool = False,
+                              sorting_method: str = "positive", max_count: int = None) -> Generator[Dict, None, None]:
     """获取文章的全部评论信息
 
     Args:
@@ -474,16 +474,23 @@ def GetArticleAllCommentsData(article_id: int, count: int = 10,
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         author_only (bool, optional): 为 True 时只获取作者发布的评论，包含作者发布的子评论及其父评论. Defaults to False.
         sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
+        max_count (int, optional): 获取的文章评论信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页文章信息
+        Iterator[Dict], None, None]: 文章信息
     """
 
     page = 1
+    now_count = 0
     while True:
         result = GetArticleCommentsData(article_id, page, count, author_only, sorting_method)
         if result:
-            yield result
             page += 1
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return

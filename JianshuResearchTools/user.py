@@ -743,7 +743,7 @@ def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000) -> List[Dict]:
     return result
 
 
-def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time") -> Generator[List[Dict], None, None]:
+def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time", max_count: int = None) -> Generator[Dict, None, None]:
     """获取用户的所有文章信息
 
     Args:
@@ -751,75 +751,100 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+        max_count (int, optional): 获取的文章信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页文章信息
+        Iterator[Dict], None, None]: 文章信息
     """
     page = 1
+    now_count = 0
     while True:
         result = GetUserArticlesInfo(user_url, page, count, sorting_method)
         if result:
-            yield result
             page += 1
-        else:
-            break
+        else:  # 没有新的数据
+            return
+        for item in result:
+            yield item
+            if max_count:  # 如果有上限
+                now_count += 1
+                if now_count == max_count:  # 达到上限
+                    return
 
 
-def GetUserAllFollowingInfo(user_url: str) -> Generator[List[Dict], None, None]:
+def GetUserAllFollowingInfo(user_url: str, max_count: int = None) -> Generator[Dict, None, None]:
     """获取用户的所有关注者信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        max_count (int, optional): 获取的关注者信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页关注者信息
+        Iterator[Dict], None, None]: 关注者信息
     """
     page = 1
+    now_count = 0
     while True:
         result = GetUserFollowingInfo(user_url, page)
         if result:
-            yield result
             page += 1
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return
 
 
-def GetUserAllFansInfo(user_url: str) -> Generator[List[Dict], None, None]:
+def GetUserAllFansInfo(user_url: str, max_count: int = None) -> Generator[Dict, None, None]:
     """获取用户的所有粉丝信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        max_count (int, optional): 获取的粉丝信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页粉丝信息
+        Iterator[Dict], None, None]: 粉丝信息
     """
     page = 1
+    now_count = 0
     while True:
         result = GetUserFansInfo(user_url, page)
         if result:
-            yield result
             page += 1
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return
 
 
-def GetUserAllTimelineInfo(user_url: str) -> Generator[List[Dict], None, None]:
+def GetUserAllTimelineInfo(user_url: str, max_count: int = None) -> Generator[Dict, None, None]:
     """获取用户的所有动态信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        max_count (int, optional): 获取的动态信息数量上限，Defaults to None.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页动态信息
+        Iterator[Dict], None, None]: 动态信息
     """
     max_id = None
+    now_count = 0
     while True:
-        if max_id:
-            result = GetUserTimelineInfo(user_url, max_id)
-        else:
-            result = GetUserTimelineInfo(user_url)
-        if not result:
-            break
-        else:
-            yield result
+        result = GetUserTimelineInfo(user_url, max_id)
+        if result:
             max_id = result[-1]["operation_id"]
+        else:
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return
