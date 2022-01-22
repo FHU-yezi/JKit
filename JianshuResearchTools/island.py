@@ -9,120 +9,135 @@ from .convert import (IslandPostSlugToIslandPostUrl,
                       IslandPostUrlToIslandPostSlug, IslandUrlToIslandSlug)
 
 
-def GetIslandName(island_url: str) -> str:
+def GetIslandName(island_url: str, disable_check: bool = False) -> str:
     """获取小岛名称
 
     Args:
         island_url (str): 小岛 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 小岛名称
     """
-    AssertIslandUrl(island_url)
-    AssertIslandStatusNormal(island_url)
+    if not disable_check:
+        AssertIslandUrl(island_url)
+        AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["name"]
     return result
 
 
-def GetIslandAvatarUrl(island_url: str) -> str:
+def GetIslandAvatarUrl(island_url: str, disable_check: bool = False) -> str:
     """获取小岛头像链接
 
     Args:
         island_url (str): 小岛 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 小岛头像链接
     """
-    AssertIslandUrl(island_url)
-    AssertIslandStatusNormal(island_url)
+    if not disable_check:
+        AssertIslandUrl(island_url)
+        AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["image"]
     return result
 
 
-def GetIslandIntroduction(island_url: str) -> str:
+def GetIslandIntroduction(island_url: str, disable_check: bool = False) -> str:
     """获取小岛简介
 
     Args:
         island_url (str): 小岛 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 小岛简介
     """
-    AssertIslandUrl(island_url)
-    AssertIslandStatusNormal(island_url)
+    if not disable_check:
+        AssertIslandUrl(island_url)
+        AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["intro"]
     return result
 
 
-def GetIslandMembersCount(island_url: str) -> int:
+def GetIslandMembersCount(island_url: str, disable_check: bool = False) -> int:
     """获取小岛成员数量
 
     Args:
         island_url (str): 小岛 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 成员数量
     """
-    AssertIslandUrl(island_url)
-    AssertIslandStatusNormal(island_url)
+    if not disable_check:
+        AssertIslandUrl(island_url)
+        AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["members_count"]
     return result
 
 
-def GetIslandPostsCount(island_url: str) -> int:
+def GetIslandPostsCount(island_url: str, disable_check: bool = False) -> int:
     """获取小岛帖子数量
 
     Args:
         island_url (str): 小岛 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 帖子数量
     """
-    AssertIslandUrl(island_url)
-    AssertIslandStatusNormal(island_url)
+    if not disable_check:
+        AssertIslandUrl(island_url)
+        AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["posts_count"]
     return result
 
 
-def GetIslandCategory(island_url: str) -> str:
+def GetIslandCategory(island_url: str, disable_check: bool = False) -> str:
     """获取小岛分类
 
     Args:
         island_url (str): 小岛 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 分类
     """
-    AssertIslandUrl(island_url)
-    AssertIslandStatusNormal(island_url)
+    if not disable_check:
+        AssertIslandUrl(island_url)
+        AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
     result = json_obj["category"]["name"]
     return result
 
 
-def GetIslandPostFullConetnt(post_url: str) -> str:
+def GetIslandPostFullConetnt(post_url: str, disable_check: bool = False) -> str:
     """获取小岛帖子完整内容
 
     Args:
         island_url (str): 小岛 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 小岛帖子完整内容
     """
-    AssertIslandPostUrl(post_url)
-    AssertIslandStatusNormal(post_url)
+    if not disable_check:
+        AssertIslandPostUrl(post_url)
+        AssertIslandStatusNormal(post_url)
     json_obj = GetIslandPostJsonDataApi(IslandPostUrlToIslandPostSlug(post_url))
     result = json_obj["content"]
     return result
 
 
 def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
-                   topic_id: int = None, sorting_method: str = "time", get_full_content: bool = False) -> List[Dict]:
+                   topic_id: int = None, sorting_method: str = "time",
+                   get_full_content: bool = False, disable_check: bool = False) -> List[Dict]:
     """获取小岛帖子信息
 
         Args:
@@ -134,12 +149,14 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
         "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
             get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
         自动调用 GetIslandPostFullConetnt 函数获取完整内容并替换. Defaults to False.
+            disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
         Returns:
             List[Dict]: 帖子信息
     """
-    AssertIslandUrl(island_url)
-    AssertIslandStatusNormal(island_url)
+    if not disable_check:
+        AssertIslandUrl(island_url)
+        AssertIslandStatusNormal(island_url)
     order_by = {
         "time": "latest",
         "hot": "hot",
@@ -209,15 +226,19 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
     return result
 
 
-def GetIslandAllBasicData(island_url: str) -> Dict:
+def GetIslandAllBasicData(island_url: str, disable_check: bool = False) -> Dict:
     """获取小岛的所有基础信息
 
     Args:
         island_url (str): 小岛 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         Dict: 小岛基础信息
     """
+    if not disable_check:
+        AssertIslandPostUrl(island_url)
+        AssertIslandStatusNormal(island_url)
     result = {}
     json_obj = GetIslandJsonDataApi(island_url)
 
@@ -232,7 +253,8 @@ def GetIslandAllBasicData(island_url: str) -> Dict:
 
 def GetIslandAllPostsData(island_url: str, count: int = 10,
                           topic_id: int = None, sorting_method: str = "time",
-                          get_full_content: bool = False, max_count: int = None) -> Generator[Dict, None, None]:
+                          get_full_content: bool = False, max_count: int = None,
+                          disable_check: bool = False) -> Generator[Dict, None, None]:
     """获取小岛的所有帖子信息
 
     Args:
@@ -244,10 +266,14 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
         get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
     自动调用 GetIslandPostFullConetnt 函数获取完整内容并替换. Defaults to False.
         max_count (int, optional): 获取的小岛帖子信息数量上限，Defaults to None.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Yields:
         Iterator[Dict], None, None]: 帖子信息
     """
+    if not disable_check:
+        AssertIslandUrl(island_url)
+        AssertIslandStatusNormal(island_url)
     start_sort_id = None
     now_count = 0
     while True:

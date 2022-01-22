@@ -14,151 +14,169 @@ except ImportError:
     pass
 
 
-def GetArticleTitle(article_url: str) -> str:
+def GetArticleTitle(article_url: str, disable_check: bool = False) -> str:
     """获取文章标题
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 文章标题
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["public_title"]
     return result
 
 
-def GetArticleAuthorName(article_url: str) -> str:
+def GetArticleAuthorName(article_url: str, disable_check: bool = False) -> str:
     """获取文章作者名
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 文章作者名
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleHtmlJsonDataApi(article_url)
     result = json_obj["props"]["initialState"]["note"]["data"]["user"]["nickname"]
     return result
 
 
-def GetArticleReadsCount(article_url: str) -> int:
+def GetArticleReadsCount(article_url: str, disable_check: bool = False) -> int:
     """获取文章阅读量
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 文章阅读量
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleHtmlJsonDataApi(article_url)
     result = json_obj["props"]["initialState"]["note"]["data"]["views_count"]
     return result
 
 
-def GetArticleWordage(article_url: str) -> int:
+def GetArticleWordage(article_url: str, disable_check: bool = False) -> int:
     """获取文章字数
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 文章字数
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleHtmlJsonDataApi(article_url)
     result = json_obj["props"]["initialState"]["note"]["data"]["wordage"]
     return result
 
 
-def GetArticleLikesCount(article_url: str) -> int:
+def GetArticleLikesCount(article_url: str, disable_check: bool = False) -> int:
     """获取文章点赞量
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 文章点赞量
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["likes_count"]
     return result
 
 
-def GetArticleCommentsCount(article_url: str) -> int:
+def GetArticleCommentsCount(article_url: str, disable_check: bool = False) -> int:
     """获取文章评论数量
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 文章评论数量
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["public_comment_count"]
     return result
 
 
-def GetArticleMostValuableCommentsCount(article_url: str) -> int:
+def GetArticleMostValuableCommentsCount(article_url: str, disable_check: bool = False) -> int:
     """获取文章精选评论数量
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 文章精选评论数量
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["featured_comments_count"]
     return result
 
 
-def GetArticleTotalFPCount(article_url: str) -> float:
+def GetArticleTotalFPCount(article_url: str, disable_check: bool = False) -> float:
     """获取文章总获钻量
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 文章总获钻量
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["total_fp_amount"] / 1000
     return result
 
 
-def GetArticleDescription(article_url: str) -> str:
+def GetArticleDescription(article_url: str, disable_check: bool = False) -> str:
     """获取文章摘要
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 文章摘要
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["description"]
     return result
 
 
-def GetArticlePublishTime(article_url: str) -> datetime:
+def GetArticlePublishTime(article_url: str, disable_check: bool = False) -> datetime:
     """获取文章发布时间
 
     Args:
@@ -167,40 +185,45 @@ def GetArticlePublishTime(article_url: str) -> datetime:
     Returns:
         datetime: 文章发布时间
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = datetime.fromisoformat(json_obj["first_shared_at"])
     return result
 
 
-def GetArticleUpdateTime(article_url: str) -> datetime:
+def GetArticleUpdateTime(article_url: str, disable_check: bool = False) -> datetime:
     """获取文章更新时间
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         datetime: 文章更新时间
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
 
-def GetArticlePaidStatus(article_url: str) -> bool:
+def GetArticlePaidStatus(article_url: str, disable_check: bool = False) -> bool:
     """获取文章付费状态
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         bool: 文章付费状态，True 为付费文章，False 为免费文章
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     paid_type = {
         "free": False,   # 免费文章
@@ -214,39 +237,43 @@ def GetArticlePaidStatus(article_url: str) -> bool:
     return result
 
 
-def GetArticleReprintStatus(article_url: str) -> bool:
+def GetArticleReprintStatus(article_url: str, disable_check: bool = False) -> bool:
     """获取文章转载声明状态
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         bool: 文章转载声明状态，True 为允许转载，False 为禁止转载
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["reprintable"]
     return result
 
 
-def GetArticleCommentStatus(article_url: str) -> bool:
+def GetArticleCommentStatus(article_url: str, disable_check: bool = False) -> bool:
     """获取文章评论区状态
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         bool: 文章评论区状态，True 为开启评论，False 为关闭评论
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     result = json_obj["commentable"]
     return result
 
 
-def GetArticleHtml(article_url: str) -> str:
+def GetArticleHtml(article_url: str, disable_check: bool = False) -> str:
     """获取 Html 格式的文章内容
 
     # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险您需自行承担
@@ -254,12 +281,14 @@ def GetArticleHtml(article_url: str) -> str:
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: Html 格式的文章内容
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     html_text = json_obj["free_content"]
     html_text = sub(r'<div class="image-[\w]*" [ \w+-="]*>', "", html_text)  # 去除 image-view 和 image-container
@@ -277,7 +306,7 @@ def GetArticleHtml(article_url: str) -> str:
     return html_text
 
 
-def GetArticleText(article_url: str) -> str:
+def GetArticleText(article_url: str, disable_check: bool = False) -> str:
     """获取纯文本格式的文章内容
 
     # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险您需自行承担
@@ -285,12 +314,14 @@ def GetArticleText(article_url: str) -> str:
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 纯文本格式的文章内容
     """
-    AssertArticleUrl(article_url)
-    AssertArticleStatusNormal(article_url)
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     html_obj = etree.HTML(json_obj["free_content"])
     result = "".join(html_obj.itertext())
@@ -298,7 +329,7 @@ def GetArticleText(article_url: str) -> str:
     return result
 
 
-def GetArticleMarkdown(article_url: str) -> str:
+def GetArticleMarkdown(article_url: str, disable_check: bool = False) -> str:
     """获取 Markdown 格式的文章内容
 
     # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险您需自行承担
@@ -306,6 +337,7 @@ def GetArticleMarkdown(article_url: str) -> str:
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: Markdown 格式的文章内容
@@ -314,6 +346,9 @@ def GetArticleMarkdown(article_url: str) -> str:
         html2md
     except NameError:
         raise ImportError("未安装 html2md 模块，该函数不可用")
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     html_text = GetArticleHtml(article_url)
     image_descriptions = [description for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述块
     image_descriptions_text = [description.replace('class="image-caption">', "").replace("</div>", "")
@@ -428,15 +463,19 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
     return result
 
 
-def GetArticleAllBasicData(article_url: str) -> Dict:
+def GetArticleAllBasicData(article_url: str, disable_check: bool = False) -> Dict:
     """获取文章的全部基础信息
 
     Args:
         article_url (str): 文章 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         Dict: 文章基础信息
     """
+    if not disable_check:
+        AssertArticleUrl(article_url)
+        AssertArticleStatusNormal(article_url)
     result = {}
     json_obj = GetArticleJsonDataApi(article_url)
     html_json_obj = GetArticleHtmlJsonDataApi(article_url)
@@ -475,11 +514,11 @@ def GetArticleAllCommentsData(article_id: int, count: int = 10, author_only: boo
         author_only (bool, optional): 为 True 时只获取作者发布的评论，包含作者发布的子评论及其父评论. Defaults to False.
         sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
         max_count (int, optional): 获取的文章评论信息数量上限，Defaults to None.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Yields:
         Iterator[Dict], None, None]: 文章信息
     """
-
     page = 1
     now_count = 0
     while True:
