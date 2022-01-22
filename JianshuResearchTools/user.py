@@ -17,33 +17,37 @@ from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
 from .exceptions import APIError
 
 
-def GetUserName(user_url: str) -> str:
+def GetUserName(user_url: str, disable_check: bool = False) -> str:
     """获取用户昵称
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 用户昵称
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["nickname"]
     return result
 
 
-def GetUserGender(user_url: str) -> int:
+def GetUserGender(user_url: str, disable_check: bool = False) -> int:
     """获取用户性别
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 用户性别，0 为未知，1 为男，2 为女
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["gender"]
     if result == 3:  # 某些未设置性别的账号性别值为 3，怀疑为简书系统遗留问题
@@ -51,88 +55,98 @@ def GetUserGender(user_url: str) -> int:
     return result
 
 
-def GetUserFollowersCount(user_url: str) -> int:
+def GetUserFollowersCount(user_url: str, disable_check: bool = False) -> int:
     """获取用户关注人数
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 用户关注人数
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["following_users_count"]
     return result
 
 
-def GetUserFansCount(user_url: str) -> int:
+def GetUserFansCount(user_url: str, disable_check: bool = False) -> int:
     """获取用户粉丝数
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 用户粉丝数
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["followers_count"]
     return result
 
 
-def GetUserArticlesCount(user_url: str) -> int:
+def GetUserArticlesCount(user_url: str, disable_check: bool = False) -> int:
     """获取用户文章数
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 用户文章数
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     html_obj = GetUserPCHtmlDataApi(user_url)
     result = html_obj.xpath("//div[@class='info']/ul/li[3]/div[@class='meta-block']/a/p")[0].text
     result = int(result)
     return result
 
 
-def GetUserWordage(user_url: str) -> int:
+def GetUserWordage(user_url: str, disable_check: bool = False) -> int:
     """获取用户文章总字数
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 用户文章总字数
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["total_wordage"]
     return result
 
 
-def GetUserLikesCount(user_url: str) -> int:
+def GetUserLikesCount(user_url: str, disable_check: bool = False) -> int:
     """获取用户被喜欢数
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         int: 用户被喜欢数
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["total_likes_count"]
     return result
 
 
-def GetUserAssetsCount(user_url: str) -> float:
+def GetUserAssetsCount(user_url: str, disable_check: bool = False) -> float:
     """获取用户总资产
 
     # ! 当用户资产大于 10000 时，结果的精确度将下降到 1000
@@ -140,6 +154,7 @@ def GetUserAssetsCount(user_url: str) -> float:
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Raises:
         APIError: 由于用户没有文章导致无法获取总资产信息时抛出此异常
@@ -147,8 +162,9 @@ def GetUserAssetsCount(user_url: str) -> float:
     Returns:
         float: 用户总资产
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     html_obj = GetUserPCHtmlDataApi(user_url)
     try:
         result = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
@@ -158,13 +174,14 @@ def GetUserAssetsCount(user_url: str) -> float:
     return result
 
 
-def GetUserFPCount(user_url: str) -> float:
+def GetUserFPCount(user_url: str, disable_check: bool = False) -> float:
     """获取用户简书钻数量
 
     # ! 当用户没有文章时，该函数将抛出 APIError 异常
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Raises:
         APIError: 由于用户没有文章导致无法获取总资产信息时抛出此异常
@@ -172,8 +189,9 @@ def GetUserFPCount(user_url: str) -> float:
     Returns:
         float: 用户简书钻数量
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["jsd_balance"] / 1000
     if json_obj["total_wordage"] == 0 and result == 0:
@@ -181,13 +199,14 @@ def GetUserFPCount(user_url: str) -> float:
     return result
 
 
-def GetUserFTNCount(user_url: str) -> float:
+def GetUserFTNCount(user_url: str, disable_check: bool = False) -> float:
     """获取用户简书贝数量
 
     # ! 视用户资产配置情况不同，该函数获取到的数值会有不大于 1000 的偏差
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         float: 用户简书贝数量
@@ -200,17 +219,19 @@ def GetUserFTNCount(user_url: str) -> float:
     return result
 
 
-def GetUserBadgesList(user_url: str) -> List[str]:
+def GetUserBadgesList(user_url: str, disable_check: bool = False) -> List[str]:
     """获取用户徽章列表
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         List[str]: 用户徽章列表
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     html_obj = GetUserPCHtmlDataApi(user_url)
     result = html_obj.xpath("//li[@class='badge-icon']/a/text()")
     result = [item.replace(" ", "").replace("\n", "") for item in result]  # 移除空格和换行符
@@ -218,33 +239,37 @@ def GetUserBadgesList(user_url: str) -> List[str]:
     return result
 
 
-def GetUserLastUpdateTime(user_url: str) -> datetime:
+def GetUserLastUpdateTime(user_url: str, disable_check: bool = False) -> datetime:
     """获取用户文章最后更新时间
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         datetime: 用户文章最后更新时间
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = datetime.fromtimestamp(json_obj["last_updated_at"])
     return result
 
 
-def GetUserVIPInfo(user_url: str) -> Dict:
+def GetUserVIPInfo(user_url: str, disable_check: bool = False) -> Dict:
     """获取用户会员信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         Dict: 用户会员信息
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     try:
         result = {
@@ -264,33 +289,37 @@ def GetUserVIPInfo(user_url: str) -> Dict:
     return result
 
 
-def GetUserIntroductionHtml(user_url: str) -> str:
+def GetUserIntroductionHtml(user_url: str, disable_check: bool = False) -> str:
     """获取 Html 格式的用户简介
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: Html 格式的用户个人简介
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["intro"]
     return result
 
 
-def GetUserIntroductionText(user_url: str) -> str:
+def GetUserIntroductionText(user_url: str, disable_check: bool = False) -> str:
     """获取纯文本格式的用户简介
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         str: 纯文本格式的用户个人简介
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
     if json_obj["intro"] == "":   # 简介为空
         return ""
@@ -300,17 +329,19 @@ def GetUserIntroductionText(user_url: str) -> str:
     return result
 
 
-def GetUserNextAnniversaryDay(user_url: str) -> datetime:
+def GetUserNextAnniversaryDay(user_url: str, disable_check: bool = False) -> datetime:
     """获取用户的下一次简书周年纪念日
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         datetime: 用户的下一次简书周年纪念日
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     user_slug = UserUrlToUserSlug(user_url)
     html_obj = GetUserNextAnniversaryDayHtmlDataApi(user_slug)
     result = html_obj.xpath('//*[@id="app"]/div[1]/div/text()')[0]
@@ -319,17 +350,19 @@ def GetUserNextAnniversaryDay(user_url: str) -> datetime:
     return result
 
 
-def GetUserNotebooksInfo(user_url: str) -> List[Dict]:
+def GetUserNotebooksInfo(user_url: str, disable_check: bool = False) -> List[Dict]:
     """获取用户文集与连载信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         List[Dict]: 用户文集与连载信息
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserCollectionsAndNotebooksJsonDataApi(user_url=user_url, user_slug=UserUrlToUserSlug(user_url))
     result = []
     for item in json_obj["notebooks"]:
@@ -344,17 +377,19 @@ def GetUserNotebooksInfo(user_url: str) -> List[Dict]:
     return result
 
 
-def GetUserOwnCollectionsInfo(user_url: str) -> List[Dict]:
+def GetUserOwnCollectionsInfo(user_url: str, disable_check: bool = False) -> List[Dict]:
     """获取用户自己创建的专题信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         List[Dict]: 用户自己创建的专题信息
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserCollectionsAndNotebooksJsonDataApi(user_url=user_url, user_slug=UserUrlToUserSlug(user_url))
     result = []
     for item in json_obj["own_collections"]:
@@ -368,17 +403,19 @@ def GetUserOwnCollectionsInfo(user_url: str) -> List[Dict]:
     return result
 
 
-def GetUserManageableCollectionsInfo(user_url: str) -> List[Dict]:
+def GetUserManageableCollectionsInfo(user_url: str, disable_check: bool = False) -> List[Dict]:
     """获取用户管理的专题信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         List[Dict]: 用户管理的专题信息
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     json_obj = GetUserCollectionsAndNotebooksJsonDataApi(user_url=user_url, user_slug=UserUrlToUserSlug(user_url))
     result = []
     for item in json_obj["manageable_collections"]:
@@ -393,7 +430,7 @@ def GetUserManageableCollectionsInfo(user_url: str) -> List[Dict]:
 
 
 def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
-                        sorting_method: str = "time") -> List[Dict]:
+                        sorting_method: str = "time", disable_check: bool = False) -> List[Dict]:
     """获取用户文章信息
 
     Args:
@@ -402,12 +439,14 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
         count (int, optional): 获取的文章数量. Defaults to 10.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         List[Dict]: 用户文章信息
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     order_by = {
         "time": "added_at",
         "comment_time": "commented_at",
@@ -443,18 +482,20 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
     return result
 
 
-def GetUserFollowingInfo(user_url: str, page: int = 1) -> List[Dict]:
+def GetUserFollowingInfo(user_url: str, disable_check: bool = False, page: int = 1) -> List[Dict]:
     """获取用户关注者信息
 
     Args:
         user_url (str): 用户个人主页 Url
         page (int, optional): 关注列表页码. Defaults to 1.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         List[Dict]: 用户关注者信息
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     html_obj = GetUserFollowingListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
     if not name_raw_data:  # 判断该页数据是否为空
@@ -477,18 +518,20 @@ def GetUserFollowingInfo(user_url: str, page: int = 1) -> List[Dict]:
     return result
 
 
-def GetUserFansInfo(user_url: str, page: int = 1) -> List[Dict]:
+def GetUserFansInfo(user_url: str, page: int = 1, disable_check: bool = False) -> List[Dict]:
     """获取用户粉丝信息
 
     Args:
         user_url (str): 用户个人主页 Url
         page (int, optional): 粉丝列表页码. Defaults to 1.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         List[Dict]: 用户粉丝信息
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     html_obj = GetUserFollowersListHtmlDataApi(user_url=user_url, page=page)
     name_raw_data = html_obj.xpath("//a[@class='name']")[1:]
     if not name_raw_data:  # 判断该页数据是否为空
@@ -511,16 +554,19 @@ def GetUserFansInfo(user_url: str, page: int = 1) -> List[Dict]:
     return result
 
 
-def GetUserAllBasicData(user_url: str) -> Dict:
+def GetUserAllBasicData(user_url: str, disable_check: bool = False) -> Dict:
     """获取用户的所有基础信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         Dict: 用户基础信息
     """
-
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     result = {}
     json_obj = GetUserJsonDataApi(user_url)
     html_obj = GetUserPCHtmlDataApi(user_url)
@@ -578,7 +624,7 @@ def GetUserAllBasicData(user_url: str) -> Dict:
     return result
 
 
-def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000) -> List[Dict]:
+def GetUserTimelineInfo(user_url: str, disable_check: bool = False, max_id: int = 1000000000) -> List[Dict]:
     """获取用户动态信息
 
     ！在极少数情况下可能会遇到不在可解析列表中的动态类型，此时程序会跳过这条动态，不会抛出异常
@@ -586,12 +632,14 @@ def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000) -> List[Dict]:
     Args:
         user_url (str): 用户个人主页 Url
         max_id (int, optional): 最大 id，值等于上一次获取到的数据中最后一项的 operation_id. Defaults to 1000000000.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
-        List[Dict]: [description]
+        List[Dict]: 用户动态信息
     """
-    AssertUserUrl(user_url)
-    AssertUserStatusNormal(user_url)
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     user_slug = UserUrlToUserSlug(user_url)
     html_obj = GetUserTimelineHtmlDataApi(user_slug, max_id)
     blocks = [x.__copy__() for x in html_obj.xpath("//li[starts-with(@id, 'feed-')]")]
@@ -743,7 +791,8 @@ def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000) -> List[Dict]:
     return result
 
 
-def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time") -> Generator[List[Dict], None, None]:
+def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str = "time",
+                           max_count: int = None, disable_check: bool = False) -> Generator[Dict, None, None]:
     """获取用户的所有文章信息
 
     Args:
@@ -751,75 +800,116 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
+        max_count (int, optional): 获取的文章信息数量上限，Defaults to None.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页文章信息
+        Iterator[Dict], None, None]: 文章信息
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     page = 1
+    now_count = 0
     while True:
-        result = GetUserArticlesInfo(user_url, page, count, sorting_method)
+        result = GetUserArticlesInfo(user_url, page, count, sorting_method, disable_check=True)
         if result:
-            yield result
             page += 1
-        else:
-            break
+        else:  # 没有新的数据
+            return
+        for item in result:
+            yield item
+            if max_count:  # 如果有上限
+                now_count += 1
+                if now_count == max_count:  # 达到上限
+                    return
 
 
-def GetUserAllFollowingInfo(user_url: str) -> Generator[List[Dict], None, None]:
+def GetUserAllFollowingInfo(user_url: str, max_count: int = None, disable_check: bool = False) -> Generator[Dict, None, None]:
     """获取用户的所有关注者信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        max_count (int, optional): 获取的关注者信息数量上限，Defaults to None.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页关注者信息
+        Iterator[Dict], None, None]: 关注者信息
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     page = 1
+    now_count = 0
     while True:
-        result = GetUserFollowingInfo(user_url, page)
+        result = GetUserFollowingInfo(user_url, page, disable_check=True)
         if result:
-            yield result
             page += 1
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return
 
 
-def GetUserAllFansInfo(user_url: str) -> Generator[List[Dict], None, None]:
+def GetUserAllFansInfo(user_url: str, max_count: int = None, disable_check: bool = False) -> Generator[Dict, None, None]:
     """获取用户的所有粉丝信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        max_count (int, optional): 获取的粉丝信息数量上限，Defaults to None.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页粉丝信息
+        Iterator[Dict], None, None]: 粉丝信息
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     page = 1
+    now_count = 0
     while True:
-        result = GetUserFansInfo(user_url, page)
+        result = GetUserFansInfo(user_url, page, disable_check=True)
         if result:
-            yield result
             page += 1
         else:
-            break
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return
 
 
-def GetUserAllTimelineInfo(user_url: str) -> Generator[List[Dict], None, None]:
+def GetUserAllTimelineInfo(user_url: str, max_count: int = None, disable_check: bool = False) -> Generator[Dict, None, None]:
     """获取用户的所有动态信息
 
     Args:
         user_url (str): 用户个人主页 Url
+        max_count (int, optional): 获取的动态信息数量上限，Defaults to None.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Yields:
-        Iterator[List[Dict], None, None]: 当前页动态信息
+        Iterator[Dict], None, None]: 动态信息
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     max_id = None
+    now_count = 0
     while True:
-        if max_id:
-            result = GetUserTimelineInfo(user_url, max_id)
-        else:
-            result = GetUserTimelineInfo(user_url)
-        if not result:
-            break
-        else:
-            yield result
+        result = GetUserTimelineInfo(user_url, max_id, disable_check=True)
+        if result:
             max_id = result[-1]["operation_id"]
+        else:
+            return
+        for item in result:
+            yield item
+            if max_count:
+                now_count += 1
+                if now_count == max_count:
+                    return

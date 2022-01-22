@@ -129,8 +129,8 @@ collection_cases:
         - 2800000
         url: https://www.jianshu.com/c/fcd7a62be697
     -   articles_count: !!python/tuple
-        - 41000
-        - 50000
+        - 38000
+        - 43000
         articles_update_time: 1638369615.0
         avatar_url: https://upload.jianshu.io/collections/images/14/6249340_194140034135_2.jpg
         cid: 14
@@ -141,8 +141,8 @@ collection_cases:
         - 3000000
         url: https://www.jianshu.com/c/V2CqjW
     -   articles_count: !!python/tuple
+        - 2600
         - 3200
-        - 4500
         articles_update_time: 1638482542.0
         avatar_url: https://upload.jianshu.io/collections/images/1938174/crop1611215330383.jpg
         cid: 1938174
@@ -323,8 +323,8 @@ user_cases:
         - 450
         - 600
         assets_count: !!python/tuple
-        - 190000
-        - 250000
+        - 370000
+        - 430000
         badges_list:
         - 简书创作者
         - 鼠年大吉

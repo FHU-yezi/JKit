@@ -34,7 +34,7 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> List[Dict]:
         if get_full:
             user_url = UserSlugToUserUrl(item_data["uslug"])
             try:
-                item_data["Assets"] = GetUserAssetsCount(user_url)
+                item_data["Assets"] = GetUserAssetsCount(user_url, disable_check=True)
                 item_data["FTN"] = round(item_data["Assets"] - item_data["FP"], 3)  # 处理浮点数精度问题
             except APIError:
                 pass
