@@ -435,7 +435,7 @@ def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10,
     page = 1
     now_count = 0
     while True:
-        result = GetCollectionArticlesInfo(collection_url, page, count, sorting_method)
+        result = GetCollectionArticlesInfo(collection_url, page, count, sorting_method, disable_check=True)
         if result:
             page += 1
         else:

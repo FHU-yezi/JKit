@@ -221,7 +221,7 @@ def GetNotebookAllArticlesInfo(notebook_url: str, count: int = 10, sorting_metho
     page = 1
     now_count = 0
     while True:
-        result = GetNotebookArticlesInfo(notebook_url, page, count, sorting_method)
+        result = GetNotebookArticlesInfo(notebook_url, page, count, sorting_method, disable_check=True)
         if result:
             page += 1
         else:

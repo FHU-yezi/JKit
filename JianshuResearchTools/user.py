@@ -429,8 +429,8 @@ def GetUserManageableCollectionsInfo(user_url: str, disable_check: bool = False)
     return result
 
 
-def GetUserArticlesInfo(user_url: str, disable_check: bool = False, page: int = 1, count: int = 10,
-                        sorting_method: str = "time") -> List[Dict]:
+def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
+                        sorting_method: str = "time", disable_check: bool = False) -> List[Dict]:
     """获取用户文章信息
 
     Args:
@@ -518,7 +518,7 @@ def GetUserFollowingInfo(user_url: str, disable_check: bool = False, page: int =
     return result
 
 
-def GetUserFansInfo(user_url: str, disable_check: bool = False, page: int = 1) -> List[Dict]:
+def GetUserFansInfo(user_url: str, page: int = 1, disable_check: bool = False) -> List[Dict]:
     """获取用户粉丝信息
 
     Args:
@@ -564,7 +564,9 @@ def GetUserAllBasicData(user_url: str, disable_check: bool = False) -> Dict:
     Returns:
         Dict: 用户基础信息
     """
-
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     result = {}
     json_obj = GetUserJsonDataApi(user_url)
     html_obj = GetUserPCHtmlDataApi(user_url)
@@ -633,7 +635,7 @@ def GetUserTimelineInfo(user_url: str, disable_check: bool = False, max_id: int 
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
-        List[Dict]: [description]
+        List[Dict]: 用户动态信息
     """
     if not disable_check:
         AssertUserUrl(user_url)
@@ -804,10 +806,13 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
     Yields:
         Iterator[Dict], None, None]: 文章信息
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     page = 1
     now_count = 0
     while True:
-        result = GetUserArticlesInfo(user_url, page, count, sorting_method)
+        result = GetUserArticlesInfo(user_url, page, count, sorting_method, disable_check=True)
         if result:
             page += 1
         else:  # 没有新的数据
@@ -831,10 +836,13 @@ def GetUserAllFollowingInfo(user_url: str, max_count: int = None, disable_check:
     Yields:
         Iterator[Dict], None, None]: 关注者信息
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     page = 1
     now_count = 0
     while True:
-        result = GetUserFollowingInfo(user_url, page)
+        result = GetUserFollowingInfo(user_url, page, disable_check=True)
         if result:
             page += 1
         else:
@@ -858,10 +866,13 @@ def GetUserAllFansInfo(user_url: str, max_count: int = None, disable_check: bool
     Yields:
         Iterator[Dict], None, None]: 粉丝信息
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     page = 1
     now_count = 0
     while True:
-        result = GetUserFansInfo(user_url, page)
+        result = GetUserFansInfo(user_url, page, disable_check=True)
         if result:
             page += 1
         else:
@@ -885,10 +896,13 @@ def GetUserAllTimelineInfo(user_url: str, max_count: int = None, disable_check: 
     Yields:
         Iterator[Dict], None, None]: 动态信息
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     max_id = None
     now_count = 0
     while True:
-        result = GetUserTimelineInfo(user_url, max_id)
+        result = GetUserTimelineInfo(user_url, max_id, disable_check=True)
         if result:
             max_id = result[-1]["operation_id"]
         else:

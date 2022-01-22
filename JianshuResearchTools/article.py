@@ -349,7 +349,7 @@ def GetArticleMarkdown(article_url: str, disable_check: bool = False) -> str:
     if not disable_check:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
-    html_text = GetArticleHtml(article_url)
+    html_text = GetArticleHtml(article_url, disable_check=True)
     image_descriptions = [description for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述块
     image_descriptions_text = [description.replace('class="image-caption">', "").replace("</div>", "")
                                for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述文本

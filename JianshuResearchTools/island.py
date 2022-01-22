@@ -221,7 +221,8 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
         except KeyError:
             pass  # 没有话题则跳过
         if get_full_content and "..." in item_data["content"]:  # 获取到的帖子内容不全
-            item_data["content"] = GetIslandPostFullConetnt(IslandPostSlugToIslandPostUrl(item_data["pslug"]))
+            item_data["content"] = GetIslandPostFullConetnt(IslandPostSlugToIslandPostUrl(item_data["pslug"]),
+                                                            disable_check=True)
         result.append(item_data)
     return result
 
@@ -277,7 +278,8 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
     start_sort_id = None
     now_count = 0
     while True:
-        result = GetIslandPosts(island_url, start_sort_id, count, topic_id, sorting_method, get_full_content)
+        result = GetIslandPosts(island_url, start_sort_id, count, topic_id,
+                                sorting_method, get_full_content, disable_check=True)
         if result:
             start_sort_id = result[-1]["sorted_id"]
         else:
