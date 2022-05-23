@@ -37,7 +37,7 @@ class User():
         """构建新的用户对象
 
         Args:
-            user_url (str, optional): 用户个人主页 Url. Defaults to None.
+            user_url (str, optional): 用户个人主页 URL. Defaults to None.
             user_slug (str, optional): 用户 Slug. Defaults to None.
         """
         # TODO: 支持使用用户 Id 初始化用户对象
@@ -55,10 +55,10 @@ class User():
 
     @property
     def url(self) -> str:
-        """获取用户主页 Url
+        """获取用户主页 URL
 
         Returns:
-            str: 用户主页 Url
+            str: 用户主页 URL
         """
         return self._url
 
@@ -313,7 +313,7 @@ class User():
         """
         result = f"""用户信息摘要：
 昵称：{self.name}
-Url：{self.url}
+URL：{self.url}
 性别：{self.gender}
 关注者数：{self.followers_count}
 粉丝数：{self.fans_count}
@@ -337,7 +337,7 @@ class Article():
         """构建新的文章对象
 
         Args:
-            article_url (str, optional): 文章 Url. Defaults to None.
+            article_url (str, optional): 文章 URL. Defaults to None.
             article_slug (str, optional): 文章 Slug. Defaults to None.
         """
         # TODO: 支持使用文章 Id 初始化文章对象
@@ -355,10 +355,10 @@ class Article():
 
     @property
     def url(self) -> str:
-        """获取文章 Url
+        """获取文章 URL
 
         Returns:
-            str: 文章 Url
+            str: 文章 URL
         """
         return self._url
 
@@ -551,7 +551,7 @@ class Article():
     def __str__(self) -> str:
         result = f"""文章信息摘要：
 标题：{self.title}
-Url: {self.url}
+URL：{self.url}
 作者名：{self.author_name}
 字数：{self.wordage}
 阅读量：{self.reads_count}
@@ -575,7 +575,7 @@ class Notebook():
         """构建新的文集对象
 
         Args:
-            notebook_url (str, optional): 文集 Url. Defaults to None.
+            notebook_url (str, optional): 文集 URL. Defaults to None.
             notebook_slug (str, optional): 文集 Slug. Defaults to None.
         """
         # TODO: 支持使用用户 Id 初始化用户对象
@@ -593,10 +593,10 @@ class Notebook():
 
     @property
     def url(self) -> str:
-        """获取文集 Url
+        """获取文集 URL
 
         Returns:
-            str: 文集 Url
+            str: 文集 URL
         """
         return self._url
 
@@ -729,7 +729,7 @@ class Notebook():
         """
         result = f"""文集信息摘要：
 名称：{self.name}
-Url：{self.url}
+URL：{self.url}
 作者名：{self.author_name}
 文章数：{self.articles_count}
 总字数：{self.wordage}
@@ -747,7 +747,7 @@ class Collection():
         """初始化专题类
 
         Args:
-            collection_url (str, optional): 专题 Url. Defaults to None.
+            collection_url (str, optional): 专题 URL. Defaults to None.
             collection_slug (str, optional): 专题 Slug. Defaults to None.
             collection_id (int, optional): 专题 Id，如不传入部分数据将无法获取. Defaults to None.
         """
@@ -771,10 +771,10 @@ class Collection():
 
     @property
     def url(self) -> str:
-        """获取专题 Url
+        """获取专题 URL
 
         Returns:
-            str: 专题 Url
+            str: 专题 URL
         """
         return self._url
 
@@ -970,7 +970,7 @@ class Collection():
         result = f"""
 专题信息摘要：
 专题名：{self.name}
-Url：{self.url}
+URL：{self.url}
 主编名：{self.owner_info["name"]}
 图片链接：{self.avatar_url}
 文章数：{self.articles_count}
@@ -1000,10 +1000,10 @@ class Island():
 
     @property
     def url(self) -> str:
-        """获取小岛 Url
+        """获取小岛 URL
 
         Returns:
-            str: 小岛 Url
+            str: 小岛 URL
         """
         return self._url
 
@@ -1118,7 +1118,7 @@ class Island():
         """
         result = f"""小岛信息摘要：
 小岛名：{self.name}
-Url：{self.url}
+URL：{self.url}
 分类：{self.category}
 成员数：{self.members_count}
 帖子数：{self.posts_count}

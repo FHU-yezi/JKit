@@ -13,7 +13,7 @@ def GetIslandName(island_url: str, disable_check: bool = False) -> str:
     """获取小岛名称
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -31,7 +31,7 @@ def GetIslandAvatarUrl(island_url: str, disable_check: bool = False) -> str:
     """获取小岛头像链接
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -49,7 +49,7 @@ def GetIslandIntroduction(island_url: str, disable_check: bool = False) -> str:
     """获取小岛简介
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -67,7 +67,7 @@ def GetIslandMembersCount(island_url: str, disable_check: bool = False) -> int:
     """获取小岛成员数量
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -85,7 +85,7 @@ def GetIslandPostsCount(island_url: str, disable_check: bool = False) -> int:
     """获取小岛帖子数量
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -103,7 +103,7 @@ def GetIslandCategory(island_url: str, disable_check: bool = False) -> str:
     """获取小岛分类
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -121,7 +121,7 @@ def GetIslandPostFullConetnt(post_url: str, disable_check: bool = False) -> str:
     """获取小岛帖子完整内容
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -141,7 +141,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
     """获取小岛帖子信息
 
         Args:
-            island_url (str): 小岛 Url
+            island_url (str): 小岛 URL
             start_sort_id (int, optional): 起始序号，等于上一条数据的序号. Defaults to None.
             count (int, optional): 每次返回的数据数量. Defaults to 10.
             topic_id (int, optional): 话题 ID. Defaults to None.
@@ -231,7 +231,7 @@ def GetIslandAllBasicData(island_url: str, disable_check: bool = False) -> Dict:
     """获取小岛的所有基础信息
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -259,7 +259,7 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
     """获取小岛的所有帖子信息
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         topic_id (int, optional): 话题 ID. Defaults to None.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，

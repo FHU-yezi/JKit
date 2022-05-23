@@ -18,7 +18,7 @@ def GetArticleTitle(article_url: str, disable_check: bool = False) -> str:
     """获取文章标题
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -36,7 +36,7 @@ def GetArticleAuthorName(article_url: str, disable_check: bool = False) -> str:
     """获取文章作者名
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -54,7 +54,7 @@ def GetArticleReadsCount(article_url: str, disable_check: bool = False) -> int:
     """获取文章阅读量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -72,7 +72,7 @@ def GetArticleWordage(article_url: str, disable_check: bool = False) -> int:
     """获取文章字数
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -90,7 +90,7 @@ def GetArticleLikesCount(article_url: str, disable_check: bool = False) -> int:
     """获取文章点赞量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -108,7 +108,7 @@ def GetArticleCommentsCount(article_url: str, disable_check: bool = False) -> in
     """获取文章评论数量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -126,7 +126,7 @@ def GetArticleMostValuableCommentsCount(article_url: str, disable_check: bool = 
     """获取文章精选评论数量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -144,7 +144,7 @@ def GetArticleTotalFPCount(article_url: str, disable_check: bool = False) -> flo
     """获取文章总获钻量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -162,7 +162,7 @@ def GetArticleDescription(article_url: str, disable_check: bool = False) -> str:
     """获取文章摘要
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -180,7 +180,7 @@ def GetArticlePublishTime(article_url: str, disable_check: bool = False) -> date
     """获取文章发布时间
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
 
     Returns:
         datetime: 文章发布时间
@@ -197,7 +197,7 @@ def GetArticleUpdateTime(article_url: str, disable_check: bool = False) -> datet
     """获取文章更新时间
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -215,7 +215,7 @@ def GetArticlePaidStatus(article_url: str, disable_check: bool = False) -> bool:
     """获取文章付费状态
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -241,7 +241,7 @@ def GetArticleReprintStatus(article_url: str, disable_check: bool = False) -> bo
     """获取文章转载声明状态
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -259,7 +259,7 @@ def GetArticleCommentStatus(article_url: str, disable_check: bool = False) -> bo
     """获取文章评论区状态
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -280,7 +280,7 @@ def GetArticleHtml(article_url: str, disable_check: bool = False) -> str:
     # ! 该函数不能获取文章付费部分的内容
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -313,7 +313,7 @@ def GetArticleText(article_url: str, disable_check: bool = False) -> str:
     # ! 该函数不能获取文章付费部分的内容
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -336,7 +336,7 @@ def GetArticleMarkdown(article_url: str, disable_check: bool = False) -> str:
     # ! 该函数不能获取文章付费部分的内容
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -467,7 +467,7 @@ def GetArticleAllBasicData(article_url: str, disable_check: bool = False) -> Dic
     """获取文章的全部基础信息
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:

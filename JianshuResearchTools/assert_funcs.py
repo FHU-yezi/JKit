@@ -32,29 +32,29 @@ def AssertType(object: Any, type_obj: Any) -> None:
 
 
 def AssertJianshuUrl(string: str) -> None:
-    """判断字符串是否是有效的简书 Url
+    """判断字符串是否是有效的简书 URL
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 字符串不是有效的简书 Url 时抛出此错误
+        InputError: 字符串不是有效的简书 URL 时抛出此错误
     """
     if not JIANSHU_URL_REGEX.fullmatch(string):
-        raise InputError(f"{string} 不是有效的简书 Url")
+        raise InputError(f"{string} 不是有效的简书 URL")
 
 
 def AssertUserUrl(string: str) -> None:
-    """判断字符串是否是有效的简书用户主页 Url
+    """判断字符串是否是有效的简书用户主页 URL
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 字符串不是有效的简书用户主页 Url 时抛出此错误
+        InputError: 字符串不是有效的简书用户主页 URL 时抛出此错误
     """
     if not JIANSHU_USER_URL_REGEX.fullmatch(string):
-        raise InputError(f"{string} 不是有效的简书用户主页 Url")
+        raise InputError(f"{string} 不是有效的简书用户主页 URL")
 
 
 @lru_cache(maxsize=64)
@@ -62,7 +62,7 @@ def AssertUserStatusNormal(user_url: str) -> None:
     """判断用户账号状态是否正常
 
     Args:
-        user_url (str): 用户主页 Url
+        user_url (str): 用户主页 URL
 
     Raises:
         ResourceError: 用户账号状态异常时抛出此错误
@@ -75,16 +75,16 @@ def AssertUserStatusNormal(user_url: str) -> None:
 
 
 def AssertArticleUrl(string: str) -> None:
-    """判断字符串是否是有效的简书文章 Url
+    """判断字符串是否是有效的简书文章 URL
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 字符串不是有效的简书文章 Url 时抛出此错误
+        InputError: 字符串不是有效的简书文章 URL 时抛出此错误
     """
     if not JIANSHU_ARTICLES_URL_REGEX.fullmatch(string):
-        raise InputError(f"{string} 不是有效的简书文章 Url")
+        raise InputError(f"{string} 不是有效的简书文章 URL")
 
 
 @lru_cache(maxsize=64)
@@ -92,7 +92,7 @@ def AssertArticleStatusNormal(article_url: str) -> None:
     """判断文章状态是否正常
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
 
     Raises:
         ResourceError: 文章状态异常时抛出此错误
@@ -106,23 +106,23 @@ def AssertArticleStatusNormal(article_url: str) -> None:
 
 
 def AssertNotebookUrl(string: str) -> None:
-    """判断字符串是否是有效的简书文集 Url
+    """判断字符串是否是有效的简书文集 URL
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 字符串不是有效的简书文集 Url 时抛出此错误
+        InputError: 字符串不是有效的简书文集 URL 时抛出此错误
     """
     if not JIANSHU_NOTEBOOK_URL_REGEX.fullmatch(string):
-        raise InputError(f"{string} 不是有效的简书文集 Url")
+        raise InputError(f"{string} 不是有效的简书文集 URL")
 
 
 def AssertNotebookStatusNormal(notebook_url: str) -> None:
     """判断文集状态是否正常
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
 
     Raises:
         ResourceError: 文集状态异常时抛出此错误
@@ -136,16 +136,16 @@ def AssertNotebookStatusNormal(notebook_url: str) -> None:
 
 
 def AssertCollectionUrl(string: str) -> None:
-    """判断字符串是否是有效的简书专题 Url
+    """判断字符串是否是有效的简书专题 URL
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 字符串不是有效的简书专题 Url 时抛出此错误
+        InputError: 字符串不是有效的简书专题 URL 时抛出此错误
     """
     if not JIANSHU_COLLECTION_URL_REGEX.fullmatch(string):
-        raise InputError(f"{string} 不是有效的简书专题 Url")
+        raise InputError(f"{string} 不是有效的简书专题 URL")
 
 
 @lru_cache(maxsize=64)
@@ -153,7 +153,7 @@ def AssertCollectionStatusNormal(collection_url: str) -> None:
     """判断专题状态是否正常
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
 
     Raises:
         ResourceError: 专题状态异常时抛出此错误
@@ -166,16 +166,16 @@ def AssertCollectionStatusNormal(collection_url: str) -> None:
 
 
 def AssertIslandUrl(string: str) -> None:
-    """判断字符串是否是有效的简书小岛 Url
+    """判断字符串是否是有效的简书小岛 URL
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 字符串不是有效的简书小岛 Url 时抛出此错误
+        InputError: 字符串不是有效的简书小岛 URL 时抛出此错误
     """
     if not JIANSHU_ISLAND_URL_REGEX.fullmatch(string):
-        raise InputError(f"{string} 不是有效的简书小岛 Url")
+        raise InputError(f"{string} 不是有效的简书小岛 URL")
 
 
 @lru_cache(maxsize=64)
@@ -188,13 +188,13 @@ def AssertIslandStatusNormal(island_url: str) -> None:
 
 
 def AssertIslandPostUrl(string: str) -> None:
-    """判断字符串是否是有效的简书小岛帖子 Url
+    """判断字符串是否是有效的简书小岛帖子 URL
 
     Args:
         string (str): 需要进行判断的字符串
 
     Raises:
-        InputError: 字符串不是有效的简书小岛帖子 Url 时抛出此错误
+        InputError: 字符串不是有效的简书小岛帖子 URL 时抛出此错误
     """
     if not JIANSHU_ISLAND_POST_URL_REGEX.fullmatch(string):
-        raise InputError(f"{string} 不是有效的简书小岛帖子 Url")
+        raise InputError(f"{string} 不是有效的简书小岛帖子 URL")

@@ -7,10 +7,10 @@ from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
 
 
 def UserUrlToUserId(user_url: str) -> int:
-    """用户个人主页 Url 转用户 ID
+    """用户个人主页 URL 转用户 ID
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
 
     Returns:
         int: 用户 ID
@@ -39,10 +39,10 @@ def UserSlugToUserId(user_slug: str) -> int:
 
 
 def UserUrlToUserSlug(user_url: str) -> str:
-    """用户个人主页 Url 转用户 Slug
+    """用户个人主页 URL 转用户 Slug
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
 
     Returns:
         str: 用户 Slug
@@ -53,13 +53,13 @@ def UserUrlToUserSlug(user_url: str) -> str:
 
 
 def UserSlugToUserUrl(user_slug: str) -> str:
-    """用户 Slug 转用户个人主页 Url
+    """用户 Slug 转用户个人主页 URL
 
     Args:
         user_slug (str): 用户 Slug
 
     Returns:
-        str: 用户个人主页 Url
+        str: 用户个人主页 URL
     """
     AssertType(user_slug, str)
     result = f"https://www.jianshu.com/u/{user_slug}"
@@ -68,10 +68,10 @@ def UserSlugToUserUrl(user_slug: str) -> str:
 
 
 def ArticleUrlToArticleSlug(article_url: str) -> str:
-    """文章 Url 转文章 Slug
+    """文章 URL 转文章 Slug
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
 
     Returns:
         str: 文章 Slug
@@ -82,13 +82,13 @@ def ArticleUrlToArticleSlug(article_url: str) -> str:
 
 
 def ArticleSlugToArticleUrl(article_slug: str) -> str:
-    """文章 Slug 转文章 Url
+    """文章 Slug 转文章 URL
 
     Args:
         article_slug (str): 文章 Slug
 
     Returns:
-        str: 文章 Url
+        str: 文章 URL
     """
     AssertType(article_slug, str)
     result = f"https://www.jianshu.com/p/{article_slug}"
@@ -112,10 +112,10 @@ def ArticleSlugToArticleId(article_slug: str) -> int:
 
 
 def ArticleUrlToArticleId(article_url: str) -> int:
-    """文章 Url 转文章 ID
+    """文章 URL 转文章 ID
 
     Args:
-        article_Url (str): 文章 Url
+        article_url (str): 文章 URL
 
     Returns:
         int: 文章 ID
@@ -129,10 +129,10 @@ def ArticleUrlToArticleId(article_url: str) -> int:
 
 
 def NotebookUrlToNotebookId(notebook_url: str) -> int:
-    """文集 Url 转文集 ID
+    """文集 URL 转文集 ID
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
 
     Returns:
         int: 文集 ID
@@ -145,10 +145,10 @@ def NotebookUrlToNotebookId(notebook_url: str) -> int:
 
 
 def NotebookUrlToNotebookSlug(notebook_url: str) -> str:
-    """文集 Url 转文集 Slug
+    """文集 URL 转文集 Slug
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
 
     Returns:
         str: 文集 Slug
@@ -159,13 +159,13 @@ def NotebookUrlToNotebookSlug(notebook_url: str) -> str:
 
 
 def NotebookSlugToNotebookUrl(notebook_slug: str) -> str:
-    """文集 Slug 转文集 Url
+    """文集 Slug 转文集 URL
 
     Args:
         notebook_slug (str): 文集 Slug
 
     Returns:
-        str: 文集 Url
+        str: 文集 URL
     """
     AssertType(notebook_slug, str)
     result = f"https://www.jianshu.com/nb/{notebook_slug}"
@@ -174,10 +174,10 @@ def NotebookSlugToNotebookUrl(notebook_slug: str) -> str:
 
 
 def CollectionUrlToCollectionSlug(collection_url: str) -> str:
-    """专题 Url 转专题 Slug
+    """专题 URL 转专题 Slug
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
 
     Returns:
         str: 专题 Slug
@@ -188,13 +188,13 @@ def CollectionUrlToCollectionSlug(collection_url: str) -> str:
 
 
 def CollectionSlugToCollectionUrl(collection_slug: str) -> str:
-    """专题 Slug 转专题 Url
+    """专题 Slug 转专题 URL
 
     Args:
         collection_slug (str): 专题 Slug
 
     Returns:
-        str: 专题 Url
+        str: 专题 URL
     """
     AssertType(collection_slug, str)
     result = f"https://www.jianshu.com/c/{collection_slug}"
@@ -203,10 +203,10 @@ def CollectionSlugToCollectionUrl(collection_slug: str) -> str:
 
 
 def CollectionUrlToCollectionId(collection_url: str) -> int:
-    """专题 Url 转专题 ID
+    """专题 URL 转专题 ID
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
 
     Returns:
         int: 专题 ID
@@ -218,10 +218,10 @@ def CollectionUrlToCollectionId(collection_url: str) -> int:
 
 
 def IslandUrlToIslandSlug(island_url: str) -> str:
-    """小岛 Url 转小岛 Slug
+    """小岛 URL 转小岛 Slug
 
     Args:
-        island_url (str): 小岛 Url
+        island_url (str): 小岛 URL
 
     Returns:
         str: 小岛 Slug
@@ -232,13 +232,13 @@ def IslandUrlToIslandSlug(island_url: str) -> str:
 
 
 def IslandSlugToIslandUrl(island_slug: str) -> str:
-    """小岛 Slug 转小岛 Url
+    """小岛 Slug 转小岛 URL
 
     Args:
         island_slug (str): 小岛 Slug
 
     Returns:
-        str: 小岛 Url
+        str: 小岛 URL
     """
     AssertType(island_slug, str)
     result = f"https://www.jianshu.com/g/{island_slug}"
@@ -247,12 +247,12 @@ def IslandSlugToIslandUrl(island_slug: str) -> str:
 
 
 def UserUrlToUserUrlScheme(user_url: str) -> str:
-    """用户个人主页 Url 转用户个人主页 Url Scheme
+    """用户个人主页 URL 转用户个人主页 URL Scheme
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
     Returns:
-        str: 用户个人主页 Url Scheme
+        str: 用户个人主页 URL Scheme
     """
     AssertType(user_url, str)
     AssertUserUrl(user_url)
@@ -261,12 +261,12 @@ def UserUrlToUserUrlScheme(user_url: str) -> str:
 
 
 def ArticleUrlToArticleUrlScheme(article_url: str) -> str:
-    """文章 Url 转文章 Url Scheme
+    """文章 URL 转文章 URL Scheme
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
     Returns:
-        str: 文章 Url Scheme
+        str: 文章 URL Scheme
     """
     AssertType(article_url, str)
     AssertArticleUrl(article_url)
@@ -275,12 +275,12 @@ def ArticleUrlToArticleUrlScheme(article_url: str) -> str:
 
 
 def NotebookUrlToNotebookUrlScheme(notebook_url: str) -> str:
-    """文集 Url 转文集 Url Scheme
+    """文集 URL 转文集 URL Scheme
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
     Returns:
-        str: 文集 Url Scheme
+        str: 文集 URL Scheme
     """
     AssertType(notebook_url, str)
     AssertNotebookUrl(notebook_url)
@@ -289,12 +289,12 @@ def NotebookUrlToNotebookUrlScheme(notebook_url: str) -> str:
 
 
 def CollectionUrlToCollectionUrlScheme(collection_url: str) -> str:
-    """文集 Url 转文集 Url Scheme
+    """文集 URL 转文集 URL Scheme
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
     Returns:
-        str: 文集 Url Scheme
+        str: 文集 URL Scheme
     """
     AssertType(collection_url, str)
     AssertCollectionUrl(collection_url)
@@ -303,10 +303,10 @@ def CollectionUrlToCollectionUrlScheme(collection_url: str) -> str:
 
 
 def IslandPostUrlToIslandPostSlug(post_url: str) -> str:
-    """小岛文章 Url 转小岛帖子 Slug
+    """小岛文章 URL 转小岛帖子 Slug
 
     Args:
-        island_url (str): 小岛帖子 Url
+        island_url (str): 小岛帖子 URL
 
     Returns:
         str: 小岛帖子 Slug
@@ -318,13 +318,13 @@ def IslandPostUrlToIslandPostSlug(post_url: str) -> str:
 
 
 def IslandPostSlugToIslandPostUrl(post_slug: str) -> str:
-    """小岛帖子 Slug 转小岛帖子 Url
+    """小岛帖子 Slug 转小岛帖子 URL
 
     Args:
         island_url (str): 小岛帖子 Slug
 
     Returns:
-        str: 小岛帖子 Url
+        str: 小岛帖子 URL
     """
     AssertType(post_slug, str)
     result = f"https://www.jianshu.com/gp/{post_slug}"
