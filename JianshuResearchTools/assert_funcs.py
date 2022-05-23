@@ -8,7 +8,7 @@ from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
 from .exceptions import InputError, ResourceError
 
 
-JIANSHU_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/\w{1,2}/\w{6,}/?$")
+JIANSHU_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/\w{1,2}/\w{6,16}/?$")
 JIANSHU_USER_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/u/\w{6,12}/?$")
 JIANSHU_ARTICLES_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/p/\w{12}/?$")
 JIANSHU_NOTEBOOK_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/nb/\d{7,8}/?$")
