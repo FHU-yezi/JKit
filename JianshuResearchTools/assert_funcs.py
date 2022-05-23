@@ -1,10 +1,20 @@
 from functools import lru_cache
 from typing import Any
+from re import compile as re_compile
 
 from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
                          GetIslandJsonDataApi, GetNotebookJsonDataApi,
                          GetUserJsonDataApi)
 from .exceptions import InputError, ResourceError
+
+
+JIANSHU_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/\w{1,2}/\w{6,}/?$")
+JIANSHU_USER_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/u/\w{6,12}/?$")
+JIANSHU_ARTICLES_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/p/\w{12}/?$")
+JIANSHU_NOTEBOOK_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/nb/\d{7,8}/?$")
+JIANSHU_COLLECTION_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/c/\w{12}/?$")
+JIANSHU_ISLAND_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/g/\w{16}/?$")
+JIANSHU_ISLAND_POST_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/gp/\w{16}/?$")
 
 
 def AssertType(object: Any, type_obj: Any) -> None:
@@ -30,10 +40,8 @@ def AssertJianshuUrl(string: str) -> None:
     Raises:
         InputError: 字符串不是有效的简书 Url 时抛出此错误
     """
-    keyword_to_find = ["https://", "www.jianshu.com"]
-    for keyword in keyword_to_find:
-        if keyword not in string:
-            raise InputError(f"{string} 不是有效的简书 Url")
+    if not JIANSHU_URL_REGEX.fullmatch(string):
+        raise InputError(f"{string} 不是有效的简书 Url")
 
 
 def AssertUserUrl(string: str) -> None:
@@ -45,10 +53,8 @@ def AssertUserUrl(string: str) -> None:
     Raises:
         InputError: 字符串不是有效的简书用户主页 Url 时抛出此错误
     """
-    keyword_to_find = ["https://", "www.jianshu.com", "/u/"]
-    for keyword in keyword_to_find:
-        if keyword not in string:
-            raise InputError(f"{string} 不是有效的简书用户主页 Url")
+    if not JIANSHU_USER_URL_REGEX.fullmatch(string):
+        raise InputError(f"{string} 不是有效的简书用户主页 Url")
 
 
 @lru_cache(maxsize=64)
@@ -77,10 +83,8 @@ def AssertArticleUrl(string: str) -> None:
     Raises:
         InputError: 字符串不是有效的简书文章 Url 时抛出此错误
     """
-    keyword_to_find = ["https://", "www.jianshu.com", "/p/"]
-    for keyword in keyword_to_find:
-        if keyword not in string:
-            raise InputError(f"{string} 不是有效的简书文章 Url")
+    if not JIANSHU_ARTICLES_URL_REGEX.fullmatch(string):
+        raise InputError(f"{string} 不是有效的简书文章 Url")
 
 
 @lru_cache(maxsize=64)
@@ -110,10 +114,8 @@ def AssertNotebookUrl(string: str) -> None:
     Raises:
         InputError: 字符串不是有效的简书文集 Url 时抛出此错误
     """
-    keyword_to_find = ["https://", "www.jianshu.com", "/nb/"]
-    for keyword in keyword_to_find:
-        if keyword not in string:
-            raise InputError(f"{string} 不是有效的简书文集 Url")
+    if not JIANSHU_NOTEBOOK_URL_REGEX.fullmatch(string):
+        raise InputError(f"{string} 不是有效的简书文集 Url")
 
 
 def AssertNotebookStatusNormal(notebook_url: str) -> None:
@@ -142,10 +144,8 @@ def AssertCollectionUrl(string: str) -> None:
     Raises:
         InputError: 字符串不是有效的简书专题 Url 时抛出此错误
     """
-    keyword_to_find = ["https://", "www.jianshu.com", "/c/"]
-    for keyword in keyword_to_find:
-        if keyword not in string:
-            raise InputError(f"{string} 不是有效的简书专题 Url")
+    if not JIANSHU_COLLECTION_URL_REGEX.fullmatch(string):
+        raise InputError(f"{string} 不是有效的简书专题 Url")
 
 
 @lru_cache(maxsize=64)
@@ -174,10 +174,8 @@ def AssertIslandUrl(string: str) -> None:
     Raises:
         InputError: 字符串不是有效的简书小岛 Url 时抛出此错误
     """
-    keyword_to_find = ["https://", "www.jianshu.com", "/g/"]
-    for keyword in keyword_to_find:
-        if keyword not in string:
-            raise InputError(f"{string} 不是有效的简书小岛 Url")
+    if not JIANSHU_ISLAND_URL_REGEX.fullmatch(string):
+        raise InputError(f"{string} 不是有效的简书小岛 Url")
 
 
 @lru_cache(maxsize=64)
@@ -198,7 +196,5 @@ def AssertIslandPostUrl(string: str) -> None:
     Raises:
         InputError: 字符串不是有效的简书小岛帖子 Url 时抛出此错误
     """
-    keyword_to_find = ["https://", "www.jianshu.com", "/gp/"]
-    for keyword in keyword_to_find:
-        if keyword not in string:
-            raise InputError(f"{string} 不是有效的简书小岛帖子 Url")
+    if not JIANSHU_ISLAND_POST_URL_REGEX.fullmatch(string):
+        raise InputError(f"{string} 不是有效的简书小岛帖子 Url")
