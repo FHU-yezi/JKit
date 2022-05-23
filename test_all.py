@@ -6,8 +6,6 @@ from yaml import FullLoader
 from yaml import load as yaml_load
 
 import JianshuResearchTools as jrt
-# from JianshuResearchTools.assert_funcs import (AssertFloat, AssertInt,
-#                                                AssertString)
 from JianshuResearchTools.convert import (ArticleSlugToArticleId,
                                           ArticleSlugToArticleUrl,
                                           ArticleUrlToArticleId,
@@ -27,12 +25,6 @@ error_text_to_obj = {
     "InputError": InputError,
     "APIError": APIError,
     "ResourceError": ResourceError
-}
-
-type_text_to_obj = {
-    "<class 'str'>": str,
-    "<class 'int'>": int,
-    "<class 'float'>": float
 }
 
 
@@ -66,39 +58,6 @@ with open("test_cases.yaml", "r", encoding="utf-8") as f:
 class TestEggs():  # 测试彩蛋内容
     def TestFuture(self):
         jrt.future()
-
-
-# class TestAssertFuncsModule():
-#     def test_AssertType(self):
-#         for case in test_cases["type_cases"]:
-#             assert type(case["value"]) == type_text_to_obj[case["type"]]
-
-#     def test_AssertString(self):
-#         for case in test_cases["type_cases"]:
-#             if case["type"] == "<class 'str'>":
-#                 with pytest.raises(DeprecationWarning):
-#                     AssertString(case["value"])
-#             else:
-#                 with pytest.raises(TypeError):
-#                     AssertString(case["value"])
-
-#     def test_AssertInt(self):
-#         for case in test_cases["type_cases"]:
-#             if case["type"] == "<class 'int'>":
-#                 with pytest.raises(DeprecationWarning):
-#                     AssertInt(case["value"])
-#             else:
-#                 with pytest.raises(TypeError):
-#                     AssertInt(case["value"])
-
-#     def test_AssertFloat(self):
-#         for case in test_cases["type_cases"]:
-#             if case["type"] == "<class 'float'>":
-#                 with pytest.raises(DeprecationWarning):
-#                     AssertFloat(case["value"])
-#             else:
-#                 with pytest.raises(TypeError):
-#                     AssertFloat(case["value"])
 
 
 class TestConvertModule():
