@@ -12,7 +12,7 @@ JIANSHU_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/\w{1,2}/\w{6,16}/?$"
 JIANSHU_USER_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/u/\w{6,12}/?$")
 JIANSHU_ARTICLES_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/p/\w{12}/?$")
 JIANSHU_NOTEBOOK_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/nb/\d{7,8}/?$")
-JIANSHU_COLLECTION_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/c/\w{12}/?$")
+JIANSHU_COLLECTION_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/c/\w{6,12}/?$")
 JIANSHU_ISLAND_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/g/\w{16}/?$")
 JIANSHU_ISLAND_POST_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/gp/\w{16}/?$")
 
