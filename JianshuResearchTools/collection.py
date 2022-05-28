@@ -9,6 +9,18 @@ from .basic_apis import (GetCollectionArticlesJsonDataApi,
                          GetCollectionSubscribersJsonDataApi)
 from .convert import CollectionUrlToCollectionSlug
 
+__all__ = [
+    "GetCollectionName", "GetCollectionAvatarUrl",
+    "GetCollectionIntroductionText", "GetCollectionIntroductionHtml",
+    "GetCollectionArticlesCount", "GetCollectionSubscribersCount",
+    "GetCollectionArticlesUpdateTime", "GetCollectionInformationUpdateTime",
+    "GetCollectionOwnerInfo", "GetCollectionEditorsInfo",
+    "GetCollectionRecommendedWritersInfo", "GetCollectionSubscribersInfo",
+    "GetCollectionAllBasicData", "GetCollectionAllEditorsInfo",
+    "GetCollectionAllRecommendedWritersInfo",
+    "GetCollectionAllSubscribersInfo", "GetCollectionAllArticlesInfo"
+]
+
 
 def GetCollectionName(collection_url: str, disable_check: bool = False) -> str:
     """获取专题名称

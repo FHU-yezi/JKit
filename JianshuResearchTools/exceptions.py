@@ -1,3 +1,6 @@
+__all__ = ["InputError", "APIError", "ResourceError"]
+
+
 class InputError(Exception):
     """传入参数错误时抛出此异常
     """

@@ -12,9 +12,26 @@ try:
 except ImportError:
     from json import loads as json_loads
 
+__all__ = [
+    "GetArticleJsonDataApi", "GetArticleHtmlJsonDataApi",
+    "GetArticleCommentsJsonDataApi", "GetBeikeIslandTradeRankListJsonDataApi",
+    "GetBeikeIslandTradeListJsonDataApi", "GetCollectionJsonDataApi",
+    "GetCollectionEditorsJsonDataApi",
+    "GetCollectionRecommendedWritersJsonDataApi",
+    "GetCollectionSubscribersJsonDataApi", "GetCollectionArticlesJsonDataApi",
+    "GetIslandJsonDataApi", "GetIslandPostsJsonDataApi",
+    "GetNotebookJsonDataApi", "GetDailyArticleRankListJsonDataApi",
+    "GetArticlesFPRankListJsonDataApi", "GetUserJsonDataApi",
+    "GetUserPCHtmlDataApi", "GetUserCollectionsAndNotebooksJsonDataApi",
+    "GetUserArticlesListJsonDataApi", "GetUserFollowingListHtmlDataApi",
+    "GetUserFollowersListHtmlDataApi", "GetUserNextAnniversaryDayHtmlDataApi",
+    "GetIslandPostJsonDataApi", "GetUserTimelineHtmlDataApi"
+]
+
 
 def GetArticleJsonDataApi(article_url: str) -> Dict:
-    request_url = article_url.replace("https://www.jianshu.com/", "https://www.jianshu.com/asimov/")
+    request_url = article_url.replace("https://www.jianshu.com/",
+                                      "https://www.jianshu.com/asimov/")
     source = httpx_get(request_url, headers=jianshu_request_header).content
     json_obj = json_loads(source)
     return json_obj

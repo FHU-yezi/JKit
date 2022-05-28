@@ -16,6 +16,19 @@ from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
                       UserUrlToUserSlug)
 from .exceptions import APIError
 
+__all__ = [
+    "GetUserName", "GetUserGender", "GetUserFollowersCount",
+    "GetUserFansCount", "GetUserArticlesCount", "GetUserWordage",
+    "GetUserLikesCount", "GetUserAssetsCount", "GetUserFPCount",
+    "GetUserFTNCount", "GetUserBadgesList", "GetUserLastUpdateTime",
+    "GetUserVIPInfo", "GetUserIntroductionHtml", "GetUserIntroductionText",
+    "GetUserNextAnniversaryDay", "GetUserNotebooksInfo",
+    "GetUserOwnCollectionsInfo", "GetUserManageableCollectionsInfo",
+    "GetUserArticlesInfo", "GetUserFollowingInfo", "GetUserFansInfo",
+    "GetUserAllBasicData", "GetUserTimelineInfo", "GetUserAllArticlesInfo",
+    "GetUserAllFollowingInfo", "GetUserAllFansInfo", "GetUserAllTimelineInfo"
+]
+
 
 def GetUserName(user_url: str, disable_check: bool = False) -> str:
     """获取用户昵称

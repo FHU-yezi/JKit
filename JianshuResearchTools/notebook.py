@@ -4,6 +4,13 @@ from typing import Dict, Generator, List
 from .assert_funcs import AssertNotebookStatusNormal, AssertNotebookUrl
 from .basic_apis import GetNotebookArticlesJsonDataApi, GetNotebookJsonDataApi
 
+__all__ = [
+    "GetNotebookName", "GetNotebookArticlesCount", "GetNotebookAuthorInfo",
+    "GetNotebookWordage", "GetNotebookSubscribersCount",
+    "GetNotebookUpdateTime", "GetNotebookArticlesInfo",
+    "GetNotebookAllBasicData", "GetNotebookAllArticlesInfo"
+]
+
 
 def GetNotebookName(notebook_url: str, disable_check: bool = False) -> str:
     """获取文集名称

@@ -6,6 +6,13 @@ from .basic_apis import (GetBeikeIslandTradeListJsonDataApi,
 from .convert import UserUrlToUserSlug
 from .exceptions import ResourceError
 
+__all__ = [
+    "GetBeikeIslandTotalTradeAmount", "GetBeikeIslandTotalTradeCount",
+    "GetBeikeIslandTotalTradeRankData", "GetBeikeIslandBuyTradeRankData",
+    "GetBeikeIslandSellTradeRankData", "GetBeikeIslandTradeOrderInfo",
+    "GetBeikeIslandTradePrice"
+]
+
 
 def GetBeikeIslandTotalTradeAmount() -> int:
     """获取贝壳小岛总交易量

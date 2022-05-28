@@ -3,6 +3,11 @@ __version__ = "2.9.0"
 from . import (article, beikeisland, collection, island, notebook, objects,
                rank, user)
 
+__all__ = [
+    "article", "beikeisland", "collection", "island", "notebook", "objects",
+    "rank", "user"
+]
+
 
 def future():
     """彩蛋

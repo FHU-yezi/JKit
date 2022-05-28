@@ -5,6 +5,18 @@ from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
 from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
                          GetUserJsonDataApi)
 
+__all__ = [
+    "UserUrlToUserId", "UserSlugToUserId", "UserUrlToUserSlug",
+    "ArticleUrlToArticleSlug", "ArticleSlugToArticleUrl",
+    "ArticleSlugToArticleId", "ArticleUrlToArticleId",
+    "NotebookUrlToNotebookId", "NotebookUrlToNotebookSlug",
+    "CollectionSlugToCollectionUrl", "CollectionUrlToCollectionId",
+    "IslandUrlToIslandSlug", "IslandSlugToIslandUrl", "UserUrlToUserUrlScheme",
+    "ArticleUrlToArticleUrlScheme", "NotebookUrlToNotebookUrlScheme",
+    "CollectionUrlToCollectionUrlScheme", "IslandPostUrlToIslandPostSlug",
+    "IslandPostSlugToIslandPostUrl"
+]
+
 
 def UserUrlToUserId(user_url: str) -> int:
     """用户个人主页 URL 转用户 ID
