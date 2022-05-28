@@ -302,18 +302,23 @@ def GetArticleHtml(article_url: str, disable_check: bool = False) -> str:
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     html_text = json_obj["free_content"]
-    html_text = sub(r'<div class="image-[\w]*" [ \w+-="]*>', "", html_text)  # 去除 image-view 和 image-container
-    html_text = sub(r'<div class="image-package">', "", html_text)  # 去除 image-package
-    html_text = sub(r'<div class="image-container-fill".+>', "", html_text)  # 去除 image-container-fill
-    old_img_blocks = findall(r'\<img[ \w+-="]*>', html_text)  # 匹配旧的 img 标签
-    img_names = findall(r"\w+-\w+.jpg|\w+-\w+.png", html_text)  # 获取图片名称
-    print(img_names)
-    new_img_blocks = [f'<img src="https://upload-images.jianshu.io/upload_images/{img_name}">'
-                      for img_name in img_names]  # 拼接新的 img 标签
+
+    # 去除 image-container、image-container-fill 和 image-view
+    html_text = sub(r'<div class="image-.*?" .*?>', "", html_text)
+    # 去除 image-package
+    html_text = html_text.replace('<div class="image-package">', "")
+
+    old_img_blocks = findall(r'<img .*?>', html_text)  # 匹配旧的 img 标签
     if not old_img_blocks:  # 文章中没有图片块
         return html_text
+
+    img_urls = [findall(r'<img data-original-src="(.*?)".*>', i)[0] for i in old_img_blocks]
+    new_img_blocks = [f'<img src="https:{img_url}">' for img_url in img_urls]
+
     for old_img_block, new_img_block in zip(old_img_blocks, new_img_blocks):
         html_text = html_text.replace(old_img_block, new_img_block)  # 替换 img 标签
+    with open("result.html", "w", encoding="utf-8") as f:
+        f.write(html_text)
     return html_text
 
 
