@@ -13,7 +13,9 @@ def NameValueMappingToString(mapping: Dict[str, Tuple[Any, bool]], title: str = 
     """
     result_lst = []
     for key, (value, new_line) in mapping.items():
+        # 如果需要换行，则在字符串前添加换行符
         value = "\n" + value if new_line else value
         result_lst.append(f"{key}: {value}")
 
+    # 如果有标题，则拼接标题并在后面加入一个换行符，然后拼接属性字符串
     return "\n".join((f"{title}：", *result_lst)) if title else "\n".join(result_lst)
