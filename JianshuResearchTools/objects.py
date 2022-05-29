@@ -521,6 +521,9 @@ class Article():
     def html(self) -> str:
         """获取 Html 格式的文章内容
 
+        # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险您需自行承担
+        # ! 该函数不能获取文章付费部分的内容
+
         Returns:
             str: Html 格式的文章内容
         """
@@ -531,6 +534,9 @@ class Article():
     def text(self) -> str:
         """获取纯文本格式的文章内容
 
+        # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险您需自行承担
+        # ! 该函数不能获取文章付费部分的内容
+
         Returns:
             str: 纯文本格式的文章内容
         """
@@ -540,6 +546,9 @@ class Article():
     @cache_result
     def markdown(self) -> str:
         """获取 Markdown 格式的文章内容
+
+        # ! 该函数可以获取设置禁止转载的文章内容，请尊重作者版权，由此带来的风险您需自行承担
+        # ! 该函数不能获取文章付费部分的内容
 
         Returns:
             str: Markdown 格式的文章内容
