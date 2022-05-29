@@ -9,6 +9,7 @@ from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
                       NotebookSlugToNotebookUrl, UserSlugToUserUrl,
                       UserUrlToUserSlug)
 from .exceptions import InputError
+from .utils import NameValueMappingToString
 
 __all__ = [
     "DISABLE_CACHE", "User", "Article", "Notebook", "Collection", "Island"
@@ -315,23 +316,23 @@ class User():
         Returns:
             str: 用户信息摘要
         """
-        result = f"""用户信息摘要：
-昵称：{self.name}
-URL：{self.url}
-性别：{self.gender}
-关注者数：{self.followers_count}
-粉丝数：{self.fans_count}
-文章数：{self.articles_count}
-总字数：{self.wordage}
-简书钻：{self.FP_count}
-简书贝：{self.FTN_count}
-总资产：{self.assets_count}
-徽章：{' '.join(self.badges)}
-最后更新时间：{self.last_update_time}
-会员等级：{self.VIP_info['vip_type']}
-会员过期时间：{self.VIP_info['expire_date']}
-个人简介：\n{self.introduction_text}"""
-        return result
+        return NameValueMappingToString({
+            "昵称": (self.name, False),
+            "URL": (self.url, False),
+            "性别": (self.gender, False),
+            "关注者数": (self.followers_count, False),
+            "粉丝数": (self.fans_count, False),
+            "文章数": (self.articles_count, False),
+            "总字数": (self.wordage, False),
+            "简书钻": (self.FP_count, False),
+            "简书贝": (self.FTN_count, False),
+            "总资产": (self.assets_count, False),
+            "徽章": (' '.join(self.badges), False),
+            "最后更新时间": (self.last_update_time, False),
+            "会员等级": (self.VIP_info["vip_type"], False),
+            "会员过期时间": (self.VIP_info["expire_date"], False),
+            "个人简介": (self.introduction_text, True)
+        }, title="用户信息摘要")
 
 
 class Article():
@@ -572,23 +573,28 @@ class Article():
             return False
 
     def __str__(self) -> str:
-        result = f"""文章信息摘要：
-标题：{self.title}
-URL：{self.url}
-作者名：{self.author_name}
-字数：{self.wordage}
-阅读量：{self.reads_count}
-点赞数：{self.likes_count}
-评论数：{self.comments_count}
-精选评论数：{self.most_valuable_comments_count}
-总获钻量：{self.total_FP_count}
-发布时间：{self.publish_time}
-更新时间：{self.update_time}
-需付费：{self.paid_status}
-可转载：{self.reprint_status}
-可评论：{self.comment_status}
-摘要：\n{self.description}"""
-        return result
+        """输出文章信息摘要
+
+        Returns:
+            str: 文章信息摘要
+        """
+        return NameValueMappingToString({
+            "标题": (self.title, False),
+            "URL": (self.url, False),
+            "作者名": (self.author_name, False),
+            "字数": (self.wordage, False),
+            "阅读量": (self.reads_count, False),
+            "点赞数": (self.likes_count, False),
+            "评论数": (self.comments_count, False),
+            "精选评论数": (self.most_valuable_comments_count, False),
+            "总获钻量": (self.total_FP_count, False),
+            "发布时间": (self.publish_time, False),
+            "更新时间": (self.update_time, False),
+            "需付费": (self.paid_status, False),
+            "可转载": (self.reprint_status, False),
+            "可评论": (self.comment_status, False),
+            "摘要": (self.description, True)
+        }, title="文章信息摘要")
 
 
 class Notebook():
@@ -750,16 +756,15 @@ class Notebook():
         Returns:
             str: 文集信息摘要
         """
-        result = f"""文集信息摘要：
-名称：{self.name}
-URL：{self.url}
-作者名：{self.author_name}
-文章数：{self.articles_count}
-总字数：{self.wordage}
-关注者数：{self.subscribers_count}
-更新时间：{self.update_time}"""
-
-        return result
+        return NameValueMappingToString({
+            "名称": (self.name, False),
+            "URL": (self.url, False),
+            "作者名": (self.author_name, False),
+            "文章数": (self.articles_count, False),
+            "总字数": (self.wordage, False),
+            "关注者数": (self.subscribers_count, False),
+            "更新时间": (self.update_time, False)
+        }, title="文集信息摘要")
 
 
 class Collection():
@@ -869,7 +874,7 @@ class Collection():
         Returns:
             datetime: 专题信息更新时间
         """
-        return collection.GetCollectionInfoUpdateTime(self._url, disable_check=True)
+        return collection.GetCollectionInformationUpdateTime(self._url, disable_check=True)
 
     @property
     @cache_result
@@ -990,19 +995,17 @@ class Collection():
         Returns:
             str: 专题信息摘要
         """
-        result = f"""
-专题信息摘要：
-专题名：{self.name}
-URL：{self.url}
-主编名：{self.owner_info["name"]}
-图片链接：{self.avatar_url}
-文章数：{self.articles_count}
-关注者数：{self.subscribers_count}
-文章更新时间：{self.articles_update_time}
-信息更新时间：{self.info_update_time}
-简介：\n{self.introduction_text}"""
-
-        return result
+        return NameValueMappingToString({
+            "专题名": (self.name, False),
+            "URL": (self.url, False),
+            "主编名": (self.owner_info["name"], False),
+            "图片链接": (self.avatar_url, False),
+            "文章数": (self.articles_count, False),
+            "关注者数": (self.subscribers_count, False),
+            "文章更新时间": (self.articles_update_time, False),
+            "信息更新时间": (self.info_update_time, False),
+            "简介": (self.introduction_text, True),
+        }, title="专题信息摘要")
 
 
 class Island():
@@ -1139,12 +1142,11 @@ class Island():
         Returns:
             str: 小岛信息摘要
         """
-        result = f"""小岛信息摘要：
-小岛名：{self.name}
-URL：{self.url}
-分类：{self.category}
-成员数：{self.members_count}
-帖子数：{self.posts_count}
-简介：\n{self.introduction}"""
-
-        return result
+        return NameValueMappingToString({
+            "小岛名": (self.name, False),
+            "URL": (self.url, False),
+            "分类": (self.category, False),
+            "成员数": (self.members_count, False),
+            "帖子数": (self.posts_count, False),
+            "简介": (self.introduction, True)
+        }, title="小岛信息摘要")
