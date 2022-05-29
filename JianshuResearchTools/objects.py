@@ -536,6 +536,16 @@ class Article():
         """
         return article.GetArticleText(self._url, disable_check=True)
 
+    @property
+    @cache_result
+    def markdown(self) -> str:
+        """获取 Markdown 格式的文章内容
+
+        Returns:
+            str: Markdown 格式的文章内容
+        """
+        return article.GetArticleMarkdown(self._url, disable_check=True)
+
     def __eq__(self, other: object) -> bool:
         """判断是否是同一篇文章
 
