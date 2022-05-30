@@ -1,9 +1,12 @@
 from datetime import datetime
-from typing import Dict, List
+from typing import Any, Callable, Dict, List
 
 from . import article, collection, island, notebook, user
-from .assert_funcs import (AssertArticleUrl, AssertCollectionUrl,
-                           AssertIslandUrl, AssertNotebookUrl, AssertUserUrl)
+from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
+                           AssertCollectionStatusNormal, AssertCollectionUrl,
+                           AssertIslandStatusNormal, AssertIslandUrl,
+                           AssertNotebookStatusNormal, AssertNotebookUrl,
+                           AssertType, AssertUserStatusNormal, AssertUserUrl)
 from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
                       IslandSlugToIslandUrl, IslandUrlToIslandSlug,
                       NotebookSlugToNotebookUrl, UserSlugToUserUrl,
@@ -12,27 +15,74 @@ from .exceptions import InputError
 from .utils import CallWithoutCheck, NameValueMappingToString, OnlyOne
 
 __all__ = [
-    "DISABLE_CACHE", "User", "Article", "Notebook", "Collection", "Island"
+    "User", "Article", "Notebook", "Collection", "Island",
+    "get_cache_items_count", "get_cache_status", "set_cache_status",
+    "clear_cache"
 ]
 
-DISABLE_CACHE = False  # 禁用缓存
+_cache_dict: Dict[int, Any] = {}
+_DISABLE_CACHE = False  # 禁用缓存
 
 
-def cache_result(func):
-    """缓存函数的返回值"""
-    cache_Dict = {}
+def cache_result_wrapper(func: Callable):
+    """该函数是一个装饰器，用于缓存函数的返回值
 
-    def wrapper(*args, **kwargs):
-        args_hash = hash((hash(args[0]),) + tuple(args[1:]) + tuple(kwargs.items()))
-        cache_result = cache_Dict.get(args_hash)
-        if cache_result and not DISABLE_CACHE:
+    Args:
+        func (Callable): 被装饰的函数
+    """
+
+    def inner(*args, **kwargs):
+        if _DISABLE_CACHE:
+            # 缓存已禁用，直接执行函数并返回结果
+            return func(*args, **kwargs)
+
+        # 生成哈希值
+        args_hash = hash((hash(func.__qualname__),) + (hash(args[0]),) + tuple(args[1:]) + tuple(kwargs.items()))
+
+        cache_result = _cache_dict.get(args_hash)
+        if cache_result:  # 如果缓存中有值，则直接返回缓存值
             return cache_result
         else:
-            result = func(*args, **kwargs)
-            if not DISABLE_CACHE:
-                cache_Dict[args_hash] = result
+            result = func(*args, **kwargs)  # 运行函数，获取返回值
+            _cache_dict[args_hash] = result  # 将返回值存入缓存
             return result
-    return wrapper
+    return inner
+
+
+def get_cache_items_count() -> int:
+    """该函数用于获取已缓存值的数量
+
+    Returns:
+        int: 已缓存值数量
+    """
+    return len(_cache_dict)
+
+
+def get_cache_status() -> bool:
+    """查询缓存状态
+
+    Returns:
+        bool: True 为开启，False 为关闭
+    """
+    return not _DISABLE_CACHE
+
+
+def set_cache_status(status: bool):
+    """设置缓存状态
+
+    Args:
+        status (bool): True 为开启，False 为关闭
+    """
+    AssertType(status, bool)
+
+    global _DISABLE_CACHE
+    _DISABLE_CACHE = not status
+
+
+def clear_cache():
+    """该函数用于清空已缓存的所有值
+    """
+    _cache_dict.clear()
 
 
 class User():
@@ -53,6 +103,8 @@ class User():
             AssertUserUrl(user_url)
         elif user_slug:
             user_url = UserSlugToUserUrl(user_slug)
+
+        AssertUserStatusNormal(user_url)
         self._url = user_url
 
     @property
@@ -65,7 +117,7 @@ class User():
         return self._url
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def slug(self) -> str:
         """获取用户 Slug
 
@@ -75,7 +127,7 @@ class User():
         return UserUrlToUserSlug(self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def name(self) -> str:
         """获取用户昵称
 
@@ -85,7 +137,7 @@ class User():
         return CallWithoutCheck(user.GetUserName, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def gender(self) -> int:
         """获取用户性别
 
@@ -95,7 +147,7 @@ class User():
         return CallWithoutCheck(user.GetUserGender, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def followers_count(self) -> int:
         """获取用户关注数
 
@@ -105,7 +157,7 @@ class User():
         return CallWithoutCheck(user.GetUserFollowersCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def fans_count(self) -> int:
         """获取用户粉丝数
 
@@ -115,7 +167,7 @@ class User():
         return CallWithoutCheck(user.GetUserFansCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def articles_count(self) -> int:
         """获取用户文章数
 
@@ -125,7 +177,7 @@ class User():
         return CallWithoutCheck(user.GetUserArticlesCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def wordage(self) -> int:
         """获取用户总字数
 
@@ -135,7 +187,7 @@ class User():
         return CallWithoutCheck(user.GetUserWordage, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def likes_count(self) -> int:
         """获取用户被点赞数
 
@@ -145,7 +197,7 @@ class User():
         return CallWithoutCheck(user.GetUserLikesCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def assets_count(self) -> float:
         """获取用户资产量
 
@@ -155,7 +207,7 @@ class User():
         return CallWithoutCheck(user.GetUserAssetsCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def FP_count(self) -> float:
         """获取用户简书钻数量
 
@@ -165,7 +217,7 @@ class User():
         return CallWithoutCheck(user.GetUserFPCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def FTN_count(self) -> float:
         """获取用户简书贝数量
 
@@ -175,7 +227,7 @@ class User():
         return CallWithoutCheck(user.GetUserFTNCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def badges(self) -> List:
         """获取徽章列表
 
@@ -185,7 +237,7 @@ class User():
         return CallWithoutCheck(user.GetUserBadgesList, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def last_update_time(self) -> datetime:
         """获取最近更新时间
 
@@ -195,7 +247,7 @@ class User():
         return CallWithoutCheck(user.GetUserLastUpdateTime, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def VIP_info(self) -> Dict:
         """获取用户会员信息
 
@@ -205,7 +257,7 @@ class User():
         return CallWithoutCheck(user.GetUserVIPInfo, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def introduction_text(self) -> str:
         """获取纯文本格式的用户简介
 
@@ -215,7 +267,7 @@ class User():
         return CallWithoutCheck(user.GetUserIntroductionText, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def introduction_html(self) -> str:
         """获取 Html 格式的用户简介
 
@@ -225,7 +277,7 @@ class User():
         return CallWithoutCheck(user.GetUserIntroductionHtml, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def notebooks(self) -> List:
         """获取用户文集信息
 
@@ -235,7 +287,7 @@ class User():
         return CallWithoutCheck(user.GetUserNotebooksInfo, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def own_collections(self) -> List:
         """获取自己创建的专题信息
 
@@ -245,7 +297,7 @@ class User():
         return CallWithoutCheck(user.GetUserOwnCollectionsInfo, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def manageable_collections(self) -> List:
         """获取用户有管理权的专题信息
 
@@ -254,7 +306,7 @@ class User():
         """
         return CallWithoutCheck(user.GetUserManageableCollectionsInfo, self._url)
 
-    @cache_result
+    @cache_result_wrapper
     def articles_info(self, page: int = 1, count: int = 10) -> List[Dict]:
         """获取文章信息
 
@@ -267,7 +319,7 @@ class User():
         """
         return CallWithoutCheck(user.GetUserArticlesInfo, self._url, page, count)
 
-    @cache_result
+    @cache_result_wrapper
     def following_info(self, page: int = 1) -> List[Dict]:
         """获取关注者信息
 
@@ -279,7 +331,7 @@ class User():
         """
         return CallWithoutCheck(user.GetUserFollowingInfo, self._url, page)
 
-    @cache_result
+    @cache_result_wrapper
     def fans_info(self, page: int = 1) -> List[Dict]:
         """获取粉丝信息
 
@@ -358,6 +410,8 @@ class Article():
             AssertArticleUrl(article_url)
         elif article_slug:
             article_url = ArticleSlugToArticleUrl(article_slug)
+
+        AssertArticleStatusNormal(article_url)
         self._url = article_url
 
     @property
@@ -370,7 +424,7 @@ class Article():
         return self._url
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def slug(self) -> str:
         """获取文章 Slug
 
@@ -380,7 +434,7 @@ class Article():
         return article.GetArticleSlug(self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def title(self) -> str:
         """获取文章标题
 
@@ -390,7 +444,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleTitle, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def author_name(self) -> str:
         """获取文章作者名
 
@@ -400,7 +454,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleAuthorName, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def wordage(self) -> int:
         """获取文章总字数
 
@@ -410,7 +464,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleWordage, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def reads_count(self) -> int:
         """获取文章阅读量
 
@@ -420,7 +474,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleReadsCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def likes_count(self) -> int:
         """获取文章点赞量
 
@@ -430,7 +484,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleLikesCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def comments_count(self) -> int:
         """获取文章评论量
 
@@ -440,7 +494,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleCommentsCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def most_valuable_comments_count(self) -> int:
         """获取文章精选评论量
 
@@ -450,7 +504,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleMostValuableCommentsCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def total_FP_count(self) -> float:
         """获取文章总获钻量
 
@@ -460,7 +514,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleTotalFPCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def description(self) -> str:
         """获取文章摘要
 
@@ -470,7 +524,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleDescription, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def publish_time(self) -> datetime:
         """获取文章发布时间
 
@@ -480,7 +534,7 @@ class Article():
         return CallWithoutCheck(article.GetArticlePublishTime, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def update_time(self) -> datetime:
         """获取文章更新时间
 
@@ -490,7 +544,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleUpdateTime, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def paid_status(self) -> bool:
         """获取文章付费状态
 
@@ -500,7 +554,7 @@ class Article():
         return CallWithoutCheck(article.GetArticlePaidStatus, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def reprint_status(self) -> bool:
         """获取文章转载状态
 
@@ -510,7 +564,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleReprintStatus, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def comment_status(self) -> bool:
         """获取文章评论状态
 
@@ -520,7 +574,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleCommentStatus, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def html(self) -> str:
         """获取 Html 格式的文章内容
 
@@ -533,7 +587,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleHtml, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def text(self) -> str:
         """获取纯文本格式的文章内容
 
@@ -546,7 +600,7 @@ class Article():
         return CallWithoutCheck(article.GetArticleText, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def markdown(self) -> str:
         """获取 Markdown 格式的文章内容
 
@@ -625,6 +679,8 @@ class Notebook():
             AssertNotebookUrl(notebook_url)
         elif notebook_slug:
             notebook_url = NotebookSlugToNotebookUrl(notebook_slug)
+
+        AssertNotebookStatusNormal(notebook_url)
         self._url = notebook_url
 
     @property
@@ -637,7 +693,7 @@ class Notebook():
         return self._url
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def id(self) -> int:
         """获取文集 ID
 
@@ -647,7 +703,7 @@ class Notebook():
         return notebook.GetNotebookId(self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def slug(self) -> str:
         """获取文集 Slug
 
@@ -657,7 +713,7 @@ class Notebook():
         return notebook.GetNotebookSlug(self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def name(self) -> str:
         """获取文集名称
 
@@ -667,7 +723,7 @@ class Notebook():
         return CallWithoutCheck(notebook.GetNotebookName, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def articles_count(self) -> int:
         """获取文集中的文章总数
 
@@ -677,7 +733,7 @@ class Notebook():
         return CallWithoutCheck(notebook.GetNotebookArticlesCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def author_name(self) -> str:
         """获取文集的作者名
 
@@ -687,7 +743,7 @@ class Notebook():
         return CallWithoutCheck(notebook.GetNotebookAuthorInfo, self._url)["name"]
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def author_info(self) -> Dict:
         """获取文集的作者信息
 
@@ -697,7 +753,7 @@ class Notebook():
         return CallWithoutCheck(notebook.GetNotebookAuthorInfo, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def wordage(self) -> int:
         """获取文集中所有文章的总字数
 
@@ -707,7 +763,7 @@ class Notebook():
         return CallWithoutCheck(notebook.GetNotebookWordage, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def subscribers_count(self) -> int:
         """获取文集的关注者数量
 
@@ -717,7 +773,7 @@ class Notebook():
         return CallWithoutCheck(notebook.GetNotebookSubscribersCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def update_time(self) -> datetime:
         """获取文集的更新时间
 
@@ -726,7 +782,7 @@ class Notebook():
         """
         return CallWithoutCheck(notebook.GetNotebookUpdateTime, self._url)
 
-    @cache_result
+    @cache_result_wrapper
     def articles_info(self, page: int = 1, count: int = 10, sorting_method: str = "time") -> List[Dict]:
         """获取文集中的文章信息
 
@@ -802,6 +858,8 @@ class Collection():
             AssertCollectionUrl(collection_url)
         elif collection_slug:
             collection_url = CollectionSlugToCollectionUrl(collection_slug)
+
+        AssertCollectionStatusNormal(collection_url)
         self._url = collection_url
 
         self._id = collection_id if collection_id else None
@@ -816,7 +874,7 @@ class Collection():
         return self._url
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def slug(self) -> str:
         """获取专题 Slug
 
@@ -826,7 +884,7 @@ class Collection():
         return collection.GetCollectionSlug(self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def name(self) -> str:
         """获取专题名称
 
@@ -836,7 +894,7 @@ class Collection():
         return CallWithoutCheck(collection.GetCollectionName, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def avatar_url(self) -> str:
         """获取专题头像链接
 
@@ -846,7 +904,7 @@ class Collection():
         return CallWithoutCheck(collection.GetCollectionAvatarUrl, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def introduction_text(self) -> str:
         """获取纯文本格式的专题简介
 
@@ -856,7 +914,7 @@ class Collection():
         return CallWithoutCheck(collection.GetCollectionIntroductionText, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def introduction_html(self) -> str:
         """获取 Html 格式的专题简介
 
@@ -866,7 +924,7 @@ class Collection():
         return CallWithoutCheck(collection.GetCollectionIntroductionHtml, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def articles_update_time(self) -> datetime:
         """获取专题文章更新时间
 
@@ -876,7 +934,7 @@ class Collection():
         return CallWithoutCheck(collection.GetCollectionArticlesUpdateTime, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def info_update_time(self) -> datetime:
         """获取专题信息更新时间
 
@@ -886,7 +944,7 @@ class Collection():
         return CallWithoutCheck(collection.GetCollectionInformationUpdateTime, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def owner_info(self) -> Dict:
         """获取专题的所有者信息
 
@@ -896,7 +954,7 @@ class Collection():
         return CallWithoutCheck(collection.GetCollectionOwnerInfo, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def articles_count(self) -> int:
         """获取专题文章数
 
@@ -906,7 +964,7 @@ class Collection():
         return CallWithoutCheck(collection.GetCollectionArticlesCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def subscribers_count(self) -> int:
         """获取专题关注者数
 
@@ -915,7 +973,7 @@ class Collection():
         """
         return CallWithoutCheck(collection.GetCollectionSubscribersCount, self._url)
 
-    @cache_result
+    @cache_result_wrapper
     def editors_info(self, page: int = 1) -> List[Dict]:
         """获取专题编辑信息
 
@@ -932,7 +990,7 @@ class Collection():
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取编辑信息")
         return collection.GetCollectionEditorsInfo(self._id, page)
 
-    @cache_result
+    @cache_result_wrapper
     def recommended_writers_info(self, page: int = False) -> List[Dict]:
         """获取专题推荐作者信息
 
@@ -949,7 +1007,7 @@ class Collection():
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取推荐作者信息")
         return collection.GetCollectionRecommendedWritersInfo(self._id, page)
 
-    @cache_result
+    @cache_result_wrapper
     def subscribers_info(self, start_sort_id: int) -> List:
         """获取专题关注者信息
 
@@ -966,7 +1024,7 @@ class Collection():
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取关注者信息")
         return collection.GetCollectionSubscribersInfo(self._id, start_sort_id)
 
-    @cache_result
+    @cache_result_wrapper
     def articles_info(self, page: int = 1, count: int = 10,
                       sorting_method: str = "time") -> List[Dict]:
         """获取专题文章信息
@@ -1042,6 +1100,8 @@ class Island():
             AssertIslandUrl(island_url)
         elif island_slug:
             island_url = IslandSlugToIslandUrl(island_slug)
+
+        AssertIslandStatusNormal(island_url)
         self._url = island_url
 
     @property
@@ -1054,7 +1114,7 @@ class Island():
         return self._url
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def slug(self) -> str:
         """获取小岛 Slug
 
@@ -1064,7 +1124,7 @@ class Island():
         return IslandUrlToIslandSlug(self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def name(self) -> str:
         """获取小岛名称
 
@@ -1074,7 +1134,7 @@ class Island():
         return CallWithoutCheck(island.GetIslandName, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def avatar_url(self) -> str:
         """获取小岛头像链接
 
@@ -1084,7 +1144,7 @@ class Island():
         return CallWithoutCheck(island.GetIslandAvatarUrl, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def introduction(self) -> str:
         """获取小岛简介
 
@@ -1094,7 +1154,7 @@ class Island():
         return CallWithoutCheck(island.GetIslandIntroduction, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def members_count(self) -> int:
         """获取小岛成员数量
 
@@ -1104,7 +1164,7 @@ class Island():
         return CallWithoutCheck(island.GetIslandMembersCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def posts_count(self) -> int:
         """获取小岛帖子数量
 
@@ -1114,7 +1174,7 @@ class Island():
         return CallWithoutCheck(island.GetIslandPostsCount, self._url)
 
     @property
-    @cache_result
+    @cache_result_wrapper
     def category(self) -> str:
         """获取小岛分类
 
@@ -1123,7 +1183,7 @@ class Island():
         """
         return CallWithoutCheck(island.GetIslandCategory, self._url)
 
-    @cache_result
+    @cache_result_wrapper
     def posts(self, start_sort_id: int = None, count: int = 10,
               topic_id: int = None, sorting_method: str = "time") -> List[Dict]:
         """获取小岛帖子信息
