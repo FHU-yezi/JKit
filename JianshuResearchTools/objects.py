@@ -45,7 +45,7 @@ class User():
             user_url (str, optional): 用户个人主页 URL. Defaults to None.
             user_slug (str, optional): 用户 Slug. Defaults to None.
         """
-        # TODO: 支持使用用户 Id 初始化用户对象
+        # TODO: 支持使用用户 ID 初始化用户对象
         if not OnlyOne(user_url, user_slug):
             raise("只能使用 URL 或 Slug 中的一个实例化用户对象")
 
@@ -350,7 +350,7 @@ class Article():
             article_url (str, optional): 文章 URL. Defaults to None.
             article_slug (str, optional): 文章 Slug. Defaults to None.
         """
-        # TODO: 支持使用文章 Id 初始化文章对象
+        # TODO: 支持使用文章 ID 初始化文章对象
         if not OnlyOne(article_url, article_slug):
             raise("只能使用 URL 或 Slug 中的一个实例化文章对象")
 
@@ -617,7 +617,7 @@ class Notebook():
             notebook_url (str, optional): 文集 URL. Defaults to None.
             notebook_slug (str, optional): 文集 Slug. Defaults to None.
         """
-        # TODO: 支持使用用户 Id 初始化用户对象
+        # TODO: 支持使用用户 ID 初始化用户对象
         if not OnlyOne(notebook_url, notebook_slug):
             raise("只能使用 URL 或 Slug 中的一个实例化文集对象")
 
@@ -792,7 +792,7 @@ class Collection():
         Args:
             collection_url (str, optional): 专题 URL. Defaults to None.
             collection_slug (str, optional): 专题 Slug. Defaults to None.
-            collection_id (int, optional): 专题 Id，如不传入部分数据将无法获取. Defaults to None.
+            collection_id (int, optional): 专题 ID，如不传入部分数据将无法获取. Defaults to None.
         """
         # TODO: 支持通过 collection_url 获取 collection_id
         if not OnlyOne(collection_url, collection_slug):
