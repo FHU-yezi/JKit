@@ -495,7 +495,7 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
     return result
 
 
-def GetUserFollowingInfo(user_url: str, disable_check: bool = False, page: int = 1) -> List[Dict]:
+def GetUserFollowingInfo(user_url: str, page: int = 1, disable_check: bool = False) -> List[Dict]:
     """获取用户关注者信息
 
     Args:
@@ -615,11 +615,11 @@ def GetUserAllBasicData(user_url: str, disable_check: bool = False) -> Dict:
     try:
         result["vip_info"] = {
             "vip_type": {
-                    "bronze": "铜牌",
-                    "silver": "银牌",
-                    "gold": "黄金",
-                    "platina": "白金"
-                }[json_obj["member"]["type"]],
+                "bronze": "铜牌",
+                "silver": "银牌",
+                "gold": "黄金",
+                "platina": "白金"
+            }[json_obj["member"]["type"]],
             "expire_date": datetime.fromtimestamp(json_obj["member"]["expires_at"])
         }
     except KeyError:
@@ -637,7 +637,7 @@ def GetUserAllBasicData(user_url: str, disable_check: bool = False) -> Dict:
     return result
 
 
-def GetUserTimelineInfo(user_url: str, disable_check: bool = False, max_id: int = 1000000000) -> List[Dict]:
+def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000, disable_check: bool = False) -> List[Dict]:
     """获取用户动态信息
 
     ！在极少数情况下可能会遇到不在可解析列表中的动态类型，此时程序会跳过这条动态，不会抛出异常
