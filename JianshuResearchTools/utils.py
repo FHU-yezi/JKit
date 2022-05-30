@@ -1,4 +1,6 @@
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, Callable
+
+__all__ = ["NameValueMappingToString", "CallWithoutCheck"]
 
 
 def NameValueMappingToString(mapping: Dict[str, Tuple[Any, bool]], title: str = "") -> str:
@@ -19,3 +21,18 @@ def NameValueMappingToString(mapping: Dict[str, Tuple[Any, bool]], title: str = 
 
     # 如果有标题，则拼接标题并在后面加入一个换行符，然后拼接属性字符串
     return "\n".join((f"{title}：", *result_lst)) if title else "\n".join(result_lst)
+
+
+def CallWithoutCheck(func: Callable, *args: Any, **kwargs: Any) -> Any:
+    """调用函数，并自动禁用函数的参数检查。
+
+    通过向参数列表注入关键字参数 disable_check=True 实现
+    如果函数不支持禁用参数检查，会抛出 AttributeError 异常
+
+    Args:
+        func (Callable): 待调用的函数
+
+    Returns:
+        Any: 函数返回值
+    """
+    return func(*args, **kwargs, disable_check=True)
