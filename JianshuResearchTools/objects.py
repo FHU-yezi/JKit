@@ -9,7 +9,7 @@ from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
                       NotebookSlugToNotebookUrl, UserSlugToUserUrl,
                       UserUrlToUserSlug)
 from .exceptions import InputError
-from .utils import CallWithoutCheck, NameValueMappingToString
+from .utils import CallWithoutCheck, NameValueMappingToString, OnlyOne
 
 __all__ = [
     "DISABLE_CACHE", "User", "Article", "Notebook", "Collection", "Island"
@@ -46,17 +46,14 @@ class User():
             user_slug (str, optional): 用户 Slug. Defaults to None.
         """
         # TODO: 支持使用用户 Id 初始化用户对象
-        if user_slug and user_url:
-            raise InputError("只能使用一个参数进行用户类的初始化")
-        elif user_url:
+        if not OnlyOne(user_url, user_slug):
+            raise("只能使用 URL 或 Slug 中的一个实例化用户对象")
+
+        if user_url:
             AssertUserUrl(user_url)
-            self._url = user_url
         elif user_slug:
             user_url = UserSlugToUserUrl(user_slug)
-            AssertUserUrl(user_url)
-            self._url = user_url
-        else:
-            raise InputError("请至少传入一个参数")
+        self._url = user_url
 
     @property
     def url(self) -> str:
@@ -354,17 +351,14 @@ class Article():
             article_slug (str, optional): 文章 Slug. Defaults to None.
         """
         # TODO: 支持使用文章 Id 初始化文章对象
-        if article_slug and article_url:
-            raise InputError("只能使用一个参数进行文章类的初始化")
-        elif article_url:
+        if not OnlyOne(article_url, article_slug):
+            raise("只能使用 URL 或 Slug 中的一个实例化文章对象")
+
+        if article_url:
             AssertArticleUrl(article_url)
-            self._url = article_url
         elif article_slug:
             article_url = ArticleSlugToArticleUrl(article_slug)
-            AssertArticleUrl(article_url)
-            self._url = article_url
-        else:
-            raise InputError("请至少传入一个参数")
+        self._url = article_url
 
     @property
     def url(self) -> str:
@@ -624,17 +618,14 @@ class Notebook():
             notebook_slug (str, optional): 文集 Slug. Defaults to None.
         """
         # TODO: 支持使用用户 Id 初始化用户对象
-        if notebook_slug and notebook_url:
-            raise InputError("只能使用一个参数进行文集类的初始化")
-        elif notebook_url:
+        if not OnlyOne(notebook_url, notebook_slug):
+            raise("只能使用 URL 或 Slug 中的一个实例化文集对象")
+
+        if notebook_url:
             AssertNotebookUrl(notebook_url)
-            self._url = notebook_url
         elif notebook_slug:
             notebook_url = NotebookSlugToNotebookUrl(notebook_slug)
-            AssertNotebookUrl(notebook_url)
-            self._url = notebook_url
-        else:
-            raise InputError("请至少传入一个参数")
+        self._url = notebook_url
 
     @property
     def url(self) -> str:
@@ -804,22 +795,16 @@ class Collection():
             collection_id (int, optional): 专题 Id，如不传入部分数据将无法获取. Defaults to None.
         """
         # TODO: 支持通过 collection_url 获取 collection_id
-        if collection_slug and collection_url:
-            raise InputError("只能使用一个参数进行专题类的初始化")
-        elif collection_url:
+        if not OnlyOne(collection_url, collection_slug):
+            raise("只能使用 URL 或 Slug 中的一个实例化专题对象")
+
+        if collection_url:
             AssertCollectionUrl(collection_url)
-            self._url = collection_url
         elif collection_slug:
             collection_url = CollectionSlugToCollectionUrl(collection_slug)
-            AssertCollectionUrl(collection_url)
-            self._url = collection_url
-        else:
-            raise InputError("请至少传入一个参数")
+        self._url = collection_url
 
-        if collection_id:
-            self._id = collection_id
-        else:
-            self._id = None
+        self._id = collection_id if collection_id else None
 
     @property
     def url(self) -> str:
@@ -945,7 +930,7 @@ class Collection():
         """
         if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取编辑信息")
-        return CallWithoutCheck(collection.GetCollectionEditorsInfo, self._id, page)
+        return collection.GetCollectionEditorsInfo(self._id, page)
 
     @cache_result
     def recommended_writers_info(self, page: int = False) -> List[Dict]:
@@ -962,7 +947,7 @@ class Collection():
         """
         if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取推荐作者信息")
-        return CallWithoutCheck(collection.GetCollectionRecommendedWritersInfo, self._id, page)
+        return collection.GetCollectionRecommendedWritersInfo(self._id, page)
 
     @cache_result
     def subscribers_info(self, start_sort_id: int) -> List:
@@ -979,7 +964,7 @@ class Collection():
         """
         if not self._id:
             raise InputError("实例化该专题对象时未传入 ID 参数，无法获取关注者信息")
-        return CallWithoutCheck(collection.GetCollectionSubscribersInfo, self._id, start_sort_id)
+        return collection.GetCollectionSubscribersInfo(self._id, start_sort_id)
 
     @cache_result
     def articles_info(self, page: int = 1, count: int = 10,
@@ -1044,17 +1029,20 @@ class Island():
     """小岛类
     """
     def __init__(self, island_url: str = None, island_slug: str = None):
-        if island_slug and island_url:
-            raise InputError("只能使用一个参数进行小岛类的初始化")
-        elif island_url:
+        """构建新的小岛对象
+
+        Args:
+            island_url (str, optional): 小岛 URL. Defaults to None.
+            island_slug (str, optional): 小岛 Slug. Defaults to None.
+        """
+        if not OnlyOne(island_url, island_slug):
+            raise("只能使用 URL 或 Slug 中的一个实例化小岛对象")
+
+        if island_url:
             AssertIslandUrl(island_url)
-            self._url = island_url
         elif island_slug:
             island_url = IslandSlugToIslandUrl(island_slug)
-            AssertIslandUrl(island_url)
-            self._url = island_url
-        else:
-            raise InputError("请至少传入一个参数")
+        self._url = island_url
 
     @property
     def url(self) -> str:

@@ -36,3 +36,12 @@ def CallWithoutCheck(func: Callable, *args: Any, **kwargs: Any) -> Any:
         Any: 函数返回值
     """
     return func(*args, **kwargs, disable_check=True)
+
+
+def OnlyOne(*args: Any) -> bool:
+    """接收任意个位置参数，如果其中只有一个不为 None，则返回 True
+
+    Returns:
+        bool: 判断结果
+    """
+    return len([arg for arg in args if arg]) == 1
