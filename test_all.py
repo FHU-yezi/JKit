@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, T, Union
+from typing import List, Union
 
 import pytest
 from yaml import FullLoader
