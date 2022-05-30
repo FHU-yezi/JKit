@@ -23,7 +23,7 @@ def cache_result(func):
     cache_Dict = {}
 
     def wrapper(*args, **kwargs):
-        args_hash = hash(tuple(args[1:]) + tuple(kwargs.items()))
+        args_hash = hash((hash(args[0]),) + tuple(args[1:]) + tuple(kwargs.items()))
         cache_result = cache_Dict.get(args_hash)
         if cache_result and not DISABLE_CACHE:
             return cache_result
@@ -310,6 +310,14 @@ class User():
         else:
             return False
 
+    def __hash__(self) -> int:
+        """返回基于用户 URL 的哈希值
+
+        Returns:
+            int: 哈希值
+        """
+        return hash(self._url)
+
     def __str__(self) -> str:
         """输出用户信息摘要
 
@@ -572,6 +580,14 @@ class Article():
         else:
             return False
 
+    def __hash__(self) -> int:
+        """返回基于文章 URL 的哈希值
+
+        Returns:
+            int: 哈希值
+        """
+        return hash(self._url)
+
     def __str__(self) -> str:
         """输出文章信息摘要
 
@@ -749,6 +765,14 @@ class Notebook():
             return True
         else:
             return False
+
+    def __hash__(self) -> int:
+        """返回基于文集 URL 的哈希值
+
+        Returns:
+            int: 哈希值
+        """
+        return hash(self._url)
 
     def __str__(self) -> str:
         """输出文集信息摘要
@@ -989,6 +1013,14 @@ class Collection():
         else:
             return False
 
+    def __hash__(self) -> int:
+        """返回基于专题 URL 的哈希值
+
+        Returns:
+            int: 哈希值
+        """
+        return hash(self._url)
+
     def __str__(self) -> str:
         """输出专题信息摘要
 
@@ -1135,6 +1167,14 @@ class Island():
             return True
         else:
             return False
+
+    def __hash__(self) -> int:
+        """返回基于小岛 URL 的哈希值
+
+        Returns:
+            int: 哈希值
+        """
+        return hash(self._url)
 
     def __str__(self) -> str:
         """输出小岛信息摘要
