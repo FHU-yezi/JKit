@@ -85,7 +85,7 @@ def GetArticleFPRankData(date: str = "latest") -> List[Dict]:
         date = (datetime.today() + timedelta(days=-1)).strftime(r"%Y%m%d")
     json_obj = GetArticlesFPRankListJsonDataApi(date=date, type_=None)
     if json_obj["notes"] == []:
-        raise ResourceError("对应日期的排行榜数据为空")
+        raise ResourceError(f"对应日期 {date} 的排行榜数据为空")
     result = []
     for ranking, item in enumerate(json_obj["notes"]):
         item_data = {
@@ -120,7 +120,7 @@ def GetArticleFPRankBasicInfo(date: str = "latest") -> Dict:
         date = (datetime.date.today() + datetime.timedelta(days=-1)).strftime("%Y%m%d")
     json_obj = GetArticlesFPRankListJsonDataApi(date=date, type_=None)
     if json_obj["notes"] == []:
-        raise ResourceError("对应日期的排行榜数据为空")
+        raise ResourceError(f"对应日期 {date} 的排行榜数据为空")
     result = {
         "total_fp": json_obj["fp"],
         "fp_to_author": json_obj["author_fp"],
@@ -150,7 +150,7 @@ def GetUserFPRankData(date: str = "latest", rank_type: str = "all") -> List[Dict
     }[rank_type]
     json_obj = GetArticlesFPRankListJsonDataApi(date=date, type_=type_)
     if json_obj["users"] == []:
-        raise ResourceError("对应日期的排行榜数据为空")
+        raise ResourceError(f"对应日期 {date} 的排行榜数据为空")
     result = []
     for ranking, item in enumerate(json_obj["users"]):
         item_data = {

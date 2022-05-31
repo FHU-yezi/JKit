@@ -82,7 +82,7 @@ def AssertUserStatusNormal(user_url: str) -> None:
     try:
         user_json_data["nickname"]
     except KeyError:
-        raise ResourceError("用户账号状态异常")
+        raise ResourceError(f"用户 {user_url} 账号状态异常")
 
 
 def AssertArticleUrl(string: str) -> None:
@@ -113,7 +113,7 @@ def AssertArticleStatusNormal(article_url: str) -> None:
     try:
         json_obj["show_ad"]
     except KeyError:
-        raise ResourceError("文章状态异常")
+        raise ResourceError(f"文章 {article_url} 状态异常")
 
 
 def AssertNotebookUrl(string: str) -> None:
@@ -143,7 +143,7 @@ def AssertNotebookStatusNormal(notebook_url: str) -> None:
     try:
         json_obj["name"]
     except KeyError:
-        raise ResourceError("文集状态异常")
+        raise ResourceError(f"文集 {notebook_url} 状态异常")
 
 
 def AssertCollectionUrl(string: str) -> None:
@@ -173,7 +173,7 @@ def AssertCollectionStatusNormal(collection_url: str) -> None:
     try:
         collection_json_data["title"]
     except KeyError:
-        raise ResourceError("专题状态异常")
+        raise ResourceError(f"专题 {collection_url} 状态异常")
 
 
 def AssertIslandUrl(string: str) -> None:
@@ -195,7 +195,7 @@ def AssertIslandStatusNormal(island_url: str) -> None:
     try:
         island_json_data["name"]
     except KeyError:
-        raise ResourceError("小岛状态异常")
+        raise ResourceError(f"小岛 {island_url} 状态异常")
 
 
 def AssertIslandPostUrl(string: str) -> None:

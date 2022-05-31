@@ -182,7 +182,7 @@ def GetUserAssetsCount(user_url: str, disable_check: bool = False) -> float:
     try:
         result = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
     except IndexError:
-        raise APIError("受 API 限制（用户无文章时无法获取总资产信息），无法获取该用户的总资产")
+        raise APIError("受简书 API 限制，用户无文章时无法获取其总资产数据")
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
@@ -208,7 +208,7 @@ def GetUserFPCount(user_url: str, disable_check: bool = False) -> float:
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["jsd_balance"] / 1000
     if json_obj["total_wordage"] == 0 and result == 0:
-        raise APIError("受 API 限制（用户无文章时无法获取总资产信息），无法获取该用户的简书钻数量")
+        raise APIError("受简书 API 限制，用户无文章时无法获取其简书钻数据")
     return result
 
 
@@ -224,6 +224,9 @@ def GetUserFTNCount(user_url: str, disable_check: bool = False) -> float:
     Returns:
         float: 用户简书贝数量
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     assets = GetUserAssetsCount(user_url)
     FTN = GetUserFPCount(user_url)
     result = assets - FTN

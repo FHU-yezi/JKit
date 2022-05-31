@@ -131,15 +131,15 @@ def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int = 1) -> List[Dict]:
     for item in json_obj["data"]["tradelist"]:
         item_data = {
             "tradeid": item["id"],
-            "tradeslug": item["tradeno"],   # ? 我也不确定这个 no 什么意思,回来去问问
+            "tradeslug": item["tradeno"],  # ? 我也不确定这个 no 什么意思,回来去问问
             "user": {
                 "jianshuname": item["jianshuname"],
-                "bkname": item["reusername"],   # ? 还有个 nickname，不知道哪个对
+                "bkname": item["reusername"],  # ? 还有个 nickname，不知道哪个对
                 "avatar_url": item["avatarurl"],
                 "userlevelcode": item["levelnum"],
                 "userlevel": item["userlevel"],
                 "user_trade_count": item["tradecount"]
-                },
+            },
             "total": item["recount"],
             "traded": item["recount"] - item["cantradenum"],
             "remaining": item["cantradenum"],
@@ -175,5 +175,5 @@ def GetBeikeIslandTradePrice(trade_type: str, rank: int = 1) -> float:
     try:
         result = json_obj["data"]["tradelist"][rank_in_this_page]["reprice"]
     except IndexError:
-        raise ResourceError("没有该排名的价格")
+        raise ResourceError("该排名没有对应的交易单")
     return result
