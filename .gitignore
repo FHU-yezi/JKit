@@ -2,6 +2,7 @@
 *.csv
 *.html
 *.ipynb
+Pipfile.lock
 .venv/
 __pycache__/
 JianshuResearchTools/__pycache__/
