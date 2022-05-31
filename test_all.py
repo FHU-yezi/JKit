@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Union
+from typing import Any, List, Union
 
 import pytest
 from yaml import FullLoader
@@ -33,7 +33,7 @@ class NumberNotInRangeError(Exception):
     pass
 
 
-def AssertNormalCase(value: T, case: T) -> None:
+def AssertNormalCase(value: Any, case: Any) -> None:
     assert type(value) == type(case)
     assert value == case
 
@@ -47,7 +47,7 @@ def AssertRangeCase(value: Union[int, float], case: List[Union[int, float]]) -> 
         raise NumberNotInRangeError(f"{value} 不在范围 {case} 中")
 
 
-def AssertListCase(value: List[T], case: List[T]):
+def AssertListCase(value: List[Any], case: List[Any]):
     assert set(case).issubset(set(value))
 
 
