@@ -107,6 +107,30 @@ class User():
         AssertUserStatusNormal(user_url)
         self._url = user_url
 
+    @classmethod
+    def from_url(cls, user_url: str) -> "User":
+        """从用户个人主页 URL 构建用户对象
+
+        Args:
+            user_url (str): 用户个人主页 URL
+
+        Returns:
+            User: 用户对象
+        """
+        return cls(user_url=user_url)
+
+    @classmethod
+    def from_slug(cls, user_slug: str) -> "User":
+        """从用户 Slug 构建用户对象
+
+        Args:
+            user_slug (str): 用户 Slug
+
+        Returns:
+            User: 用户对象
+        """
+        return cls(user_slug=user_slug)
+
     @property
     def url(self) -> str:
         """获取用户主页 URL
@@ -414,6 +438,30 @@ class Article():
         AssertArticleStatusNormal(article_url)
         self._url = article_url
 
+    @classmethod
+    def from_url(cls, article_url: str) -> "Article":
+        """从文章 URL 构建文章对象
+
+        Args:
+            article_url (str): 文章 URL
+
+        Returns:
+            Article: 文章对象
+        """
+        return cls(article_url=article_url)
+
+    @classmethod
+    def from_slug(cls, article_slug: str) -> "Article":
+        """从文章 Slug 构建文章对象
+
+        Args:
+            article_slug (str): 文章 Slug
+
+        Returns:
+            Article: 文章对象
+        """
+        return cls(article_slug=article_slug)
+
     @property
     def url(self) -> str:
         """获取文章 URL
@@ -683,6 +731,30 @@ class Notebook():
         AssertNotebookStatusNormal(notebook_url)
         self._url = notebook_url
 
+    @classmethod
+    def from_url(cls, notebook_url: str) -> "Notebook":
+        """从文集 URL 构建文集对象
+
+        Args:
+            notebook_url (str): 文集 URL
+
+        Returns:
+            Notebook: 文集对象
+        """
+        return cls(notebook_url=notebook_url)
+
+    @classmethod
+    def from_slug(cls, notebook_slug: str) -> "Notebook":
+        """从文集 Slug 构建文集对象
+
+        Args:
+            notebook_slug (str): 文集 Slug
+
+        Returns:
+            Notebook: 文集对象
+        """
+        return cls(notebook_slug=notebook_slug)
+
     @property
     def url(self) -> str:
         """获取文集 URL
@@ -863,6 +935,32 @@ class Collection():
         self._url = collection_url
 
         self._id = collection_id if collection_id else None
+
+    @classmethod
+    def from_url(cls, collection_url: str, collection_id: int = None) -> "Collection":
+        """从专题 URL 构建专题对象
+
+        Args:
+           collection_url (str): 专题 URL
+           collection_id (int, optional): 专题 ID，如不传入部分数据将无法获取. Defaults to None.
+
+        Returns:
+            Collection: 专题对象
+        """
+        return cls(collection_url=collection_url, collection_id=collection_id)
+
+    @classmethod
+    def from_slug(cls, collection_slug: str, collection_id: int = None) -> "Collection":
+        """从专题 Slug 构建专题对象
+
+        Args:
+           collection_slug (str): 专题 Slug
+           collection_id (int, optional): 专题 ID，如不传入部分数据将无法获取. Defaults to None.
+
+        Returns:
+            Collection: 专题对象
+        """
+        return cls(collection_slug=collection_slug, collection_id=collection_id)
 
     @property
     def url(self) -> str:
@@ -1103,6 +1201,30 @@ class Island():
 
         AssertIslandStatusNormal(island_url)
         self._url = island_url
+
+    @classmethod
+    def from_url(cls, island_url: str) -> "Island":
+        """从小岛 URL 构建小岛对象
+
+        Args:
+            island_url (str): 小岛 URL
+
+        Returns:
+            Island: 小岛对象
+        """
+        return cls(island_url=island_url)
+
+    @classmethod
+    def from_slug(cls, island_slug: str) -> "Island":
+        """从小岛 Slug 构建小岛对象
+
+        Args:
+            island_slug (str): 小岛 Slug
+
+        Returns:
+            Island: 小岛对象
+        """
+        return cls(island_slug=island_slug)
 
     @property
     def url(self) -> str:
