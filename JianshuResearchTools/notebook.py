@@ -4,12 +4,19 @@ from typing import Dict, Generator, List
 from .assert_funcs import AssertNotebookStatusNormal, AssertNotebookUrl
 from .basic_apis import GetNotebookArticlesJsonDataApi, GetNotebookJsonDataApi
 
+__all__ = [
+    "GetNotebookName", "GetNotebookArticlesCount", "GetNotebookAuthorInfo",
+    "GetNotebookWordage", "GetNotebookSubscribersCount",
+    "GetNotebookUpdateTime", "GetNotebookArticlesInfo",
+    "GetNotebookAllBasicData", "GetNotebookAllArticlesInfo"
+]
+
 
 def GetNotebookName(notebook_url: str, disable_check: bool = False) -> str:
     """获取文集名称
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -27,7 +34,7 @@ def GetNotebookArticlesCount(notebook_url: str, disable_check: bool = False) -> 
     """获取文集中的文章数量
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -45,7 +52,7 @@ def GetNotebookAuthorInfo(notebook_url: str, disable_check: bool = False) -> Dic
     """获取文集作者的信息
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -67,7 +74,7 @@ def GetNotebookWordage(notebook_url: str, disable_check: bool = False) -> int:
     """获取文集中所有文章的总字数
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -85,7 +92,7 @@ def GetNotebookSubscribersCount(notebook_url: str, disable_check: bool = False) 
     """获取文集的订阅者数量
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -103,7 +110,7 @@ def GetNotebookUpdateTime(notebook_url: str, disable_check: bool = False) -> dat
     """获取文集的更新时间
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -123,7 +130,7 @@ def GetNotebookArticlesInfo(notebook_url: str, page: int = 1,
     """获取文集中的文章信息
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
         page (int, optional): 页码. Defaults to 1.
         count (int, optional): 每次返回的数据数量. Defaults to 10.
         sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
@@ -175,7 +182,7 @@ def GetNotebookAllBasicData(notebook_url: str, disable_check: bool = False) -> D
     """获取文集的所有基础信息
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -205,7 +212,7 @@ def GetNotebookAllArticlesInfo(notebook_url: str, count: int = 10, sorting_metho
     """获取文集中的全部文章信息
 
     Args:
-        notebook_url (str): 文集 Url
+        notebook_url (str): 文集 URL
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".

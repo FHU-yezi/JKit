@@ -9,12 +9,24 @@ from .basic_apis import (GetCollectionArticlesJsonDataApi,
                          GetCollectionSubscribersJsonDataApi)
 from .convert import CollectionUrlToCollectionSlug
 
+__all__ = [
+    "GetCollectionName", "GetCollectionAvatarUrl",
+    "GetCollectionIntroductionText", "GetCollectionIntroductionHtml",
+    "GetCollectionArticlesCount", "GetCollectionSubscribersCount",
+    "GetCollectionArticlesUpdateTime", "GetCollectionInformationUpdateTime",
+    "GetCollectionOwnerInfo", "GetCollectionEditorsInfo",
+    "GetCollectionRecommendedWritersInfo", "GetCollectionSubscribersInfo",
+    "GetCollectionAllBasicData", "GetCollectionAllEditorsInfo",
+    "GetCollectionAllRecommendedWritersInfo",
+    "GetCollectionAllSubscribersInfo", "GetCollectionAllArticlesInfo"
+]
+
 
 def GetCollectionName(collection_url: str, disable_check: bool = False) -> str:
     """获取专题名称
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -32,7 +44,7 @@ def GetCollectionAvatarUrl(collection_url: str, disable_check: bool = False) -> 
     """获取专题头像链接
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -50,7 +62,7 @@ def GetCollectionIntroductionText(collection_url: str, disable_check: bool = Fal
     """获取纯文本格式的专题简介
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -68,7 +80,7 @@ def GetCollectionIntroductionHtml(collection_url: str, disable_check: bool = Fal
     """获取 Html 格式的专题简介
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -86,7 +98,7 @@ def GetCollectionArticlesCount(collection_url: str, disable_check: bool = False)
     """获取专题中的文章数量
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -104,7 +116,7 @@ def GetCollectionSubscribersCount(collection_url: str, disable_check: bool = Fal
     """获取专题的订阅者数量
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -122,7 +134,7 @@ def GetCollectionArticlesUpdateTime(collection_url: str, disable_check: bool = F
     """获取专题文章更新时间
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -140,7 +152,7 @@ def GetCollectionInformationUpdateTime(collection_url: str, disable_check: bool 
     """获取专题信息更新时间
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -158,7 +170,7 @@ def GetCollectionOwnerInfo(collection_url: str, disable_check: bool = False) -> 
     """获取专题的所有者信息
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -255,7 +267,7 @@ def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
     """获取专题文章信息
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         page (int, optional): 页码. Defaults to 1.
         count (int, optional): 每次返回的数据数量. Defaults to 10.
         sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
@@ -306,7 +318,7 @@ def GetCollectionAllBasicData(collection_url: str, disable_check: bool = False) 
     """获取专题的所有基础信息
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -419,7 +431,7 @@ def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10,
     """获取专题的所有文章信息
 
     Args:
-        collection_url (str): 专题 Url
+        collection_url (str): 专题 URL
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
         "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".

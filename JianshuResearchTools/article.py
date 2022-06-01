@@ -13,12 +13,23 @@ try:
 except ImportError:
     pass
 
+__all__ = [
+    "GetArticleTitle", "GetArticleAuthorName", "GetArticleReadsCount",
+    "GetArticleWordage", "GetArticleLikesCount", "GetArticleCommentsCount",
+    "GetArticleMostValuableCommentsCount", "GetArticleTotalFPCount",
+    "GetArticleDescription", "GetArticlePublishTime", "GetArticleUpdateTime",
+    "GetArticlePaidStatus", "GetArticleReprintStatus",
+    "GetArticleCommentStatus", "GetArticleHtml", "GetArticleText",
+    "GetArticleMarkdown", "GetArticleCommentsData", "GetArticleAllBasicData",
+    "GetArticleAllCommentsData"
+]
+
 
 def GetArticleTitle(article_url: str, disable_check: bool = False) -> str:
     """获取文章标题
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -36,7 +47,7 @@ def GetArticleAuthorName(article_url: str, disable_check: bool = False) -> str:
     """获取文章作者名
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -54,7 +65,7 @@ def GetArticleReadsCount(article_url: str, disable_check: bool = False) -> int:
     """获取文章阅读量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -72,7 +83,7 @@ def GetArticleWordage(article_url: str, disable_check: bool = False) -> int:
     """获取文章字数
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -90,7 +101,7 @@ def GetArticleLikesCount(article_url: str, disable_check: bool = False) -> int:
     """获取文章点赞量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -108,7 +119,7 @@ def GetArticleCommentsCount(article_url: str, disable_check: bool = False) -> in
     """获取文章评论数量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -126,7 +137,7 @@ def GetArticleMostValuableCommentsCount(article_url: str, disable_check: bool = 
     """获取文章精选评论数量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -144,7 +155,7 @@ def GetArticleTotalFPCount(article_url: str, disable_check: bool = False) -> flo
     """获取文章总获钻量
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -162,7 +173,7 @@ def GetArticleDescription(article_url: str, disable_check: bool = False) -> str:
     """获取文章摘要
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -180,7 +191,7 @@ def GetArticlePublishTime(article_url: str, disable_check: bool = False) -> date
     """获取文章发布时间
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
 
     Returns:
         datetime: 文章发布时间
@@ -197,7 +208,7 @@ def GetArticleUpdateTime(article_url: str, disable_check: bool = False) -> datet
     """获取文章更新时间
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -215,7 +226,7 @@ def GetArticlePaidStatus(article_url: str, disable_check: bool = False) -> bool:
     """获取文章付费状态
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -241,7 +252,7 @@ def GetArticleReprintStatus(article_url: str, disable_check: bool = False) -> bo
     """获取文章转载声明状态
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -259,7 +270,7 @@ def GetArticleCommentStatus(article_url: str, disable_check: bool = False) -> bo
     """获取文章评论区状态
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -280,7 +291,7 @@ def GetArticleHtml(article_url: str, disable_check: bool = False) -> str:
     # ! 该函数不能获取文章付费部分的内容
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -291,18 +302,23 @@ def GetArticleHtml(article_url: str, disable_check: bool = False) -> str:
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     html_text = json_obj["free_content"]
-    html_text = sub(r'<div class="image-[\w]*" [ \w+-="]*>', "", html_text)  # 去除 image-view 和 image-container
-    html_text = sub(r'<div class="image-package">', "", html_text)  # 去除 image-package
-    html_text = sub(r'<div class="image-container-fill".+>', "", html_text)  # 去除 image-container-fill
-    old_img_blocks = findall(r'\<img[ \w+-="]*>', html_text)  # 匹配旧的 img 标签
-    img_names = findall(r"\w+-\w+.jpg|\w+-\w+.png", html_text)  # 获取图片名称
-    print(img_names)
-    new_img_blocks = [f'<img src="https://upload-images.jianshu.io/upload_images/{img_name}">'
-                      for img_name in img_names]  # 拼接新的 img 标签
+
+    # 去除 image-container、image-container-fill 和 image-view
+    html_text = sub(r'<div class="image-.*?" .*?>', "", html_text)
+    # 去除 image-package
+    html_text = html_text.replace('<div class="image-package">', "")
+
+    old_img_blocks = findall(r'<img .*?>', html_text)  # 匹配旧的 img 标签
     if not old_img_blocks:  # 文章中没有图片块
         return html_text
+
+    img_urls = [findall(r'<img data-original-src="(.*?)".*>', i)[0] for i in old_img_blocks]
+    new_img_blocks = [f'<img src="https:{img_url}">' for img_url in img_urls]
+
     for old_img_block, new_img_block in zip(old_img_blocks, new_img_blocks):
         html_text = html_text.replace(old_img_block, new_img_block)  # 替换 img 标签
+    with open("result.html", "w", encoding="utf-8") as f:
+        f.write(html_text)
     return html_text
 
 
@@ -313,7 +329,7 @@ def GetArticleText(article_url: str, disable_check: bool = False) -> str:
     # ! 该函数不能获取文章付费部分的内容
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -336,7 +352,7 @@ def GetArticleMarkdown(article_url: str, disable_check: bool = False) -> str:
     # ! 该函数不能获取文章付费部分的内容
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -412,12 +428,12 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
             pass
         else:
             item_data["user"]["vip_type"] = {
-                    "bronze": "铜牌",
-                    "silver": "银牌",
-                    "gold": "黄金",
-                    "platina": "白金",
-                    "ordinary": "普通（旧会员）",
-                    "distinguished": "至尊（旧会员）"
+                "bronze": "铜牌",
+                "silver": "银牌",
+                "gold": "黄金",
+                "platina": "白金",
+                "ordinary": "普通（旧会员）",
+                "distinguished": "至尊（旧会员）"
             }[item["user"]["member"]["type"]]
             item_data["user"]["vip_expire_date"] = datetime.fromtimestamp(item["user"]["member"]["expires_at"])
 
@@ -448,12 +464,12 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                     pass
                 else:
                     sub_comment_data["user"]["vip_type"] = {
-                            "bronze": "铜牌",
-                            "silver": "银牌",
-                            "gold": "黄金",
-                            "platina": "白金",
-                            "ordinary": "普通（旧会员）",
-                            "distinguished": "至尊（旧会员）"
+                        "bronze": "铜牌",
+                        "silver": "银牌",
+                        "gold": "黄金",
+                        "platina": "白金",
+                        "ordinary": "普通（旧会员）",
+                        "distinguished": "至尊（旧会员）"
                     }[sub_comment["user"]["member"]["type"]]
                     sub_comment_data["user"]["vip_expire_date"] = datetime.fromtimestamp(sub_comment["user"]["member"]["expires_at"])
 
@@ -467,7 +483,7 @@ def GetArticleAllBasicData(article_url: str, disable_check: bool = False) -> Dic
     """获取文章的全部基础信息
 
     Args:
-        article_url (str): 文章 Url
+        article_url (str): 文章 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:

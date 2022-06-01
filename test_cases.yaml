@@ -25,7 +25,7 @@ article_cases:
         - 3000
         reprint_status: true
         title: 科技赋能创作星辰，简书分析工具集 JRT 发布
-        total_FP_count: &id005 !!python/tuple
+        total_FP_count: &id004 !!python/tuple
         - 80
         - 120
         update_time: 1619840059.0
@@ -57,33 +57,6 @@ article_cases:
         update_time: 1625207736.0
         url: https://www.jianshu.com/p/11dfce54cd7c
         wordage: 1093
-    -   aid: 76734617
-        aslug: b3cd0fee6325
-        author_name: 简叔
-        comment_status: true
-        comments_count: &id004 !!python/tuple
-        - 25
-        - 40
-        description: ''
-        likes_count: !!python/tuple
-        - 350
-        - 400
-        most_valuable_comments_count: !!python/tuple
-        - 20
-        - 30
-        paid_status: true
-        publish_time: 1599137490.0
-        reads_count: !!python/tuple
-        - 10000
-        - 12000
-        reprint_status: true
-        title: 要有爱，不要白嫖
-        total_FP_count: !!python/tuple
-        - 300
-        - 350
-        update_time: 1599137488.0
-        url: https://www.jianshu.com/p/b3cd0fee6325
-        wordage: 0
     -   aid: 78722940
         aslug: 09c5bf171574
         author_name: 简书钻首席小管家
@@ -129,8 +102,8 @@ collection_cases:
         - 2800000
         url: https://www.jianshu.com/c/fcd7a62be697
     -   articles_count: !!python/tuple
-        - 38000
-        - 43000
+        - 40000
+        - 45000
         articles_update_time: 1638369615.0
         avatar_url: https://upload.jianshu.io/collections/images/14/6249340_194140034135_2.jpg
         cid: 14
@@ -141,8 +114,8 @@ collection_cases:
         - 3000000
         url: https://www.jianshu.com/c/V2CqjW
     -   articles_count: !!python/tuple
-        - 2600
-        - 3200
+        - 2000
+        - 5000
         articles_update_time: 1638482542.0
         avatar_url: https://upload.jianshu.io/collections/images/1938174/crop1611215330383.jpg
         cid: 1938174
@@ -158,9 +131,6 @@ convert_cases:
     -   aid: 89748991
         aslug: 11dfce54cd7c
         url: https://www.jianshu.com/p/11dfce54cd7c
-    -   aid: 76734617
-        aslug: b3cd0fee6325
-        url: https://www.jianshu.com/p/b3cd0fee6325
     collection_convert_cases:
     -   cid: 95
         cslug: fcd7a62be697
@@ -198,8 +168,8 @@ island_cases:
     -   avatar_url: https://upload.jianshu.io/group_image/18454410/6b6138a6-685a-4f12-80a7-5e731b5fc935
         category: 生活
         members_count: !!python/tuple
-        - 50000
-        - 70000
+        - 60000
+        - 80000
         name: 简友动态广场
         posts_count: !!python/tuple
         - 140000
@@ -212,7 +182,9 @@ notebook_cases:
         url: https://www.jianshu.com/nb/12345678
         uslug: '12345678'
     success_cases:
-    -   articles_count: *id004
+    -   articles_count: !!python/tuple
+        - 25
+        - 40
         author_avatar_url: https://upload.jianshu.io/users/upload_avatars/259/5210859b-fc54-4cf8-908f-830f0237926a.png
         author_name: 简书
         author_uslug: yZq3ZV
@@ -236,7 +208,7 @@ user_cases:
         - 10000
         - 20000
         FTN_count: !!python/tuple
-        - 8200
+        - 3000
         - 12000
         VIP_info:
             expire_date: null
@@ -292,11 +264,10 @@ user_cases:
         - 幸运四叶草
         - 怦然心动
         - 岛主
-        - 简书铜牌会员
         fans_count: !!python/tuple
         - 8000
         - 12000
-        followers_count: *id005
+        followers_count: *id004
         gender: 0
         last_update_time: 1616126174.0
         likes_count: !!python/tuple
@@ -314,8 +285,8 @@ user_cases:
         - 700
         - 1500
         FTN_count: !!python/tuple
-        - 180000
-        - 250000
+        - 500000
+        - 600000
         VIP_info:
             expire_date: null
             vip_type: null
@@ -323,8 +294,8 @@ user_cases:
         - 450
         - 600
         assets_count: !!python/tuple
-        - 370000
-        - 430000
+        - 400000
+        - 600000
         badges_list:
         - 简书创作者
         - 鼠年大吉

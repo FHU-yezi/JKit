@@ -85,21 +85,24 @@ print(jrt.__version__)
 示例二，获取用户信息摘要：
 ```python
 >>> import JianshuResearchTools as jrt
->>> user = jrt.objects.User("https://www.jianshu.com/u/ea36c8d8aa30")            
+>>> user = jrt.objects.User("https://www.jianshu.com/u/ea36c8d8aa30")
 >>> print(user)
 用户信息摘要：
-用户名：初心不变_叶子
-性别：男
-关注数：325
-粉丝数：822
-文章数：120
-总字数：245295
-被点赞数：4030
-总资产：18000.0
-简书钻：10156.544
-简书贝：7843.456
-会员等级：None
-会员过期时间：None
+昵称: 初心不变_叶子
+URL: https://www.jianshu.com/u/ea36c8d8aa30
+性别: 1
+关注者数: 388
+粉丝数: 1094
+文章数: 159
+总字数: 316169
+简书钻: 15122.726
+简书贝: 4877.274
+总资产: 20000.0
+徽章: 简书创作者 岛主 社区守护者
+最后更新时间: 2022-02-02 08:29:26
+会员等级: None
+会员过期时间: None
+个人简介:
 ```
 
 # 依赖库
@@ -112,7 +115,7 @@ print(jrt.__version__)
 ## 可选依赖
 
 - ujson：安装后在大量数据获取场景将获得一定性能提升
-- tomd：安装后可以使用`jrt.article.GetArticleMarkdown()`函数获取 Markdown 格式的文章内容
+- tomd：安装后可以使用 `jrt.article.GetArticleMarkdown()` 函数获取 Markdown 格式的文章内容
 
 # 贡献
 

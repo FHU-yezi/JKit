@@ -16,12 +16,25 @@ from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
                       UserUrlToUserSlug)
 from .exceptions import APIError
 
+__all__ = [
+    "GetUserName", "GetUserGender", "GetUserFollowersCount",
+    "GetUserFansCount", "GetUserArticlesCount", "GetUserWordage",
+    "GetUserLikesCount", "GetUserAssetsCount", "GetUserFPCount",
+    "GetUserFTNCount", "GetUserBadgesList", "GetUserLastUpdateTime",
+    "GetUserVIPInfo", "GetUserIntroductionHtml", "GetUserIntroductionText",
+    "GetUserNextAnniversaryDay", "GetUserNotebooksInfo",
+    "GetUserOwnCollectionsInfo", "GetUserManageableCollectionsInfo",
+    "GetUserArticlesInfo", "GetUserFollowingInfo", "GetUserFansInfo",
+    "GetUserAllBasicData", "GetUserTimelineInfo", "GetUserAllArticlesInfo",
+    "GetUserAllFollowingInfo", "GetUserAllFansInfo", "GetUserAllTimelineInfo"
+]
+
 
 def GetUserName(user_url: str, disable_check: bool = False) -> str:
     """获取用户昵称
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -39,7 +52,7 @@ def GetUserGender(user_url: str, disable_check: bool = False) -> int:
     """获取用户性别
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -59,7 +72,7 @@ def GetUserFollowersCount(user_url: str, disable_check: bool = False) -> int:
     """获取用户关注人数
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -77,7 +90,7 @@ def GetUserFansCount(user_url: str, disable_check: bool = False) -> int:
     """获取用户粉丝数
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -95,7 +108,7 @@ def GetUserArticlesCount(user_url: str, disable_check: bool = False) -> int:
     """获取用户文章数
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -114,7 +127,7 @@ def GetUserWordage(user_url: str, disable_check: bool = False) -> int:
     """获取用户文章总字数
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -132,7 +145,7 @@ def GetUserLikesCount(user_url: str, disable_check: bool = False) -> int:
     """获取用户被喜欢数
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -153,7 +166,7 @@ def GetUserAssetsCount(user_url: str, disable_check: bool = False) -> float:
     # ! 当用户没有文章时，该函数将抛出 APIError 异常
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Raises:
@@ -169,7 +182,7 @@ def GetUserAssetsCount(user_url: str, disable_check: bool = False) -> float:
     try:
         result = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
     except IndexError:
-        raise APIError("受 API 限制（用户无文章时无法获取总资产信息），无法获取该用户的总资产")
+        raise APIError("受简书 API 限制，用户无文章时无法获取其总资产数据")
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
@@ -180,7 +193,7 @@ def GetUserFPCount(user_url: str, disable_check: bool = False) -> float:
     # ! 当用户没有文章时，该函数将抛出 APIError 异常
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Raises:
@@ -195,7 +208,7 @@ def GetUserFPCount(user_url: str, disable_check: bool = False) -> float:
     json_obj = GetUserJsonDataApi(user_url)
     result = json_obj["jsd_balance"] / 1000
     if json_obj["total_wordage"] == 0 and result == 0:
-        raise APIError("受 API 限制（用户无文章时无法获取总资产信息），无法获取该用户的简书钻数量")
+        raise APIError("受简书 API 限制，用户无文章时无法获取其简书钻数据")
     return result
 
 
@@ -205,12 +218,15 @@ def GetUserFTNCount(user_url: str, disable_check: bool = False) -> float:
     # ! 视用户资产配置情况不同，该函数获取到的数值会有不大于 1000 的偏差
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         float: 用户简书贝数量
     """
+    if not disable_check:
+        AssertUserUrl(user_url)
+        AssertUserStatusNormal(user_url)
     assets = GetUserAssetsCount(user_url)
     FTN = GetUserFPCount(user_url)
     result = assets - FTN
@@ -223,7 +239,7 @@ def GetUserBadgesList(user_url: str, disable_check: bool = False) -> List[str]:
     """获取用户徽章列表
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -243,7 +259,7 @@ def GetUserLastUpdateTime(user_url: str, disable_check: bool = False) -> datetim
     """获取用户文章最后更新时间
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -261,7 +277,7 @@ def GetUserVIPInfo(user_url: str, disable_check: bool = False) -> Dict:
     """获取用户会员信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -293,7 +309,7 @@ def GetUserIntroductionHtml(user_url: str, disable_check: bool = False) -> str:
     """获取 Html 格式的用户简介
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -311,7 +327,7 @@ def GetUserIntroductionText(user_url: str, disable_check: bool = False) -> str:
     """获取纯文本格式的用户简介
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -333,7 +349,7 @@ def GetUserNextAnniversaryDay(user_url: str, disable_check: bool = False) -> dat
     """获取用户的下一次简书周年纪念日
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -354,7 +370,7 @@ def GetUserNotebooksInfo(user_url: str, disable_check: bool = False) -> List[Dic
     """获取用户文集与连载信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -381,7 +397,7 @@ def GetUserOwnCollectionsInfo(user_url: str, disable_check: bool = False) -> Lis
     """获取用户自己创建的专题信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -407,7 +423,7 @@ def GetUserManageableCollectionsInfo(user_url: str, disable_check: bool = False)
     """获取用户管理的专题信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -434,7 +450,7 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
     """获取用户文章信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         page (int, optional): 页码，与网页端文章顺序相同. Defaults to 1.
         count (int, optional): 获取的文章数量. Defaults to 10.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
@@ -482,11 +498,11 @@ def GetUserArticlesInfo(user_url: str, page: int = 1, count: int = 10,
     return result
 
 
-def GetUserFollowingInfo(user_url: str, disable_check: bool = False, page: int = 1) -> List[Dict]:
+def GetUserFollowingInfo(user_url: str, page: int = 1, disable_check: bool = False) -> List[Dict]:
     """获取用户关注者信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         page (int, optional): 关注列表页码. Defaults to 1.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
@@ -511,7 +527,7 @@ def GetUserFollowingInfo(user_url: str, disable_check: bool = False, page: int =
             "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")),
             "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")),
             "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")),
-            "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
+            "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),
             "likes_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_data)
@@ -522,7 +538,7 @@ def GetUserFansInfo(user_url: str, page: int = 1, disable_check: bool = False) -
     """获取用户粉丝信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         page (int, optional): 粉丝列表页码. Defaults to 1.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
@@ -547,7 +563,7 @@ def GetUserFansInfo(user_url: str, page: int = 1, disable_check: bool = False) -
             "followers_count": int(followers_raw_data[index].text.replace("关注 ", "")),
             "fans_count": int(fans_raw_data[index].text.replace("粉丝", "")),
             "articles_count": int(articles_raw_data[index].text.replace("文章 ", "")),
-            "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),   # TODO: 重复运行正则匹配，影响效率，需要优化
+            "words_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[0]),
             "likes_count": int(findall(r"\d+", words_and_likes_raw_data[index].text)[1])
         }
         result.append(item_data)
@@ -558,7 +574,7 @@ def GetUserAllBasicData(user_url: str, disable_check: bool = False) -> Dict:
     """获取用户的所有基础信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -602,11 +618,11 @@ def GetUserAllBasicData(user_url: str, disable_check: bool = False) -> Dict:
     try:
         result["vip_info"] = {
             "vip_type": {
-                    "bronze": "铜牌",
-                    "silver": "银牌",
-                    "gold": "黄金",
-                    "platina": "白金"
-                }[json_obj["member"]["type"]],
+                "bronze": "铜牌",
+                "silver": "银牌",
+                "gold": "黄金",
+                "platina": "白金"
+            }[json_obj["member"]["type"]],
             "expire_date": datetime.fromtimestamp(json_obj["member"]["expires_at"])
         }
     except KeyError:
@@ -624,13 +640,13 @@ def GetUserAllBasicData(user_url: str, disable_check: bool = False) -> Dict:
     return result
 
 
-def GetUserTimelineInfo(user_url: str, disable_check: bool = False, max_id: int = 1000000000) -> List[Dict]:
+def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000, disable_check: bool = False) -> List[Dict]:
     """获取用户动态信息
 
     ！在极少数情况下可能会遇到不在可解析列表中的动态类型，此时程序会跳过这条动态，不会抛出异常
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         max_id (int, optional): 最大 id，值等于上一次获取到的数据中最后一项的 operation_id. Defaults to 1000000000.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
@@ -796,7 +812,7 @@ def GetUserAllArticlesInfo(user_url: str, count: int = 10, sorting_method: str =
     """获取用户的所有文章信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
@@ -829,7 +845,7 @@ def GetUserAllFollowingInfo(user_url: str, max_count: int = None, disable_check:
     """获取用户的所有关注者信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         max_count (int, optional): 获取的关注者信息数量上限，Defaults to None.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
@@ -859,7 +875,7 @@ def GetUserAllFansInfo(user_url: str, max_count: int = None, disable_check: bool
     """获取用户的所有粉丝信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         max_count (int, optional): 获取的粉丝信息数量上限，Defaults to None.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
@@ -889,7 +905,7 @@ def GetUserAllTimelineInfo(user_url: str, max_count: int = None, disable_check: 
     """获取用户的所有动态信息
 
     Args:
-        user_url (str): 用户个人主页 Url
+        user_url (str): 用户个人主页 URL
         max_count (int, optional): 获取的动态信息数量上限，Defaults to None.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
