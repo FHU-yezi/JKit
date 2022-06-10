@@ -38,7 +38,7 @@ def UserSlugToUserId(user_slug: str) -> int:
     """用户 Slug 转用户 ID
 
     Args:
-        user_url (str): 用户 Slug
+        user_slug (str): 用户 Slug
 
     Returns:
         int: 用户 ID
@@ -318,7 +318,7 @@ def IslandPostUrlToIslandPostSlug(post_url: str) -> str:
     """小岛文章 URL 转小岛帖子 Slug
 
     Args:
-        island_url (str): 小岛帖子 URL
+        post_url (str): 小岛帖子 URL
 
     Returns:
         str: 小岛帖子 Slug
@@ -333,7 +333,7 @@ def IslandPostSlugToIslandPostUrl(post_slug: str) -> str:
     """小岛帖子 Slug 转小岛帖子 URL
 
     Args:
-        island_url (str): 小岛帖子 Slug
+        post_slug (str): 小岛帖子 Slug
 
     Returns:
         str: 小岛帖子 URL

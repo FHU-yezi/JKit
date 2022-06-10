@@ -192,6 +192,7 @@ def GetArticlePublishTime(article_url: str, disable_check: bool = False) -> date
 
     Args:
         article_url (str): 文章 URL
+        disable_check (str): 禁用参数有效性检查. Defaults to False.
 
     Returns:
         datetime: 文章发布时间
@@ -530,7 +531,6 @@ def GetArticleAllCommentsData(article_id: int, count: int = 10, author_only: boo
         author_only (bool, optional): 为 True 时只获取作者发布的评论，包含作者发布的子评论及其父评论. Defaults to False.
         sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
         max_count (int, optional): 获取的文章评论信息数量上限，Defaults to None.
-        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Yields:
         Iterator[Dict], None, None]: 文章信息

@@ -11,7 +11,7 @@ from .convert import (IslandPostSlugToIslandPostUrl,
 __all__ = [
     "GetIslandName", "GetIslandAvatarUrl", "GetIslandIntroduction",
     "GetIslandMembersCount", "GetIslandPostsCount", "GetIslandCategory",
-    "GetIslandPostFullConetnt", "GetIslandPosts", "GetIslandAllBasicData",
+    "GetIslandPostFullContent", "GetIslandPosts", "GetIslandAllBasicData",
     "GetIslandAllPostsData"
 ]
 
@@ -124,11 +124,11 @@ def GetIslandCategory(island_url: str, disable_check: bool = False) -> str:
     return result
 
 
-def GetIslandPostFullConetnt(post_url: str, disable_check: bool = False) -> str:
+def GetIslandPostFullContent(post_url: str, disable_check: bool = False) -> str:
     """获取小岛帖子完整内容
 
     Args:
-        island_url (str): 小岛 URL
+        post_url (str): 小岛帖子 URL
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
     Returns:
@@ -153,9 +153,9 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
             count (int, optional): 每次返回的数据数量. Defaults to 10.
             topic_id (int, optional): 话题 ID. Defaults to None.
             sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
-        "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
+            "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
             get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
-        自动调用 GetIslandPostFullConetnt 函数获取完整内容并替换. Defaults to False.
+            自动调用 GetIslandPostFullContent 函数获取完整内容并替换. Defaults to False.
             disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
         Returns:
@@ -170,7 +170,8 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
         "most_valuable": "best"
     }[sorting_method],
     json_obj = GetIslandPostsJsonDataApi(group_slug=IslandUrlToIslandSlug(island_url),
-                                         max_id=start_sort_id, count=count, topic_id=topic_id, order_by=order_by)
+                                         max_id=start_sort_id, count=count, topic_id=topic_id,
+                                         order_by=order_by)
 
     result = []
     for item in json_obj:
@@ -228,7 +229,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
         except KeyError:
             pass  # 没有话题则跳过
         if get_full_content and "..." in item_data["content"]:  # 获取到的帖子内容不全
-            item_data["content"] = GetIslandPostFullConetnt(IslandPostSlugToIslandPostUrl(item_data["pslug"]),
+            item_data["content"] = GetIslandPostFullContent(IslandPostSlugToIslandPostUrl(item_data["pslug"]),
                                                             disable_check=True)
         result.append(item_data)
     return result
@@ -272,7 +273,7 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
         sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
         get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
-    自动调用 GetIslandPostFullConetnt 函数获取完整内容并替换. Defaults to False.
+        自动调用 GetIslandPostFullContent 函数获取完整内容并替换. Defaults to False.
         max_count (int, optional): 获取的小岛帖子信息数量上限，Defaults to None.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
