@@ -10,7 +10,8 @@ from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
 from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
                       IslandSlugToIslandUrl, IslandUrlToIslandSlug,
                       NotebookSlugToNotebookUrl, UserSlugToUserUrl,
-                      UserUrlToUserSlug)
+                      UserUrlToUserSlug, ArticleUrlToArticleSlug,
+                      NotebookUrlToNotebookId, NotebookUrlToNotebookSlug, CollectionUrlToCollectionSlug)
 from .exceptions import InputError
 from .utils import CallWithoutCheck, NameValueMappingToString, OnlyOne
 
@@ -479,7 +480,7 @@ class Article():
         Returns:
             str: 文章 Slug
         """
-        return article.GetArticleSlug(self._url)
+        return ArticleUrlToArticleSlug(self._url)
 
     @property
     @cache_result_wrapper
@@ -772,7 +773,7 @@ class Notebook():
         Returns:
             int: 文集 ID
         """
-        return notebook.GetNotebookId(self._url)
+        return NotebookUrlToNotebookId(self._url)
 
     @property
     @cache_result_wrapper
@@ -782,7 +783,7 @@ class Notebook():
         Returns:
             str: 文集 Slug
         """
-        return notebook.GetNotebookSlug(self._url)
+        return NotebookUrlToNotebookSlug(self._url)
 
     @property
     @cache_result_wrapper
@@ -979,7 +980,7 @@ class Collection():
         Returns:
             str: 专题 Slug
         """
-        return collection.GetCollectionSlug(self._url)
+        return CollectionUrlToCollectionSlug(self._url)
 
     @property
     @cache_result_wrapper
