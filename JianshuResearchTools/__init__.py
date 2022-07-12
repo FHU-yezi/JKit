@@ -1,4 +1,4 @@
-__version__ = "2.10.0"
+__version__ = "2.10.1"
 
 from . import (article, beikeisland, collection, island, notebook, objects,
                rank, user)
