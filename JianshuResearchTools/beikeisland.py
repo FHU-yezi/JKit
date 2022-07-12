@@ -126,30 +126,45 @@ def GetBeikeIslandTradeOrderInfo(trade_type: str, page: int = 1) -> List[Dict]:
         "buy": 2,
         "sell": 1
     }[trade_type]
-    json_obj = GetBeikeIslandTradeListJsonDataApi(pageIndex=page, retype=retype)
+    json_obj = GetBeikeIslandTradeListJsonDataApi(pageIndex=page,
+                                                  retype=retype)
     result = []
     for item in json_obj["data"]["tradelist"]:
         item_data = {
-            "tradeid": item["id"],
-            "tradeslug": item["tradeno"],  # ? 我也不确定这个 no 什么意思,回来去问问
-            "user": {
-                "jianshuname": item["jianshuname"],
-                "bkname": item["reusername"],  # ? 还有个 nickname，不知道哪个对
-                "avatar_url": item["avatarurl"],
-                "userlevelcode": item["levelnum"],
-                "userlevel": item["userlevel"],
-                "user_trade_count": item["tradecount"]
+            "trade_id": item["id"],
+            "trade_slug": item["tradeno"],
+            "publish_time": datetime.fromisoformat(item["releasetime"]),
+            "status": {
+                "code": item["statuscode"],
+                "text": item["statustext"]
             },
-            "total": item["recount"],
-            "traded": item["recount"] - item["cantradenum"],
-            "remaining": item["cantradenum"],
-            "price": item["reprice"],
-            "minimum_limit": item["minlimit"],
-            "percentage": item["compeletper"],
-            "statuscode": item["statuscode"],
-            "status": item["statustext"],
-            "publish_time": datetime.fromisoformat(item["releasetime"])
+            "trade": {
+                "total": item["recount"],
+                "traded": item["recount"] - item["cantradenum"],
+                "remaining": item["cantradenum"],
+                "minimum_trade_limit": item["minlimit"],
+                "traded_percentage": round(
+                    float(item["compeletper"]) / 100, 3
+                ),
+                "price": item["reprice"],
+            }
         }
+
+        if item["anonymity"]:
+            item_data["user"] = {
+                "is_anonymity": True
+            }
+        else:
+            item_data["user"] = {
+                "is_anonymity": False,
+                "name": item["reusername"],
+                "avatar_url": item["avatarurl"],
+                "level": {
+                    "code": item["levelnum"],
+                    "text": item["userlevel"]
+                }
+            }
+
         result.append(item_data)
     return result
 

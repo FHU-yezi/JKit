@@ -1,8 +1,9 @@
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 
 from httpx import get as httpx_get
 from httpx import post as httpx_post
 from lxml import etree
+from lxml.etree import _Element
 
 from .headers import (BeikeIsland_request_header, PC_header,
                       api_request_header, mobile_header)
@@ -37,7 +38,7 @@ def GetArticleJsonDataApi(article_url: str) -> Dict:
     return json_obj
 
 
-def GetArticleHtmlJsonDataApi(article_url: str) -> Dict:
+def GetArticleHtmlJsonDataApi(article_url: str) -> _Element:
     source = httpx_get(article_url, headers=PC_header).content
     html_obj = etree.HTML(source)
     json_obj = json_loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
@@ -190,7 +191,7 @@ def GetDailyArticleRankListJsonDataApi() -> Dict:
     return json_obj
 
 
-def GetArticlesFPRankListJsonDataApi(date: str, type_: str) -> Dict:  # 避免覆盖内置函数
+def GetArticlesFPRankListJsonDataApi(date: str, type_: Optional[str]) -> Dict:  # 避免覆盖内置函数
     params = {
         "date": date,
         "type": type_
@@ -207,7 +208,7 @@ def GetUserJsonDataApi(user_url: str) -> Dict:
     return json_obj
 
 
-def GetUserPCHtmlDataApi(user_url: str) -> Dict:
+def GetUserPCHtmlDataApi(user_url: str) -> _Element:
     source = httpx_get(user_url, headers=PC_header).content
     html_obj = etree.HTML(source)
     return html_obj
@@ -236,7 +237,7 @@ def GetUserArticlesListJsonDataApi(user_url: str, page: int,
     return json_obj
 
 
-def GetUserFollowingListHtmlDataApi(user_url: str, page: int):
+def GetUserFollowingListHtmlDataApi(user_url: str, page: int) -> _Element:
     request_url = user_url.replace("/u/", "/users/") + "/following"
     params = {
         "page": page
@@ -246,7 +247,7 @@ def GetUserFollowingListHtmlDataApi(user_url: str, page: int):
     return html_obj
 
 
-def GetUserFollowersListHtmlDataApi(user_url: str, page: int):
+def GetUserFollowersListHtmlDataApi(user_url: str, page: int) -> _Element:
     request_url = user_url.replace("/u/", "/users/") + "/followers"
     params = {
         "page": page
@@ -256,7 +257,7 @@ def GetUserFollowersListHtmlDataApi(user_url: str, page: int):
     return html_obj
 
 
-def GetUserNextAnniversaryDayHtmlDataApi(user_slug: str):
+def GetUserNextAnniversaryDayHtmlDataApi(user_slug: str) -> _Element:
     request_url = f"https://www.jianshu.com/mobile/u/{user_slug}/anniversary"
     source = httpx_get(request_url, headers=mobile_header).content
     html_obj = etree.HTML(source)
@@ -270,7 +271,7 @@ def GetIslandPostJsonDataApi(post_slug: str) -> List[Dict]:
     return json_obj
 
 
-def GetUserTimelineHtmlDataApi(uslug: str, max_id: int) -> Dict:
+def GetUserTimelineHtmlDataApi(uslug: str, max_id: int) -> _Element:
     request_url = f"https://www.jianshu.com/users/{uslug}/timeline"
     params = {
         "max_id": max_id

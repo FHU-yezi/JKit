@@ -55,12 +55,12 @@ with open("test_cases.yaml", "r", encoding="utf-8") as f:
     test_cases = yaml_load(f, Loader=FullLoader)
 
 
-class TestEggs():  # 测试彩蛋内容
+class TestEggs:  # 测试彩蛋内容
     def TestFuture(self):
         jrt.future()
 
 
-class TestConvertModule():
+class TestConvertModule:
     def test_UserUrlToUserId(self):
         for case in test_cases["convert_cases"]["user_convert_cases"]:
             AssertNormalCase(UserUrlToUserId(case["url"]), case["uid"])
@@ -122,7 +122,7 @@ class TestConvertModule():
             AssertNormalCase(IslandSlugToIslandUrl(case["islug"]), case["url"])
 
 
-class TestArticleModule():
+class TestArticleModule:
     def test_GetArticleTitle(self):
         for case in test_cases["article_cases"]["success_cases"]:
             AssertNormalCase(jrt.article.GetArticleTitle(case["url"]), case["title"])
@@ -236,7 +236,7 @@ class TestArticleModule():
                 jrt.article.GetArticleCommentStatus(case["url"])
 
 
-class TestUserModule():
+class TestUserModule:
     def test_GetUserName(self):
         for case in test_cases["user_cases"]["success_cases"]:
             AssertNormalCase(jrt.user.GetUserName(case["url"]), case["name"])
@@ -342,7 +342,7 @@ class TestUserModule():
                 jrt.user.GetUserNextAnniversaryDay(case["url"])
 
 
-class TestCollectionModule():
+class TestCollectionModule:
     def test_GetCollectionAvatarUrl(self):
         for case in test_cases["collection_cases"]["success_cases"]:
             AssertNormalCase(jrt.collection.GetCollectionAvatarUrl(case["url"]), case["avatar_url"])
@@ -384,7 +384,7 @@ class TestCollectionModule():
                 jrt.collection.GetCollectionInformationUpdateTime(case["url"])
 
 
-class TestIslandModule():
+class TestIslandModule:
     def test_GetArticleName(self):
         for case in test_cases["island_cases"]["success_cases"]:
             AssertNormalCase(jrt.island.GetIslandName(case["url"]), case["name"])
@@ -426,7 +426,7 @@ class TestIslandModule():
                 jrt.island.GetIslandCategory(case["url"])
 
 
-class TestNotebookModule():
+class TestNotebookModule:
     def test_GetNotebookName(self):
         for case in test_cases["notebook_cases"]["success_cases"]:
             AssertNormalCase(jrt.notebook.GetNotebookName(case["url"]), case["name"])
@@ -449,7 +449,7 @@ class TestNotebookModule():
 
         for case in test_cases["notebook_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
-                jrt.notebook.GetNotebookAuthorInfo(case["url"])["name"]
+                _ = jrt.notebook.GetNotebookAuthorInfo(case["url"])["name"]
 
     def test_GetNotebookAuthorAvatarUrl(self):
         for case in test_cases["notebook_cases"]["success_cases"]:
@@ -457,7 +457,7 @@ class TestNotebookModule():
 
         for case in test_cases["notebook_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
-                jrt.notebook.GetNotebookAuthorInfo(case["url"])["author_avatar_url"]
+                _ = jrt.notebook.GetNotebookAuthorInfo(case["url"])["author_avatar_url"]
 
     def test_GetNotebookWordage(self):
         for case in test_cases["notebook_cases"]["success_cases"]:

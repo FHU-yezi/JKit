@@ -10,7 +10,8 @@ from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
 from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
                       IslandSlugToIslandUrl, IslandUrlToIslandSlug,
                       NotebookSlugToNotebookUrl, UserSlugToUserUrl,
-                      UserUrlToUserSlug)
+                      UserUrlToUserSlug, ArticleUrlToArticleSlug,
+                      NotebookUrlToNotebookId, NotebookUrlToNotebookSlug, CollectionUrlToCollectionSlug)
 from .exceptions import InputError
 from .utils import CallWithoutCheck, NameValueMappingToString, OnlyOne
 
@@ -85,7 +86,7 @@ def clear_cache():
     _cache_dict.clear()
 
 
-class User():
+class User:
     """用户类
     """
     def __init__(self, user_url: str = None, *, user_slug: str = None):
@@ -416,7 +417,7 @@ class User():
         }, title="用户信息摘要")
 
 
-class Article():
+class Article:
     """文章类
     """
     def __init__(self, article_url: str = None, article_slug: str = None):
@@ -479,7 +480,7 @@ class Article():
         Returns:
             str: 文章 Slug
         """
-        return article.GetArticleSlug(self._url)
+        return ArticleUrlToArticleSlug(self._url)
 
     @property
     @cache_result_wrapper
@@ -709,7 +710,7 @@ class Article():
         }, title="文章信息摘要")
 
 
-class Notebook():
+class Notebook:
     """文集类
     """
     def __init__(self, notebook_url: str = None, notebook_slug: str = None):
@@ -772,7 +773,7 @@ class Notebook():
         Returns:
             int: 文集 ID
         """
-        return notebook.GetNotebookId(self._url)
+        return NotebookUrlToNotebookId(self._url)
 
     @property
     @cache_result_wrapper
@@ -782,7 +783,7 @@ class Notebook():
         Returns:
             str: 文集 Slug
         """
-        return notebook.GetNotebookSlug(self._url)
+        return NotebookUrlToNotebookSlug(self._url)
 
     @property
     @cache_result_wrapper
@@ -910,7 +911,7 @@ class Notebook():
         }, title="文集信息摘要")
 
 
-class Collection():
+class Collection:
     """专题类
     """
     def __init__(self, collection_url: str = None, collection_slug: str = None,
@@ -979,7 +980,7 @@ class Collection():
         Returns:
             str: 专题 Slug
         """
-        return collection.GetCollectionSlug(self._url)
+        return CollectionUrlToCollectionSlug(self._url)
 
     @property
     @cache_result_wrapper
@@ -1076,7 +1077,7 @@ class Collection():
         """获取专题编辑信息
 
         Args:
-            page (int, optional): 页码. Defause to 1.
+            page (int, optional): 页码. Default to 1.
 
         Raises:
             InputError: 因缺少 ID 参数而无法获取结果时抛出此异常
@@ -1181,7 +1182,7 @@ class Collection():
         }, title="专题信息摘要")
 
 
-class Island():
+class Island:
     """小岛类
     """
     def __init__(self, island_url: str = None, island_slug: str = None):

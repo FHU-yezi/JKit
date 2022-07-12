@@ -662,10 +662,11 @@ def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000, disable_check: 
     result = []
 
     for block in blocks:
-        item_data = {}
-        item_data["operation_id"] = int(block.xpath("//li/@id")[0][5:])
-        item_data["operation_type"] = block.xpath("//span[starts-with(@data-datetime, '20')]/@data-type")[0]
-        item_data["operation_time"] = datetime.fromisoformat(block.xpath("//span[starts-with(@data-datetime, '20')]/@data-datetime")[0])
+        item_data = {
+            "operation_id": int(block.xpath("//li/@id")[0][5:]),
+            "operation_type": block.xpath("//span[starts-with(@data-datetime, '20')]/@data-type")[0],
+            "operation_time": datetime.fromisoformat(block.xpath("//span[starts-with(@data-datetime, '20')]/@data-datetime")[0])
+        }
 
         if item_data["operation_type"] == "like_note":  # 对文章点赞
             item_data["operation_type"] = "like_article"  # 鬼知道谁把对文章点赞写成 like_note 的
@@ -754,13 +755,13 @@ def GetUserTimelineInfo(user_url: str, max_id: int = 1000000000, disable_check: 
             item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
             item_data["operator_url"] = UserSlugToUserUrl(block.xpath("//a[@class='nickname']/@href")[0][4:])
             item_data["operator_avatar_url"] = block.xpath("//a[@class='avatar']/img/@src")[0]
-            item_data["target_collecton_title"] = block.xpath("//a[@class='title']/text()")[0]
-            item_data["target_collecton_url"] = CollectionSlugToCollectionUrl(block.xpath("//a[@class='title']/@href")[0][3:])
-            item_data["target_collecton_avatar_url"] = block.xpath("//div[@class='follow-detail']/div/a/img/@src")[0]
+            item_data["target_collection_title"] = block.xpath("//a[@class='title']/text()")[0]
+            item_data["target_collection_url"] = CollectionSlugToCollectionUrl(block.xpath("//a[@class='title']/@href")[0][3:])
+            item_data["target_collection_avatar_url"] = block.xpath("//div[@class='follow-detail']/div/a/img/@src")[0]
             item_data["target_user_name"] = block.xpath("//a[@class='creater']/text()")[0]
             item_data["target_user_url"] = UserSlugToUserUrl(block.xpath("//a[@class='creater']/@href")[0][3:])
-            item_data["target_collecton_articles_count"] = int(findall(r"\d+", block.xpath("//div[@class='info'][1]/p/text()")[1])[0])
-            item_data["target_collecton_subscribers_count"] = int(findall(r"\d+", block.xpath("//div[@class='info'][1]/p/text()")[1])[1])
+            item_data["target_collection_articles_count"] = int(findall(r"\d+", block.xpath("//div[@class='info'][1]/p/text()")[1])[0])
+            item_data["target_collection_subscribers_count"] = int(findall(r"\d+", block.xpath("//div[@class='info'][1]/p/text()")[1])[1])
 
         elif item_data["operation_type"] == "like_user":  # 关注用户
             item_data["operation_type"] = "follow_user"  # 鬼知道谁把关注用户写成 like_user 的

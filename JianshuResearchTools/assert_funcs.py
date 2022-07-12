@@ -1,6 +1,6 @@
 from functools import lru_cache
-from typing import Any
 from re import compile as re_compile
+from typing import Any
 
 from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
                          GetIslandJsonDataApi, GetNotebookJsonDataApi,
@@ -28,18 +28,18 @@ JIANSHU_ISLAND_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/g/\w{16}/?$")
 JIANSHU_ISLAND_POST_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/gp/\w{16}/?$")
 
 
-def AssertType(object: Any, type_obj: Any) -> None:
+def AssertType(obj: Any, type_obj: Any) -> None:
     """判断对象是否是指定类型
 
     Args:
-        object (Any): 需要进行判断的对象
+        obj (Any): 需要进行判断的对象
         type_obj (object): 目标类型
 
     Raises:
         TypeError: 对象类型错误时抛出此错误
     """
-    if not isinstance(object, type_obj):
-        raise TypeError(f"{object} 不是 {type_obj.__name__} 类型，而是 { type(object).__name__ } 类型")
+    if not isinstance(obj, type_obj):
+        raise TypeError(f"{obj} 不是 {type_obj.__name__} 类型，而是 { type(obj).__name__ } 类型")
 
 
 def AssertJianshuUrl(string: str) -> None:
