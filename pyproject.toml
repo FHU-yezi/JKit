@@ -1,10 +1,23 @@
 [tool.poetry]
-name = "jianshuresearchtools"
+name = "JianshuResearchTools"
 version = "2.11.0"
 description = "科技赋能创作星辰"
 authors = ["yezi <yehaowei20060411@qq.com>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/FHU-yezi/JianshuResearchTools"
+keywords = ["jianshu", "SDK"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+    "Programming Language :: Python :: 3"
+]
+packages = [
+    { include = "JianshuResearchTools" },
+    { include = "README.md" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
