@@ -11,8 +11,11 @@ from .exceptions import APIError, ResourceError
 from .user import GetUserAssetsCount
 
 __all__ = [
-    "GetAssetsRankData", "GetDailyArticleRankData", "GetUserFPRankData",
-    "GetArticleFPRankBasicInfo", "GetUserFPRankData"
+    "GetAssetsRankData",
+    "GetDailyArticleRankData",
+    "GetUserFPRankData",
+    "GetArticleFPRankBasicInfo",
+    "GetUserFPRankData",
 ]
 
 
@@ -36,13 +39,15 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> List[Dict]:
             "uslug": item["user"]["slug"],
             "name": item["user"]["nickname"],
             "avatar_url": item["user"]["avatar"],
-            "FP": item["amount"] / 1000
+            "FP": item["amount"] / 1000,
         }
         if get_full:
             user_url = UserSlugToUserUrl(item_data["uslug"])
             try:
                 item_data["Assets"] = GetUserAssetsCount(user_url, disable_check=True)
-                item_data["FTN"] = round(item_data["Assets"] - item_data["FP"], 3)  # 处理浮点数精度问题
+                item_data["FTN"] = round(
+                    item_data["Assets"] - item_data["FP"], 3
+                )  # 处理浮点数精度问题
             except APIError:
                 pass
         result.append(item_data)
@@ -63,7 +68,7 @@ def GetDailyArticleRankData() -> List[Dict]:
             "uslug": item["slug"],
             "name": item["nickname"],
             "avatar_url": item["avatar"],
-            "check_in_count": item["checkin_count"]
+            "check_in_count": item["checkin_count"],
         }
         result.append(item_data)
     return result
@@ -98,7 +103,7 @@ def GetArticleFPRankData(target_date: str = "latest") -> List[Dict]:
             "author_avatar_url": item["author_avatar"],
             "fp_to_author": item["author_fp"] / 1000,
             "fp_to_voter": item["voter_fp"] / 1000,
-            "total_fp": item["fp"] / 1000
+            "total_fp": item["fp"] / 1000,
         }
         result.append(item_data)
     return result
@@ -126,11 +131,13 @@ def GetArticleFPRankBasicInfo(target_date: str = "latest") -> Dict:
     return {
         "total_fp": json_obj["fp"],
         "fp_to_author": json_obj["author_fp"],
-        "fp_to_voter": json_obj["voter_fp"]
+        "fp_to_voter": json_obj["voter_fp"],
     }
 
 
-def GetUserFPRankData(target_date: str = "latest", rank_type: str = "all") -> List[Dict]:
+def GetUserFPRankData(
+    target_date: str = "latest", rank_type: str = "all"
+) -> List[Dict]:
     """获取用户收益排行榜信息
 
     目前只能获取 2020 年 6 月 20 日之后的数据。
@@ -145,11 +152,7 @@ def GetUserFPRankData(target_date: str = "latest", rank_type: str = "all") -> Li
     Returns:
         List[Dict]: 用户收益排行榜信息
     """
-    type_ = {
-        "all": None,
-        "write": "note",
-        "vote": "like"
-    }[rank_type]
+    type_ = {"all": None, "write": "note", "vote": "like"}[rank_type]
     json_obj = GetArticlesFPRankListJsonDataApi(date=target_date, type_=type_)
     if json_obj["users"] == []:
         raise ResourceError(f"对应日期 {target_date} 的排行榜数据为空")
@@ -161,7 +164,7 @@ def GetUserFPRankData(target_date: str = "latest", rank_type: str = "all") -> Li
             "name": item["nickname"],
             "avatar_url": item["avatar"],
             "fp_from_write": item["author_fp"],
-            "fp_from_vote": item["voter_fp"]
+            "fp_from_vote": item["voter_fp"],
         }
         result.append(item_data)
     return result

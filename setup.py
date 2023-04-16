@@ -19,11 +19,11 @@ setuptools.setup(
     extras_require={
         "md-convert": ["tomd==0.1.3"],
         "high-perf": ["ujson==5.3.0"],
-        "full": ["tomd==0.1.3", "ujson==5.3.0"]
+        "full": ["tomd==0.1.3", "ujson==5.3.0"],
     },
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.6"
+    python_requires=">=3.6",
 )

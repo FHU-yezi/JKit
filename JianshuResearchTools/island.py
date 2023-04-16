@@ -15,10 +15,16 @@ from .convert import (
 )
 
 __all__ = [
-    "GetIslandName", "GetIslandAvatarUrl", "GetIslandIntroduction",
-    "GetIslandMembersCount", "GetIslandPostsCount", "GetIslandCategory",
-    "GetIslandPostFullContent", "GetIslandPosts", "GetIslandAllBasicData",
-    "GetIslandAllPostsData"
+    "GetIslandName",
+    "GetIslandAvatarUrl",
+    "GetIslandIntroduction",
+    "GetIslandMembersCount",
+    "GetIslandPostsCount",
+    "GetIslandCategory",
+    "GetIslandPostFullContent",
+    "GetIslandPosts",
+    "GetIslandAllBasicData",
+    "GetIslandAllPostsData",
 ]
 
 
@@ -141,36 +147,44 @@ def GetIslandPostFullContent(post_url: str, disable_check: bool = False) -> str:
     return json_obj["content"]
 
 
-def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
-                   topic_id: int = None, sorting_method: str = "time",
-                   get_full_content: bool = False, disable_check: bool = False) -> List[Dict]:
+def GetIslandPosts(
+    island_url: str,
+    start_sort_id: int = None,
+    count: int = 10,
+    topic_id: int = None,
+    sorting_method: str = "time",
+    get_full_content: bool = False,
+    disable_check: bool = False,
+) -> List[Dict]:
     """获取小岛帖子信息
 
-        Args:
-            island_url (str): 小岛 URL
-            start_sort_id (int, optional): 起始序号，等于上一条数据的序号. Defaults to None.
-            count (int, optional): 每次返回的数据数量. Defaults to 10.
-            topic_id (int, optional): 话题 ID. Defaults to None.
-            sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
-            "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
-            get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
-            自动调用 GetIslandPostFullContent 函数获取完整内容并替换. Defaults to False.
-            disable_check (bool): 禁用参数有效性检查. Defaults to False.
+    Args:
+        island_url (str): 小岛 URL
+        start_sort_id (int, optional): 起始序号，等于上一条数据的序号. Defaults to None.
+        count (int, optional): 每次返回的数据数量. Defaults to 10.
+        topic_id (int, optional): 话题 ID. Defaults to None.
+        sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
+        get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
+        自动调用 GetIslandPostFullContent 函数获取完整内容并替换. Defaults to False.
+        disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
-        Returns:
-            List[Dict]: 帖子信息
+    Returns:
+        List[Dict]: 帖子信息
     """
     if not disable_check:
         AssertIslandUrl(island_url)
         AssertIslandStatusNormal(island_url)
-    order_by = {
-        "time": "latest",
-        "hot": "hot",
-        "most_valuable": "best"
-    }[sorting_method],
-    json_obj = GetIslandPostsJsonDataApi(group_slug=IslandUrlToIslandSlug(island_url),
-                                         max_id=start_sort_id, count=count, topic_id=topic_id,
-                                         order_by=order_by)
+    order_by = (
+        {"time": "latest", "hot": "hot", "most_valuable": "best"}[sorting_method],
+    )
+    json_obj = GetIslandPostsJsonDataApi(
+        group_slug=IslandUrlToIslandSlug(island_url),
+        max_id=start_sort_id,
+        count=count,
+        topic_id=topic_id,
+        order_by=order_by,
+    )
 
     result = []
     for item in json_obj:
@@ -191,7 +205,7 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
             "island": {
                 "iid": item["group"]["id"],
                 "islug": item["group"]["slug"],
-                "island_name": item["group"]["name"]
+                "island_name": item["group"]["name"],
             },
             "user": {
                 "uid": item["user"]["id"],
@@ -222,8 +236,9 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
                 # 有个 group_role 不知道干什么用的，没解析
             }
         if get_full_content and "..." in item_data["content"]:  # 获取到的帖子内容不全
-            item_data["content"] = GetIslandPostFullContent(IslandPostSlugToIslandPostUrl(item_data["pslug"]),
-                                                            disable_check=True)
+            item_data["content"] = GetIslandPostFullContent(
+                IslandPostSlugToIslandPostUrl(item_data["pslug"]), disable_check=True
+            )
         result.append(item_data)
     return result
 
@@ -253,10 +268,15 @@ def GetIslandAllBasicData(island_url: str, disable_check: bool = False) -> Dict:
     return result
 
 
-def GetIslandAllPostsData(island_url: str, count: int = 10,
-                          topic_id: int = None, sorting_method: str = "time",
-                          get_full_content: bool = False, max_count: int = None,
-                          disable_check: bool = False) -> Generator[Dict, None, None]:
+def GetIslandAllPostsData(
+    island_url: str,
+    count: int = 10,
+    topic_id: int = None,
+    sorting_method: str = "time",
+    get_full_content: bool = False,
+    max_count: int = None,
+    disable_check: bool = False,
+) -> Generator[Dict, None, None]:
     """获取小岛的所有帖子信息
 
     Args:
@@ -279,8 +299,15 @@ def GetIslandAllPostsData(island_url: str, count: int = 10,
     start_sort_id = None
     now_count = 0
     while True:
-        result = GetIslandPosts(island_url, start_sort_id, count, topic_id,
-                                sorting_method, get_full_content, disable_check=True)
+        result = GetIslandPosts(
+            island_url,
+            start_sort_id,
+            count,
+            topic_id,
+            sorting_method,
+            get_full_content,
+            disable_check=True,
+        )
         if result:
             start_sort_id = result[-1]["sorted_id"]
         else:

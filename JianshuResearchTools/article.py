@@ -16,14 +16,26 @@ with suppress(ImportError):
     from tomd import convert as html2md
 
 __all__ = [
-    "GetArticleTitle", "GetArticleAuthorName", "GetArticleReadsCount",
-    "GetArticleWordage", "GetArticleLikesCount", "GetArticleCommentsCount",
-    "GetArticleMostValuableCommentsCount", "GetArticleTotalFPCount",
-    "GetArticleDescription", "GetArticlePublishTime", "GetArticleUpdateTime",
-    "GetArticlePaidStatus", "GetArticleReprintStatus",
-    "GetArticleCommentStatus", "GetArticleHtml", "GetArticleText",
-    "GetArticleMarkdown", "GetArticleCommentsData", "GetArticleAllBasicData",
-    "GetArticleAllCommentsData"
+    "GetArticleTitle",
+    "GetArticleAuthorName",
+    "GetArticleReadsCount",
+    "GetArticleWordage",
+    "GetArticleLikesCount",
+    "GetArticleCommentsCount",
+    "GetArticleMostValuableCommentsCount",
+    "GetArticleTotalFPCount",
+    "GetArticleDescription",
+    "GetArticlePublishTime",
+    "GetArticleUpdateTime",
+    "GetArticlePaidStatus",
+    "GetArticleReprintStatus",
+    "GetArticleCommentStatus",
+    "GetArticleHtml",
+    "GetArticleText",
+    "GetArticleMarkdown",
+    "GetArticleCommentsData",
+    "GetArticleAllBasicData",
+    "GetArticleAllCommentsData",
 ]
 
 
@@ -129,7 +141,9 @@ def GetArticleCommentsCount(article_url: str, disable_check: bool = False) -> in
     return json_obj["public_comment_count"]
 
 
-def GetArticleMostValuableCommentsCount(article_url: str, disable_check: bool = False) -> int:
+def GetArticleMostValuableCommentsCount(
+    article_url: str, disable_check: bool = False
+) -> int:
     """获取文章精选评论数量
 
     Args:
@@ -229,12 +243,12 @@ def GetArticlePaidStatus(article_url: str, disable_check: bool = False) -> bool:
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
     paid_type = {
-        "free": False,   # 免费文章
-        "fbook_free": False,   # 免费连载中的免费文章
-        "pbook_free": False,   # 付费连载中的免费文章
-        "paid": True,   # 付费文章
-        "fbook_paid": True,   # 免费连载中的付费文章
-        "pbook_paid": True   # 付费连载中的付费文章
+        "free": False,  # 免费文章
+        "fbook_free": False,  # 免费连载中的免费文章
+        "pbook_free": False,  # 付费连载中的免费文章
+        "paid": True,  # 付费文章
+        "fbook_paid": True,  # 免费连载中的付费文章
+        "pbook_paid": True,  # 付费连载中的付费文章
     }
     return paid_type[json_obj["paid_type"]]
 
@@ -297,11 +311,13 @@ def GetArticleHtml(article_url: str, disable_check: bool = False) -> str:
     # 去除 image-package
     html_text = html_text.replace('<div class="image-package">', "")
 
-    old_img_blocks = findall(r'<img .*?>', html_text)  # 匹配旧的 img 标签
+    old_img_blocks = findall(r"<img .*?>", html_text)  # 匹配旧的 img 标签
     if not old_img_blocks:  # 文章中没有图片块
         return html_text
 
-    img_urls = [findall(r'<img data-original-src="(.*?)".*>', i)[0] for i in old_img_blocks]
+    img_urls = [
+        findall(r'<img data-original-src="(.*?)".*>', i)[0] for i in old_img_blocks
+    ]
     new_img_blocks = [f'<img src="https:{img_url}">' for img_url in img_urls]
 
     for old_img_block, new_img_block in zip(old_img_blocks, new_img_blocks):
@@ -355,28 +371,50 @@ def GetArticleMarkdown(article_url: str, disable_check: bool = False) -> str:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     html_text = GetArticleHtml(article_url, disable_check=True)
-    image_descriptions = list(findall(r'class="image-caption">.+</div>', html_text))  # 获取图片描述块
-    image_descriptions_text = [description.replace('class="image-caption">', "").replace("</div>", "")
-                               for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述文本
+    image_descriptions = list(
+        findall(r'class="image-caption">.+</div>', html_text)
+    )  # 获取图片描述块
+    image_descriptions_text = [
+        description.replace('class="image-caption">', "").replace("</div>", "")
+        for description in findall(r'class="image-caption">.+</div>', html_text)
+    ]  # 获取图片描述文本
     for index in range(len(image_descriptions)):
-        html_text = html_text.replace(image_descriptions[index], "<p>&&" + image_descriptions_text[index] + "&&</p>")  # 将图片描述替换成带有标记符的文本
+        html_text = html_text.replace(
+            image_descriptions[index],
+            "<p>&&" + image_descriptions_text[index] + "&&</p>",
+        )  # 将图片描述替换成带有标记符的文本
     images = findall(r'<img src=".+">', html_text)  # 获取图片块
     for image in images:
         html_text = html_text.replace(image, f"<p>{image}</img></p>")  # 处理图片块
     markdown = html2md(html_text)  # 将 HTML 格式的文章转换成 Markdown 格式
 
-    md_images_and_description = findall(r'!\[.*\]\(.+\)\n\n&&.+&&', markdown)  # 获取 Markdown 中图片语法和对应描述的部分
-    md_images_url = [findall(r'https://.+\)', item)[0].replace(")", "") for item in md_images_and_description]  # 获取所有图片链接
-    md_image_descriptions = [findall(r'&&.+&&', item)[0].replace("&&", "") for item in md_images_and_description]  # 获取所有图片描述
+    md_images_and_description = findall(
+        r"!\[.*\]\(.+\)\n\n&&.+&&", markdown
+    )  # 获取 Markdown 中图片语法和对应描述的部分
+    md_images_url = [
+        findall(r"https://.+\)", item)[0].replace(")", "")
+        for item in md_images_and_description
+    ]  # 获取所有图片链接
+    md_image_descriptions = [
+        findall(r"&&.+&&", item)[0].replace("&&", "")
+        for item in md_images_and_description
+    ]  # 获取所有图片描述
 
     for index, item in enumerate(md_images_and_description):
-        markdown = markdown.replace(item, f"![{md_image_descriptions[index]}]({md_images_url[index]})")  # 拼接 Markdown 语法并进行替换
+        markdown = markdown.replace(
+            item, f"![{md_image_descriptions[index]}]({md_images_url[index]})"
+        )  # 拼接 Markdown 语法并进行替换
 
     return markdown
 
 
-def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
-                           author_only: bool = False, sorting_method: str = "positive") -> List[Dict]:
+def GetArticleCommentsData(
+    article_id: int,
+    page: int = 1,
+    count: int = 10,
+    author_only: bool = False,
+    sorting_method: str = "positive",
+) -> List[Dict]:
     """获取文章评论信息
 
     Args:
@@ -389,11 +427,10 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
     Returns:
         List[Dict]: 文章评论信息
     """
-    order_by = {
-        "positive": "asc",   # 正序
-        "reverse": "desc"  # 倒序
-    }[sorting_method]
-    json_obj = GetArticleCommentsJsonDataApi(article_id, page, count, author_only, order_by)
+    order_by = {"positive": "asc", "reverse": "desc"}[sorting_method]  # 正序  # 倒序
+    json_obj = GetArticleCommentsJsonDataApi(
+        article_id, page, count, author_only, order_by
+    )
     result = []
     for item in json_obj["comments"]:
         item_data = {
@@ -408,8 +445,8 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                 "uid": item["user"]["id"],
                 "name": item["user"]["nickname"],
                 "uslug": item["user"]["slug"],
-                "avatar_url": item["user"]["avatar"]
-            }
+                "avatar_url": item["user"]["avatar"],
+            },
         }
         try:
             item["user"]["member"]
@@ -422,9 +459,11 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                 "gold": "黄金",
                 "platina": "白金",
                 "ordinary": "普通（旧会员）",
-                "distinguished": "至尊（旧会员）"
+                "distinguished": "至尊（旧会员）",
             }[item["user"]["member"]["type"]]
-            item_data["user"]["vip_expire_date"] = datetime.fromtimestamp(item["user"]["member"]["expires_at"])
+            item_data["user"]["vip_expire_date"] = datetime.fromtimestamp(
+                item["user"]["member"]["expires_at"]
+            )
 
         try:
             item["children"]
@@ -443,8 +482,8 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                         "uid": sub_comment["user"]["id"],
                         "name": sub_comment["user"]["nickname"],
                         "uslug": sub_comment["user"]["slug"],
-                        "avatar_url": sub_comment["user"]["avatar"]
-                    }
+                        "avatar_url": sub_comment["user"]["avatar"],
+                    },
                 }
 
                 try:
@@ -458,9 +497,13 @@ def GetArticleCommentsData(article_id: int, page: int = 1, count: int = 10,
                         "gold": "黄金",
                         "platina": "白金",
                         "ordinary": "普通（旧会员）",
-                        "distinguished": "至尊（旧会员）"
+                        "distinguished": "至尊（旧会员）",
                     }[sub_comment["user"]["member"]["type"]]
-                    sub_comment_data["user"]["vip_expire_date"] = datetime.fromtimestamp(sub_comment["user"]["member"]["expires_at"])
+                    sub_comment_data["user"][
+                        "vip_expire_date"
+                    ] = datetime.fromtimestamp(
+                        sub_comment["user"]["member"]["expires_at"]
+                    )
 
                 item_data["sub_comments"].append(sub_comment_data)
 
@@ -486,12 +529,18 @@ def GetArticleAllBasicData(article_url: str, disable_check: bool = False) -> Dic
     html_json_obj = GetArticleHtmlJsonDataApi(article_url)
 
     result["title"] = json_obj["public_title"]
-    result["author_name"] = html_json_obj["props"]["initialState"]["note"]["data"]["user"]["nickname"]
-    result["reads_count"] = html_json_obj["props"]["initialState"]["note"]["data"]["views_count"]
+    result["author_name"] = html_json_obj["props"]["initialState"]["note"]["data"][
+        "user"
+    ]["nickname"]
+    result["reads_count"] = html_json_obj["props"]["initialState"]["note"]["data"][
+        "views_count"
+    ]
     result["likes_count"] = json_obj["likes_count"]
     result["comments_count"] = json_obj["public_comment_count"]
     result["most_valuable_comments_count"] = json_obj["featured_comments_count"]
-    result["wordage"] = html_json_obj["props"]["initialState"]["note"]["data"]["wordage"]
+    result["wordage"] = html_json_obj["props"]["initialState"]["note"]["data"][
+        "wordage"
+    ]
     result["FP_count"] = json_obj["total_fp_amount"] / 1000
     result["description"] = json_obj["description"]
     result["publish_time"] = datetime.fromisoformat(json_obj["first_shared_at"])
@@ -502,15 +551,20 @@ def GetArticleAllBasicData(article_url: str, disable_check: bool = False) -> Dic
         "pbook_free": False,
         "paid": True,
         "fbook_paid": True,
-        "pbook_paid": True
+        "pbook_paid": True,
     }[json_obj["paid_type"]]
     result["reprint_status"] = json_obj["reprintable"]
     result["comment_status"] = json_obj["commentable"]
     return result
 
 
-def GetArticleAllCommentsData(article_id: int, count: int = 10, author_only: bool = False,
-                              sorting_method: str = "positive", max_count: int = None) -> Generator[Dict, None, None]:
+def GetArticleAllCommentsData(
+    article_id: int,
+    count: int = 10,
+    author_only: bool = False,
+    sorting_method: str = "positive",
+    max_count: int = None,
+) -> Generator[Dict, None, None]:
     """获取文章的全部评论信息
 
     Args:
@@ -526,7 +580,9 @@ def GetArticleAllCommentsData(article_id: int, count: int = 10, author_only: boo
     page = 1
     now_count = 0
     while True:
-        result = GetArticleCommentsData(article_id, page, count, author_only, sorting_method)
+        result = GetArticleCommentsData(
+            article_id, page, count, author_only, sorting_method
+        )
         if result:
             page += 1
         else:

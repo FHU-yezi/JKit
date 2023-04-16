@@ -32,9 +32,15 @@ from .exceptions import InputError
 from .utils import CallWithoutCheck, NameValueMappingToString, OnlyOne
 
 __all__ = [
-    "User", "Article", "Notebook", "Collection", "Island",
-    "get_cache_items_count", "get_cache_status", "set_cache_status",
-    "clear_cache"
+    "User",
+    "Article",
+    "Notebook",
+    "Collection",
+    "Island",
+    "get_cache_items_count",
+    "get_cache_status",
+    "set_cache_status",
+    "clear_cache",
 ]
 
 _cache_dict: Dict[int, Any] = {}
@@ -54,7 +60,12 @@ def cache_result_wrapper(func: Callable) -> Callable:
             return func(*args, **kwargs)
 
         # 生成哈希值
-        args_hash = hash((hash(func.__qualname__),) + (hash(args[0]),) + tuple(args[1:]) + tuple(kwargs.items()))
+        args_hash = hash(
+            (hash(func.__qualname__),)
+            + (hash(args[0]),)
+            + tuple(args[1:])
+            + tuple(kwargs.items())
+        )
 
         cache_result = _cache_dict.get(args_hash)
         if cache_result:  # 如果缓存中有值，则直接返回缓存值
@@ -63,6 +74,7 @@ def cache_result_wrapper(func: Callable) -> Callable:
         result = func(*args, **kwargs)  # 运行函数，获取返回值
         _cache_dict[args_hash] = result  # 将返回值存入缓存
         return result
+
     return inner
 
 
@@ -97,14 +109,13 @@ def set_cache_status(status: bool) -> None:
 
 
 def clear_cache():  # noqa: ANN201
-    """该函数用于清空已缓存的所有值
-    """
+    """该函数用于清空已缓存的所有值"""
     _cache_dict.clear()
 
 
 class User:
-    """用户类
-    """
+    """用户类"""
+
     def __init__(self, user_url: str = None, *, user_slug: str = None) -> None:
         """构建新的用户对象
 
@@ -411,28 +422,31 @@ class User:
         Returns:
             str: 用户信息摘要
         """
-        return NameValueMappingToString({
-            "昵称": (self.name, False),
-            "URL": (self.url, False),
-            "性别": (self.gender, False),
-            "关注者数": (self.followers_count, False),
-            "粉丝数": (self.fans_count, False),
-            "文章数": (self.articles_count, False),
-            "总字数": (self.wordage, False),
-            "简书钻": (self.FP_count, False),
-            "简书贝": (self.FTN_count, False),
-            "总资产": (self.assets_count, False),
-            "徽章": (' '.join(self.badges), False),
-            "最后更新时间": (self.last_update_time, False),
-            "会员等级": (self.VIP_info["vip_type"], False),
-            "会员过期时间": (self.VIP_info["expire_date"], False),
-            "个人简介": (self.introduction_text, True)
-        }, title="用户信息摘要")
+        return NameValueMappingToString(
+            {
+                "昵称": (self.name, False),
+                "URL": (self.url, False),
+                "性别": (self.gender, False),
+                "关注者数": (self.followers_count, False),
+                "粉丝数": (self.fans_count, False),
+                "文章数": (self.articles_count, False),
+                "总字数": (self.wordage, False),
+                "简书钻": (self.FP_count, False),
+                "简书贝": (self.FTN_count, False),
+                "总资产": (self.assets_count, False),
+                "徽章": (" ".join(self.badges), False),
+                "最后更新时间": (self.last_update_time, False),
+                "会员等级": (self.VIP_info["vip_type"], False),
+                "会员过期时间": (self.VIP_info["expire_date"], False),
+                "个人简介": (self.introduction_text, True),
+            },
+            title="用户信息摘要",
+        )
 
 
 class Article:
-    """文章类
-    """
+    """文章类"""
+
     def __init__(self, article_url: str = None, article_slug: str = None) -> None:
         """构建新的文章对象
 
@@ -701,28 +715,31 @@ class Article:
         Returns:
             str: 文章信息摘要
         """
-        return NameValueMappingToString({
-            "标题": (self.title, False),
-            "URL": (self.url, False),
-            "作者名": (self.author_name, False),
-            "字数": (self.wordage, False),
-            "阅读量": (self.reads_count, False),
-            "点赞数": (self.likes_count, False),
-            "评论数": (self.comments_count, False),
-            "精选评论数": (self.most_valuable_comments_count, False),
-            "总获钻量": (self.total_FP_count, False),
-            "发布时间": (self.publish_time, False),
-            "更新时间": (self.update_time, False),
-            "需付费": (self.paid_status, False),
-            "可转载": (self.reprint_status, False),
-            "可评论": (self.comment_status, False),
-            "摘要": (self.description, True)
-        }, title="文章信息摘要")
+        return NameValueMappingToString(
+            {
+                "标题": (self.title, False),
+                "URL": (self.url, False),
+                "作者名": (self.author_name, False),
+                "字数": (self.wordage, False),
+                "阅读量": (self.reads_count, False),
+                "点赞数": (self.likes_count, False),
+                "评论数": (self.comments_count, False),
+                "精选评论数": (self.most_valuable_comments_count, False),
+                "总获钻量": (self.total_FP_count, False),
+                "发布时间": (self.publish_time, False),
+                "更新时间": (self.update_time, False),
+                "需付费": (self.paid_status, False),
+                "可转载": (self.reprint_status, False),
+                "可评论": (self.comment_status, False),
+                "摘要": (self.description, True),
+            },
+            title="文章信息摘要",
+        )
 
 
 class Notebook:
-    """文集类
-    """
+    """文集类"""
+
     def __init__(self, notebook_url: str = None, notebook_slug: str = None) -> None:
         """构建新的文集对象
 
@@ -866,7 +883,9 @@ class Notebook:
         return CallWithoutCheck(notebook.GetNotebookUpdateTime, self._url)
 
     @cache_result_wrapper
-    def articles_info(self, page: int = 1, count: int = 10, sorting_method: str = "time") -> List[Dict]:
+    def articles_info(
+        self, page: int = 1, count: int = 10, sorting_method: str = "time"
+    ) -> List[Dict]:
         """获取文集中的文章信息
 
         Args:
@@ -878,7 +897,9 @@ class Notebook:
         Returns:
             List[Dict]: 文章信息
         """
-        return CallWithoutCheck(notebook.GetNotebookArticlesInfo, self._url, page, count, sorting_method)
+        return CallWithoutCheck(
+            notebook.GetNotebookArticlesInfo, self._url, page, count, sorting_method
+        )
 
     def __eq__(self, other: object) -> bool:
         """判断是否是同一个文集
@@ -907,22 +928,29 @@ class Notebook:
         Returns:
             str: 文集信息摘要
         """
-        return NameValueMappingToString({
-            "名称": (self.name, False),
-            "URL": (self.url, False),
-            "作者名": (self.author_name, False),
-            "文章数": (self.articles_count, False),
-            "总字数": (self.wordage, False),
-            "关注者数": (self.subscribers_count, False),
-            "更新时间": (self.update_time, False)
-        }, title="文集信息摘要")
+        return NameValueMappingToString(
+            {
+                "名称": (self.name, False),
+                "URL": (self.url, False),
+                "作者名": (self.author_name, False),
+                "文章数": (self.articles_count, False),
+                "总字数": (self.wordage, False),
+                "关注者数": (self.subscribers_count, False),
+                "更新时间": (self.update_time, False),
+            },
+            title="文集信息摘要",
+        )
 
 
 class Collection:
-    """专题类
-    """
-    def __init__(self, collection_url: str = None, collection_slug: str = None,
-                 collection_id: int = None) -> None:
+    """专题类"""
+
+    def __init__(
+        self,
+        collection_url: str = None,
+        collection_slug: str = None,
+        collection_id: int = None,
+    ) -> None:
         """初始化专题类
 
         Args:
@@ -1047,7 +1075,9 @@ class Collection:
         Returns:
             datetime: 专题信息更新时间
         """
-        return CallWithoutCheck(collection.GetCollectionInformationUpdateTime, self._url)
+        return CallWithoutCheck(
+            collection.GetCollectionInformationUpdateTime, self._url
+        )
 
     @property
     @cache_result_wrapper
@@ -1131,8 +1161,9 @@ class Collection:
         return collection.GetCollectionSubscribersInfo(self._id, start_sort_id)
 
     @cache_result_wrapper
-    def articles_info(self, page: int = 1, count: int = 10,
-                      sorting_method: str = "time") -> List[Dict]:
+    def articles_info(
+        self, page: int = 1, count: int = 10, sorting_method: str = "time"
+    ) -> List[Dict]:
         """获取专题文章信息
 
         Args:
@@ -1144,7 +1175,9 @@ class Collection:
         Returns:
             List[Dict]: 专题中的文章信息
         """
-        return CallWithoutCheck(collection.GetCollectionArticlesInfo, self._url, page, count, sorting_method)
+        return CallWithoutCheck(
+            collection.GetCollectionArticlesInfo, self._url, page, count, sorting_method
+        )
 
     def __eq__(self, other: object) -> bool:
         """判断是否是同一个专题
@@ -1173,22 +1206,25 @@ class Collection:
         Returns:
             str: 专题信息摘要
         """
-        return NameValueMappingToString({
-            "专题名": (self.name, False),
-            "URL": (self.url, False),
-            "主编名": (self.owner_info["name"], False),
-            "图片链接": (self.avatar_url, False),
-            "文章数": (self.articles_count, False),
-            "关注者数": (self.subscribers_count, False),
-            "文章更新时间": (self.articles_update_time, False),
-            "信息更新时间": (self.info_update_time, False),
-            "简介": (self.introduction_text, True),
-        }, title="专题信息摘要")
+        return NameValueMappingToString(
+            {
+                "专题名": (self.name, False),
+                "URL": (self.url, False),
+                "主编名": (self.owner_info["name"], False),
+                "图片链接": (self.avatar_url, False),
+                "文章数": (self.articles_count, False),
+                "关注者数": (self.subscribers_count, False),
+                "文章更新时间": (self.articles_update_time, False),
+                "信息更新时间": (self.info_update_time, False),
+                "简介": (self.introduction_text, True),
+            },
+            title="专题信息摘要",
+        )
 
 
 class Island:
-    """小岛类
-    """
+    """小岛类"""
+
     def __init__(self, island_url: str = None, island_slug: str = None) -> None:
         """构建新的小岛对象
 
@@ -1311,8 +1347,13 @@ class Island:
         return CallWithoutCheck(island.GetIslandCategory, self._url)
 
     @cache_result_wrapper
-    def posts(self, start_sort_id: int = None, count: int = 10,
-              topic_id: int = None, sorting_method: str = "time") -> List[Dict]:
+    def posts(
+        self,
+        start_sort_id: int = None,
+        count: int = 10,
+        topic_id: int = None,
+        sorting_method: str = "time",
+    ) -> List[Dict]:
         """获取小岛帖子信息
 
         Args:
@@ -1325,7 +1366,14 @@ class Island:
         Returns:
             List[Dict]: 帖子信息
         """
-        return CallWithoutCheck(island.GetIslandPosts, self._url, start_sort_id, count, topic_id, sorting_method)
+        return CallWithoutCheck(
+            island.GetIslandPosts,
+            self._url,
+            start_sort_id,
+            count,
+            topic_id,
+            sorting_method,
+        )
 
     def __eq__(self, other: object) -> bool:
         """判断是否是同一个小岛
@@ -1354,11 +1402,14 @@ class Island:
         Returns:
             str: 小岛信息摘要
         """
-        return NameValueMappingToString({
-            "小岛名": (self.name, False),
-            "URL": (self.url, False),
-            "分类": (self.category, False),
-            "成员数": (self.members_count, False),
-            "帖子数": (self.posts_count, False),
-            "简介": (self.introduction, True)
-        }, title="小岛信息摘要")
+        return NameValueMappingToString(
+            {
+                "小岛名": (self.name, False),
+                "URL": (self.url, False),
+                "分类": (self.category, False),
+                "成员数": (self.members_count, False),
+                "帖子数": (self.posts_count, False),
+                "简介": (self.introduction, True),
+            },
+            title="小岛信息摘要",
+        )

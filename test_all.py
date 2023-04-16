@@ -27,12 +27,13 @@ from JianshuResearchTools.exceptions import APIError, InputError, ResourceError
 error_text_to_obj = {
     "InputError": InputError,
     "APIError": APIError,
-    "ResourceError": ResourceError
+    "ResourceError": ResourceError,
 }
 
 
 class NumberNotInRangeError(Exception):
     """内容不在数值范围内时抛出此异常"""
+
     pass
 
 
@@ -136,7 +137,9 @@ class TestArticleModule:
 
     def test_GetArticleAuthorName(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertNormalCase(jrt.article.GetArticleAuthorName(case["url"]), case["author_name"])
+            AssertNormalCase(
+                jrt.article.GetArticleAuthorName(case["url"]), case["author_name"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -144,7 +147,9 @@ class TestArticleModule:
 
     def test_GetArticleReadsCount(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertRangeCase(jrt.article.GetArticleReadsCount(case["url"]), case["reads_count"])
+            AssertRangeCase(
+                jrt.article.GetArticleReadsCount(case["url"]), case["reads_count"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -152,7 +157,9 @@ class TestArticleModule:
 
     def test_GetArticleWordage(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertNormalCase(jrt.article.GetArticleWordage(case["url"]), case["wordage"])
+            AssertNormalCase(
+                jrt.article.GetArticleWordage(case["url"]), case["wordage"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -160,7 +167,9 @@ class TestArticleModule:
 
     def test_GetArticleLikesCount(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertRangeCase(jrt.article.GetArticleLikesCount(case["url"]), case["likes_count"])
+            AssertRangeCase(
+                jrt.article.GetArticleLikesCount(case["url"]), case["likes_count"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -168,7 +177,9 @@ class TestArticleModule:
 
     def test_GetArticleCommentsCount(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertRangeCase(jrt.article.GetArticleCommentsCount(case["url"]), case["comments_count"])
+            AssertRangeCase(
+                jrt.article.GetArticleCommentsCount(case["url"]), case["comments_count"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -176,7 +187,10 @@ class TestArticleModule:
 
     def test_GetArticleMostValuableCommentsCount(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertRangeCase(jrt.article.GetArticleMostValuableCommentsCount(case["url"]), case["most_valuable_comments_count"])
+            AssertRangeCase(
+                jrt.article.GetArticleMostValuableCommentsCount(case["url"]),
+                case["most_valuable_comments_count"],
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -184,7 +198,9 @@ class TestArticleModule:
 
     def test_GetArticleTotalFPCount(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertRangeCase(jrt.article.GetArticleTotalFPCount(case["url"]), case["total_FP_count"])
+            AssertRangeCase(
+                jrt.article.GetArticleTotalFPCount(case["url"]), case["total_FP_count"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -192,7 +208,9 @@ class TestArticleModule:
 
     def test_GetArticleDescription(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertNormalCase(jrt.article.GetArticleDescription(case["url"]), case["description"])
+            AssertNormalCase(
+                jrt.article.GetArticleDescription(case["url"]), case["description"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -200,7 +218,9 @@ class TestArticleModule:
 
     def test_GetArticlePublishTime(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertDatetimeCase(jrt.article.GetArticlePublishTime(case["url"]), case["publish_time"])
+            AssertDatetimeCase(
+                jrt.article.GetArticlePublishTime(case["url"]), case["publish_time"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -208,7 +228,9 @@ class TestArticleModule:
 
     def test_GetArticleUpdateTime(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertDatetimeCase(jrt.article.GetArticleUpdateTime(case["url"]), case["update_time"])
+            AssertDatetimeCase(
+                jrt.article.GetArticleUpdateTime(case["url"]), case["update_time"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -216,7 +238,9 @@ class TestArticleModule:
 
     def test_GetArticlePaidStatus(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertNormalCase(jrt.article.GetArticlePaidStatus(case["url"]), case["paid_status"])
+            AssertNormalCase(
+                jrt.article.GetArticlePaidStatus(case["url"]), case["paid_status"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -224,7 +248,9 @@ class TestArticleModule:
 
     def test_GetArticleReprintStatus(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertNormalCase(jrt.article.GetArticleReprintStatus(case["url"]), case["reprint_status"])
+            AssertNormalCase(
+                jrt.article.GetArticleReprintStatus(case["url"]), case["reprint_status"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -232,7 +258,9 @@ class TestArticleModule:
 
     def test_GetArticleCommentStatus(self) -> None:
         for case in test_cases["article_cases"]["success_cases"]:
-            AssertNormalCase(jrt.article.GetArticleCommentStatus(case["url"]), case["comment_status"])
+            AssertNormalCase(
+                jrt.article.GetArticleCommentStatus(case["url"]), case["comment_status"]
+            )
 
         for case in test_cases["article_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -258,7 +286,9 @@ class TestUserModule:
 
     def test_GetUserFollowersCount(self) -> None:
         for case in test_cases["user_cases"]["success_cases"]:
-            AssertRangeCase(jrt.user.GetUserFollowersCount(case["url"]), case["followers_count"])
+            AssertRangeCase(
+                jrt.user.GetUserFollowersCount(case["url"]), case["followers_count"]
+            )
 
         for case in test_cases["user_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -274,7 +304,9 @@ class TestUserModule:
 
     def test_GetUserArticlesCount(self) -> None:
         for case in test_cases["user_cases"]["success_cases"]:
-            AssertRangeCase(jrt.user.GetUserArticlesCount(case["url"]), case["articles_count"])
+            AssertRangeCase(
+                jrt.user.GetUserArticlesCount(case["url"]), case["articles_count"]
+            )
 
         for case in test_cases["user_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -290,7 +322,9 @@ class TestUserModule:
 
     def test_GetUserLikesCount(self) -> None:
         for case in test_cases["user_cases"]["success_cases"]:
-            AssertRangeCase(jrt.user.GetUserLikesCount(case["url"]), case["likes_count"])
+            AssertRangeCase(
+                jrt.user.GetUserLikesCount(case["url"]), case["likes_count"]
+            )
 
         for case in test_cases["user_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -298,7 +332,9 @@ class TestUserModule:
 
     def test_GetUserAssetsCount(self) -> None:
         for case in test_cases["user_cases"]["success_cases"]:
-            AssertRangeCase(jrt.user.GetUserAssetsCount(case["url"]), case["assets_count"])
+            AssertRangeCase(
+                jrt.user.GetUserAssetsCount(case["url"]), case["assets_count"]
+            )
 
         for case in test_cases["user_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -330,7 +366,9 @@ class TestUserModule:
 
     def test_GetUserLastUpdateTime(self) -> None:
         for case in test_cases["user_cases"]["success_cases"]:
-            AssertDatetimeCase(jrt.user.GetUserLastUpdateTime(case["url"]), case["last_update_time"])
+            AssertDatetimeCase(
+                jrt.user.GetUserLastUpdateTime(case["url"]), case["last_update_time"]
+            )
 
         for case in test_cases["user_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -338,7 +376,10 @@ class TestUserModule:
 
     def test_GetUserNextAnniversaryDay(self) -> None:
         for case in test_cases["user_cases"]["success_cases"]:
-            AssertDatetimeCase(jrt.user.GetUserNextAnniversaryDay(case["url"]), case["next_anniversary_day"])
+            AssertDatetimeCase(
+                jrt.user.GetUserNextAnniversaryDay(case["url"]),
+                case["next_anniversary_day"],
+            )
 
         for case in test_cases["user_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -348,7 +389,9 @@ class TestUserModule:
 class TestCollectionModule:
     def test_GetCollectionAvatarUrl(self) -> None:
         for case in test_cases["collection_cases"]["success_cases"]:
-            AssertNormalCase(jrt.collection.GetCollectionAvatarUrl(case["url"]), case["avatar_url"])
+            AssertNormalCase(
+                jrt.collection.GetCollectionAvatarUrl(case["url"]), case["avatar_url"]
+            )
 
         for case in test_cases["collection_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -356,7 +399,10 @@ class TestCollectionModule:
 
     def test_GetCollectionArticlesCount(self) -> None:
         for case in test_cases["collection_cases"]["success_cases"]:
-            AssertRangeCase(jrt.collection.GetCollectionArticlesCount(case["url"]), case["articles_count"])
+            AssertRangeCase(
+                jrt.collection.GetCollectionArticlesCount(case["url"]),
+                case["articles_count"],
+            )
 
         for case in test_cases["collection_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -364,7 +410,10 @@ class TestCollectionModule:
 
     def test_GetCollectionSubscribersCount(self) -> None:
         for case in test_cases["collection_cases"]["success_cases"]:
-            AssertRangeCase(jrt.collection.GetCollectionSubscribersCount(case["url"]), case["subscribers_count"])
+            AssertRangeCase(
+                jrt.collection.GetCollectionSubscribersCount(case["url"]),
+                case["subscribers_count"],
+            )
 
         for case in test_cases["collection_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -372,7 +421,10 @@ class TestCollectionModule:
 
     def test_GetCollectionArticlesUpdateTime(self) -> None:
         for case in test_cases["collection_cases"]["success_cases"]:
-            AssertDatetimeCase(jrt.collection.GetCollectionArticlesUpdateTime(case["url"]), case["articles_update_time"])
+            AssertDatetimeCase(
+                jrt.collection.GetCollectionArticlesUpdateTime(case["url"]),
+                case["articles_update_time"],
+            )
 
         for case in test_cases["collection_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -380,7 +432,10 @@ class TestCollectionModule:
 
     def test_GetCollectionInformationUpdateTime(self) -> None:
         for case in test_cases["collection_cases"]["success_cases"]:
-            AssertDatetimeCase(jrt.collection.GetCollectionInformationUpdateTime(case["url"]), case["information_update_time"])
+            AssertDatetimeCase(
+                jrt.collection.GetCollectionInformationUpdateTime(case["url"]),
+                case["information_update_time"],
+            )
 
         for case in test_cases["collection_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -398,7 +453,9 @@ class TestIslandModule:
 
     def test_GetIslandAvatarUrl(self) -> None:
         for case in test_cases["island_cases"]["success_cases"]:
-            AssertNormalCase(jrt.island.GetIslandAvatarUrl(case["url"]), case["avatar_url"])
+            AssertNormalCase(
+                jrt.island.GetIslandAvatarUrl(case["url"]), case["avatar_url"]
+            )
 
         for case in test_cases["island_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -406,7 +463,9 @@ class TestIslandModule:
 
     def test_GetIslandMembersCount(self) -> None:
         for case in test_cases["island_cases"]["success_cases"]:
-            AssertRangeCase(jrt.island.GetIslandMembersCount(case["url"]), case["members_count"])
+            AssertRangeCase(
+                jrt.island.GetIslandMembersCount(case["url"]), case["members_count"]
+            )
 
         for case in test_cases["island_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -414,7 +473,9 @@ class TestIslandModule:
 
     def test_GetIslandPostsCount(self) -> None:
         for case in test_cases["island_cases"]["success_cases"]:
-            AssertRangeCase(jrt.island.GetIslandPostsCount(case["url"]), case["posts_count"])
+            AssertRangeCase(
+                jrt.island.GetIslandPostsCount(case["url"]), case["posts_count"]
+            )
 
         for case in test_cases["island_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -422,7 +483,9 @@ class TestIslandModule:
 
     def test_GetIslandCategory(self) -> None:
         for case in test_cases["island_cases"]["success_cases"]:
-            AssertNormalCase(jrt.island.GetIslandCategory(case["url"]), case["category"])
+            AssertNormalCase(
+                jrt.island.GetIslandCategory(case["url"]), case["category"]
+            )
 
         for case in test_cases["island_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -440,7 +503,10 @@ class TestNotebookModule:
 
     def test_GetNotebookArticlesCount(self) -> None:
         for case in test_cases["notebook_cases"]["success_cases"]:
-            AssertRangeCase(jrt.notebook.GetNotebookArticlesCount(case["url"]), case["articles_count"])
+            AssertRangeCase(
+                jrt.notebook.GetNotebookArticlesCount(case["url"]),
+                case["articles_count"],
+            )
 
         for case in test_cases["notebook_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -448,7 +514,10 @@ class TestNotebookModule:
 
     def test_GetNotebookAuthorName(self) -> None:
         for case in test_cases["notebook_cases"]["success_cases"]:
-            AssertNormalCase(jrt.notebook.GetNotebookAuthorInfo(case["url"])["name"], case["author_name"])
+            AssertNormalCase(
+                jrt.notebook.GetNotebookAuthorInfo(case["url"])["name"],
+                case["author_name"],
+            )
 
         for case in test_cases["notebook_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -456,7 +525,10 @@ class TestNotebookModule:
 
     def test_GetNotebookAuthorAvatarUrl(self) -> None:
         for case in test_cases["notebook_cases"]["success_cases"]:
-            AssertNormalCase(jrt.notebook.GetNotebookAuthorInfo(case["url"])["avatar_url"], case["author_avatar_url"])
+            AssertNormalCase(
+                jrt.notebook.GetNotebookAuthorInfo(case["url"])["avatar_url"],
+                case["author_avatar_url"],
+            )
 
         for case in test_cases["notebook_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -464,7 +536,9 @@ class TestNotebookModule:
 
     def test_GetNotebookWordage(self) -> None:
         for case in test_cases["notebook_cases"]["success_cases"]:
-            AssertRangeCase(jrt.notebook.GetNotebookWordage(case["url"]), case["wordage"])
+            AssertRangeCase(
+                jrt.notebook.GetNotebookWordage(case["url"]), case["wordage"]
+            )
 
         for case in test_cases["notebook_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -472,7 +546,10 @@ class TestNotebookModule:
 
     def test_GetNotebookSubscribersCount(self) -> None:
         for case in test_cases["notebook_cases"]["success_cases"]:
-            AssertRangeCase(jrt.notebook.GetNotebookSubscribersCount(case["url"]), case["subscribers_count"])
+            AssertRangeCase(
+                jrt.notebook.GetNotebookSubscribersCount(case["url"]),
+                case["subscribers_count"],
+            )
 
         for case in test_cases["notebook_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):
@@ -480,7 +557,9 @@ class TestNotebookModule:
 
     def test_GetNotebookUpdateTime(self) -> None:
         for case in test_cases["notebook_cases"]["success_cases"]:
-            AssertDatetimeCase(jrt.notebook.GetNotebookUpdateTime(case["url"]), case["update_time"])
+            AssertDatetimeCase(
+                jrt.notebook.GetNotebookUpdateTime(case["url"]), case["update_time"]
+            )
 
         for case in test_cases["notebook_cases"]["fail_cases"]:
             with pytest.raises(error_text_to_obj[case["exception_name"]]):

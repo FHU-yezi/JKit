@@ -15,15 +15,25 @@ from .basic_apis import (
 )
 
 __all__ = [
-    "UserUrlToUserId", "UserSlugToUserId", "UserUrlToUserSlug",
-    "ArticleUrlToArticleSlug", "ArticleSlugToArticleUrl",
-    "ArticleSlugToArticleId", "ArticleUrlToArticleId",
-    "NotebookUrlToNotebookId", "NotebookUrlToNotebookSlug",
-    "CollectionSlugToCollectionUrl", "CollectionUrlToCollectionId",
-    "IslandUrlToIslandSlug", "IslandSlugToIslandUrl", "UserUrlToUserUrlScheme",
-    "ArticleUrlToArticleUrlScheme", "NotebookUrlToNotebookUrlScheme",
-    "CollectionUrlToCollectionUrlScheme", "IslandPostUrlToIslandPostSlug",
-    "IslandPostSlugToIslandPostUrl"
+    "UserUrlToUserId",
+    "UserSlugToUserId",
+    "UserUrlToUserSlug",
+    "ArticleUrlToArticleSlug",
+    "ArticleSlugToArticleUrl",
+    "ArticleSlugToArticleId",
+    "ArticleUrlToArticleId",
+    "NotebookUrlToNotebookId",
+    "NotebookUrlToNotebookSlug",
+    "CollectionSlugToCollectionUrl",
+    "CollectionUrlToCollectionId",
+    "IslandUrlToIslandSlug",
+    "IslandSlugToIslandUrl",
+    "UserUrlToUserUrlScheme",
+    "ArticleUrlToArticleUrlScheme",
+    "NotebookUrlToNotebookUrlScheme",
+    "CollectionUrlToCollectionUrlScheme",
+    "IslandPostUrlToIslandPostSlug",
+    "IslandPostSlugToIslandPostUrl",
 ]
 
 
