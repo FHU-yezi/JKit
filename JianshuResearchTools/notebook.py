@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Optional
 
 from .assert_funcs import AssertNotebookStatusNormal, AssertNotebookUrl
 from .basic_apis import GetNotebookArticlesJsonDataApi, GetNotebookJsonDataApi
@@ -215,7 +215,7 @@ def GetNotebookAllArticlesInfo(
     notebook_url: str,
     count: int = 10,
     sorting_method: str = "time",
-    max_count: int = None,
+    max_count: Optional[int] = None,
     disable_check: bool = False,
 ) -> Generator[Dict, None, None]:
     """获取文集中的全部文章信息

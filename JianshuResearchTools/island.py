@@ -1,6 +1,6 @@
 from contextlib import suppress
 from datetime import datetime
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Optional
 
 from .assert_funcs import AssertIslandPostUrl, AssertIslandStatusNormal, AssertIslandUrl
 from .basic_apis import (
@@ -149,9 +149,9 @@ def GetIslandPostFullContent(post_url: str, disable_check: bool = False) -> str:
 
 def GetIslandPosts(
     island_url: str,
-    start_sort_id: int = None,
+    start_sort_id: Optional[int] = None,
     count: int = 10,
-    topic_id: int = None,
+    topic_id: Optional[int] = None,
     sorting_method: str = "time",
     get_full_content: bool = False,
     disable_check: bool = False,
@@ -175,9 +175,11 @@ def GetIslandPosts(
     if not disable_check:
         AssertIslandUrl(island_url)
         AssertIslandStatusNormal(island_url)
-    order_by = (
-        {"time": "latest", "hot": "hot", "most_valuable": "best"}[sorting_method],
-    )
+    order_by = {
+        "time": "latest",
+        "hot": "hot",
+        "most_valuable": "best",
+    }[sorting_method]
     json_obj = GetIslandPostsJsonDataApi(
         group_slug=IslandUrlToIslandSlug(island_url),
         max_id=start_sort_id,
@@ -271,10 +273,10 @@ def GetIslandAllBasicData(island_url: str, disable_check: bool = False) -> Dict:
 def GetIslandAllPostsData(
     island_url: str,
     count: int = 10,
-    topic_id: int = None,
+    topic_id: Optional[int] = None,
     sorting_method: str = "time",
     get_full_content: bool = False,
-    max_count: int = None,
+    max_count: Optional[int] = None,
     disable_check: bool = False,
 ) -> Generator[Dict, None, None]:
     """获取小岛的所有帖子信息

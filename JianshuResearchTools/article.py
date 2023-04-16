@@ -1,7 +1,7 @@
 from contextlib import suppress
 from datetime import datetime
 from re import findall, sub
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Optional
 
 from lxml import etree
 
@@ -344,7 +344,7 @@ def GetArticleText(article_url: str, disable_check: bool = False) -> str:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    html_obj = etree.HTML(json_obj["free_content"])
+    html_obj = etree.HTML(json_obj["free_content"])  # type: ignore
     result = "".join(html_obj.itertext())
     result = sub(r"\s{3,}", "", result)  # 去除多余的空行
     return result
@@ -563,7 +563,7 @@ def GetArticleAllCommentsData(
     count: int = 10,
     author_only: bool = False,
     sorting_method: str = "positive",
-    max_count: int = None,
+    max_count: Optional[int] = None,
 ) -> Generator[Dict, None, None]:
     """获取文章的全部评论信息
 

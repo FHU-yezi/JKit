@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Optional
 
 from .assert_funcs import AssertCollectionStatusNormal, AssertCollectionUrl
 from .basic_apis import (
@@ -253,7 +253,7 @@ def GetCollectionRecommendedWritersInfo(
 
 
 def GetCollectionSubscribersInfo(
-    collection_id: int, start_sort_id: int = None
+    collection_id: int, start_sort_id: Optional[int] = None
 ) -> List[Dict]:
     """获取专题关注者信息
 
@@ -376,7 +376,7 @@ def GetCollectionAllBasicData(collection_url: str, disable_check: bool = False) 
 
 
 def GetCollectionAllEditorsInfo(
-    collection_id: int, max_count: int = None
+    collection_id: int, max_count: Optional[int] = None
 ) -> Generator[Dict, None, None]:
     """获取专题的所有编辑信息
 
@@ -404,7 +404,7 @@ def GetCollectionAllEditorsInfo(
 
 
 def GetCollectionAllRecommendedWritersInfo(
-    collection_id: int, count: int = 20, max_count: int = None
+    collection_id: int, count: int = 20, max_count: Optional[int] = None
 ) -> Generator[Dict, None, None]:
     """获取专题的所有推荐作者信息
 
@@ -433,7 +433,7 @@ def GetCollectionAllRecommendedWritersInfo(
 
 
 def GetCollectionAllSubscribersInfo(
-    collection_id: int, max_count: int = None
+    collection_id: int, max_count: Optional[int] = None
 ) -> Generator[Dict, None, None]:
     """获取专题的所有关注者信息
 
@@ -464,7 +464,7 @@ def GetCollectionAllArticlesInfo(
     collection_url: str,
     count: int = 10,
     sorting_method: str = "time",
-    max_count: int = None,
+    max_count: Optional[int] = None,
     disable_check: bool = False,
 ) -> Generator[Dict, None, None]:
     """获取专题的所有文章信息

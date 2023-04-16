@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 from . import article, collection, island, notebook, user
 from .assert_funcs import (
@@ -116,7 +116,9 @@ def clear_cache():  # noqa: ANN201
 class User:
     """用户类"""
 
-    def __init__(self, user_url: str = None, *, user_slug: str = None) -> None:
+    def __init__(
+        self, user_url: Optional[str] = None, *, user_slug: Optional[str] = None
+    ) -> None:
         """构建新的用户对象
 
         Args:
@@ -131,6 +133,8 @@ class User:
             AssertUserUrl(user_url)
         elif user_slug:
             user_url = UserSlugToUserUrl(user_slug)
+        else:
+            raise ValueError("user_url 和 user_slug 至少需要传入一个")
 
         AssertUserStatusNormal(user_url)
         self._url = user_url
@@ -447,7 +451,9 @@ class User:
 class Article:
     """文章类"""
 
-    def __init__(self, article_url: str = None, article_slug: str = None) -> None:
+    def __init__(
+        self, article_url: Optional[str] = None, article_slug: Optional[str] = None
+    ) -> None:
         """构建新的文章对象
 
         Args:
@@ -462,6 +468,8 @@ class Article:
             AssertArticleUrl(article_url)
         elif article_slug:
             article_url = ArticleSlugToArticleUrl(article_slug)
+        else:
+            raise ValueError("article_url 和 article_slug 至少需要传入一个")
 
         AssertArticleStatusNormal(article_url)
         self._url = article_url
@@ -740,7 +748,9 @@ class Article:
 class Notebook:
     """文集类"""
 
-    def __init__(self, notebook_url: str = None, notebook_slug: str = None) -> None:
+    def __init__(
+        self, notebook_url: Optional[str] = None, notebook_slug: Optional[str] = None
+    ) -> None:
         """构建新的文集对象
 
         Args:
@@ -755,6 +765,8 @@ class Notebook:
             AssertNotebookUrl(notebook_url)
         elif notebook_slug:
             notebook_url = NotebookSlugToNotebookUrl(notebook_slug)
+        else:
+            raise ValueError("notebook_url 和 notebook_slug 至少需要传入一个")
 
         AssertNotebookStatusNormal(notebook_url)
         self._url = notebook_url
@@ -947,9 +959,9 @@ class Collection:
 
     def __init__(
         self,
-        collection_url: str = None,
-        collection_slug: str = None,
-        collection_id: int = None,
+        collection_url: Optional[str] = None,
+        collection_slug: Optional[str] = None,
+        collection_id: Optional[int] = None,
     ) -> None:
         """初始化专题类
 
@@ -966,6 +978,8 @@ class Collection:
             AssertCollectionUrl(collection_url)
         elif collection_slug:
             collection_url = CollectionSlugToCollectionUrl(collection_slug)
+        else:
+            raise ValueError("collection_url 和 collection_slug 至少需要传入一个")
 
         AssertCollectionStatusNormal(collection_url)
         self._url = collection_url
@@ -973,7 +987,9 @@ class Collection:
         self._id = collection_id if collection_id else None
 
     @classmethod
-    def from_url(cls, collection_url: str, collection_id: int = None) -> "Collection":
+    def from_url(
+        cls, collection_url: str, collection_id: Optional[int] = None
+    ) -> "Collection":
         """从专题 URL 构建专题对象
 
         Args:
@@ -986,7 +1002,9 @@ class Collection:
         return cls(collection_url=collection_url, collection_id=collection_id)
 
     @classmethod
-    def from_slug(cls, collection_slug: str, collection_id: int = None) -> "Collection":
+    def from_slug(
+        cls, collection_slug: str, collection_id: Optional[int] = None
+    ) -> "Collection":
         """从专题 Slug 构建专题对象
 
         Args:
@@ -1225,7 +1243,9 @@ class Collection:
 class Island:
     """小岛类"""
 
-    def __init__(self, island_url: str = None, island_slug: str = None) -> None:
+    def __init__(
+        self, island_url: Optional[str] = None, island_slug: Optional[str] = None
+    ) -> None:
         """构建新的小岛对象
 
         Args:
@@ -1239,6 +1259,8 @@ class Island:
             AssertIslandUrl(island_url)
         elif island_slug:
             island_url = IslandSlugToIslandUrl(island_slug)
+        else:
+            raise ValueError("island_url 和 island_slug 至少需要传入一个")
 
         AssertIslandStatusNormal(island_url)
         self._url = island_url
@@ -1349,9 +1371,9 @@ class Island:
     @cache_result_wrapper
     def posts(
         self,
-        start_sort_id: int = None,
+        start_sort_id: Optional[int] = None,
         count: int = 10,
-        topic_id: int = None,
+        topic_id: Optional[int] = None,
         sorting_method: str = "time",
     ) -> List[Dict]:
         """获取小岛帖子信息

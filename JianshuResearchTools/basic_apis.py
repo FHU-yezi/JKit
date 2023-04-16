@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 from httpx import get as httpx_get
 from lxml import etree
@@ -49,9 +49,9 @@ def GetArticleJsonDataApi(article_url: str) -> Dict:
     return json_loads(source)
 
 
-def GetArticleHtmlJsonDataApi(article_url: str) -> _Element:
+def GetArticleHtmlJsonDataApi(article_url: str) -> Dict:
     source = httpx_get(article_url, headers=PC_header).content
-    html_obj = etree.HTML(source)
+    html_obj = etree.HTML(source)  # type: ignore
     return json_loads(html_obj.xpath("//script[@id='__NEXT_DATA__']/text()")[0])
 
 
@@ -96,7 +96,9 @@ def GetCollectionRecommendedWritersJsonDataApi(
     return json_loads(source)
 
 
-def GetCollectionSubscribersJsonDataApi(collection_id: int, max_sort_id: int) -> Dict:
+def GetCollectionSubscribersJsonDataApi(
+    collection_id: int, max_sort_id: Optional[int]
+) -> Dict:
     request_url = f"https://www.jianshu.com/collection/{collection_id}/subscribers"
     params = {"max_sort_id": max_sort_id}
     source = httpx_get(request_url, params=params, headers=api_request_header).content
@@ -121,7 +123,11 @@ def GetIslandJsonDataApi(island_url: str) -> Dict:
 
 
 def GetIslandPostsJsonDataApi(
-    group_slug: str, max_id: int, count: int, topic_id: int, order_by: str
+    group_slug: str,
+    max_id: Optional[int],
+    count: int,
+    topic_id: Optional[int],
+    order_by: str,
 ) -> Dict:
     params = {
         "group_slug": group_slug,
@@ -200,7 +206,7 @@ def GetUserJsonDataApi(user_url: str) -> Dict:
 
 def GetUserPCHtmlDataApi(user_url: str) -> _Element:
     source = httpx_get(user_url, headers=PC_header).content
-    return etree.HTML(source)
+    return etree.HTML(source)  # type: ignore
 
 
 def GetUserCollectionsAndNotebooksJsonDataApi(user_url: str, user_slug: str) -> Dict:
@@ -223,30 +229,30 @@ def GetUserFollowingListHtmlDataApi(user_url: str, page: int) -> _Element:
     request_url = user_url.replace("/u/", "/users/") + "/following"
     params = {"page": page}
     source = httpx_get(request_url, headers=PC_header, params=params).content
-    return etree.HTML(source)
+    return etree.HTML(source)  # type: ignore
 
 
 def GetUserFollowersListHtmlDataApi(user_url: str, page: int) -> _Element:
     request_url = user_url.replace("/u/", "/users/") + "/followers"
     params = {"page": page}
     source = httpx_get(request_url, headers=PC_header, params=params).content
-    return etree.HTML(source)
+    return etree.HTML(source)  # type: ignore
 
 
 def GetUserNextAnniversaryDayHtmlDataApi(user_slug: str) -> _Element:
     request_url = f"https://www.jianshu.com/mobile/u/{user_slug}/anniversary"
     source = httpx_get(request_url, headers=mobile_header).content
-    return etree.HTML(source)
+    return etree.HTML(source)  # type: ignore
 
 
-def GetIslandPostJsonDataApi(post_slug: str) -> List[Dict]:
+def GetIslandPostJsonDataApi(post_slug: str) -> Dict:
     request_url = f"https://www.jianshu.com/asimov/posts/{post_slug}"
     source = httpx_get(request_url, headers=api_request_header).content
     return json_loads(source)
 
 
-def GetUserTimelineHtmlDataApi(uslug: str, max_id: int) -> _Element:
+def GetUserTimelineHtmlDataApi(uslug: str, max_id: Optional[int]) -> _Element:
     request_url = f"https://www.jianshu.com/users/{uslug}/timeline"
     params = {"max_id": max_id}
     source = httpx_get(request_url, headers=PC_header, params=params).content
-    return etree.HTML(source)
+    return etree.HTML(source)  # type: ignore

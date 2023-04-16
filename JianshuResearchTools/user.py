@@ -1,6 +1,6 @@
 from datetime import datetime
 from re import findall
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Optional
 
 from lxml import etree
 
@@ -356,7 +356,7 @@ def GetUserIntroductionText(user_url: str, disable_check: bool = False) -> str:
     json_obj = GetUserJsonDataApi(user_url)
     if json_obj["intro"] == "":  # 简介为空
         return ""
-    html_obj = etree.HTML(json_obj["intro"])
+    html_obj = etree.HTML(json_obj["intro"])  # type: ignore
     result = html_obj.xpath("//*/text()")
     result = "\n".join(result)
     return result
@@ -678,7 +678,7 @@ def GetUserAllBasicData(user_url: str, disable_check: bool = False) -> Dict:
         result["introduction_text"] = ""
     else:
         result["introduction_text"] = "\n".join(
-            etree.HTML(result["introduction_html"]).xpath("//*/text()")
+            etree.HTML(result["introduction_html"]).xpath("//*/text()")  # type: ignore
         )
     result["next_anniversary_day"] = anniversary_day_html_obj.xpath(
         '//*[@id="app"]/div[1]/div/text()'
@@ -690,7 +690,7 @@ def GetUserAllBasicData(user_url: str, disable_check: bool = False) -> Dict:
 
 
 def GetUserTimelineInfo(
-    user_url: str, max_id: int = 1000000000, disable_check: bool = False
+    user_url: str, max_id: Optional[int] = 1000000000, disable_check: bool = False
 ) -> List[Dict]:
     """获取用户动态信息
 
@@ -1038,7 +1038,7 @@ def GetUserAllArticlesInfo(
     user_url: str,
     count: int = 10,
     sorting_method: str = "time",
-    max_count: int = None,
+    max_count: Optional[int] = None,
     disable_check: bool = False,
 ) -> Generator[Dict, None, None]:
     """获取用户的所有文章信息
@@ -1076,7 +1076,7 @@ def GetUserAllArticlesInfo(
 
 
 def GetUserAllFollowingInfo(
-    user_url: str, max_count: int = None, disable_check: bool = False
+    user_url: str, max_count: Optional[int] = None, disable_check: bool = False
 ) -> Generator[Dict, None, None]:
     """获取用户的所有关注者信息
 
@@ -1108,7 +1108,7 @@ def GetUserAllFollowingInfo(
 
 
 def GetUserAllFansInfo(
-    user_url: str, max_count: int = None, disable_check: bool = False
+    user_url: str, max_count: Optional[int] = None, disable_check: bool = False
 ) -> Generator[Dict, None, None]:
     """获取用户的所有粉丝信息
 
@@ -1140,7 +1140,7 @@ def GetUserAllFansInfo(
 
 
 def GetUserAllTimelineInfo(
-    user_url: str, max_count: int = None, disable_check: bool = False
+    user_url: str, max_count: Optional[int] = None, disable_check: bool = False
 ) -> Generator[Dict, None, None]:
     """获取用户的所有动态信息
 
