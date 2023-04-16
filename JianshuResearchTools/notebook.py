@@ -26,8 +26,7 @@ def GetNotebookName(notebook_url: str, disable_check: bool = False) -> str:
         AssertNotebookUrl(notebook_url)
         AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
-    result = json_obj["name"]
-    return result
+    return json_obj["name"]
 
 
 def GetNotebookArticlesCount(notebook_url: str, disable_check: bool = False) -> int:
@@ -44,8 +43,7 @@ def GetNotebookArticlesCount(notebook_url: str, disable_check: bool = False) -> 
         AssertNotebookUrl(notebook_url)
         AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
-    result = json_obj["notes_count"]
-    return result
+    return json_obj["notes_count"]
 
 
 def GetNotebookAuthorInfo(notebook_url: str, disable_check: bool = False) -> Dict:
@@ -62,12 +60,11 @@ def GetNotebookAuthorInfo(notebook_url: str, disable_check: bool = False) -> Dic
         AssertNotebookUrl(notebook_url)
         AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
-    result = {
+    return {
         "name": json_obj["user"]["nickname"],
         "uslug": json_obj["user"]["slug"],
         "avatar_url": json_obj["user"]["avatar"]
     }
-    return result
 
 
 def GetNotebookWordage(notebook_url: str, disable_check: bool = False) -> int:
@@ -84,8 +81,7 @@ def GetNotebookWordage(notebook_url: str, disable_check: bool = False) -> int:
         AssertNotebookUrl(notebook_url)
         AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
-    result = json_obj["wordage"]
-    return result
+    return json_obj["wordage"]
 
 
 def GetNotebookSubscribersCount(notebook_url: str, disable_check: bool = False) -> int:
@@ -102,8 +98,7 @@ def GetNotebookSubscribersCount(notebook_url: str, disable_check: bool = False) 
         AssertNotebookUrl(notebook_url)
         AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
-    result = json_obj["subscribers_count"]
-    return result
+    return json_obj["subscribers_count"]
 
 
 def GetNotebookUpdateTime(notebook_url: str, disable_check: bool = False) -> datetime:
@@ -120,8 +115,7 @@ def GetNotebookUpdateTime(notebook_url: str, disable_check: bool = False) -> dat
         AssertNotebookUrl(notebook_url)
         AssertNotebookStatusNormal(notebook_url)
     json_obj = GetNotebookJsonDataApi(notebook_url)
-    result = datetime.fromtimestamp(json_obj["last_updated_at"])
-    return result
+    return datetime.fromtimestamp(json_obj["last_updated_at"])
 
 
 def GetNotebookArticlesInfo(notebook_url: str, page: int = 1,

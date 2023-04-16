@@ -1,9 +1,11 @@
-from datetime import datetime, timedelta, date
+from datetime import date, datetime, timedelta
 from typing import Dict, List
 
-from .basic_apis import (GetArticlesFPRankListJsonDataApi,
-                         GetAssetsRankJsonDataApi,
-                         GetDailyArticleRankListJsonDataApi)
+from .basic_apis import (
+    GetArticlesFPRankListJsonDataApi,
+    GetAssetsRankJsonDataApi,
+    GetDailyArticleRankListJsonDataApi,
+)
 from .convert import UserSlugToUserUrl
 from .exceptions import APIError, ResourceError
 from .user import GetUserAssetsCount
@@ -121,12 +123,11 @@ def GetArticleFPRankBasicInfo(target_date: str = "latest") -> Dict:
     json_obj = GetArticlesFPRankListJsonDataApi(date=target_date, type_=None)
     if json_obj["notes"] == []:
         raise ResourceError(f"对应日期 {target_date} 的排行榜数据为空")
-    result = {
+    return {
         "total_fp": json_obj["fp"],
         "fp_to_author": json_obj["author_fp"],
         "fp_to_voter": json_obj["voter_fp"]
     }
-    return result
 
 
 def GetUserFPRankData(target_date: str = "latest", rank_type: str = "all") -> List[Dict]:

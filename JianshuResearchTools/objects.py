@@ -2,16 +2,32 @@ from datetime import datetime
 from typing import Any, Callable, Dict, List
 
 from . import article, collection, island, notebook, user
-from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
-                           AssertCollectionStatusNormal, AssertCollectionUrl,
-                           AssertIslandStatusNormal, AssertIslandUrl,
-                           AssertNotebookStatusNormal, AssertNotebookUrl,
-                           AssertType, AssertUserStatusNormal, AssertUserUrl)
-from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
-                      IslandSlugToIslandUrl, IslandUrlToIslandSlug,
-                      NotebookSlugToNotebookUrl, UserSlugToUserUrl,
-                      UserUrlToUserSlug, ArticleUrlToArticleSlug,
-                      NotebookUrlToNotebookId, NotebookUrlToNotebookSlug, CollectionUrlToCollectionSlug)
+from .assert_funcs import (
+    AssertArticleStatusNormal,
+    AssertArticleUrl,
+    AssertCollectionStatusNormal,
+    AssertCollectionUrl,
+    AssertIslandStatusNormal,
+    AssertIslandUrl,
+    AssertNotebookStatusNormal,
+    AssertNotebookUrl,
+    AssertType,
+    AssertUserStatusNormal,
+    AssertUserUrl,
+)
+from .convert import (
+    ArticleSlugToArticleUrl,
+    ArticleUrlToArticleSlug,
+    CollectionSlugToCollectionUrl,
+    CollectionUrlToCollectionSlug,
+    IslandSlugToIslandUrl,
+    IslandUrlToIslandSlug,
+    NotebookSlugToNotebookUrl,
+    NotebookUrlToNotebookId,
+    NotebookUrlToNotebookSlug,
+    UserSlugToUserUrl,
+    UserUrlToUserSlug,
+)
 from .exceptions import InputError
 from .utils import CallWithoutCheck, NameValueMappingToString, OnlyOne
 
@@ -25,14 +41,14 @@ _cache_dict: Dict[int, Any] = {}
 _DISABLE_CACHE = False  # 禁用缓存
 
 
-def cache_result_wrapper(func: Callable):
+def cache_result_wrapper(func: Callable) -> Callable:
     """该函数是一个装饰器，用于缓存函数的返回值
 
     Args:
         func (Callable): 被装饰的函数
     """
 
-    def inner(*args, **kwargs):
+    def inner(*args: Any, **kwargs: Any) -> Any:
         if _DISABLE_CACHE:
             # 缓存已禁用，直接执行函数并返回结果
             return func(*args, **kwargs)
@@ -43,10 +59,10 @@ def cache_result_wrapper(func: Callable):
         cache_result = _cache_dict.get(args_hash)
         if cache_result:  # 如果缓存中有值，则直接返回缓存值
             return cache_result
-        else:
-            result = func(*args, **kwargs)  # 运行函数，获取返回值
-            _cache_dict[args_hash] = result  # 将返回值存入缓存
-            return result
+
+        result = func(*args, **kwargs)  # 运行函数，获取返回值
+        _cache_dict[args_hash] = result  # 将返回值存入缓存
+        return result
     return inner
 
 
@@ -68,7 +84,7 @@ def get_cache_status() -> bool:
     return not _DISABLE_CACHE
 
 
-def set_cache_status(status: bool):
+def set_cache_status(status: bool) -> None:
     """设置缓存状态
 
     Args:
@@ -80,7 +96,7 @@ def set_cache_status(status: bool):
     _DISABLE_CACHE = not status
 
 
-def clear_cache():
+def clear_cache():  # noqa: ANN201
     """该函数用于清空已缓存的所有值
     """
     _cache_dict.clear()
@@ -89,7 +105,7 @@ def clear_cache():
 class User:
     """用户类
     """
-    def __init__(self, user_url: str = None, *, user_slug: str = None):
+    def __init__(self, user_url: str = None, *, user_slug: str = None) -> None:
         """构建新的用户对象
 
         Args:
@@ -98,7 +114,7 @@ class User:
         """
         # TODO: 支持使用用户 ID 初始化用户对象
         if not OnlyOne(user_url, user_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化用户对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化用户对象")
 
         if user_url:
             AssertUserUrl(user_url)
@@ -379,10 +395,7 @@ class User:
         """
         if not isinstance(other, User):
             return False  # 不是由用户类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于用户 URL 的哈希值
@@ -420,7 +433,7 @@ class User:
 class Article:
     """文章类
     """
-    def __init__(self, article_url: str = None, article_slug: str = None):
+    def __init__(self, article_url: str = None, article_slug: str = None) -> None:
         """构建新的文章对象
 
         Args:
@@ -429,7 +442,7 @@ class Article:
         """
         # TODO: 支持使用文章 ID 初始化文章对象
         if not OnlyOne(article_url, article_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化文章对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化文章对象")
 
         if article_url:
             AssertArticleUrl(article_url)
@@ -672,10 +685,7 @@ class Article:
         """
         if not isinstance(other, Article):
             return False  # 不是由文章类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于文章 URL 的哈希值
@@ -713,7 +723,7 @@ class Article:
 class Notebook:
     """文集类
     """
-    def __init__(self, notebook_url: str = None, notebook_slug: str = None):
+    def __init__(self, notebook_url: str = None, notebook_slug: str = None) -> None:
         """构建新的文集对象
 
         Args:
@@ -722,7 +732,7 @@ class Notebook:
         """
         # TODO: 支持使用用户 ID 初始化用户对象
         if not OnlyOne(notebook_url, notebook_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化文集对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化文集对象")
 
         if notebook_url:
             AssertNotebookUrl(notebook_url)
@@ -767,7 +777,7 @@ class Notebook:
 
     @property
     @cache_result_wrapper
-    def id(self) -> int:
+    def id(self) -> int:  # noqa: A003
         """获取文集 ID
 
         Returns:
@@ -881,10 +891,7 @@ class Notebook:
         """
         if not isinstance(other, Notebook):
             return False  # 不是由文集类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于文集 URL 的哈希值
@@ -915,7 +922,7 @@ class Collection:
     """专题类
     """
     def __init__(self, collection_url: str = None, collection_slug: str = None,
-                 collection_id: int = None):
+                 collection_id: int = None) -> None:
         """初始化专题类
 
         Args:
@@ -925,7 +932,7 @@ class Collection:
         """
         # TODO: 支持通过 collection_url 获取 collection_id
         if not OnlyOne(collection_url, collection_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化专题对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化专题对象")
 
         if collection_url:
             AssertCollectionUrl(collection_url)
@@ -1150,10 +1157,7 @@ class Collection:
         """
         if not isinstance(other, Collection):
             return False  # 不是由专题类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于专题 URL 的哈希值
@@ -1185,7 +1189,7 @@ class Collection:
 class Island:
     """小岛类
     """
-    def __init__(self, island_url: str = None, island_slug: str = None):
+    def __init__(self, island_url: str = None, island_slug: str = None) -> None:
         """构建新的小岛对象
 
         Args:
@@ -1193,7 +1197,7 @@ class Island:
             island_slug (str, optional): 小岛 Slug. Defaults to None.
         """
         if not OnlyOne(island_url, island_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化小岛对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化小岛对象")
 
         if island_url:
             AssertIslandUrl(island_url)
@@ -1334,10 +1338,7 @@ class Island:
         """
         if not isinstance(other, Collection):
             return False  # 不是由小岛类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于小岛 URL 的哈希值

@@ -1,5 +1,6 @@
-from yaml import dump as yaml_dump
 from datetime import datetime
+
+from yaml import dump as yaml_dump
 
 test_cases = {
     # "type_cases": [

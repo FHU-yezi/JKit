@@ -1,3 +1,4 @@
+from contextlib import suppress
 from datetime import datetime
 from re import findall, sub
 from typing import Dict, Generator, List
@@ -5,13 +6,14 @@ from typing import Dict, Generator, List
 from lxml import etree
 
 from .assert_funcs import AssertArticleStatusNormal, AssertArticleUrl
-from .basic_apis import (GetArticleCommentsJsonDataApi,
-                         GetArticleHtmlJsonDataApi, GetArticleJsonDataApi)
+from .basic_apis import (
+    GetArticleCommentsJsonDataApi,
+    GetArticleHtmlJsonDataApi,
+    GetArticleJsonDataApi,
+)
 
-try:
+with suppress(ImportError):
     from tomd import convert as html2md
-except ImportError:
-    pass
 
 __all__ = [
     "GetArticleTitle", "GetArticleAuthorName", "GetArticleReadsCount",
@@ -39,8 +41,7 @@ def GetArticleTitle(article_url: str, disable_check: bool = False) -> str:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = json_obj["public_title"]
-    return result
+    return json_obj["public_title"]
 
 
 def GetArticleAuthorName(article_url: str, disable_check: bool = False) -> str:
@@ -57,8 +58,7 @@ def GetArticleAuthorName(article_url: str, disable_check: bool = False) -> str:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleHtmlJsonDataApi(article_url)
-    result = json_obj["props"]["initialState"]["note"]["data"]["user"]["nickname"]
-    return result
+    return json_obj["props"]["initialState"]["note"]["data"]["user"]["nickname"]
 
 
 def GetArticleReadsCount(article_url: str, disable_check: bool = False) -> int:
@@ -75,8 +75,7 @@ def GetArticleReadsCount(article_url: str, disable_check: bool = False) -> int:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleHtmlJsonDataApi(article_url)
-    result = json_obj["props"]["initialState"]["note"]["data"]["views_count"]
-    return result
+    return json_obj["props"]["initialState"]["note"]["data"]["views_count"]
 
 
 def GetArticleWordage(article_url: str, disable_check: bool = False) -> int:
@@ -93,8 +92,7 @@ def GetArticleWordage(article_url: str, disable_check: bool = False) -> int:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleHtmlJsonDataApi(article_url)
-    result = json_obj["props"]["initialState"]["note"]["data"]["wordage"]
-    return result
+    return json_obj["props"]["initialState"]["note"]["data"]["wordage"]
 
 
 def GetArticleLikesCount(article_url: str, disable_check: bool = False) -> int:
@@ -111,8 +109,7 @@ def GetArticleLikesCount(article_url: str, disable_check: bool = False) -> int:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = json_obj["likes_count"]
-    return result
+    return json_obj["likes_count"]
 
 
 def GetArticleCommentsCount(article_url: str, disable_check: bool = False) -> int:
@@ -129,8 +126,7 @@ def GetArticleCommentsCount(article_url: str, disable_check: bool = False) -> in
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = json_obj["public_comment_count"]
-    return result
+    return json_obj["public_comment_count"]
 
 
 def GetArticleMostValuableCommentsCount(article_url: str, disable_check: bool = False) -> int:
@@ -147,8 +143,7 @@ def GetArticleMostValuableCommentsCount(article_url: str, disable_check: bool = 
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = json_obj["featured_comments_count"]
-    return result
+    return json_obj["featured_comments_count"]
 
 
 def GetArticleTotalFPCount(article_url: str, disable_check: bool = False) -> float:
@@ -165,8 +160,7 @@ def GetArticleTotalFPCount(article_url: str, disable_check: bool = False) -> flo
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = json_obj["total_fp_amount"] / 1000
-    return result
+    return json_obj["total_fp_amount"] / 1000
 
 
 def GetArticleDescription(article_url: str, disable_check: bool = False) -> str:
@@ -183,8 +177,7 @@ def GetArticleDescription(article_url: str, disable_check: bool = False) -> str:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = json_obj["description"]
-    return result
+    return json_obj["description"]
 
 
 def GetArticlePublishTime(article_url: str, disable_check: bool = False) -> datetime:
@@ -201,8 +194,7 @@ def GetArticlePublishTime(article_url: str, disable_check: bool = False) -> date
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = datetime.fromisoformat(json_obj["first_shared_at"])
-    return result
+    return datetime.fromisoformat(json_obj["first_shared_at"])
 
 
 def GetArticleUpdateTime(article_url: str, disable_check: bool = False) -> datetime:
@@ -219,8 +211,7 @@ def GetArticleUpdateTime(article_url: str, disable_check: bool = False) -> datet
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = datetime.fromtimestamp(json_obj["last_updated_at"])
-    return result
+    return datetime.fromtimestamp(json_obj["last_updated_at"])
 
 
 def GetArticlePaidStatus(article_url: str, disable_check: bool = False) -> bool:
@@ -245,8 +236,7 @@ def GetArticlePaidStatus(article_url: str, disable_check: bool = False) -> bool:
         "fbook_paid": True,   # 免费连载中的付费文章
         "pbook_paid": True   # 付费连载中的付费文章
     }
-    result = paid_type[json_obj["paid_type"]]
-    return result
+    return paid_type[json_obj["paid_type"]]
 
 
 def GetArticleReprintStatus(article_url: str, disable_check: bool = False) -> bool:
@@ -263,8 +253,7 @@ def GetArticleReprintStatus(article_url: str, disable_check: bool = False) -> bo
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = json_obj["reprintable"]
-    return result
+    return json_obj["reprintable"]
 
 
 def GetArticleCommentStatus(article_url: str, disable_check: bool = False) -> bool:
@@ -281,8 +270,7 @@ def GetArticleCommentStatus(article_url: str, disable_check: bool = False) -> bo
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = json_obj["commentable"]
-    return result
+    return json_obj["commentable"]
 
 
 def GetArticleHtml(article_url: str, disable_check: bool = False) -> str:
@@ -360,14 +348,14 @@ def GetArticleMarkdown(article_url: str, disable_check: bool = False) -> str:
         str: Markdown 格式的文章内容
     """
     try:
-        html2md
+        html2md  # noqa: B018  # type: ignore
     except NameError:
-        raise ImportError("未安装 html2md 模块，该函数不可用")
+        raise ImportError("未安装 html2md 模块，该函数不可用") from None
     if not disable_check:
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     html_text = GetArticleHtml(article_url, disable_check=True)
-    image_descriptions = [description for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述块
+    image_descriptions = list(findall(r'class="image-caption">.+</div>', html_text))  # 获取图片描述块
     image_descriptions_text = [description.replace('class="image-caption">', "").replace("</div>", "")
                                for description in findall(r'class="image-caption">.+</div>', html_text)]  # 获取图片描述文本
     for index in range(len(image_descriptions)):

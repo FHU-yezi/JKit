@@ -1,12 +1,18 @@
+from contextlib import suppress
 from datetime import datetime
 from typing import Dict, Generator, List
 
-from .assert_funcs import (AssertIslandPostUrl, AssertIslandStatusNormal,
-                           AssertIslandUrl)
-from .basic_apis import (GetIslandJsonDataApi, GetIslandPostJsonDataApi,
-                         GetIslandPostsJsonDataApi)
-from .convert import (IslandPostSlugToIslandPostUrl,
-                      IslandPostUrlToIslandPostSlug, IslandUrlToIslandSlug)
+from .assert_funcs import AssertIslandPostUrl, AssertIslandStatusNormal, AssertIslandUrl
+from .basic_apis import (
+    GetIslandJsonDataApi,
+    GetIslandPostJsonDataApi,
+    GetIslandPostsJsonDataApi,
+)
+from .convert import (
+    IslandPostSlugToIslandPostUrl,
+    IslandPostUrlToIslandPostSlug,
+    IslandUrlToIslandSlug,
+)
 
 __all__ = [
     "GetIslandName", "GetIslandAvatarUrl", "GetIslandIntroduction",
@@ -30,8 +36,7 @@ def GetIslandName(island_url: str, disable_check: bool = False) -> str:
         AssertIslandUrl(island_url)
         AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
-    result = json_obj["name"]
-    return result
+    return json_obj["name"]
 
 
 def GetIslandAvatarUrl(island_url: str, disable_check: bool = False) -> str:
@@ -48,8 +53,7 @@ def GetIslandAvatarUrl(island_url: str, disable_check: bool = False) -> str:
         AssertIslandUrl(island_url)
         AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
-    result = json_obj["image"]
-    return result
+    return json_obj["image"]
 
 
 def GetIslandIntroduction(island_url: str, disable_check: bool = False) -> str:
@@ -66,8 +70,7 @@ def GetIslandIntroduction(island_url: str, disable_check: bool = False) -> str:
         AssertIslandUrl(island_url)
         AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
-    result = json_obj["intro"]
-    return result
+    return json_obj["intro"]
 
 
 def GetIslandMembersCount(island_url: str, disable_check: bool = False) -> int:
@@ -84,8 +87,7 @@ def GetIslandMembersCount(island_url: str, disable_check: bool = False) -> int:
         AssertIslandUrl(island_url)
         AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
-    result = json_obj["members_count"]
-    return result
+    return json_obj["members_count"]
 
 
 def GetIslandPostsCount(island_url: str, disable_check: bool = False) -> int:
@@ -102,8 +104,7 @@ def GetIslandPostsCount(island_url: str, disable_check: bool = False) -> int:
         AssertIslandUrl(island_url)
         AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
-    result = json_obj["posts_count"]
-    return result
+    return json_obj["posts_count"]
 
 
 def GetIslandCategory(island_url: str, disable_check: bool = False) -> str:
@@ -120,8 +121,7 @@ def GetIslandCategory(island_url: str, disable_check: bool = False) -> str:
         AssertIslandUrl(island_url)
         AssertIslandStatusNormal(island_url)
     json_obj = GetIslandJsonDataApi(island_url)
-    result = json_obj["category"]["name"]
-    return result
+    return json_obj["category"]["name"]
 
 
 def GetIslandPostFullContent(post_url: str, disable_check: bool = False) -> str:
@@ -138,8 +138,7 @@ def GetIslandPostFullContent(post_url: str, disable_check: bool = False) -> str:
         AssertIslandPostUrl(post_url)
         AssertIslandStatusNormal(post_url)
     json_obj = GetIslandPostJsonDataApi(IslandPostUrlToIslandPostSlug(post_url))
-    result = json_obj["content"]
-    return result
+    return json_obj["content"]
 
 
 def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
@@ -209,25 +208,19 @@ def GetIslandPosts(island_url: str, start_sort_id: int = None, count: int = 10,
             #     # 有个 group_role 不知道干什么用的，没解析
             # }
         }
-        try:
+        with suppress(KeyError):  # 没有图片则跳过
             image_urls = []
             for image in item["images"]:
                 image_urls.append(image["url"])
-        except KeyError:
-            pass  # 没有图片则跳过
-        try:
+        with suppress(KeyError):  # 没有徽章则跳过
             item_data["user"]["badge"] = item["user"]["badge"]["text"]
-        except KeyError:
-            pass  # 没有徽章则跳过
-        try:
+        with suppress(KeyError):  # 没有话题则跳过
             item_data["topic"] = {
                 "tid": item["topic"]["id"],
                 "tslug": item["topic"]["slug"],
                 "topic_name": item["topic"]["name"]
                 # 有个 group_role 不知道干什么用的，没解析
             }
-        except KeyError:
-            pass  # 没有话题则跳过
         if get_full_content and "..." in item_data["content"]:  # 获取到的帖子内容不全
             item_data["content"] = GetIslandPostFullContent(IslandPostSlugToIslandPostUrl(item_data["pslug"]),
                                                             disable_check=True)

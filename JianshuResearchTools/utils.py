@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple, Callable
+from typing import Any, Callable, Dict, Tuple
 
 __all__ = ["NameValueMappingToString", "CallWithoutCheck"]
 

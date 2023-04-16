@@ -2,11 +2,13 @@ from datetime import datetime
 from typing import Dict, Generator, List
 
 from .assert_funcs import AssertCollectionStatusNormal, AssertCollectionUrl
-from .basic_apis import (GetCollectionArticlesJsonDataApi,
-                         GetCollectionEditorsJsonDataApi,
-                         GetCollectionJsonDataApi,
-                         GetCollectionRecommendedWritersJsonDataApi,
-                         GetCollectionSubscribersJsonDataApi)
+from .basic_apis import (
+    GetCollectionArticlesJsonDataApi,
+    GetCollectionEditorsJsonDataApi,
+    GetCollectionJsonDataApi,
+    GetCollectionRecommendedWritersJsonDataApi,
+    GetCollectionSubscribersJsonDataApi,
+)
 from .convert import CollectionUrlToCollectionSlug
 
 __all__ = [
@@ -36,8 +38,7 @@ def GetCollectionName(collection_url: str, disable_check: bool = False) -> str:
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["title"]
-    return result
+    return json_obj["title"]
 
 
 def GetCollectionAvatarUrl(collection_url: str, disable_check: bool = False) -> str:
@@ -54,8 +55,7 @@ def GetCollectionAvatarUrl(collection_url: str, disable_check: bool = False) -> 
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["image"]
-    return result
+    return json_obj["image"]
 
 
 def GetCollectionIntroductionText(collection_url: str, disable_check: bool = False) -> str:
@@ -72,8 +72,7 @@ def GetCollectionIntroductionText(collection_url: str, disable_check: bool = Fal
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["content_without_html"]
-    return result
+    return json_obj["content_without_html"]
 
 
 def GetCollectionIntroductionHtml(collection_url: str, disable_check: bool = False) -> str:
@@ -90,8 +89,7 @@ def GetCollectionIntroductionHtml(collection_url: str, disable_check: bool = Fal
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["content_in_full"]
-    return result
+    return json_obj["content_in_full"]
 
 
 def GetCollectionArticlesCount(collection_url: str, disable_check: bool = False) -> int:
@@ -108,8 +106,7 @@ def GetCollectionArticlesCount(collection_url: str, disable_check: bool = False)
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["notes_count"]
-    return result
+    return json_obj["notes_count"]
 
 
 def GetCollectionSubscribersCount(collection_url: str, disable_check: bool = False) -> int:
@@ -126,8 +123,7 @@ def GetCollectionSubscribersCount(collection_url: str, disable_check: bool = Fal
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["subscribers_count"]
-    return result
+    return json_obj["subscribers_count"]
 
 
 def GetCollectionArticlesUpdateTime(collection_url: str, disable_check: bool = False) -> datetime:
@@ -144,8 +140,7 @@ def GetCollectionArticlesUpdateTime(collection_url: str, disable_check: bool = F
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = datetime.fromtimestamp(json_obj["newly_added_at"])
-    return result
+    return datetime.fromtimestamp(json_obj["newly_added_at"])
 
 
 def GetCollectionInformationUpdateTime(collection_url: str, disable_check: bool = False) -> datetime:
@@ -162,8 +157,7 @@ def GetCollectionInformationUpdateTime(collection_url: str, disable_check: bool 
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = datetime.fromtimestamp(json_obj["last_updated_at"])
-    return result
+    return datetime.fromtimestamp(json_obj["last_updated_at"])
 
 
 def GetCollectionOwnerInfo(collection_url: str, disable_check: bool = False) -> Dict:
@@ -180,12 +174,11 @@ def GetCollectionOwnerInfo(collection_url: str, disable_check: bool = False) -> 
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = {
+    return {
         "uid": json_obj["owner"]["id"],
         "name": json_obj["owner"]["nickname"],
         "uslug": json_obj["owner"]["slug"]
     }
-    return result
 
 
 def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> List[Dict]:

@@ -1,7 +1,6 @@
 __version__ = "2.10.1"
 
-from . import (article, beikeisland, collection, island, notebook, objects,
-               rank, user)
+from . import article, beikeisland, collection, island, notebook, objects, rank, user
 
 __all__ = [
     "article", "beikeisland", "collection", "island", "notebook", "objects",
@@ -9,7 +8,7 @@ __all__ = [
 ]
 
 
-def future():
+def future() -> None:
     """彩蛋
 
     在 JRT 2.0 版本中加入

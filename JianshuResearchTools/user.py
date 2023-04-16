@@ -5,15 +5,23 @@ from typing import Dict, Generator, List
 from lxml import etree
 
 from .assert_funcs import AssertUserStatusNormal, AssertUserUrl
-from .basic_apis import (GetUserArticlesListJsonDataApi,
-                         GetUserCollectionsAndNotebooksJsonDataApi,
-                         GetUserFollowersListHtmlDataApi,
-                         GetUserFollowingListHtmlDataApi, GetUserJsonDataApi,
-                         GetUserNextAnniversaryDayHtmlDataApi,
-                         GetUserPCHtmlDataApi, GetUserTimelineHtmlDataApi)
-from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
-                      NotebookSlugToNotebookUrl, UserSlugToUserUrl,
-                      UserUrlToUserSlug)
+from .basic_apis import (
+    GetUserArticlesListJsonDataApi,
+    GetUserCollectionsAndNotebooksJsonDataApi,
+    GetUserFollowersListHtmlDataApi,
+    GetUserFollowingListHtmlDataApi,
+    GetUserJsonDataApi,
+    GetUserNextAnniversaryDayHtmlDataApi,
+    GetUserPCHtmlDataApi,
+    GetUserTimelineHtmlDataApi,
+)
+from .convert import (
+    ArticleSlugToArticleUrl,
+    CollectionSlugToCollectionUrl,
+    NotebookSlugToNotebookUrl,
+    UserSlugToUserUrl,
+    UserUrlToUserSlug,
+)
 from .exceptions import APIError
 
 __all__ = [
@@ -44,8 +52,7 @@ def GetUserName(user_url: str, disable_check: bool = False) -> str:
         AssertUserUrl(user_url)
         AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
-    result = json_obj["nickname"]
-    return result
+    return json_obj["nickname"]
 
 
 def GetUserGender(user_url: str, disable_check: bool = False) -> int:
@@ -82,8 +89,7 @@ def GetUserFollowersCount(user_url: str, disable_check: bool = False) -> int:
         AssertUserUrl(user_url)
         AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
-    result = json_obj["following_users_count"]
-    return result
+    return json_obj["following_users_count"]
 
 
 def GetUserFansCount(user_url: str, disable_check: bool = False) -> int:
@@ -100,8 +106,7 @@ def GetUserFansCount(user_url: str, disable_check: bool = False) -> int:
         AssertUserUrl(user_url)
         AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
-    result = json_obj["followers_count"]
-    return result
+    return json_obj["followers_count"]
 
 
 def GetUserArticlesCount(user_url: str, disable_check: bool = False) -> int:
@@ -137,8 +142,7 @@ def GetUserWordage(user_url: str, disable_check: bool = False) -> int:
         AssertUserUrl(user_url)
         AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
-    result = json_obj["total_wordage"]
-    return result
+    return json_obj["total_wordage"]
 
 
 def GetUserLikesCount(user_url: str, disable_check: bool = False) -> int:
@@ -155,8 +159,7 @@ def GetUserLikesCount(user_url: str, disable_check: bool = False) -> int:
         AssertUserUrl(user_url)
         AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
-    result = json_obj["total_likes_count"]
-    return result
+    return json_obj["total_likes_count"]
 
 
 def GetUserAssetsCount(user_url: str, disable_check: bool = False) -> float:
@@ -182,7 +185,7 @@ def GetUserAssetsCount(user_url: str, disable_check: bool = False) -> float:
     try:
         result = html_obj.xpath("//div[@class='info']/ul/li[6]/div[@class='meta-block']/p")[0].text
     except IndexError:
-        raise APIError("受简书 API 限制，用户无文章时无法获取其总资产数据")
+        raise APIError("受简书 API 限制，用户无文章时无法获取其总资产数据") from None
     result = float(result.replace(".", "").replace("w", "000"))
     return result
 
@@ -269,8 +272,7 @@ def GetUserLastUpdateTime(user_url: str, disable_check: bool = False) -> datetim
         AssertUserUrl(user_url)
         AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
-    result = datetime.fromtimestamp(json_obj["last_updated_at"])
-    return result
+    return datetime.fromtimestamp(json_obj["last_updated_at"])
 
 
 def GetUserVIPInfo(user_url: str, disable_check: bool = False) -> Dict:
@@ -319,8 +321,7 @@ def GetUserIntroductionHtml(user_url: str, disable_check: bool = False) -> str:
         AssertUserUrl(user_url)
         AssertUserStatusNormal(user_url)
     json_obj = GetUserJsonDataApi(user_url)
-    result = json_obj["intro"]
-    return result
+    return json_obj["intro"]
 
 
 def GetUserIntroductionText(user_url: str, disable_check: bool = False) -> str:
