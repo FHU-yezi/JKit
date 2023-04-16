@@ -1,9 +1,9 @@
 __version__ = "2.10.1"
 
-from . import article, beikeisland, collection, island, notebook, objects, rank, user
+from . import article, collection, island, notebook, objects, rank, user
 
 __all__ = [
-    "article", "beikeisland", "collection", "island", "notebook", "objects",
+    "article", "collection", "island", "notebook", "objects",
     "rank", "user"
 ]
 

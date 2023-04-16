@@ -158,23 +158,6 @@ ValueError: check_hostname requires server_hostname
 - 参数
 - 返回值
 
-示例：
-
-思路：通过解析接口返回的 Json 数据实现。
-
-接口：https://www.beikeisland.com/api/Trade/getTradeList
-
-请求方式：POST
-
-参数：
-
-- pageIndex：整数，页码
-- retype：整数，1 为卖单，2 为买单
-
-返回值：
-
-（略）
-
 **联系方式**
 
 可选的联系方式如下：

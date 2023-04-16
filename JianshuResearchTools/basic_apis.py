@@ -1,12 +1,10 @@
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 
 from httpx import get as httpx_get
-from httpx import post as httpx_post
 from lxml import etree
 from lxml.etree import _Element
 
 from .headers import (
-    BeikeIsland_request_header,
     PC_header,
     api_request_header,
     mobile_header,
@@ -19,8 +17,8 @@ except ImportError:
 
 __all__ = [
     "GetArticleJsonDataApi", "GetArticleHtmlJsonDataApi",
-    "GetArticleCommentsJsonDataApi", "GetBeikeIslandTradeRankListJsonDataApi",
-    "GetBeikeIslandTradeListJsonDataApi", "GetCollectionJsonDataApi",
+    "GetArticleCommentsJsonDataApi",
+    "GetCollectionJsonDataApi",
     "GetCollectionEditorsJsonDataApi",
     "GetCollectionRecommendedWritersJsonDataApi",
     "GetCollectionSubscribersJsonDataApi", "GetCollectionArticlesJsonDataApi",
@@ -57,26 +55,6 @@ def GetArticleCommentsJsonDataApi(article_id: int, page: int, count: int,
     }
     request_url = f"https://www.jianshu.com/shakespeare/notes/{article_id}/comments"
     source = httpx_get(request_url, params=params, headers=api_request_header).content
-    return json_loads(source)
-
-
-def GetBeikeIslandTradeRankListJsonDataApi(ranktype: Union[int, None], pageIndex: Union[int, None]) -> Dict:
-    params = {
-        "ranktype": ranktype,
-        "pageIndex": pageIndex
-    }
-    source = httpx_post("https://www.beikeisland.com/api/Trade/getTradeRankList",
-                        headers=BeikeIsland_request_header, json=params).content
-    return json_loads(source)
-
-
-def GetBeikeIslandTradeListJsonDataApi(pageIndex: int, retype: int) -> List[Dict]:
-    params = {
-        "pageIndex": pageIndex,
-        "retype": retype
-    }
-    source = httpx_post("https://www.beikeisland.com/api/Trade/getTradeList",
-                        headers=BeikeIsland_request_header, json=params).content
     return json_loads(source)
 
 
