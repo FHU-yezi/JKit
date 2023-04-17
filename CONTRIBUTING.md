@@ -11,11 +11,11 @@
 以下是一个示例：
 
 - 操作系统：Windows 10 专业版 内部版本号 2004
-- Python ：Python 3.8.10 64-bit
+- Python ：Python 3.10.10 64-bit
 - JRT：v2.0.0
 - 依赖库：
-    - requests 2.25.1
-    - lxml 4.6.3
+    - httpx 0.24.0
+    - lxml 4.9.2
 
 **您执行的代码**
 
@@ -139,13 +139,13 @@ ValueError: check_hostname requires server_hostname
 
 示例：
 
-增加获取贝壳小岛挂单信息的函数
+支持从 collection_url 获取 collection_id
 
 **提出该建议的原因**（可选）
 
 示例：
 
-助力对简书资产交易的分析
+简化专题信息获取
 
 **实现思路**（可选）
 
@@ -157,23 +157,6 @@ ValueError: check_hostname requires server_hostname
 - 请求方式
 - 参数
 - 返回值
-
-示例：
-
-思路：通过解析接口返回的 Json 数据实现。
-
-接口：https://www.beikeisland.com/api/Trade/getTradeList
-
-请求方式：POST
-
-参数：
-
-- pageIndex：整数，页码
-- retype：整数，1 为卖单，2 为买单
-
-返回值：
-
-（略）
 
 **联系方式**
 
@@ -199,7 +182,7 @@ ValueError: check_hostname requires server_hostname
 
 存储库下载到本地后，请执行 `git switch dev` 切换到开发分支，在主分支上进行开发的 PR 将被拒绝。
 
-开发时请注意遵守代码规范。本项目基本遵循 PEP8 规范，对单行字符数的限制除外。
+开发时请注意遵守代码规范。本项目遵守 PEP8 规范，对单行字符数的限制除外。
 
 请书写与现有注释格式一致的函数注释。如果您使用 VS Code 进行开发，建议下载 Python Docstring Generator 扩展。
 

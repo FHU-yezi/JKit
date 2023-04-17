@@ -1,9 +1,11 @@
-from typing import Any, Dict, Tuple, Callable
+from typing import Any, Callable, Dict, Tuple
 
 __all__ = ["NameValueMappingToString", "CallWithoutCheck"]
 
 
-def NameValueMappingToString(mapping: Dict[str, Tuple[Any, bool]], title: str = "") -> str:
+def NameValueMappingToString(
+    mapping: Dict[str, Tuple[Any, bool]], title: str = ""
+) -> str:
     """将字典转换成特定格式的字符串
 
     Args:

@@ -2,20 +2,34 @@ from functools import lru_cache
 from re import compile as re_compile
 from typing import Any
 
-from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
-                         GetIslandJsonDataApi, GetNotebookJsonDataApi,
-                         GetUserJsonDataApi)
+from .basic_apis import (
+    GetArticleJsonDataApi,
+    GetCollectionJsonDataApi,
+    GetIslandJsonDataApi,
+    GetNotebookJsonDataApi,
+    GetUserJsonDataApi,
+)
 from .exceptions import InputError, ResourceError
 
 __all__ = [
-    "JIANSHU_URL_REGEX", "JIANSHU_USER_URL_REGEX",
-    "JIANSHU_ARTICLES_URL_REGEX", "JIANSHU_NOTEBOOK_URL_REGEX",
-    "JIANSHU_COLLECTION_URL_REGEX", "JIANSHU_ISLAND_URL_REGEX",
-    "JIANSHU_ISLAND_POST_URL_REGEX", "AssertType", "AssertJianshuUrl",
-    "AssertUserUrl", "AssertUserStatusNormal", "AssertArticleUrl",
-    "AssertArticleStatusNormal", "AssertCollectionUrl",
-    "AssertCollectionStatusNormal", "AssertIslandUrl",
-    "AssertIslandStatusNormal", "AssertIslandPostUrl"
+    "JIANSHU_URL_REGEX",
+    "JIANSHU_USER_URL_REGEX",
+    "JIANSHU_ARTICLES_URL_REGEX",
+    "JIANSHU_NOTEBOOK_URL_REGEX",
+    "JIANSHU_COLLECTION_URL_REGEX",
+    "JIANSHU_ISLAND_URL_REGEX",
+    "JIANSHU_ISLAND_POST_URL_REGEX",
+    "AssertType",
+    "AssertJianshuUrl",
+    "AssertUserUrl",
+    "AssertUserStatusNormal",
+    "AssertArticleUrl",
+    "AssertArticleStatusNormal",
+    "AssertCollectionUrl",
+    "AssertCollectionStatusNormal",
+    "AssertIslandUrl",
+    "AssertIslandStatusNormal",
+    "AssertIslandPostUrl",
 ]
 
 
@@ -82,7 +96,7 @@ def AssertUserStatusNormal(user_url: str) -> None:
     try:
         user_json_data["nickname"]
     except KeyError:
-        raise ResourceError(f"用户 {user_url} 账号状态异常")
+        raise ResourceError(f"用户 {user_url} 账号状态异常") from None
 
 
 def AssertArticleUrl(string: str) -> None:
@@ -113,7 +127,7 @@ def AssertArticleStatusNormal(article_url: str) -> None:
     try:
         json_obj["show_ad"]
     except KeyError:
-        raise ResourceError(f"文章 {article_url} 状态异常")
+        raise ResourceError(f"文章 {article_url} 状态异常") from None
 
 
 def AssertNotebookUrl(string: str) -> None:
@@ -143,7 +157,7 @@ def AssertNotebookStatusNormal(notebook_url: str) -> None:
     try:
         json_obj["name"]
     except KeyError:
-        raise ResourceError(f"文集 {notebook_url} 状态异常")
+        raise ResourceError(f"文集 {notebook_url} 状态异常") from None
 
 
 def AssertCollectionUrl(string: str) -> None:
@@ -173,7 +187,7 @@ def AssertCollectionStatusNormal(collection_url: str) -> None:
     try:
         collection_json_data["title"]
     except KeyError:
-        raise ResourceError(f"专题 {collection_url} 状态异常")
+        raise ResourceError(f"专题 {collection_url} 状态异常") from None
 
 
 def AssertIslandUrl(string: str) -> None:
@@ -195,7 +209,7 @@ def AssertIslandStatusNormal(island_url: str) -> None:
     try:
         island_json_data["name"]
     except KeyError:
-        raise ResourceError(f"小岛 {island_url} 状态异常")
+        raise ResourceError(f"小岛 {island_url} 状态异常") from None
 
 
 def AssertIslandPostUrl(string: str) -> None:

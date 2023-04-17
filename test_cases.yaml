@@ -1,8 +1,8 @@
 article_cases:
     fail_cases:
-    -   aslug: 1b9ad61ade73
+    -   aslug: abc1234qwert
         exception_name: ResourceError
-        url: https://www.jianshu.com/p/1b9ad61ade73
+        url: https://www.jianshu.com/p/abc1234qwert
     success_cases:
     -   aid: 87256893
         aslug: 52698676395f
@@ -73,8 +73,8 @@ article_cases:
         paid_status: false
         publish_time: 1603099326.0
         reads_count: !!python/tuple
-        - 3500
-        - 5000
+        - 7000
+        - 12000
         reprint_status: true
         title: 简书社区守护者徽章奖励公告
         total_FP_count: !!python/tuple
@@ -102,7 +102,7 @@ collection_cases:
         - 2800000
         url: https://www.jianshu.com/c/fcd7a62be697
     -   articles_count: !!python/tuple
-        - 40000
+        - 35000
         - 45000
         articles_update_time: 1638369615.0
         avatar_url: https://upload.jianshu.io/collections/images/14/6249340_194140034135_2.jpg
@@ -168,12 +168,12 @@ island_cases:
     -   avatar_url: https://upload.jianshu.io/group_image/18454410/6b6138a6-685a-4f12-80a7-5e731b5fc935
         category: 生活
         members_count: !!python/tuple
-        - 60000
         - 80000
+        - 120000
         name: 简友动态广场
         posts_count: !!python/tuple
-        - 140000
         - 160000
+        - 240000
         slug: 6187f99def472f5e
         url: https://www.jianshu.com/g/6187f99def472f5e
 notebook_cases:
@@ -205,34 +205,32 @@ user_cases:
         uslug: ea36c8d8aa31
     success_cases:
     -   FP_count: !!python/tuple
-        - 10000
-        - 20000
+        - 30000
+        - 100000
         FTN_count: !!python/tuple
-        - 3000
-        - 12000
+        - 1000
+        - 50000
         VIP_info:
             expire_date: null
             vip_type: null
         articles_count: !!python/tuple
-        - 130
-        - 180
+        - 150
+        - 270
         assets_count: !!python/tuple
-        - 17000
-        - 30000
+        - 50000
+        - 120000
         badges_list:
         - 简书创作者
         - 岛主
         - 社区守护者
-        fans_count: !!python/tuple
-        - 800
-        - 1200
+        fans_count: *id003
         followers_count: !!python/tuple
         - 200
         - 500
         gender: 1
         last_update_time: 1627743976.0
         likes_count: !!python/tuple
-        - 4300
+        - 4000
         - 7000
         name: 初心不变_叶子
         next_anniversary_day: 1666281600.0
@@ -281,12 +279,10 @@ user_cases:
         wordage: !!python/tuple
         - 18000
         - 30000
-    -   FP_count: !!python/tuple
-        - 700
-        - 1500
-        FTN_count: !!python/tuple
-        - 500000
-        - 600000
+    -   FP_count: &id005 !!python/tuple
+        - 0
+        - 3000
+        FTN_count: *id005
         VIP_info:
             expire_date: null
             vip_type: null
@@ -294,8 +290,8 @@ user_cases:
         - 450
         - 600
         assets_count: !!python/tuple
-        - 400000
-        - 600000
+        - 0
+        - 5000
         badges_list:
         - 简书创作者
         - 鼠年大吉

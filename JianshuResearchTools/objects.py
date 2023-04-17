@@ -1,52 +1,80 @@
 from datetime import datetime
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 from . import article, collection, island, notebook, user
-from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
-                           AssertCollectionStatusNormal, AssertCollectionUrl,
-                           AssertIslandStatusNormal, AssertIslandUrl,
-                           AssertNotebookStatusNormal, AssertNotebookUrl,
-                           AssertType, AssertUserStatusNormal, AssertUserUrl)
-from .convert import (ArticleSlugToArticleUrl, CollectionSlugToCollectionUrl,
-                      IslandSlugToIslandUrl, IslandUrlToIslandSlug,
-                      NotebookSlugToNotebookUrl, UserSlugToUserUrl,
-                      UserUrlToUserSlug, ArticleUrlToArticleSlug,
-                      NotebookUrlToNotebookId, NotebookUrlToNotebookSlug, CollectionUrlToCollectionSlug)
+from .assert_funcs import (
+    AssertArticleStatusNormal,
+    AssertArticleUrl,
+    AssertCollectionStatusNormal,
+    AssertCollectionUrl,
+    AssertIslandStatusNormal,
+    AssertIslandUrl,
+    AssertNotebookStatusNormal,
+    AssertNotebookUrl,
+    AssertType,
+    AssertUserStatusNormal,
+    AssertUserUrl,
+)
+from .convert import (
+    ArticleSlugToArticleUrl,
+    ArticleUrlToArticleSlug,
+    CollectionSlugToCollectionUrl,
+    CollectionUrlToCollectionSlug,
+    IslandSlugToIslandUrl,
+    IslandUrlToIslandSlug,
+    NotebookSlugToNotebookUrl,
+    NotebookUrlToNotebookId,
+    NotebookUrlToNotebookSlug,
+    UserSlugToUserUrl,
+    UserUrlToUserSlug,
+)
 from .exceptions import InputError
 from .utils import CallWithoutCheck, NameValueMappingToString, OnlyOne
 
 __all__ = [
-    "User", "Article", "Notebook", "Collection", "Island",
-    "get_cache_items_count", "get_cache_status", "set_cache_status",
-    "clear_cache"
+    "User",
+    "Article",
+    "Notebook",
+    "Collection",
+    "Island",
+    "get_cache_items_count",
+    "get_cache_status",
+    "set_cache_status",
+    "clear_cache",
 ]
 
 _cache_dict: Dict[int, Any] = {}
 _DISABLE_CACHE = False  # 禁用缓存
 
 
-def cache_result_wrapper(func: Callable):
+def cache_result_wrapper(func: Callable) -> Callable:
     """该函数是一个装饰器，用于缓存函数的返回值
 
     Args:
         func (Callable): 被装饰的函数
     """
 
-    def inner(*args, **kwargs):
+    def inner(*args: Any, **kwargs: Any) -> Any:
         if _DISABLE_CACHE:
             # 缓存已禁用，直接执行函数并返回结果
             return func(*args, **kwargs)
 
         # 生成哈希值
-        args_hash = hash((hash(func.__qualname__),) + (hash(args[0]),) + tuple(args[1:]) + tuple(kwargs.items()))
+        args_hash = hash(
+            (hash(func.__qualname__),)
+            + (hash(args[0]),)
+            + tuple(args[1:])
+            + tuple(kwargs.items())
+        )
 
         cache_result = _cache_dict.get(args_hash)
         if cache_result:  # 如果缓存中有值，则直接返回缓存值
             return cache_result
-        else:
-            result = func(*args, **kwargs)  # 运行函数，获取返回值
-            _cache_dict[args_hash] = result  # 将返回值存入缓存
-            return result
+
+        result = func(*args, **kwargs)  # 运行函数，获取返回值
+        _cache_dict[args_hash] = result  # 将返回值存入缓存
+        return result
+
     return inner
 
 
@@ -68,7 +96,7 @@ def get_cache_status() -> bool:
     return not _DISABLE_CACHE
 
 
-def set_cache_status(status: bool):
+def set_cache_status(status: bool) -> None:
     """设置缓存状态
 
     Args:
@@ -80,16 +108,17 @@ def set_cache_status(status: bool):
     _DISABLE_CACHE = not status
 
 
-def clear_cache():
-    """该函数用于清空已缓存的所有值
-    """
+def clear_cache():  # noqa: ANN201
+    """该函数用于清空已缓存的所有值"""
     _cache_dict.clear()
 
 
 class User:
-    """用户类
-    """
-    def __init__(self, user_url: str = None, *, user_slug: str = None):
+    """用户类"""
+
+    def __init__(
+        self, user_url: Optional[str] = None, *, user_slug: Optional[str] = None
+    ) -> None:
         """构建新的用户对象
 
         Args:
@@ -98,12 +127,14 @@ class User:
         """
         # TODO: 支持使用用户 ID 初始化用户对象
         if not OnlyOne(user_url, user_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化用户对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化用户对象")
 
         if user_url:
             AssertUserUrl(user_url)
         elif user_slug:
             user_url = UserSlugToUserUrl(user_slug)
+        else:
+            raise ValueError("user_url 和 user_slug 至少需要传入一个")
 
         AssertUserStatusNormal(user_url)
         self._url = user_url
@@ -379,10 +410,7 @@ class User:
         """
         if not isinstance(other, User):
             return False  # 不是由用户类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于用户 URL 的哈希值
@@ -398,29 +426,34 @@ class User:
         Returns:
             str: 用户信息摘要
         """
-        return NameValueMappingToString({
-            "昵称": (self.name, False),
-            "URL": (self.url, False),
-            "性别": (self.gender, False),
-            "关注者数": (self.followers_count, False),
-            "粉丝数": (self.fans_count, False),
-            "文章数": (self.articles_count, False),
-            "总字数": (self.wordage, False),
-            "简书钻": (self.FP_count, False),
-            "简书贝": (self.FTN_count, False),
-            "总资产": (self.assets_count, False),
-            "徽章": (' '.join(self.badges), False),
-            "最后更新时间": (self.last_update_time, False),
-            "会员等级": (self.VIP_info["vip_type"], False),
-            "会员过期时间": (self.VIP_info["expire_date"], False),
-            "个人简介": (self.introduction_text, True)
-        }, title="用户信息摘要")
+        return NameValueMappingToString(
+            {
+                "昵称": (self.name, False),
+                "URL": (self.url, False),
+                "性别": (self.gender, False),
+                "关注者数": (self.followers_count, False),
+                "粉丝数": (self.fans_count, False),
+                "文章数": (self.articles_count, False),
+                "总字数": (self.wordage, False),
+                "简书钻": (self.FP_count, False),
+                "简书贝": (self.FTN_count, False),
+                "总资产": (self.assets_count, False),
+                "徽章": (" ".join(self.badges), False),
+                "最后更新时间": (self.last_update_time, False),
+                "会员等级": (self.VIP_info["vip_type"], False),
+                "会员过期时间": (self.VIP_info["expire_date"], False),
+                "个人简介": (self.introduction_text, True),
+            },
+            title="用户信息摘要",
+        )
 
 
 class Article:
-    """文章类
-    """
-    def __init__(self, article_url: str = None, article_slug: str = None):
+    """文章类"""
+
+    def __init__(
+        self, article_url: Optional[str] = None, article_slug: Optional[str] = None
+    ) -> None:
         """构建新的文章对象
 
         Args:
@@ -429,12 +462,14 @@ class Article:
         """
         # TODO: 支持使用文章 ID 初始化文章对象
         if not OnlyOne(article_url, article_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化文章对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化文章对象")
 
         if article_url:
             AssertArticleUrl(article_url)
         elif article_slug:
             article_url = ArticleSlugToArticleUrl(article_slug)
+        else:
+            raise ValueError("article_url 和 article_slug 至少需要传入一个")
 
         AssertArticleStatusNormal(article_url)
         self._url = article_url
@@ -672,10 +707,7 @@ class Article:
         """
         if not isinstance(other, Article):
             return False  # 不是由文章类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于文章 URL 的哈希值
@@ -691,29 +723,34 @@ class Article:
         Returns:
             str: 文章信息摘要
         """
-        return NameValueMappingToString({
-            "标题": (self.title, False),
-            "URL": (self.url, False),
-            "作者名": (self.author_name, False),
-            "字数": (self.wordage, False),
-            "阅读量": (self.reads_count, False),
-            "点赞数": (self.likes_count, False),
-            "评论数": (self.comments_count, False),
-            "精选评论数": (self.most_valuable_comments_count, False),
-            "总获钻量": (self.total_FP_count, False),
-            "发布时间": (self.publish_time, False),
-            "更新时间": (self.update_time, False),
-            "需付费": (self.paid_status, False),
-            "可转载": (self.reprint_status, False),
-            "可评论": (self.comment_status, False),
-            "摘要": (self.description, True)
-        }, title="文章信息摘要")
+        return NameValueMappingToString(
+            {
+                "标题": (self.title, False),
+                "URL": (self.url, False),
+                "作者名": (self.author_name, False),
+                "字数": (self.wordage, False),
+                "阅读量": (self.reads_count, False),
+                "点赞数": (self.likes_count, False),
+                "评论数": (self.comments_count, False),
+                "精选评论数": (self.most_valuable_comments_count, False),
+                "总获钻量": (self.total_FP_count, False),
+                "发布时间": (self.publish_time, False),
+                "更新时间": (self.update_time, False),
+                "需付费": (self.paid_status, False),
+                "可转载": (self.reprint_status, False),
+                "可评论": (self.comment_status, False),
+                "摘要": (self.description, True),
+            },
+            title="文章信息摘要",
+        )
 
 
 class Notebook:
-    """文集类
-    """
-    def __init__(self, notebook_url: str = None, notebook_slug: str = None):
+    """文集类"""
+
+    def __init__(
+        self, notebook_url: Optional[str] = None, notebook_slug: Optional[str] = None
+    ) -> None:
         """构建新的文集对象
 
         Args:
@@ -722,12 +759,14 @@ class Notebook:
         """
         # TODO: 支持使用用户 ID 初始化用户对象
         if not OnlyOne(notebook_url, notebook_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化文集对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化文集对象")
 
         if notebook_url:
             AssertNotebookUrl(notebook_url)
         elif notebook_slug:
             notebook_url = NotebookSlugToNotebookUrl(notebook_slug)
+        else:
+            raise ValueError("notebook_url 和 notebook_slug 至少需要传入一个")
 
         AssertNotebookStatusNormal(notebook_url)
         self._url = notebook_url
@@ -767,7 +806,7 @@ class Notebook:
 
     @property
     @cache_result_wrapper
-    def id(self) -> int:
+    def id(self) -> int:  # noqa: A003
         """获取文集 ID
 
         Returns:
@@ -856,7 +895,9 @@ class Notebook:
         return CallWithoutCheck(notebook.GetNotebookUpdateTime, self._url)
 
     @cache_result_wrapper
-    def articles_info(self, page: int = 1, count: int = 10, sorting_method: str = "time") -> List[Dict]:
+    def articles_info(
+        self, page: int = 1, count: int = 10, sorting_method: str = "time"
+    ) -> List[Dict]:
         """获取文集中的文章信息
 
         Args:
@@ -868,7 +909,9 @@ class Notebook:
         Returns:
             List[Dict]: 文章信息
         """
-        return CallWithoutCheck(notebook.GetNotebookArticlesInfo, self._url, page, count, sorting_method)
+        return CallWithoutCheck(
+            notebook.GetNotebookArticlesInfo, self._url, page, count, sorting_method
+        )
 
     def __eq__(self, other: object) -> bool:
         """判断是否是同一个文集
@@ -881,10 +924,7 @@ class Notebook:
         """
         if not isinstance(other, Notebook):
             return False  # 不是由文集类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于文集 URL 的哈希值
@@ -900,22 +940,29 @@ class Notebook:
         Returns:
             str: 文集信息摘要
         """
-        return NameValueMappingToString({
-            "名称": (self.name, False),
-            "URL": (self.url, False),
-            "作者名": (self.author_name, False),
-            "文章数": (self.articles_count, False),
-            "总字数": (self.wordage, False),
-            "关注者数": (self.subscribers_count, False),
-            "更新时间": (self.update_time, False)
-        }, title="文集信息摘要")
+        return NameValueMappingToString(
+            {
+                "名称": (self.name, False),
+                "URL": (self.url, False),
+                "作者名": (self.author_name, False),
+                "文章数": (self.articles_count, False),
+                "总字数": (self.wordage, False),
+                "关注者数": (self.subscribers_count, False),
+                "更新时间": (self.update_time, False),
+            },
+            title="文集信息摘要",
+        )
 
 
 class Collection:
-    """专题类
-    """
-    def __init__(self, collection_url: str = None, collection_slug: str = None,
-                 collection_id: int = None):
+    """专题类"""
+
+    def __init__(
+        self,
+        collection_url: Optional[str] = None,
+        collection_slug: Optional[str] = None,
+        collection_id: Optional[int] = None,
+    ) -> None:
         """初始化专题类
 
         Args:
@@ -925,12 +972,14 @@ class Collection:
         """
         # TODO: 支持通过 collection_url 获取 collection_id
         if not OnlyOne(collection_url, collection_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化专题对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化专题对象")
 
         if collection_url:
             AssertCollectionUrl(collection_url)
         elif collection_slug:
             collection_url = CollectionSlugToCollectionUrl(collection_slug)
+        else:
+            raise ValueError("collection_url 和 collection_slug 至少需要传入一个")
 
         AssertCollectionStatusNormal(collection_url)
         self._url = collection_url
@@ -938,7 +987,9 @@ class Collection:
         self._id = collection_id if collection_id else None
 
     @classmethod
-    def from_url(cls, collection_url: str, collection_id: int = None) -> "Collection":
+    def from_url(
+        cls, collection_url: str, collection_id: Optional[int] = None
+    ) -> "Collection":
         """从专题 URL 构建专题对象
 
         Args:
@@ -951,7 +1002,9 @@ class Collection:
         return cls(collection_url=collection_url, collection_id=collection_id)
 
     @classmethod
-    def from_slug(cls, collection_slug: str, collection_id: int = None) -> "Collection":
+    def from_slug(
+        cls, collection_slug: str, collection_id: Optional[int] = None
+    ) -> "Collection":
         """从专题 Slug 构建专题对象
 
         Args:
@@ -1040,7 +1093,9 @@ class Collection:
         Returns:
             datetime: 专题信息更新时间
         """
-        return CallWithoutCheck(collection.GetCollectionInformationUpdateTime, self._url)
+        return CallWithoutCheck(
+            collection.GetCollectionInformationUpdateTime, self._url
+        )
 
     @property
     @cache_result_wrapper
@@ -1124,8 +1179,9 @@ class Collection:
         return collection.GetCollectionSubscribersInfo(self._id, start_sort_id)
 
     @cache_result_wrapper
-    def articles_info(self, page: int = 1, count: int = 10,
-                      sorting_method: str = "time") -> List[Dict]:
+    def articles_info(
+        self, page: int = 1, count: int = 10, sorting_method: str = "time"
+    ) -> List[Dict]:
         """获取专题文章信息
 
         Args:
@@ -1137,7 +1193,9 @@ class Collection:
         Returns:
             List[Dict]: 专题中的文章信息
         """
-        return CallWithoutCheck(collection.GetCollectionArticlesInfo, self._url, page, count, sorting_method)
+        return CallWithoutCheck(
+            collection.GetCollectionArticlesInfo, self._url, page, count, sorting_method
+        )
 
     def __eq__(self, other: object) -> bool:
         """判断是否是同一个专题
@@ -1150,10 +1208,7 @@ class Collection:
         """
         if not isinstance(other, Collection):
             return False  # 不是由专题类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于专题 URL 的哈希值
@@ -1169,23 +1224,28 @@ class Collection:
         Returns:
             str: 专题信息摘要
         """
-        return NameValueMappingToString({
-            "专题名": (self.name, False),
-            "URL": (self.url, False),
-            "主编名": (self.owner_info["name"], False),
-            "图片链接": (self.avatar_url, False),
-            "文章数": (self.articles_count, False),
-            "关注者数": (self.subscribers_count, False),
-            "文章更新时间": (self.articles_update_time, False),
-            "信息更新时间": (self.info_update_time, False),
-            "简介": (self.introduction_text, True),
-        }, title="专题信息摘要")
+        return NameValueMappingToString(
+            {
+                "专题名": (self.name, False),
+                "URL": (self.url, False),
+                "主编名": (self.owner_info["name"], False),
+                "图片链接": (self.avatar_url, False),
+                "文章数": (self.articles_count, False),
+                "关注者数": (self.subscribers_count, False),
+                "文章更新时间": (self.articles_update_time, False),
+                "信息更新时间": (self.info_update_time, False),
+                "简介": (self.introduction_text, True),
+            },
+            title="专题信息摘要",
+        )
 
 
 class Island:
-    """小岛类
-    """
-    def __init__(self, island_url: str = None, island_slug: str = None):
+    """小岛类"""
+
+    def __init__(
+        self, island_url: Optional[str] = None, island_slug: Optional[str] = None
+    ) -> None:
         """构建新的小岛对象
 
         Args:
@@ -1193,12 +1253,14 @@ class Island:
             island_slug (str, optional): 小岛 Slug. Defaults to None.
         """
         if not OnlyOne(island_url, island_slug):
-            raise("只能使用 URL 或 Slug 中的一个实例化小岛对象")
+            raise ValueError("只能使用 URL 或 Slug 中的一个实例化小岛对象")
 
         if island_url:
             AssertIslandUrl(island_url)
         elif island_slug:
             island_url = IslandSlugToIslandUrl(island_slug)
+        else:
+            raise ValueError("island_url 和 island_slug 至少需要传入一个")
 
         AssertIslandStatusNormal(island_url)
         self._url = island_url
@@ -1307,8 +1369,13 @@ class Island:
         return CallWithoutCheck(island.GetIslandCategory, self._url)
 
     @cache_result_wrapper
-    def posts(self, start_sort_id: int = None, count: int = 10,
-              topic_id: int = None, sorting_method: str = "time") -> List[Dict]:
+    def posts(
+        self,
+        start_sort_id: Optional[int] = None,
+        count: int = 10,
+        topic_id: Optional[int] = None,
+        sorting_method: str = "time",
+    ) -> List[Dict]:
         """获取小岛帖子信息
 
         Args:
@@ -1321,7 +1388,14 @@ class Island:
         Returns:
             List[Dict]: 帖子信息
         """
-        return CallWithoutCheck(island.GetIslandPosts, self._url, start_sort_id, count, topic_id, sorting_method)
+        return CallWithoutCheck(
+            island.GetIslandPosts,
+            self._url,
+            start_sort_id,
+            count,
+            topic_id,
+            sorting_method,
+        )
 
     def __eq__(self, other: object) -> bool:
         """判断是否是同一个小岛
@@ -1334,10 +1408,7 @@ class Island:
         """
         if not isinstance(other, Collection):
             return False  # 不是由小岛类构建的必定不相等
-        if self._url == other._url:
-            return True
-        else:
-            return False
+        return self._url == other._url
 
     def __hash__(self) -> int:
         """返回基于小岛 URL 的哈希值
@@ -1353,11 +1424,14 @@ class Island:
         Returns:
             str: 小岛信息摘要
         """
-        return NameValueMappingToString({
-            "小岛名": (self.name, False),
-            "URL": (self.url, False),
-            "分类": (self.category, False),
-            "成员数": (self.members_count, False),
-            "帖子数": (self.posts_count, False),
-            "简介": (self.introduction, True)
-        }, title="小岛信息摘要")
+        return NameValueMappingToString(
+            {
+                "小岛名": (self.name, False),
+                "URL": (self.url, False),
+                "分类": (self.category, False),
+                "成员数": (self.members_count, False),
+                "帖子数": (self.posts_count, False),
+                "简介": (self.introduction, True),
+            },
+            title="小岛信息摘要",
+        )

@@ -1,14 +1,2 @@
-*.log
-*.csv
-*.html
-*.ipynb
-Pipfile.lock
-.venv/
-__pycache__/
-JianshuResearchTools/__pycache__/
-.vscode/
-build/
+**/__pycache__/
 dist/
-JianshuResearchTools.egg-info/
-assets/
-.pytest_cache/

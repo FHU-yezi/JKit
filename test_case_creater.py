@@ -1,5 +1,6 @@
-from yaml import dump as yaml_dump
 from datetime import datetime
+
+from yaml import dump as yaml_dump
 
 test_cases = {
     # "type_cases": [
@@ -60,7 +61,7 @@ test_cases = {
                 "uid": 14715425,
                 "url": "https://www.jianshu.com/u/c5a2ce84f60b",
                 "uslug": "c5a2ce84f60b",
-            }
+            },
         ],
         "collection_convert_cases": [
             {
@@ -77,7 +78,7 @@ test_cases = {
                 "cid": 1938174,
                 "url": "https://www.jianshu.com/c/a335661c66d9",
                 "cslug": "a335661c66d9",
-            }
+            },
         ],
         "island_convert_cases": [
             {
@@ -93,8 +94,8 @@ test_cases = {
             {
                 "url": "https://www.jianshu.com/nb/36131833",
                 "nslug": "36131833",
-            }
-        ]
+            },
+        ],
     },
     "article_cases": {
         "success_cases": [
@@ -115,7 +116,7 @@ test_cases = {
                 "update_time": datetime(2021, 5, 1, 11, 34, 19).timestamp(),
                 "paid_status": False,
                 "reprint_status": True,
-                "comment_status": True
+                "comment_status": True,
             },
             {
                 "aid": 89748991,
@@ -134,7 +135,7 @@ test_cases = {
                 "update_time": datetime(2021, 7, 2, 14, 35, 36).timestamp(),
                 "paid_status": False,
                 "reprint_status": True,
-                "comment_status": True
+                "comment_status": True,
             },
             {
                 "aid": 78722940,
@@ -142,7 +143,7 @@ test_cases = {
                 "aslug": "09c5bf171574",
                 "title": "简书社区守护者徽章奖励公告",
                 "author_name": "简书钻首席小管家",
-                "reads_count": (3500, 5000),
+                "reads_count": (7000, 12000),
                 "wordage": 185,
                 "likes_count": (65, 120),
                 "comments_count": (0, 0),
@@ -153,16 +154,16 @@ test_cases = {
                 "update_time": datetime(2020, 12, 24, 12, 38, 30).timestamp(),
                 "paid_status": False,
                 "reprint_status": True,
-                "comment_status": False
+                "comment_status": False,
             },
         ],
         "fail_cases": [
             {
                 "exception_name": "ResourceError",
-                "url": "https://www.jianshu.com/p/1b9ad61ade73",
-                "aslug": "1b9ad61ade73",
+                "url": "https://www.jianshu.com/p/abc1234qwert",
+                "aslug": "abc1234qwert",
             }
-        ]
+        ],
     },
     "user_cases": {
         "success_cases": [
@@ -173,19 +174,16 @@ test_cases = {
                 "name": "初心不变_叶子",
                 "gender": 1,
                 "followers_count": (200, 500),
-                "fans_count": (800, 1200),
-                "articles_count": (130, 180),
+                "fans_count": (1000, 3000),
+                "articles_count": (150, 270),
                 "wordage": (270000, 800000),
-                "likes_count": (4300, 7000),
-                "assets_count": (17000, 30000),
-                "FP_count": (10000, 20000),
-                "FTN_count": (3000, 12000),
+                "likes_count": (4000, 7000),
+                "assets_count": (50000, 120000),
+                "FP_count": (30000, 100000),
+                "FTN_count": (1000, 50000),
                 "badges_list": ["简书创作者", "岛主", "社区守护者"],
                 "last_update_time": datetime(2021, 7, 31, 23, 6, 16).timestamp(),
-                "VIP_info": {
-                    "vip_type": None,
-                    "expire_date": None
-                },
+                "VIP_info": {"vip_type": None, "expire_date": None},
                 "next_anniversary_day": datetime(2022, 10, 21, 0, 0).timestamp(),
             },
             {
@@ -202,11 +200,11 @@ test_cases = {
                 "assets_count": (500000, 700000),
                 "FP_count": (150000, 200000),
                 "FTN_count": (380000, 500000),
-                "badges_list": ['简书员工', '鼠年大吉', '锦鲤', '幸运四叶草', '怦然心动', '岛主'],
+                "badges_list": ["简书员工", "鼠年大吉", "锦鲤", "幸运四叶草", "怦然心动", "岛主"],
                 "last_update_time": datetime(2021, 3, 19, 11, 56, 14).timestamp(),
                 "VIP_info": {
                     "vip_type": "铜牌",
-                    "expire_date": datetime(2022, 3, 26, 11, 56, 14).timestamp()
+                    "expire_date": datetime(2022, 3, 26, 11, 56, 14).timestamp(),
                 },
                 "next_anniversary_day": datetime(2022, 8, 19, 0, 0).timestamp(),
             },
@@ -221,15 +219,12 @@ test_cases = {
                 "articles_count": (450, 600),
                 "wordage": (450000, 600000),
                 "likes_count": (110000, 150000),
-                "assets_count": (400000, 600000),
-                "FP_count": (700, 1500),
-                "FTN_count": (500000, 600000),
-                "badges_list": ['简书创作者', '鼠年大吉', '二〇一九新春快乐~', '简书员工'],
+                "assets_count": (0, 5000),
+                "FP_count": (0, 3000),
+                "FTN_count": (0, 3000),
+                "badges_list": ["简书创作者", "鼠年大吉", "二〇一九新春快乐~", "简书员工"],
                 "last_update_time": datetime(2020, 10, 9, 18, 38, 36).timestamp(),
-                "VIP_info": {
-                    "vip_type": None,
-                    "expire_date": None
-                },
+                "VIP_info": {"vip_type": None, "expire_date": None},
                 "next_anniversary_day": datetime(2022, 10, 29, 0, 0).timestamp(),
             },
         ],
@@ -239,7 +234,7 @@ test_cases = {
                 "url": "https://www.jianshu.com/u/ea36c8d8aa31",
                 "uslug": "ea36c8d8aa31",
             }
-        ]
+        ],
     },
     "collection_cases": {
         "success_cases": [
@@ -258,10 +253,12 @@ test_cases = {
                 "url": "https://www.jianshu.com/c/V2CqjW",
                 "cslug": "V2CqjW",
                 "avatar_url": "https://upload.jianshu.io/collections/images/14/6249340_194140034135_2.jpg",
-                "articles_count": (40000, 45000),
+                "articles_count": (35000, 45000),
                 "subscribers_count": (2500000, 3000000),
                 "articles_update_time": datetime(2021, 12, 1, 22, 40, 15).timestamp(),
-                "information_update_time": datetime(2021, 3, 12, 17, 46, 57).timestamp(),
+                "information_update_time": datetime(
+                    2021, 3, 12, 17, 46, 57
+                ).timestamp(),
             },
             {
                 "cid": 1938174,
@@ -271,16 +268,18 @@ test_cases = {
                 "articles_count": (2000, 5000),
                 "subscribers_count": (1000, 3000),
                 "articles_update_time": datetime(2021, 12, 3, 6, 2, 22).timestamp(),
-                "information_update_time": datetime(2021, 1, 28, 15, 40, 42).timestamp(),
+                "information_update_time": datetime(
+                    2021, 1, 28, 15, 40, 42
+                ).timestamp(),
             },
         ],
         "fail_cases": [
             {
                 "exception_name": "ResourceError",
                 "url": "https://www.jianshu.com/c/a335661c66d0",
-                "uslug": "a335661c66d0"
+                "uslug": "a335661c66d0",
             }
-        ]
+        ],
     },
     "island_cases": {
         "success_cases": [
@@ -289,18 +288,18 @@ test_cases = {
                 "slug": "6187f99def472f5e",
                 "name": "简友动态广场",
                 "avatar_url": "https://upload.jianshu.io/group_image/18454410/6b6138a6-685a-4f12-80a7-5e731b5fc935",
-                "members_count": (60000, 80000),
-                "posts_count": (140000, 160000),
-                "category": "生活"
+                "members_count": (80000, 120000),
+                "posts_count": (160000, 240000),
+                "category": "生活",
             }
         ],
         "fail_cases": [
             {
                 "exception_name": "ResourceError",
                 "url": "https://www.jianshu.com/g/6187f99def472f5f",
-                "uslug": "6187f99def472f5e"
+                "uslug": "6187f99def472f5e",
             }
-        ]
+        ],
     },
     "notebook_cases": {
         "success_cases": [
@@ -321,10 +320,10 @@ test_cases = {
             {
                 "exception_name": "ResourceError",
                 "url": "https://www.jianshu.com/nb/12345678",
-                "uslug": "12345678"
+                "uslug": "12345678",
             }
-        ]
-    }
+        ],
+    },
 }
 
 with open("test_cases.yaml", "w", encoding="utf-8") as f:

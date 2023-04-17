@@ -1,20 +1,39 @@
-from .assert_funcs import (AssertArticleStatusNormal, AssertArticleUrl,
-                           AssertCollectionUrl, AssertIslandPostUrl,
-                           AssertIslandUrl, AssertNotebookUrl, AssertType,
-                           AssertUserUrl)
-from .basic_apis import (GetArticleJsonDataApi, GetCollectionJsonDataApi,
-                         GetUserJsonDataApi)
+from .assert_funcs import (
+    AssertArticleStatusNormal,
+    AssertArticleUrl,
+    AssertCollectionUrl,
+    AssertIslandPostUrl,
+    AssertIslandUrl,
+    AssertNotebookUrl,
+    AssertType,
+    AssertUserUrl,
+)
+from .basic_apis import (
+    GetArticleJsonDataApi,
+    GetCollectionJsonDataApi,
+    GetUserJsonDataApi,
+)
 
 __all__ = [
-    "UserUrlToUserId", "UserSlugToUserId", "UserUrlToUserSlug",
-    "ArticleUrlToArticleSlug", "ArticleSlugToArticleUrl",
-    "ArticleSlugToArticleId", "ArticleUrlToArticleId",
-    "NotebookUrlToNotebookId", "NotebookUrlToNotebookSlug",
-    "CollectionSlugToCollectionUrl", "CollectionUrlToCollectionId",
-    "IslandUrlToIslandSlug", "IslandSlugToIslandUrl", "UserUrlToUserUrlScheme",
-    "ArticleUrlToArticleUrlScheme", "NotebookUrlToNotebookUrlScheme",
-    "CollectionUrlToCollectionUrlScheme", "IslandPostUrlToIslandPostSlug",
-    "IslandPostSlugToIslandPostUrl"
+    "UserUrlToUserId",
+    "UserSlugToUserId",
+    "UserUrlToUserSlug",
+    "ArticleUrlToArticleSlug",
+    "ArticleSlugToArticleUrl",
+    "ArticleSlugToArticleId",
+    "ArticleUrlToArticleId",
+    "NotebookUrlToNotebookId",
+    "NotebookUrlToNotebookSlug",
+    "CollectionSlugToCollectionUrl",
+    "CollectionUrlToCollectionId",
+    "IslandUrlToIslandSlug",
+    "IslandSlugToIslandUrl",
+    "UserUrlToUserUrlScheme",
+    "ArticleUrlToArticleUrlScheme",
+    "NotebookUrlToNotebookUrlScheme",
+    "CollectionUrlToCollectionUrlScheme",
+    "IslandPostUrlToIslandPostSlug",
+    "IslandPostSlugToIslandPostUrl",
 ]
 
 
@@ -30,8 +49,7 @@ def UserUrlToUserId(user_url: str) -> int:
     AssertType(user_url, str)
     AssertUserUrl(user_url)
     json_obj = GetUserJsonDataApi(user_url)
-    result = json_obj["id"]
-    return result
+    return json_obj["id"]
 
 
 def UserSlugToUserId(user_slug: str) -> int:
@@ -46,8 +64,7 @@ def UserSlugToUserId(user_slug: str) -> int:
     AssertType(user_slug, str)
     user_url = UserSlugToUserUrl(user_slug)
     AssertUserUrl(user_url)
-    result = UserUrlToUserId(user_url)
-    return result
+    return UserUrlToUserId(user_url)
 
 
 def UserUrlToUserSlug(user_url: str) -> str:
@@ -119,8 +136,7 @@ def ArticleSlugToArticleId(article_slug: str) -> int:
     """
     AssertType(article_slug, str)
     json_obj = GetArticleJsonDataApi(ArticleSlugToArticleUrl(article_slug))
-    result = json_obj["id"]
-    return result
+    return json_obj["id"]
 
 
 def ArticleUrlToArticleId(article_url: str) -> int:
@@ -136,8 +152,7 @@ def ArticleUrlToArticleId(article_url: str) -> int:
     AssertArticleUrl(article_url)
     AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    result = json_obj["id"]
-    return result
+    return json_obj["id"]
 
 
 def NotebookUrlToNotebookId(notebook_url: str) -> int:
@@ -152,8 +167,7 @@ def NotebookUrlToNotebookId(notebook_url: str) -> int:
     AssertType(notebook_url, str)
     AssertNotebookUrl(notebook_url)
     json_obj = GetArticleJsonDataApi(notebook_url)
-    result = json_obj["id"]
-    return result
+    return json_obj["id"]
 
 
 def NotebookUrlToNotebookSlug(notebook_url: str) -> str:
@@ -225,8 +239,7 @@ def CollectionUrlToCollectionId(collection_url: str) -> int:
     """
     AssertType(collection_url, str)
     AssertCollectionUrl(collection_url)
-    result = GetCollectionJsonDataApi(collection_url)["id"]
-    return result
+    return GetCollectionJsonDataApi(collection_url)["id"]
 
 
 def IslandUrlToIslandSlug(island_url: str) -> str:
@@ -268,8 +281,7 @@ def UserUrlToUserUrlScheme(user_url: str) -> str:
     """
     AssertType(user_url, str)
     AssertUserUrl(user_url)
-    result = user_url.replace("https://www.jianshu.com/u/", "jianshu://u/")
-    return result
+    return user_url.replace("https://www.jianshu.com/u/", "jianshu://u/")
 
 
 def ArticleUrlToArticleUrlScheme(article_url: str) -> str:
@@ -282,8 +294,7 @@ def ArticleUrlToArticleUrlScheme(article_url: str) -> str:
     """
     AssertType(article_url, str)
     AssertArticleUrl(article_url)
-    result = article_url.replace("https://www.jianshu.com/p/", "jianshu://notes/")
-    return result
+    return article_url.replace("https://www.jianshu.com/p/", "jianshu://notes/")
 
 
 def NotebookUrlToNotebookUrlScheme(notebook_url: str) -> str:
@@ -296,8 +307,7 @@ def NotebookUrlToNotebookUrlScheme(notebook_url: str) -> str:
     """
     AssertType(notebook_url, str)
     AssertNotebookUrl(notebook_url)
-    result = notebook_url.replace("https://www.jianshu.com/nb/", "jianshu://nb/")
-    return result
+    return notebook_url.replace("https://www.jianshu.com/nb/", "jianshu://nb/")
 
 
 def CollectionUrlToCollectionUrlScheme(collection_url: str) -> str:
@@ -310,8 +320,7 @@ def CollectionUrlToCollectionUrlScheme(collection_url: str) -> str:
     """
     AssertType(collection_url, str)
     AssertCollectionUrl(collection_url)
-    result = collection_url.replace("https://www.jianshu.com/c/", "jianshu://c/")
-    return result
+    return collection_url.replace("https://www.jianshu.com/c/", "jianshu://c/")
 
 
 def IslandPostUrlToIslandPostSlug(post_url: str) -> str:
@@ -325,8 +334,7 @@ def IslandPostUrlToIslandPostSlug(post_url: str) -> str:
     """
     AssertType(post_url, str)
     AssertIslandPostUrl(post_url)
-    result = post_url.replace("https://www.jianshu.com/gp/", "")
-    return result
+    return post_url.replace("https://www.jianshu.com/gp/", "")
 
 
 def IslandPostSlugToIslandPostUrl(post_slug: str) -> str:

@@ -1,24 +1,34 @@
 from datetime import datetime
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Literal, Optional
 
 from .assert_funcs import AssertCollectionStatusNormal, AssertCollectionUrl
-from .basic_apis import (GetCollectionArticlesJsonDataApi,
-                         GetCollectionEditorsJsonDataApi,
-                         GetCollectionJsonDataApi,
-                         GetCollectionRecommendedWritersJsonDataApi,
-                         GetCollectionSubscribersJsonDataApi)
+from .basic_apis import (
+    GetCollectionArticlesJsonDataApi,
+    GetCollectionEditorsJsonDataApi,
+    GetCollectionJsonDataApi,
+    GetCollectionRecommendedWritersJsonDataApi,
+    GetCollectionSubscribersJsonDataApi,
+)
 from .convert import CollectionUrlToCollectionSlug
 
 __all__ = [
-    "GetCollectionName", "GetCollectionAvatarUrl",
-    "GetCollectionIntroductionText", "GetCollectionIntroductionHtml",
-    "GetCollectionArticlesCount", "GetCollectionSubscribersCount",
-    "GetCollectionArticlesUpdateTime", "GetCollectionInformationUpdateTime",
-    "GetCollectionOwnerInfo", "GetCollectionEditorsInfo",
-    "GetCollectionRecommendedWritersInfo", "GetCollectionSubscribersInfo",
-    "GetCollectionAllBasicData", "GetCollectionAllEditorsInfo",
+    "GetCollectionName",
+    "GetCollectionAvatarUrl",
+    "GetCollectionIntroductionText",
+    "GetCollectionIntroductionHtml",
+    "GetCollectionArticlesCount",
+    "GetCollectionSubscribersCount",
+    "GetCollectionArticlesUpdateTime",
+    "GetCollectionInformationUpdateTime",
+    "GetCollectionOwnerInfo",
+    "GetCollectionEditorsInfo",
+    "GetCollectionRecommendedWritersInfo",
+    "GetCollectionSubscribersInfo",
+    "GetCollectionAllBasicData",
+    "GetCollectionAllEditorsInfo",
     "GetCollectionAllRecommendedWritersInfo",
-    "GetCollectionAllSubscribersInfo", "GetCollectionAllArticlesInfo"
+    "GetCollectionAllSubscribersInfo",
+    "GetCollectionAllArticlesInfo",
 ]
 
 
@@ -36,8 +46,7 @@ def GetCollectionName(collection_url: str, disable_check: bool = False) -> str:
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["title"]
-    return result
+    return json_obj["title"]
 
 
 def GetCollectionAvatarUrl(collection_url: str, disable_check: bool = False) -> str:
@@ -54,11 +63,12 @@ def GetCollectionAvatarUrl(collection_url: str, disable_check: bool = False) -> 
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["image"]
-    return result
+    return json_obj["image"]
 
 
-def GetCollectionIntroductionText(collection_url: str, disable_check: bool = False) -> str:
+def GetCollectionIntroductionText(
+    collection_url: str, disable_check: bool = False
+) -> str:
     """获取纯文本格式的专题简介
 
     Args:
@@ -72,11 +82,12 @@ def GetCollectionIntroductionText(collection_url: str, disable_check: bool = Fal
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["content_without_html"]
-    return result
+    return json_obj["content_without_html"]
 
 
-def GetCollectionIntroductionHtml(collection_url: str, disable_check: bool = False) -> str:
+def GetCollectionIntroductionHtml(
+    collection_url: str, disable_check: bool = False
+) -> str:
     """获取 Html 格式的专题简介
 
     Args:
@@ -90,8 +101,7 @@ def GetCollectionIntroductionHtml(collection_url: str, disable_check: bool = Fal
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["content_in_full"]
-    return result
+    return json_obj["content_in_full"]
 
 
 def GetCollectionArticlesCount(collection_url: str, disable_check: bool = False) -> int:
@@ -108,11 +118,12 @@ def GetCollectionArticlesCount(collection_url: str, disable_check: bool = False)
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["notes_count"]
-    return result
+    return json_obj["notes_count"]
 
 
-def GetCollectionSubscribersCount(collection_url: str, disable_check: bool = False) -> int:
+def GetCollectionSubscribersCount(
+    collection_url: str, disable_check: bool = False
+) -> int:
     """获取专题的订阅者数量
 
     Args:
@@ -126,11 +137,12 @@ def GetCollectionSubscribersCount(collection_url: str, disable_check: bool = Fal
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = json_obj["subscribers_count"]
-    return result
+    return json_obj["subscribers_count"]
 
 
-def GetCollectionArticlesUpdateTime(collection_url: str, disable_check: bool = False) -> datetime:
+def GetCollectionArticlesUpdateTime(
+    collection_url: str, disable_check: bool = False
+) -> datetime:
     """获取专题文章更新时间
 
     Args:
@@ -144,11 +156,12 @@ def GetCollectionArticlesUpdateTime(collection_url: str, disable_check: bool = F
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = datetime.fromtimestamp(json_obj["newly_added_at"])
-    return result
+    return datetime.fromtimestamp(json_obj["newly_added_at"])
 
 
-def GetCollectionInformationUpdateTime(collection_url: str, disable_check: bool = False) -> datetime:
+def GetCollectionInformationUpdateTime(
+    collection_url: str, disable_check: bool = False
+) -> datetime:
     """获取专题信息更新时间
 
     Args:
@@ -162,8 +175,7 @@ def GetCollectionInformationUpdateTime(collection_url: str, disable_check: bool 
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = datetime.fromtimestamp(json_obj["last_updated_at"])
-    return result
+    return datetime.fromtimestamp(json_obj["last_updated_at"])
 
 
 def GetCollectionOwnerInfo(collection_url: str, disable_check: bool = False) -> Dict:
@@ -180,12 +192,11 @@ def GetCollectionOwnerInfo(collection_url: str, disable_check: bool = False) -> 
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
     json_obj = GetCollectionJsonDataApi(collection_url)
-    result = {
+    return {
         "uid": json_obj["owner"]["id"],
         "name": json_obj["owner"]["nickname"],
-        "uslug": json_obj["owner"]["slug"]
+        "uslug": json_obj["owner"]["slug"],
     }
-    return result
 
 
 def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> List[Dict]:
@@ -204,13 +215,15 @@ def GetCollectionEditorsInfo(collection_id: int, page: int = 1) -> List[Dict]:
         item_data = {
             "uslug": item["slug"],
             "name": item["nickname"],
-            "avatar_url": item["avatar_source"]
+            "avatar_url": item["avatar_source"],
         }
         result.append(item_data)
     return result
 
 
-def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count: int = 20) -> List[Dict]:
+def GetCollectionRecommendedWritersInfo(
+    collection_id: int, page: int = 1, count: int = 20
+) -> List[Dict]:
     """获取专题推荐作者信息
 
     Args:
@@ -221,7 +234,9 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count
     Returns:
         List[Dict]: 专题推荐作者信息
     """
-    json_obj = GetCollectionRecommendedWritersJsonDataApi(collection_id, page=page, count=count)
+    json_obj = GetCollectionRecommendedWritersJsonDataApi(
+        collection_id, page=page, count=count
+    )
     result = []
     for item in json_obj["users"]:
         item_data = {
@@ -231,13 +246,15 @@ def GetCollectionRecommendedWritersInfo(collection_id: int, page: int = 1, count
             "avatar_url": item["avatar_source"],
             "collection_name": item["collection_name"],
             "likes_count": item["total_likes_count"],
-            "words_count": item["total_wordage"]
+            "words_count": item["total_wordage"],
         }
         result.append(item_data)
     return result
 
 
-def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) -> List[Dict]:
+def GetCollectionSubscribersInfo(
+    collection_id: int, start_sort_id: Optional[int] = None
+) -> List[Dict]:
     """获取专题关注者信息
 
     Args:
@@ -247,7 +264,9 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) 
     Returns:
         List[Dict]: 关注者信息
     """
-    json_obj = GetCollectionSubscribersJsonDataApi(collection_id, max_sort_id=start_sort_id)
+    json_obj = GetCollectionSubscribersJsonDataApi(
+        collection_id, max_sort_id=start_sort_id
+    )
     result = []
     for item in json_obj:
         item_data = {
@@ -255,22 +274,26 @@ def GetCollectionSubscribersInfo(collection_id: int, start_sort_id: int = None) 
             "name": item["nickname"],
             "avatar_url": item["avatar_source"],
             "sort_id": item["like_id"],
-            "subscribe_time": datetime.fromisoformat(item["subscribed_at"])
+            "subscribe_time": datetime.fromisoformat(item["subscribed_at"]),
         }
         result.append(item_data)
     return result
 
 
-def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
-                              count: int = 10, sorting_method: str = "time",
-                              disable_check: bool = False) -> List[Dict]:
+def GetCollectionArticlesInfo(
+    collection_url: str,
+    page: int = 1,
+    count: int = 10,
+    sorting_method: Literal["time", "comment_time", "hot"] = "time",
+    disable_check: bool = False,
+) -> List[Dict]:
     """获取专题文章信息
 
     Args:
         collection_url (str): 专题 URL
         page (int, optional): 页码. Defaults to 1.
         count (int, optional): 每次返回的数据数量. Defaults to 10.
-        sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        sorting_method (Literal["time", "comment_time", "hot"], optional): 排序方法，"time" 为按照发布时间排序，
         "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
@@ -283,17 +306,23 @@ def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
     order_by = {
         "time": "added_at",
         "comment_time": "commented_at",
-        "hot": "top"
+        "hot": "top",
     }[sorting_method]
-    json_obj = GetCollectionArticlesJsonDataApi(CollectionUrlToCollectionSlug(collection_url),
-                                                page=page, count=count, order_by=order_by)
+    json_obj = GetCollectionArticlesJsonDataApi(
+        CollectionUrlToCollectionSlug(collection_url),
+        page=page,
+        count=count,
+        order_by=order_by,
+    )
     result = []
     for item in json_obj:
         item_data = {
             "aid": item["object"]["data"]["id"],
             "title": item["object"]["data"]["title"],
             "aslug": item["object"]["data"]["slug"],
-            "release_time": datetime.fromisoformat(item["object"]["data"]["first_shared_at"]),
+            "release_time": datetime.fromisoformat(
+                item["object"]["data"]["first_shared_at"]
+            ).replace(tzinfo=None),
             "first_image_url": item["object"]["data"]["list_image_url"],
             "summary": item["object"]["data"]["public_abbr"],
             "views_count": item["object"]["data"]["views_count"],
@@ -304,11 +333,11 @@ def GetCollectionArticlesInfo(collection_url: str, page: int = 1,
                 "uid": item["object"]["data"]["user"]["id"],
                 "name": item["object"]["data"]["user"]["nickname"],
                 "uslug": item["object"]["data"]["user"]["slug"],
-                "avatar_url": item["object"]["data"]["user"]["avatar"]
+                "avatar_url": item["object"]["data"]["user"]["avatar"],
             },
             "total_fp_amount": item["object"]["data"]["total_fp_amount"] / 1000,
             "comments_count": item["object"]["data"]["public_comments_count"],
-            "rewards_count": item["object"]["data"]["total_rewards_count"]
+            "rewards_count": item["object"]["data"]["total_rewards_count"],
         }
         result.append(item_data)
     return result
@@ -337,16 +366,20 @@ def GetCollectionAllBasicData(collection_url: str, disable_check: bool = False) 
     result["articles_count"] = json_obj["notes_count"]
     result["subscribers_count"] = json_obj["subscribers_count"]
     result["articles_update_time"] = datetime.fromtimestamp(json_obj["newly_added_at"])
-    result["information_update_time"] = datetime.fromtimestamp(json_obj["last_updated_at"])
+    result["information_update_time"] = datetime.fromtimestamp(
+        json_obj["last_updated_at"]
+    )
     result["owner_info"] = {
         "uid": json_obj["owner"]["id"],
         "name": json_obj["owner"]["nickname"],
-        "uslug": json_obj["owner"]["slug"]
+        "uslug": json_obj["owner"]["slug"],
     }
     return result
 
 
-def GetCollectionAllEditorsInfo(collection_id: int, max_count: int = None) -> Generator[Dict, None, None]:
+def GetCollectionAllEditorsInfo(
+    collection_id: int, max_count: Optional[int] = None
+) -> Generator[Dict, None, None]:
     """获取专题的所有编辑信息
 
     Args:
@@ -372,7 +405,9 @@ def GetCollectionAllEditorsInfo(collection_id: int, max_count: int = None) -> Ge
                     return
 
 
-def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20, max_count: int = None) -> Generator[Dict, None, None]:
+def GetCollectionAllRecommendedWritersInfo(
+    collection_id: int, count: int = 20, max_count: Optional[int] = None
+) -> Generator[Dict, None, None]:
     """获取专题的所有推荐作者信息
 
     Args:
@@ -399,7 +434,9 @@ def GetCollectionAllRecommendedWritersInfo(collection_id: int, count: int = 20, 
                     return
 
 
-def GetCollectionAllSubscribersInfo(collection_id: int, max_count: int = None) -> Generator[Dict, None, None]:
+def GetCollectionAllSubscribersInfo(
+    collection_id: int, max_count: Optional[int] = None
+) -> Generator[Dict, None, None]:
     """获取专题的所有关注者信息
 
     Args:
@@ -425,15 +462,19 @@ def GetCollectionAllSubscribersInfo(collection_id: int, max_count: int = None) -
                     return
 
 
-def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10,
-                                 sorting_method: str = "time", max_count: int = None,
-                                 disable_check: bool = False) -> Generator[Dict, None, None]:
+def GetCollectionAllArticlesInfo(
+    collection_url: str,
+    count: int = 10,
+    sorting_method: Literal["time", "comment_time", "hot"] = "time",
+    max_count: Optional[int] = None,
+    disable_check: bool = False,
+) -> Generator[Dict, None, None]:
     """获取专题的所有文章信息
 
     Args:
         collection_url (str): 专题 URL
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
-        sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        sorting_method (Literal["time", "comment_time", "hot"], optional): 排序方法，"time" 为按照发布时间排序，
         "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
         max_count (int, optional): 获取的专题文章信息数量上限，Defaults to None.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
@@ -447,7 +488,9 @@ def GetCollectionAllArticlesInfo(collection_url: str, count: int = 10,
     page = 1
     now_count = 0
     while True:
-        result = GetCollectionArticlesInfo(collection_url, page, count, sorting_method, disable_check=True)
+        result = GetCollectionArticlesInfo(
+            collection_url, page, count, sorting_method, disable_check=True
+        )
         if result:
             page += 1
         else:
