@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, List, Union
 
 import pytest
-from yaml import safe_load as yaml_load
+from yaml import full_load as yaml_load
 
 import JianshuResearchTools as jrt
 from JianshuResearchTools.convert import (
