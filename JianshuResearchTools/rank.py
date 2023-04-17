@@ -8,7 +8,7 @@ from .basic_apis import (
 )
 from .convert import UserSlugToUserUrl
 from .exceptions import APIError, ResourceError
-from .user import GetUserAssetsCount
+from .user import GetUserFPCount
 
 __all__ = [
     "GetAssetsRankData",
@@ -21,6 +21,10 @@ __all__ = [
 
 def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> List[Dict]:
     """获取资产排行榜信息
+
+    ! 2.10 之前的版本中存在数据错误，总资产（assets）以简书钻（FP）字段返回，
+    ! 为保证向后兼容，FP 字段在 v3 中暂不移除，其值与 assets 字段相同。
+    ! 若 get_full = True，将获取真实的简书钻数据，并替换兼容用途的 FP 字段，简书贝（FTN）字段也将正确计算。
 
     Args:
         start_id (int, optional): 起始位置. Defaults to 1.
@@ -40,13 +44,14 @@ def GetAssetsRankData(start_id: int = 1, get_full: bool = False) -> List[Dict]:
             "name": item["user"]["nickname"],
             "avatar_url": item["user"]["avatar"],
             "FP": item["amount"] / 1000,
+            "assets": item["amount"] / 1000,
         }
         if get_full:
             user_url = UserSlugToUserUrl(item_data["uslug"])
             try:
-                item_data["Assets"] = GetUserAssetsCount(user_url, disable_check=True)
+                item_data["FP"] = GetUserFPCount(user_url, disable_check=True)
                 item_data["FTN"] = round(
-                    item_data["Assets"] - item_data["FP"], 3
+                    item_data["assets"] - item_data["FP"], 3
                 )  # 处理浮点数精度问题
             except APIError:
                 pass
