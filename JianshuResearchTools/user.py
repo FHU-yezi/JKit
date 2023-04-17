@@ -744,7 +744,7 @@ def GetUserTimelineInfo(
                 "//div[@class='origin-author']/a/text()"
             )[0]
             item_data["target_user_url"] = UserSlugToUserUrl(
-                block.xpath("//div[@class='meta']/a/@href")[0][3:]
+                block.xpath("//div[@class='origin-author']/a/@href")[0].split("/")[-1]
             )
             item_data["target_article_reads_count"] = int(
                 block.xpath("//div[@class='meta']/a/text()")[1]
@@ -819,6 +819,9 @@ def GetUserTimelineInfo(
                 item_data["target_article_comments_count"] = 0
 
         elif item_data["operation_type"] == "comment_note":  # 发表评论
+            item_data[
+                "operation_type"
+            ] = "comment_article"  # 鬼知道谁把评论文章写成 comment_note 的
             item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
             item_data["operator_url"] = UserSlugToUserUrl(
                 block.xpath("//a[@class='nickname']/@href")[0][3:]
@@ -839,7 +842,7 @@ def GetUserTimelineInfo(
                 "//div[@class='origin-author']/a/text()"
             )[0]
             item_data["target_user_url"] = UserSlugToUserUrl(
-                block.xpath("//div[@class='meta']/a/@href")[0][3:]
+                block.xpath("//div[@class='origin-author']/a/@href")[0].split("/")[-1]
             )
             item_data["target_article_reads_count"] = int(
                 block.xpath("//div[@class='meta']/a/text()")[1]
@@ -881,7 +884,7 @@ def GetUserTimelineInfo(
                 "//a[@class='title']/text()"
             )[0]
             item_data["target_notebook_url"] = NotebookSlugToNotebookUrl(
-                block.xpath("//a[@class='title']/@href")[0][3:]
+                block.xpath("//a[@class='title']/@href")[0][4:]
             )
             item_data["target_notebook_avatar_url"] = block.xpath(
                 "//div[@class='follow-detail']/div/a/img/@src"
@@ -901,7 +904,7 @@ def GetUserTimelineInfo(
 
         elif item_data["operation_type"] == "like_collection":  # 关注专题
             item_data[
-                "operator_type"
+                "operation_type"
             ] = "follow_collection"  # 鬼知道谁把关注专题写成 like_collection 的
             item_data["operator_name"] = block.xpath("//a[@class='nickname']/text()")[0]
             item_data["operator_url"] = UserSlugToUserUrl(
