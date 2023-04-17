@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Generator, List, Optional
+from typing import Dict, Generator, List, Literal, Optional
 
 from .assert_funcs import AssertCollectionStatusNormal, AssertCollectionUrl
 from .basic_apis import (
@@ -284,7 +284,7 @@ def GetCollectionArticlesInfo(
     collection_url: str,
     page: int = 1,
     count: int = 10,
-    sorting_method: str = "time",
+    sorting_method: Literal["time", "comment_time", "hot"] = "time",
     disable_check: bool = False,
 ) -> List[Dict]:
     """获取专题文章信息
@@ -293,7 +293,7 @@ def GetCollectionArticlesInfo(
         collection_url (str): 专题 URL
         page (int, optional): 页码. Defaults to 1.
         count (int, optional): 每次返回的数据数量. Defaults to 10.
-        sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        sorting_method (Literal["time", "comment_time", "hot"], optional): 排序方法，"time" 为按照发布时间排序，
         "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
@@ -303,9 +303,11 @@ def GetCollectionArticlesInfo(
     if not disable_check:
         AssertCollectionUrl(collection_url)
         AssertCollectionStatusNormal(collection_url)
-    order_by = {"time": "added_at", "comment_time": "commented_at", "hot": "top"}[
-        sorting_method
-    ]
+    order_by = {
+        "time": "added_at",
+        "comment_time": "commented_at",
+        "hot": "top",
+    }[sorting_method]
     json_obj = GetCollectionArticlesJsonDataApi(
         CollectionUrlToCollectionSlug(collection_url),
         page=page,
@@ -463,7 +465,7 @@ def GetCollectionAllSubscribersInfo(
 def GetCollectionAllArticlesInfo(
     collection_url: str,
     count: int = 10,
-    sorting_method: str = "time",
+    sorting_method: Literal["time", "comment_time", "hot"] = "time",
     max_count: Optional[int] = None,
     disable_check: bool = False,
 ) -> Generator[Dict, None, None]:
@@ -472,7 +474,7 @@ def GetCollectionAllArticlesInfo(
     Args:
         collection_url (str): 专题 URL
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
-        sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        sorting_method (Literal["time", "comment_time", "hot"], optional): 排序方法，"time" 为按照发布时间排序，
         "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
         max_count (int, optional): 获取的专题文章信息数量上限，Defaults to None.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.

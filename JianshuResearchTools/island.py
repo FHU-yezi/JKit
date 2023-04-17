@@ -1,6 +1,6 @@
 from contextlib import suppress
 from datetime import datetime
-from typing import Dict, Generator, List, Optional
+from typing import Dict, Generator, List, Literal, Optional
 
 from .assert_funcs import AssertIslandPostUrl, AssertIslandStatusNormal, AssertIslandUrl
 from .basic_apis import (
@@ -152,7 +152,7 @@ def GetIslandPosts(
     start_sort_id: Optional[int] = None,
     count: int = 10,
     topic_id: Optional[int] = None,
-    sorting_method: str = "time",
+    sorting_method: Literal["time", "comment_time", "hot"] = "time",
     get_full_content: bool = False,
     disable_check: bool = False,
 ) -> List[Dict]:
@@ -163,7 +163,7 @@ def GetIslandPosts(
         start_sort_id (int, optional): 起始序号，等于上一条数据的序号. Defaults to None.
         count (int, optional): 每次返回的数据数量. Defaults to 10.
         topic_id (int, optional): 话题 ID. Defaults to None.
-        sorting_method (str, optional): 排序方法，"time" 为按照发布时间排序，
+        sorting_method (Literal["time", "comment_time", "hot"], optional): 排序方法，"time" 为按照发布时间排序，
         "comment_time" 为按照最近评论时间排序，"hot" 为按照热度排序. Defaults to "time".
         get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
         自动调用 GetIslandPostFullContent 函数获取完整内容并替换. Defaults to False.
@@ -274,7 +274,7 @@ def GetIslandAllPostsData(
     island_url: str,
     count: int = 10,
     topic_id: Optional[int] = None,
-    sorting_method: str = "time",
+    sorting_method: Literal["time", "comment_time", "hot"] = "time",
     get_full_content: bool = False,
     max_count: Optional[int] = None,
     disable_check: bool = False,
@@ -285,7 +285,7 @@ def GetIslandAllPostsData(
         island_url (str): 小岛 URL
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         topic_id (int, optional): 话题 ID. Defaults to None.
-        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        sorting_method (Literal["time", "comment_time", "hot"], optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
         get_full_content (bool, optional): 为 True 时，当检测到获取的帖子内容不全时，
         自动调用 GetIslandPostFullContent 函数获取完整内容并替换. Defaults to False.

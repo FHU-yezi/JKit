@@ -1,6 +1,6 @@
 from datetime import datetime
 from re import findall
-from typing import Dict, Generator, List, Optional
+from typing import Dict, Generator, List, Literal, Optional
 
 from lxml import etree
 
@@ -470,7 +470,7 @@ def GetUserArticlesInfo(
     user_url: str,
     page: int = 1,
     count: int = 10,
-    sorting_method: str = "time",
+    sorting_method: Literal["time", "comment_time", "hot"] = "time",
     disable_check: bool = False,
 ) -> List[Dict]:
     """获取用户文章信息
@@ -479,7 +479,7 @@ def GetUserArticlesInfo(
         user_url (str): 用户个人主页 URL
         page (int, optional): 页码，与网页端文章顺序相同. Defaults to 1.
         count (int, optional): 获取的文章数量. Defaults to 10.
-        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        sorting_method (Literal["time", "comment_time", "hot"], optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
         disable_check (bool): 禁用参数有效性检查. Defaults to False.
 
@@ -489,9 +489,11 @@ def GetUserArticlesInfo(
     if not disable_check:
         AssertUserUrl(user_url)
         AssertUserStatusNormal(user_url)
-    order_by = {"time": "added_at", "comment_time": "commented_at", "hot": "top"}[
-        sorting_method
-    ]
+    order_by = {
+        "time": "added_at",
+        "comment_time": "commented_at",
+        "hot": "top",
+    }[sorting_method]
     json_obj = GetUserArticlesListJsonDataApi(
         user_url=user_url, page=page, count=count, order_by=order_by
     )
@@ -1040,7 +1042,7 @@ def GetUserTimelineInfo(
 def GetUserAllArticlesInfo(
     user_url: str,
     count: int = 10,
-    sorting_method: str = "time",
+    sorting_method: Literal["time", "comment_time", "hot"] = "time",
     max_count: Optional[int] = None,
     disable_check: bool = False,
 ) -> Generator[Dict, None, None]:
@@ -1049,7 +1051,7 @@ def GetUserAllArticlesInfo(
     Args:
         user_url (str): 用户个人主页 URL
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
-        sorting_method (str, optional): 排序方法，time 为按照发布时间排序，
+        sorting_method (Literal["time", "comment_time", "hot"], optional): 排序方法，time 为按照发布时间排序，
         comment_time 为按照最近评论时间排序，hot 为按照热度排序. Defaults to "time".
         max_count (int, optional): 获取的文章信息数量上限，Defaults to None.
         disable_check (bool): 禁用参数有效性检查. Defaults to False.

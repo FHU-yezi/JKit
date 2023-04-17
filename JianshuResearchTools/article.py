@@ -1,7 +1,7 @@
 from contextlib import suppress
 from datetime import datetime
 from re import findall, sub
-from typing import Dict, Generator, List, Optional
+from typing import Dict, Generator, List, Literal, Optional
 
 from lxml import etree
 
@@ -413,7 +413,7 @@ def GetArticleCommentsData(
     page: int = 1,
     count: int = 10,
     author_only: bool = False,
-    sorting_method: str = "positive",
+    sorting_method: Literal["positive", "reverse"] = "positive",
 ) -> List[Dict]:
     """获取文章评论信息
 
@@ -422,12 +422,15 @@ def GetArticleCommentsData(
         page (int, optional): 页码. Defaults to 1.
         count (int, optional): 每次获取的评论数（不包含子评论）. Defaults to 10.
         author_only (bool, optional): 为 True 时只获取作者发布的评论，包含作者发布的子评论及其父评论. Defaults to False.
-        sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
+        sorting_method (Literal["positive", "reverse"], optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
 
     Returns:
         List[Dict]: 文章评论信息
     """
-    order_by = {"positive": "asc", "reverse": "desc"}[sorting_method]  # 正序  # 倒序
+    order_by = {
+        "positive": "asc",
+        "reverse": "desc",
+    }[sorting_method]
     json_obj = GetArticleCommentsJsonDataApi(
         article_id, page, count, author_only, order_by
     )
@@ -562,7 +565,7 @@ def GetArticleAllCommentsData(
     article_id: int,
     count: int = 10,
     author_only: bool = False,
-    sorting_method: str = "positive",
+    sorting_method: Literal["positive", "reverse"] = "positive",
     max_count: Optional[int] = None,
 ) -> Generator[Dict, None, None]:
     """获取文章的全部评论信息
@@ -571,7 +574,7 @@ def GetArticleAllCommentsData(
         article_id (int): 文章 ID
         count (int, optional): 单次获取的数据数量，会影响性能. Defaults to 10.
         author_only (bool, optional): 为 True 时只获取作者发布的评论，包含作者发布的子评论及其父评论. Defaults to False.
-        sorting_method (str, optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
+        sorting_method (Literal["positive", "reverse"], optional): 排序方式，为”positive“时按时间正序排列，为”reverse“时按时间倒序排列. Defaults to "positive".
         max_count (int, optional): 获取的文章评论信息数量上限，Defaults to None.
 
     Yields:
