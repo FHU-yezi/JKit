@@ -503,7 +503,7 @@ def GetUserArticlesInfo(
             "aslug": item["object"]["data"]["slug"],
             "release_time": datetime.fromisoformat(
                 item["object"]["data"]["first_shared_at"]
-            ),
+            ).replace(tzinfo=None),
             "first_image_url": item["object"]["data"]["list_image_url"],
             "summary": item["object"]["data"]["public_abbr"],
             "views_count": item["object"]["data"]["views_count"],
@@ -722,7 +722,7 @@ def GetUserTimelineInfo(
                 block.xpath("//span[starts-with(@data-datetime, '20')]/@data-datetime")[
                     0
                 ]
-            ),
+            ).replace(tzinfo=None),
         }
 
         if item_data["operation_type"] == "like_note":  # 对文章点赞

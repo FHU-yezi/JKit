@@ -208,7 +208,7 @@ def GetArticlePublishTime(article_url: str, disable_check: bool = False) -> date
         AssertArticleUrl(article_url)
         AssertArticleStatusNormal(article_url)
     json_obj = GetArticleJsonDataApi(article_url)
-    return datetime.fromisoformat(json_obj["first_shared_at"])
+    return datetime.fromisoformat(json_obj["first_shared_at"]).replace(tzinfo=None)
 
 
 def GetArticleUpdateTime(article_url: str, disable_check: bool = False) -> datetime:
