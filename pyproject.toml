@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "jkit"
+version = "3.0.0"
+description = ""
+authors = ["yezi <yehaowei20060411@qq.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+httpx = {extras = ["http2"], version = "0.*"}
+msgspec = "0.*"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.0"
+pyright = "^1.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+
+select = [
+    "A", "ANN", "ASYNC", "B", "BLE",
+    "C4", "D", "E", "F", "I",
+    "ICN", "ISC", "N", "PIE", "Q",
+    "RET", "RSE", "RUF", "S", "SIM",
+    "SLF", "TCH", "UP", "W"
+]
+
+ignore = ["ANN101", "ANN401", "BLE001", "RUF001", "RUF002", "RUF003"]
+
+target-version = "py38"
