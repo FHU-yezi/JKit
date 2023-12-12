@@ -29,6 +29,6 @@ select = [
     "SLF", "TCH", "UP", "W"
 ]
 
-ignore = ["ANN101", "ANN401", "BLE001", "RUF001", "RUF002", "RUF003"]
+ignore = ["ANN101", "ANN401", "BLE001", "RUF001", "RUF002", "RUF003", "SLF001"]
 
 target-version = "py38"
