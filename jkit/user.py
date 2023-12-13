@@ -1,4 +1,5 @@
-from typing import Optional, Self
+from datetime import datetime
+from typing import Optional, Self, Tuple
 
 from jkit._http_client import get_json
 from jkit._normalization import normalize_datetime
@@ -99,3 +100,51 @@ class User(ResourceObject):
     @property
     async def name(self) -> str:
         return (await self.info).name
+
+    @property
+    async def gender(self) -> GenderEnum:
+        return (await self.info).gender
+
+    @property
+    async def introduction(self) -> str:
+        return (await self.info).introduction
+
+    @property
+    async def introduction_updated_at(self) -> datetime:
+        return (await self.info).introduction_updated_at
+
+    @property
+    async def avatar_url(self) -> str:
+        return (await self.info).avatar_url
+
+    @property
+    async def background_image_url(self) -> str:
+        return (await self.info).background_image_url
+
+    @property
+    async def badges(self) -> Tuple[UserBadge, ...]:
+        return (await self.info).badges
+
+    @property
+    async def membership(self) -> UserMembership:
+        return (await self.info).membership
+
+    @property
+    async def address_by_ip(self) -> str:
+        return (await self.info).address_by_ip
+
+    @property
+    async def followers_count(self) -> int:
+        return (await self.info).followers_count
+
+    @property
+    async def fans_count(self) -> int:
+        return (await self.info).fans_count
+
+    @property
+    async def total_wordage(self) -> int:
+        return (await self.info).total_wordage
+
+    @property
+    async def total_likes_count(self) -> int:
+        return (await self.info).total_likes_count
