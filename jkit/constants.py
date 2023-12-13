@@ -1,5 +1,9 @@
 from re import compile as regex_compile
 
+JIANSHU_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/[a-z0-9/]*/?$")
+UPLOAD_JIANSHU_IO_URL_REGEX = regex_compile(
+    r"^https://upload\.jianshu\.io/[a-z0-9\-_/\.]*/?$"
+)
 USER_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/u/[a-z0-9]{6,12}/?$")
 ARTICLE_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/p/[a-z0-9]{12}/?$")
 NOTEBOOK_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/nb/\d{7,8}/?$")

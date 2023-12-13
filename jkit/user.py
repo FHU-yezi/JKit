@@ -76,19 +76,21 @@ class User(ResourceObject):
                     name=badge["text"],
                     introduction_url=badge["intro_url"],
                     image_url=badge["image_url"],
-                )
+                ).validate()
                 for badge in data["badges"]
             ),
             membership=UserMembership(
-                type=MembershipEnum(data["member"]["type"]),
+                type=MembershipEnum(
+                    data["member"]["type"] if data["member"]["type"] else "none"
+                ),
                 expired_at=normalize_datetime(data["member"]["expires_at"]),
-            ),
+            ).validate(),
             address_by_ip=data["user_ip_addr"],
             followers_count=data["following_users_count"],
             fans_count=data["followers_count"],
             total_wordage=data["total_wordage"],
             total_likes_count=data["total_likes_count"],
-        )
+        ).validate()
 
     @property
     async def id(self) -> int:  # noqa: A003
