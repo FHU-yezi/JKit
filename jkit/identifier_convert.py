@@ -25,6 +25,19 @@ def user_slug_to_url(string: str, /) -> str:
 
     return f"https://www.jianshu.com/u/{string}"
 
+
+async def user_url_to_id(string: str, /) -> int:
+    from jkit.user import User
+
+    return await User.from_url(string).id
+
+
+async def user_slug_to_id(string: str, /) -> int:
+    from jkit.user import User
+
+    return await User.from_slug(string).id
+
+
 def article_url_to_slug(string: str, /) -> str:
     if not assert_article_url(string):
         raise ValueError(f"{string} 不是有效的 article_url")
@@ -37,6 +50,7 @@ def article_slug_to_url(string: str, /) -> str:
         raise ValueError(f"{string} 不是有效的 article_slug")
 
     return f"https://www.jianshu.com/p/{string}"
+
 
 def notebook_url_to_slug(string: str, /) -> str:
     if not assert_notebook_url(string):
@@ -51,6 +65,7 @@ def notebook_slug_to_url(string: str, /) -> str:
 
     return f"https://www.jianshu.com/nb/{string}"
 
+
 def collection_url_to_slug(string: str, /) -> str:
     if not assert_collection_url(string):
         raise ValueError(f"{string} 不是有效的 collection_url")
@@ -63,6 +78,7 @@ def collection_slug_to_url(string: str, /) -> str:
         raise ValueError(f"{string} 不是有效的 collection_slug")
 
     return f"https://www.jianshu.com/c/{string}"
+
 
 def island_url_to_slug(string: str, /) -> str:
     if not assert_island_url(string):

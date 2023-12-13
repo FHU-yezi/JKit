@@ -1,22 +1,32 @@
-"""用户."""
 from typing import Optional, Self
 
-from jkit._http_client import HTTP_CLIENT
+from jkit._http_client import get_json
+from jkit._normalization import normalize_datetime
 from jkit._resource_object_base import ResourceObject
 from jkit._utils import only_one
 from jkit.config import ENDPOINT_CONFIG
-from jkit.data_objects.user import UserInfo
+from jkit.data_objects.user import (
+    GenderEnum,
+    MembershipEnum,
+    UserBadge,
+    UserInfo,
+    UserMembership,
+)
+from jkit.identifier_assert import assert_user_url
 from jkit.identifier_convert import user_slug_to_url, user_url_to_slug
 
 
+# TODO: 用户状态校验
 class User(ResourceObject):
-    """用户类"""
-
-    def __init__(self, url: Optional[str] = None, slug: Optional[str] = None) -> None:
+    def __init__(
+        self, *, url: Optional[str] = None, slug: Optional[str] = None
+    ) -> None:
         if not only_one(url, slug):
             raise ValueError("url 和 slug 不可同时提供")
 
         if url:
+            if not assert_user_url(url):
+                raise ValueError(f"{url} 不是有效的 user_url")
             self._url = url
         elif slug:
             self._url = user_slug_to_url(slug)
@@ -24,11 +34,11 @@ class User(ResourceObject):
             raise ValueError("必须提供 url 或 slug")
 
     @classmethod
-    def from_url(cls, url: str) -> Self:
+    def from_url(cls, url: str, /) -> Self:
         return cls(url=url)
 
     @classmethod
-    def from_slug(cls, slug: str) -> Self:
+    def from_slug(cls, slug: str, /) -> Self:
         return cls(slug=slug)
 
     @property
@@ -41,15 +51,49 @@ class User(ResourceObject):
 
     @property
     async def info(self) -> UserInfo:
-        response = await HTTP_CLIENT.get(
-            f"{ENDPOINT_CONFIG.jianshu}/asimov/users/slug/{self.slug}"
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/asimov/users/slug/{self.slug}",
         )
-        data = response.json()
 
         return UserInfo(
             id=data["id"],
             url=user_slug_to_url(data["slug"]),
             slug=data["slug"],
             name=data["nickname"],
+            gender={
+                0: GenderEnum.UNKNOWN,
+                1: GenderEnum.MALE,
+                2: GenderEnum.FEMALE,
+                3: GenderEnum.UNKNOWN,
+            }[data["gender"]],
             introduction=data["intro"],
+            introduction_updated_at=normalize_datetime(data["last_updated_at"]),
+            avatar_url=data["avatar"],
+            background_image_url=data["background_image"],
+            badges=tuple(
+                UserBadge(
+                    name=badge["text"],
+                    introduction_url=badge["intro_url"],
+                    image_url=badge["image_url"],
+                )
+                for badge in data["badges"]
+            ),
+            membership=UserMembership(
+                type=MembershipEnum(data["member"]["type"]),
+                expired_at=normalize_datetime(data["member"]["expires_at"]),
+            ),
+            address_by_ip=data["user_ip_addr"],
+            followers_count=data["following_users_count"],
+            fans_count=data["followers_count"],
+            total_wordage=data["total_wordage"],
+            total_likes_count=data["total_likes_count"],
         )
+
+    @property
+    async def id(self) -> int:  # noqa: A003
+        return (await self.info).id
+
+    @property
+    async def name(self) -> str:
+        return (await self.info).name
