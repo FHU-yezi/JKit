@@ -1,6 +1,5 @@
-from typing import Self
-
 from msgspec import Struct, convert, to_builtins
+from typing_extensions import Self
 
 
 class DataObject(Struct):
