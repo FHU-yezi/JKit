@@ -77,7 +77,7 @@ class User(ResourceObject):
                     name=badge["text"],
                     introduction_url=badge["intro_url"],
                     image_url=badge["image_url"],
-                ).validate()
+                )
                 for badge in data["badges"]
             ),
             membership=UserMembership(
@@ -85,7 +85,7 @@ class User(ResourceObject):
                     data["member"]["type"] if data["member"]["type"] else "none"
                 ),
                 expired_at=normalize_datetime(data["member"]["expires_at"]),
-            ).validate(),
+            ),
             address_by_ip=data["user_ip_addr"],
             followers_count=data["following_users_count"],
             fans_count=data["followers_count"],

@@ -1,10 +1,16 @@
-from datetime import datetime
 from enum import Enum
-from typing import Annotated, Optional, Tuple
+from typing import Optional, Tuple
 
-from msgspec import Meta
-
-from jkit.constants import UPLOAD_JIANSHU_IO_URL_REGEX, USER_SLUG_REGEX, USER_URL_REGEX
+from jkit._constraints import (
+    NonEmptyStr,
+    NonNegativeInt,
+    NormalizedDatetime,
+    PositiveInt,
+    UploadJianshuIoUrlStr,
+    UserNameStr,
+    UserSlugStr,
+    UserUrlStr,
+)
 from jkit.data_objects._base import DATA_OBJECT_CONFIG, DataObject
 
 
@@ -30,27 +36,25 @@ class GenderEnum(Enum):
 
 class UserMembership(DataObject, **DATA_OBJECT_CONFIG):
     type: MembershipEnum  # noqa: A003
-    expired_at: Optional[datetime]
+    expired_at: Optional[NormalizedDatetime]
 
 
 class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: Annotated[int, Meta(gt=0)]  # noqa: A003
-    url: Annotated[str, Meta(pattern=USER_URL_REGEX.pattern)]
-    slug: Annotated[str, Meta(pattern=USER_SLUG_REGEX.pattern)]
-    name: str
+    id: PositiveInt  # noqa: A003
+    url: UserUrlStr
+    slug: UserSlugStr
+    name: UserNameStr
     gender: GenderEnum
     introduction: str
-    introduction_updated_at: datetime
-    avatar_url: Annotated[str, Meta(pattern=UPLOAD_JIANSHU_IO_URL_REGEX.pattern)]
-    background_image_url: Annotated[
-        str, Meta(pattern=UPLOAD_JIANSHU_IO_URL_REGEX.pattern)
-    ]
+    introduction_updated_at: NormalizedDatetime
+    avatar_url: UploadJianshuIoUrlStr
+    background_image_url: UploadJianshuIoUrlStr
     badges: Tuple[UserBadge, ...]
     membership: UserMembership
-    address_by_ip: Annotated[str, Meta(min_length=1)]
+    address_by_ip: NonEmptyStr
 
-    followers_count: Annotated[int, Meta(ge=0)]
-    fans_count: Annotated[int, Meta(ge=0)]
-    total_wordage: Annotated[int, Meta(ge=0)]
-    total_likes_count: Annotated[int, Meta(ge=0)]
+    followers_count: NonNegativeInt
+    fans_count: NonNegativeInt
+    total_wordage: NonNegativeInt
+    total_likes_count: NonNegativeInt
     # TODO: 简书钻数量

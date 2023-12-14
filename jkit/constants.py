@@ -1,5 +1,7 @@
 from re import compile as regex_compile
 
+USER_NAME_REGEX = regex_compile(r"^[\w]*$")
+
 JIANSHU_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/[a-z0-9/]*/?$")
 UPLOAD_JIANSHU_IO_URL_REGEX = regex_compile(
     r"^https://upload\.jianshu\.io/[a-z0-9\-_/\.]*/?$"
