@@ -1,6 +1,8 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Self, Tuple
+from typing import Optional, Tuple
+
+from typing_extensions import Self
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
@@ -10,8 +12,6 @@ from jkit._constraints import (
     PositiveInt,
     UploadJianshuIoUrlStr,
     UserNameStr,
-    UserSlugStr,
-    UserUrlStr,
 )
 from jkit._http_client import get_json
 from jkit._normalization import normalize_datetime
@@ -28,17 +28,17 @@ class UserBadge(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class MembershipEnum(Enum):
-    NONE = "none"
-    BRONZE = "bronze"
-    SLIVER = "sliver"
-    GOLD = "gold"
-    PLATINA = "platina"
+    NONE = "无会员"
+    BRONZE = "铜牌会员"
+    SLIVER = "银牌会员"
+    GOLD = "金牌会员"
+    PLATINA = "白金会员"
 
 
 class GenderEnum(Enum):
-    UNKNOWN = "unknown"
-    MALE = "male"
-    FEMALE = "female"
+    UNKNOWN = "未知"
+    MALE = "男"
+    FEMALE = "女"
 
 
 class UserMembership(DataObject, **DATA_OBJECT_CONFIG):
@@ -48,8 +48,6 @@ class UserMembership(DataObject, **DATA_OBJECT_CONFIG):
 
 class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
-    url: UserUrlStr
-    slug: UserSlugStr
     name: UserNameStr
     gender: GenderEnum
     introduction: str
@@ -109,8 +107,6 @@ class User(ResourceObject):
 
         return UserInfo(
             id=data["id"],
-            url=user_slug_to_url(data["slug"]),
-            slug=data["slug"],
             name=data["nickname"],
             gender={
                 0: GenderEnum.UNKNOWN,
@@ -131,9 +127,13 @@ class User(ResourceObject):
                 for badge in data["badges"]
             ),
             membership=UserMembership(
-                type=MembershipEnum(
-                    data["member"]["type"] if data["member"]["type"] else "none"
-                ),
+                type={
+                    "none": MembershipEnum.NONE,
+                    "bronze": MembershipEnum.BRONZE,
+                    "sliver": MembershipEnum.SLIVER,
+                    "gold": MembershipEnum.GOLD,
+                    "platina": MembershipEnum.PLATINA,
+                }[data["member"]["type"]],
                 expired_at=normalize_datetime(data["member"]["expires_at"]),
             ),
             address_by_ip=data["user_ip_addr"],
