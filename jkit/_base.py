@@ -12,3 +12,6 @@ DATA_OBJECT_CONFIG = {
     "eq": False,
     "kw_only": True,
 }
+
+class ResourceObject:
+    pass
