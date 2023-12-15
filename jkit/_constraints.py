@@ -13,9 +13,9 @@ from jkit.constants import (
     JIANSHU_URL_REGEX,
     NOTEBOOK_SLUG_REGEX,
     NOTEBOOK_URL_REGEX,
-    UPLOAD_JIANSHU_IO_URL_REGEX,
     USER_NAME_REGEX,
     USER_SLUG_REGEX,
+    USER_UPLOADED_URL_REGEX,
     USER_URL_REGEX,
 )
 
@@ -30,8 +30,8 @@ NormalizedDatetime = Annotated[datetime, Meta(tz=False)]
 UserNameStr = Annotated[str, Meta(pattern=USER_NAME_REGEX.pattern)]
 
 JianshuUrlStr = Annotated[str, Meta(pattern=JIANSHU_URL_REGEX.pattern)]
-UploadJianshuIoUrlStr = Annotated[
-    str, Meta(pattern=UPLOAD_JIANSHU_IO_URL_REGEX.pattern)
+UserUploadedUrlStr = Annotated[
+    str, Meta(pattern=USER_UPLOADED_URL_REGEX.pattern)
 ]
 UserUrlStr = Annotated[str, Meta(pattern=USER_URL_REGEX.pattern)]
 ArticleUrlStr = Annotated[str, Meta(pattern=ARTICLE_URL_REGEX.pattern)]

@@ -10,8 +10,8 @@ from jkit._constraints import (
     NonNegativeInt,
     NormalizedDatetime,
     PositiveInt,
-    UploadJianshuIoUrlStr,
     UserNameStr,
+    UserUploadedUrlStr,
 )
 from jkit._http_client import get_json
 from jkit._normalization import normalize_datetime
@@ -52,8 +52,8 @@ class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
     gender: GenderEnum
     introduction: str
     introduction_updated_at: NormalizedDatetime
-    avatar_url: UploadJianshuIoUrlStr
-    background_image_url: UploadJianshuIoUrlStr
+    avatar_url: UserUploadedUrlStr
+    background_image_url: Optional[UserUploadedUrlStr]
     badges: Tuple[UserBadge, ...]
     membership_info: UserMembershipInfo
     address_by_ip: NonEmptyStr
@@ -117,7 +117,9 @@ class User(ResourceObject):
             introduction=data["intro"],
             introduction_updated_at=normalize_datetime(data["last_updated_at"]),
             avatar_url=data["avatar"],
-            background_image_url=data["background_image"],
+            background_image_url=data["background_image"]
+            if data.get("background_image")
+            else None,
             badges=tuple(
                 UserBadge(
                     name=badge["text"],
@@ -128,13 +130,17 @@ class User(ResourceObject):
             ),
             membership_info=UserMembershipInfo(
                 type={
-                    "none": MembershipEnum.NONE,
                     "bronze": MembershipEnum.BRONZE,
                     "sliver": MembershipEnum.SLIVER,
                     "gold": MembershipEnum.GOLD,
                     "platina": MembershipEnum.PLATINA,
                 }[data["member"]["type"]],
                 expired_at=normalize_datetime(data["member"]["expires_at"]),
+            )
+            if data.get("member")
+            else UserMembershipInfo(
+                type=MembershipEnum.NONE,
+                expired_at=None,
             ),
             address_by_ip=data["user_ip_addr"],
             followers_count=data["following_users_count"],
@@ -168,7 +174,7 @@ class User(ResourceObject):
         return (await self.info).avatar_url
 
     @property
-    async def background_image_url(self) -> str:
+    async def background_image_url(self) -> Optional[str]:
         return (await self.info).background_image_url
 
     @property
