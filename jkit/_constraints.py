@@ -30,9 +30,7 @@ NormalizedDatetime = Annotated[datetime, Meta(tz=False)]
 UserNameStr = Annotated[str, Meta(pattern=USER_NAME_REGEX.pattern)]
 
 JianshuUrlStr = Annotated[str, Meta(pattern=JIANSHU_URL_REGEX.pattern)]
-UserUploadedUrlStr = Annotated[
-    str, Meta(pattern=USER_UPLOADED_URL_REGEX.pattern)
-]
+UserUploadedUrlStr = Annotated[str, Meta(pattern=USER_UPLOADED_URL_REGEX.pattern)]
 UserUrlStr = Annotated[str, Meta(pattern=USER_URL_REGEX.pattern)]
 ArticleUrlStr = Annotated[str, Meta(pattern=ARTICLE_URL_REGEX.pattern)]
 NotebookUrlStr = Annotated[str, Meta(pattern=NOTEBOOK_URL_REGEX.pattern)]

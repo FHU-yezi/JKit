@@ -3,9 +3,7 @@ from re import compile as regex_compile
 USER_NAME_REGEX = regex_compile(r"^[\w]*$")
 
 JIANSHU_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/[a-z0-9/]*/?$")
-USER_UPLOADED_URL_REGEX = regex_compile(
-    r"^https://.*\.jianshu\.io/[a-z0-9\-_/\.]*/?$"
-)
+USER_UPLOADED_URL_REGEX = regex_compile(r"^https://.*\.jianshu\.io/[a-z0-9\-_/\.]*/?$")
 USER_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/u/[a-z0-9]{6,12}/?$")
 ARTICLE_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/p/[a-z0-9]{12}/?$")
 NOTEBOOK_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/nb/\d{7,8}/?$")
