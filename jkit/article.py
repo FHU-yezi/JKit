@@ -34,9 +34,9 @@ class ArticlePaidStatusEnum(Enum):
 class ArticlePaidInfo(DataObject, **DATA_OBJECT_CONFIG):
     notebook_paid_status: Optional[NotebookPaidStatusEnum]
     article_paid_status: ArticlePaidStatusEnum
-    price: PositiveFloat
-    paid_cotent_percent: Percentage
-    paid_readers_count: NonNegativeInt
+    price: Optional[PositiveFloat]
+    paid_cotent_percent: Optional[Percentage]
+    paid_readers_count: Optional[NonNegativeInt]
 
 
 class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
@@ -125,10 +125,14 @@ class Article(ResourceObject):
                     "fbook_paid": ArticlePaidStatusEnum.PAID,  # 免费连载中的付费文章
                     "pbook_paid": ArticlePaidStatusEnum.PAID,  # 付费连载中的付费文章
                 }[data["paid_type"]],
-                price=float(data["retail_price"]) / 100,
+                price=float(data["retail_price"]) / 100
+                if data.get("retail_price")
+                else None,
                 paid_cotent_percent=float(data["paid_content_percent"].replace("%", ""))
-                / 100,
-                paid_readers_count=data["purchased_count"],
+                / 100
+                if data.get("paid_content_percent")
+                else None,
+                paid_readers_count=data.get("purchased_count"),
             ),
             content=data["free_content"],
             likes_count=data["likes_count"],
