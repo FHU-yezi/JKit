@@ -41,7 +41,7 @@ class GenderEnum(Enum):
     FEMALE = "女"
 
 
-class UserMembership(DataObject, **DATA_OBJECT_CONFIG):
+class UserMembershipInfo(DataObject, **DATA_OBJECT_CONFIG):
     type: MembershipEnum  # noqa: A003
     expired_at: Optional[NormalizedDatetime]
 
@@ -55,7 +55,7 @@ class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
     avatar_url: UploadJianshuIoUrlStr
     background_image_url: UploadJianshuIoUrlStr
     badges: Tuple[UserBadge, ...]
-    membership: UserMembership
+    membership_info: UserMembershipInfo
     address_by_ip: NonEmptyStr
 
     followers_count: NonNegativeInt
@@ -126,7 +126,7 @@ class User(ResourceObject):
                 )
                 for badge in data["badges"]
             ),
-            membership=UserMembership(
+            membership_info=UserMembershipInfo(
                 type={
                     "none": MembershipEnum.NONE,
                     "bronze": MembershipEnum.BRONZE,
@@ -176,8 +176,8 @@ class User(ResourceObject):
         return (await self.info).badges
 
     @property
-    async def membership(self) -> UserMembership:
-        return (await self.info).membership
+    async def membership(self) -> UserMembershipInfo:
+        return (await self.info).membership_info
 
     @property
     async def address_by_ip(self) -> str:
