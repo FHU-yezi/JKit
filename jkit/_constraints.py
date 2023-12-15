@@ -20,8 +20,11 @@ from jkit.constants import (
 )
 
 PositiveInt = Annotated[int, Meta(gt=0)]
+PositiveFloat = Annotated[float, Meta(gt=0)]
 NonNegativeInt = Annotated[int, Meta(ge=0)]
+NonNegativeFloat = Annotated[float, Meta(ge=0)]
 NonEmptyStr = Annotated[str, Meta(min_length=1)]
+Percentage = Annotated[float, Meta(ge=0, le=1)]
 NormalizedDatetime = Annotated[datetime, Meta(tz=False)]
 
 UserNameStr = Annotated[str, Meta(pattern=USER_NAME_REGEX.pattern)]
