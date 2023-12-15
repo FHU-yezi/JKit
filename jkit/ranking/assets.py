@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from jkit.user import User
 
 
-class AssetsRankItemUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+class AssetsRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
     slug: UserSlugStr
     avatar_url: UserUploadedUrlStr
@@ -26,10 +26,10 @@ class AssetsRankItemUserInfo(DataObject, **DATA_OBJECT_CONFIG):
         return User.from_slug(self.slug)
 
 
-class AssetsRankItem(DataObject, **DATA_OBJECT_CONFIG):
+class AssetsRankRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     assert_amount: NonNegativeFloat
-    user_info: AssetsRankItemUserInfo
+    user_info: AssetsRankRecordUserInfo
 
 
 # TODO: 支持获取完整数据
@@ -37,7 +37,7 @@ class AssetsRank(ResourceObject):
     def __init__(self, *, full: bool = False) -> None:
         self._full = full
 
-    async def get_data(self, *, start_id: int = 1) -> Tuple[AssetsRankItem, ...]:
+    async def get_data(self, *, start_id: int = 1) -> Tuple[AssetsRankRecord, ...]:
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
             path="/asimov/fp_rankings",
@@ -45,21 +45,21 @@ class AssetsRank(ResourceObject):
         )
 
         return tuple(
-            AssetsRankItem(
+            AssetsRankRecord(
                 ranking=item["ranking"],
                 assert_amount=item["amount"],
-                user_info=AssetsRankItemUserInfo(
+                user_info=AssetsRankRecordUserInfo(
                     id=item["user"]["id"],
                     slug=item["user"]["slug"],
                     avatar_url=item["user"]["avatar"],
                 ),
-            ).validate()
+            )._validate()
             for item in data["rankings"]
         )
 
     async def iter_data(
         self, start_id: int = 1
-    ) -> AsyncGenerator[AssetsRankItem, None]:
+    ) -> AsyncGenerator[AssetsRankRecord, None]:
         now_id = start_id
         while True:
             data = await self.get_data(start_id=now_id)

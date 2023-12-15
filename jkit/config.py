@@ -2,16 +2,12 @@ from typing import Any, Literal, Optional
 
 from httpx import AsyncClient
 from httpx._types import ProxiesTypes, TimeoutTypes
-from msgspec import Struct
 
-_CONFIG_CONFIG = {
-    "eq": False,
-    "kw_only": True,
-    "gc": False,
-}
+from jkit._base import CONFIG_CONFIG, ConfigObject
+from jkit._constraints import NonEmptyStr
 
 
-class _NetworkConfig(Struct, **_CONFIG_CONFIG):
+class _NetworkConfig(ConfigObject, **CONFIG_CONFIG):
     http_protool: Literal["HTTP/1", "HTTP/2"] = "HTTP/2"
     proxies: Optional[ProxiesTypes] = None
     timeout: TimeoutTypes = 5
@@ -32,8 +28,8 @@ class _NetworkConfig(Struct, **_CONFIG_CONFIG):
         jkit._http_client.HTTP_CLIENT = self._get_http_client()
 
 
-class _EndpointConfig(Struct, **_CONFIG_CONFIG):
-    jianshu: str = "https://www.jianshu.com"
+class _EndpointConfig(ConfigObject, **CONFIG_CONFIG):
+    jianshu: NonEmptyStr = "https://www.jianshu.com"
 
 
 NETWORK_CONFIG = _NetworkConfig()

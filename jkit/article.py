@@ -139,7 +139,7 @@ class Article(ResourceObject):
             comments_count=data["public_comment_count"],
             featured_comments_count=data["featured_comments_count"],
             earned_fp_amount=data["total_fp_amount"] / 1000,
-        ).validate()
+        )._validate()
 
     @property
     async def id(self) -> int:  # noqa: A003

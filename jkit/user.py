@@ -147,7 +147,7 @@ class User(ResourceObject):
             fans_count=data["followers_count"],
             total_wordage=data["total_wordage"],
             total_likes_count=data["total_likes_count"],
-        ).validate()
+        )._validate()
 
     @property
     async def id(self) -> int:  # noqa: A003
