@@ -1,0 +1,15 @@
+meta {
+  name: 获取收益加成卡数据
+  type: http
+  seq: 4
+}
+
+get {
+  url: https://www.jianshu.com/asimov/fp_wallets/benefit_cards/info
+  body: none
+  auth: none
+}
+
+headers {
+  Cookie: {{user_token}}
+}

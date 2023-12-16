@@ -1,0 +1,16 @@
+meta {
+  name: 获取文集文章
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://www.jianshu.com/asimov/notebooks/{{notebook_id}}/public_notes?page=1&count=10
+  body: none
+  auth: none
+}
+
+query {
+  page: 1
+  count: 10
+}

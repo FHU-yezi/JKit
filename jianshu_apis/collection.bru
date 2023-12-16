@@ -1,0 +1,7 @@
+headers {
+  Accept: application/json
+}
+
+tests {
+  test("验证状态码", () => expect(res.getStatus()).to.equal(200));
+}

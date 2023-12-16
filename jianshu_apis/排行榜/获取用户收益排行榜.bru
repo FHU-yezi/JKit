@@ -1,0 +1,16 @@
+meta {
+  name: 获取用户收益排行榜
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://www.jianshu.com/asimov/fp_rankings/voter_users?type=note&date={{date}}
+  body: none
+  auth: none
+}
+
+query {
+  type: note
+  date: {{date}}
+}
