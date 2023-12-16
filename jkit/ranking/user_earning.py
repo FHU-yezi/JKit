@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Literal, Tuple
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
     PositiveFloat,
+    PositiveInt,
     UserNameStr,
     UserSlugStr,
     UserUploadedUrlStr,
@@ -17,6 +18,7 @@ if TYPE_CHECKING:
 
 
 class UserEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
+    ranking: PositiveInt
     name: UserNameStr
     slug: UserSlugStr
     avatar_url: UserUploadedUrlStr
@@ -69,6 +71,7 @@ class UserEarningRank(ResourceObject):
             fp_by_voting_amount_sum=data["voter_fp"] / 1000,
             records=tuple(
                 UserEarningRankRecord(
+                    ranking=ranking,
                     name=item["nickname"],
                     slug=item["slug"],
                     avatar_url=item["avatar"],
@@ -76,6 +79,6 @@ class UserEarningRank(ResourceObject):
                     fp_by_creating_anount=item["author_fp"] / 1000,
                     fp_by_voting_amount=item["voter_fp"] / 1000,
                 )
-                for item in data["users"]
+                for ranking, item in enumerate(data["users"], start=1)
             ),
         )

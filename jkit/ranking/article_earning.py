@@ -47,7 +47,7 @@ class ArticleEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
 
 class ArticleEarningRankData(DataObject, **DATA_OBJECT_CONFIG):
     total_fp_amount_sum: PositiveFloat
-    fp_to_author_anount_sum: PositiveFloat
+    fp_to_author_amount_sum: PositiveFloat
     fp_to_voter_amount_sum: PositiveFloat
     records: Tuple[ArticleEarningRankRecord, ...]
 
@@ -69,19 +69,20 @@ class ArticleEarningRank(ResourceObject):
         )
 
         return ArticleEarningRankData(
-            total_fp_amount_sum=data["fp"],
-            fp_to_author_anount_sum=data["author_fp"],
-            fp_to_voter_amount_sum=data["voter_fp"],
+            total_fp_amount_sum=data["fp"] / 1000,
+            fp_to_author_amount_sum=data["author_fp"] / 1000,
+            fp_to_voter_amount_sum=data["voter_fp"] / 1000,
             records=tuple(
                 ArticleEarningRankRecord(
                     ranking=ranking,
                     title=item["title"],
                     slug=item["slug"],
-                    total_fp_amount=item["fp"],
-                    fp_to_author_anount=item["author_fp"],
-                    fp_to_voter_amount=item["voter_fp"],
+                    total_fp_amount=item["fp"] / 1000,
+                    fp_to_author_anount=item["author_fp"] / 1000,
+                    fp_to_voter_amount=item["voter_fp"] / 1000,
                     user_info=ArticleEarningRankRecordUserInfo(
-                        name=item["author_nickname"], avatar_url=item["author_avatar"]
+                        name=item["author_nickname"],
+                        avatar_url=item["author_avatar"],
                     ),
                 )
                 for ranking, item in enumerate(data["notes"], start=1)
