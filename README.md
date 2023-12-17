@@ -1,13 +1,18 @@
 # JKit
 
 [![许可证](https://img.shields.io/github/license/FHU-yezi/JKit?style=flat-square&label=%E8%AE%B8%E5%8F%AF%E8%AF%81)](https://github.com/FHU-yezi/JKit/blob/v3/LICENSE)
-![PyPI 月下载量](https://img.shields.io/pypi/dm/jkit?style=flat-square&label=PyPI%20%E6%9C%88%E4%B8%8B%E8%BD%BD%E9%87%8F)
-[![Python 版本](https://img.shields.io/pypi/pyversions/jkit.svg?style=flat-square&label=Python%20%E7%89%88%E6%9C%AC)](https://pypi.python.org/pypi/jkit)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json&style=flat-square)](https://github.com/astral-sh/ruff)
+[![简书主页](https://img.shields.io/badge/%E7%AE%80%E4%B9%A6-%E5%88%9D%E5%BF%83%E4%B8%8D%E5%8F%98__%E5%8F%B6%E5%AD%90-black?style=flat-square&color=EA6F5A)](https://www.jianshu.com/u/ea36c8d8aa30)
+
+[![PyPI 最新版](https://img.shields.io/pypi/v/jkit?style=flat-square&label=PyPI)
+](https://pypi.python.org/pypi/jkit)
+[![支持的 Python 版本](https://img.shields.io/pypi/pyversions/jkit.svg?style=flat-square&label=Python%20%E7%89%88%E6%9C%AC)](https://pypi.python.org/pypi/jkit)
+
+[![Ruff](https://img.shields.io/badge/%E9%9D%99%E6%80%81%E6%A3%80%E6%9F%A5-Ruff-purple?style=flat-square)
+](https://github.com/astral-sh/ruff)
 [![Pyright](https://img.shields.io/badge/%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5-Pyright-blue?style=flat-square)
 ](https://github.com/microsoft/pyright)
-[![Black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square&label=%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC)](https://github.com/psf/black)
-![简书主页](https://img.shields.io/badge/%E7%AE%80%E4%B9%A6-%E5%88%9D%E5%BF%83%E4%B8%8D%E5%8F%98__%E5%8F%B6%E5%AD%90-black?style=flat-square&color=EA6F5A)
+[![Black](https://img.shields.io/badge/%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC-Black-black?style=flat-square)
+](https://github.com/psf/black)
 
 
 <p align="center">
