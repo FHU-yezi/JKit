@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from typing_extensions import Self
 
@@ -13,6 +13,9 @@ from jkit._constraints import (
     Percentage,
     PositiveFloat,
     PositiveInt,
+    UserNameStr,
+    UserSlugStr,
+    UserUploadedUrlStr,
 )
 from jkit._http_client import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
@@ -20,6 +23,9 @@ from jkit._utils import only_one
 from jkit.config import ENDPOINT_CONFIG
 from jkit.identifier_check import is_article_url
 from jkit.identifier_convert import article_slug_to_url, article_url_to_slug
+
+if TYPE_CHECKING:
+    from jkit.user import User
 
 
 class NotebookPaidStatusEnum(Enum):
@@ -40,6 +46,24 @@ class ArticlePaidInfo(DataObject, **DATA_OBJECT_CONFIG):
     paid_readers_count: Optional[NonNegativeInt]
 
 
+class ArticleUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    slug: UserSlugStr
+    name: UserNameStr
+    avatar_url: UserUploadedUrlStr
+    introduction: str
+    address_by_ip: NonEmptyStr
+
+    total_wordage: NonNegativeInt
+    total_likes_count: NonNegativeInt
+
+    @property
+    def get_user_obj(self) -> "User":
+        from jkit.user import User
+
+        return User.from_slug(self.slug)
+
+
 class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
     notebook_id: PositiveInt
@@ -51,6 +75,7 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     can_comment: bool
     can_reprint: bool
     paid_info: ArticlePaidInfo
+    user_info: ArticleUserInfo
     content: NonEmptyStr
 
     likes_count: NonNegativeInt
@@ -135,6 +160,16 @@ class Article(ResourceObject):
                 else None,
                 paid_readers_count=data.get("purchased_count"),
             ),
+            user_info=ArticleUserInfo(
+                id=data["user"]["id"],
+                slug=data["user"]["slug"],
+                name=data["user"]["nickname"],
+                avatar_url=data["user"]["avatar"],
+                introduction=data["user"]["intro"],
+                address_by_ip=data["user"]["user_ip_addr"],
+                total_wordage=data["user"]["wordage"],
+                total_likes_count=data["user"]["likes_count"],
+            ),
             content=data["free_content"],
             likes_count=data["likes_count"],
             comments_count=data["public_comment_count"],
@@ -181,6 +216,10 @@ class Article(ResourceObject):
     @property
     async def paid_info(self) -> ArticlePaidInfo:
         return (await self.info).paid_info
+
+    @property
+    async def user_info(self) -> ArticleUserInfo:
+        return (await self.info).user_info
 
     @property
     async def content(self) -> str:
