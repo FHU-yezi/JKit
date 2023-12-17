@@ -12,7 +12,7 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Framework :: AsyncIO",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT",
+    "License :: OSI Approved :: MIT License",
     "Natural Language :: Chinese (Simplified)",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
