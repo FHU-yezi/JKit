@@ -17,7 +17,7 @@ from jkit._http_client import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit._utils import only_one
 from jkit.config import ENDPOINT_CONFIG
-from jkit.identifier_assert import assert_article_url
+from jkit.identifier_check import is_article_url
 from jkit.identifier_convert import article_slug_to_url, article_url_to_slug
 
 
@@ -67,7 +67,7 @@ class Article(ResourceObject):
             raise ValueError("url 和 slug 不可同时提供")
 
         if url:
-            if not assert_article_url(url):
+            if not is_article_url(url):
                 raise ValueError(f"{url} 不是有效的 article_url")
             self._url = url
         elif slug:

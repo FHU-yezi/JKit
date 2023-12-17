@@ -12,41 +12,41 @@ from jkit.constants import (
 )
 
 
-def assert_user_url(string: str, /) -> bool:
+def is_user_url(string: str, /) -> bool:
     return bool(USER_URL_REGEX.fullmatch(string))
 
 
-def assert_article_url(string: str, /) -> bool:
+def is_article_url(string: str, /) -> bool:
     return bool(ARTICLE_URL_REGEX.fullmatch(string))
 
 
-def assert_notebook_url(string: str, /) -> bool:
+def is_notebook_url(string: str, /) -> bool:
     return bool(NOTEBOOK_URL_REGEX.fullmatch(string))
 
 
-def assert_collection_url(string: str, /) -> bool:
+def is_collection_url(string: str, /) -> bool:
     return bool(COLLECTION_URL_REGEX.fullmatch(string))
 
 
-def assert_island_url(string: str, /) -> bool:
+def is_island_url(string: str, /) -> bool:
     return bool(ISLAND_URL_REGEX.fullmatch(string))
 
 
-def assert_user_slug(string: str, /) -> bool:
+def is_user_slug(string: str, /) -> bool:
     return bool(USER_SLUG_REGEX.fullmatch(string))
 
 
-def assert_article_slug(string: str, /) -> bool:
+def is_article_slug(string: str, /) -> bool:
     return bool(ARTICLE_SLUG_REGEX.fullmatch(string))
 
 
-def assert_notebook_slug(string: str, /) -> bool:
+def is_notebook_slug(string: str, /) -> bool:
     return bool(NOTEBOOK_SLUG_REGEX.fullmatch(string))
 
 
-def assert_collection_slug(string: str, /) -> bool:
+def is_collection_slug(string: str, /) -> bool:
     return bool(COLLECTION_SLUG_REGEX.fullmatch(string))
 
 
-def assert_island_slug(string: str, /) -> bool:
+def is_island_slug(string: str, /) -> bool:
     return bool(ISLAND_SLUG_REGEX.fullmatch(string))
