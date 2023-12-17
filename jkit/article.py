@@ -152,3 +152,12 @@ class Article(ResourceObject):
     @property
     async def content(self) -> str:
         return (await self.info).content
+
+    @property
+    async def views_count(self) -> int:
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/shakespeare/v2/notes/{self.slug}/views_count",
+        )
+
+        return data["views_count"]
