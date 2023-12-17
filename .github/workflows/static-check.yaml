@@ -1,0 +1,26 @@
+name: Static Check
+
+on:
+  push:
+
+jobs:
+  static-check:
+    runs-on: ubuntu-latest
+    env:
+      POETRY_VIRTUALENVS_CREATE: false
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Poetry
+      run: pipx install poetry
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.x"
+        cache: "poetry"
+    - name: Install Dependencies
+      run: poetry install --all-extras --no-root
+    - name: Lint With Ruff
+      run: poetry run ruff check --output-format=github .
+    - name: Type checking with Pyright
+      run: poetry run pyright --warnings .
+    - name: Spelling check with Codespell
+      run: poetry run codespell -f .
