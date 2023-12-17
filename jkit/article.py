@@ -14,7 +14,7 @@ from jkit._constraints import (
     PositiveInt,
 )
 from jkit._http_client import get_json
-from jkit._normalization import normalize_datetime
+from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit._utils import only_one
 from jkit.config import ENDPOINT_CONFIG
 from jkit.identifier_assert import assert_article_url
@@ -138,7 +138,7 @@ class Article(ResourceObject):
             likes_count=data["likes_count"],
             comments_count=data["public_comment_count"],
             featured_comments_count=data["featured_comments_count"],
-            earned_fp_amount=data["total_fp_amount"] / 1000,
+            earned_fp_amount=normalize_assets_amount(data["total_fp_amount"]),
         )._validate()
 
     @property

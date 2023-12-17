@@ -11,6 +11,7 @@ from jkit._constraints import (
     UserUploadedUrlStr,
 )
 from jkit._http_client import get_json
+from jkit._normalization import normalize_assets_amount
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import APIUnsupportedError
 
@@ -69,17 +70,17 @@ class ArticleEarningRank(ResourceObject):
         )
 
         return ArticleEarningRankData(
-            total_fp_amount_sum=data["fp"] / 1000,
-            fp_to_author_amount_sum=data["author_fp"] / 1000,
-            fp_to_voter_amount_sum=data["voter_fp"] / 1000,
+            total_fp_amount_sum=normalize_assets_amount(data["fp"]),
+            fp_to_author_amount_sum=normalize_assets_amount(data["author_fp"]),
+            fp_to_voter_amount_sum=normalize_assets_amount(data["voter_fp"]),
             records=tuple(
                 ArticleEarningRankRecord(
                     ranking=ranking,
                     title=item["title"],
                     slug=item["slug"],
-                    total_fp_amount=item["fp"] / 1000,
-                    fp_to_author_anount=item["author_fp"] / 1000,
-                    fp_to_voter_amount=item["voter_fp"] / 1000,
+                    total_fp_amount=normalize_assets_amount(item["fp"]),
+                    fp_to_author_anount=normalize_assets_amount(item["author_fp"]),
+                    fp_to_voter_amount=normalize_assets_amount(item["voter_fp"]),
                     user_info=ArticleEarningRankRecordUserInfo(
                         name=item["author_nickname"],
                         avatar_url=item["author_avatar"],
