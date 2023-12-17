@@ -28,7 +28,7 @@ class AssetsRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class AssetsRankRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
-    assert_amount: NonNegativeFloat
+    assets_amount: NonNegativeFloat
     user_info: AssetsRankRecordUserInfo
 
 
@@ -47,7 +47,7 @@ class AssetsRank(ResourceObject):
         return tuple(
             AssetsRankRecord(
                 ranking=item["ranking"],
-                assert_amount=item["amount"],
+                assets_amount=item["amount"],
                 user_info=AssetsRankRecordUserInfo(
                     id=item["user"]["id"],
                     slug=item["user"]["slug"],
