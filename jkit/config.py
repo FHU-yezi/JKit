@@ -23,9 +23,9 @@ class _NetworkConfig(ConfigObject, **CONFIG_CONFIG):
     def __setattr__(self, __name: str, __value: Any) -> None:
         super().__setattr__(__name, __value)
 
-        import jkit._http_client
+        import jkit._network_request
 
-        jkit._http_client.HTTP_CLIENT = self._get_http_client()
+        jkit._network_request.HTTP_CLIENT = self._get_http_client()
 
 
 class _EndpointConfig(ConfigObject, **CONFIG_CONFIG):

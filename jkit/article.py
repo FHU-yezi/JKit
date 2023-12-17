@@ -18,7 +18,7 @@ from jkit._constraints import (
     UserSlugStr,
     UserUploadedUrlStr,
 )
-from jkit._http_client import get_json
+from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit._utils import only_one, validate_if_necessary
 from jkit.config import ENDPOINT_CONFIG

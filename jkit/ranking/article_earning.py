@@ -10,7 +10,7 @@ from jkit._constraints import (
     UserNameStr,
     UserUploadedUrlStr,
 )
-from jkit._http_client import get_json
+from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import APIUnsupportedError
