@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from typing import Optional
 
@@ -146,8 +147,40 @@ class Article(ResourceObject):
         return (await self.info).id
 
     @property
+    async def notebook_id(self) -> int:
+        return (await self.info).notebook_id
+
+    @property
     async def title(self) -> str:
         return (await self.info).title
+
+    @property
+    async def description(self) -> str:
+        return (await self.info).description
+
+    @property
+    async def wordage(self) -> int:
+        return (await self.info).wordage
+
+    @property
+    async def published_at(self) -> datetime:
+        return (await self.info).published_at
+
+    @property
+    async def updated_at(self) -> datetime:
+        return (await self.info).updated_at
+
+    @property
+    async def can_comment(self) -> bool:
+        return (await self.info).can_comment
+
+    @property
+    async def can_reprint(self) -> bool:
+        return (await self.info).can_reprint
+
+    @property
+    async def paid_info(self) -> ArticlePaidInfo:
+        return (await self.info).paid_info
 
     @property
     async def content(self) -> str:
@@ -161,3 +194,19 @@ class Article(ResourceObject):
         )
 
         return data["views_count"]
+
+    @property
+    async def likes_count(self) -> int:
+        return (await self.info).likes_count
+
+    @property
+    async def comments_count(self) -> int:
+        return (await self.info).comments_count
+
+    @property
+    async def featured_comments_count(self) -> int:
+        return (await self.info).featured_comments_count
+
+    @property
+    async def earned_fp_amount(self) -> float:
+        return (await self.info).earned_fp_amount
