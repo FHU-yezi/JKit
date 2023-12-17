@@ -4,3 +4,7 @@ class JKitError(Exception):
 
 class APIUnsupportedError(JKitError):
     pass
+
+
+class ResourceUnavailableError(JKitError):
+    pass

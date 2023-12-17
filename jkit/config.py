@@ -32,5 +32,10 @@ class _EndpointConfig(ConfigObject, **CONFIG_CONFIG):
     jianshu: NonEmptyStr = "https://www.jianshu.com"
 
 
+class _BehaviorConfig(ConfigObject, **CONFIG_CONFIG):
+    force_validate: bool = True
+
+
 NETWORK_CONFIG = _NetworkConfig()
 ENDPOINT_CONFIG = _EndpointConfig()
+BEHAVIOR_CONFIG = _BehaviorConfig()

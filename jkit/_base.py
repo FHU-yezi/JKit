@@ -1,4 +1,5 @@
-from typing import List
+from abc import ABCMeta, abstractmethod
+from typing import Any, List
 
 from msgspec import Struct, convert, to_builtins
 from typing_extensions import Self
@@ -33,6 +34,45 @@ DATA_OBJECT_CONFIG = {
 
 
 class ResourceObject:
+    pass
+
+
+class StandardResourceObject(metaclass=ABCMeta):
+    def __init__(self) -> None:
+        self._validated = False
+
+    @classmethod
+    @abstractmethod
+    def from_url(cls, url: str, /) -> Self:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def from_slug(cls, slug: str, /) -> Self:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def url(self) -> str:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def slug(self) -> str:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def validate(self) -> None:
+        raise NotImplementedError
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__) and self.url == other.url:
+            return True
+
+        return False
+
+
+class RankingResourceObject(ResourceObject):
     pass
 
 

@@ -2,9 +2,10 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional, Tuple
 
+from httpx import HTTPStatusError
 from typing_extensions import Self
 
-from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
+from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
     NonEmptyStr,
     NonNegativeInt,
@@ -15,8 +16,9 @@ from jkit._constraints import (
 )
 from jkit._http_client import get_json
 from jkit._normalization import normalize_datetime
-from jkit._utils import only_one
+from jkit._utils import only_one, validate_if_necessary
 from jkit.config import ENDPOINT_CONFIG
+from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_user_url
 from jkit.identifier_convert import user_slug_to_url, user_url_to_slug
 
@@ -65,11 +67,12 @@ class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
     # TODO: 简书钻数量
 
 
-# TODO: 用户状态校验
-class User(ResourceObject):
+class User(StandardResourceObject):
     def __init__(
         self, *, url: Optional[str] = None, slug: Optional[str] = None
     ) -> None:
+        super().__init__()
+
         if not only_one(url, slug):
             raise ValueError("url 和 slug 不可同时提供")
 
@@ -98,8 +101,24 @@ class User(ResourceObject):
     def slug(self) -> str:
         return user_url_to_slug(self._url)
 
+    async def validate(self) -> None:
+        if self._validated:
+            return
+
+        try:
+            await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path=f"/asimov/users/slug/{self.slug}",
+            )
+        except HTTPStatusError:
+            raise ResourceUnavailableError(
+                f"用户 {self.url} 不存在或已注销 / 被封禁"
+            ) from None
+
     @property
     async def info(self) -> UserInfo:
+        await validate_if_necessary(self._validated, self.validate)
+
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
             path=f"/asimov/users/slug/{self.slug}",

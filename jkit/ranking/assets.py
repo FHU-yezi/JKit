@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, AsyncGenerator, Tuple
 
-from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
+from jkit._base import DATA_OBJECT_CONFIG, DataObject, RankingResourceObject
 from jkit._constraints import (
     NonNegativeFloat,
     PositiveInt,
@@ -33,7 +33,7 @@ class AssetsRankRecord(DataObject, **DATA_OBJECT_CONFIG):
 
 
 # TODO: 支持获取完整数据
-class AssetsRank(ResourceObject):
+class AssetsRank(RankingResourceObject):
     def __init__(self, *, full: bool = False) -> None:
         self._full = full
 
