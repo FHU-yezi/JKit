@@ -1,12 +1,23 @@
-from typing import Optional
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AsyncGenerator,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+)
 
 from httpx import HTTPStatusError
 from typing_extensions import Self
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
+    ArticleSlugStr,
     CollectionSlugStr,
     NonEmptyStr,
+    NonNegativeFloat,
     NonNegativeInt,
     NormalizedDatetime,
     PositiveInt,
@@ -15,12 +26,16 @@ from jkit._constraints import (
     UserUploadedUrlStr,
 )
 from jkit._network_request import get_json
-from jkit._normalization import normalize_datetime
+from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit._utils import only_one, validate_if_necessary
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_collection_url
 from jkit.identifier_convert import collection_slug_to_url, collection_url_to_slug
+
+if TYPE_CHECKING:
+    from jkit.article import Article
+    from jkit.user import User
 
 
 class CollectionOwnerInfo(DataObject, **DATA_OBJECT_CONFIG):
@@ -28,12 +43,17 @@ class CollectionOwnerInfo(DataObject, **DATA_OBJECT_CONFIG):
     slug: UserSlugStr
     name: UserNameStr
 
+    def get_user_obj(self) -> "User":
+        from jkit.user import User
+
+        return User.from_slug(self.slug)
+
 
 class CollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
     slug: CollectionSlugStr
     name: NonEmptyStr
-    image: UserUploadedUrlStr
+    image_url: UserUploadedUrlStr
     description: str
     description_updated_at: NormalizedDatetime
     new_article_added_at: NormalizedDatetime
@@ -41,6 +61,41 @@ class CollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
 
     articles_count: NonNegativeInt
     subscribers_count: NonNegativeInt
+
+
+class CollectionArticleUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    slug: UserSlugStr
+    name: UserNameStr
+    avatar_url: UserUploadedUrlStr
+
+    def get_user_obj(self) -> "User":
+        from jkit.user import User
+
+        return User.from_slug(self.slug)
+
+
+class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    slug: ArticleSlugStr
+    title: NonEmptyStr
+    description: NonEmptyStr
+    image_url: Optional[UserUploadedUrlStr]
+    published_at: NormalizedDatetime
+    is_paid: bool
+    can_comment: bool
+    user_info: CollectionArticleUserInfo
+
+    views_count: NonNegativeInt
+    likes_count: NonNegativeInt
+    comments_count: NonNegativeInt
+    tips_count: NonNegativeInt
+    earned_fp_amount: NonNegativeFloat
+
+    def get_article_obj(self) -> "Article":
+        from jkit.article import Article
+
+        return Article.from_slug(self.slug)
 
 
 class Collection(StandardResourceObject):
@@ -103,7 +158,7 @@ class Collection(StandardResourceObject):
             id=data["id"],
             slug=data["slug"],
             name=data["title"],
-            image=data["image"],
+            image_url=data["image"],
             description=data["content_in_full"],
             description_updated_at=normalize_datetime(data["last_updated_at"]),
             new_article_added_at=normalize_datetime(data["newly_added_at"]),
@@ -115,3 +170,77 @@ class Collection(StandardResourceObject):
             articles_count=data["notes_count"],
             subscribers_count=data["subscribers_count"],
         )._validate()
+
+    async def get_articles(
+        self,
+        page: int = 1,
+        order_by: Literal["add_time", "last_comment_time", "popularity"] = "add_time",
+        page_size: int = 20,
+    ) -> Tuple[CollectionArticleInfo, ...]:
+        await validate_if_necessary(self._validated, self.validate)
+
+        data: List[Dict[str, Any]] = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/asimov/collections/slug/{self.slug}/public_notes",
+            params={
+                "page": page,
+                "count": page_size,
+                "ordered_by": {
+                    "add_time": "time",
+                    "last_comment_time": "comment_time",
+                    "popularity": "hot",
+                }[order_by],
+            },
+        )  # type: ignore
+
+        return tuple(
+            CollectionArticleInfo(
+                id=item["object"]["data"]["id"],
+                slug=item["object"]["data"]["slug"],
+                title=item["object"]["data"]["title"],
+                description=item["object"]["data"]["public_abbr"],
+                image_url=item["object"]["data"]["list_image_url"]
+                if item["object"]["data"]["list_image_url"]
+                else None,
+                published_at=normalize_datetime(
+                    item["object"]["data"]["first_shared_at"]
+                ),
+                is_paid=item["object"]["data"]["paid"],
+                can_comment=item["object"]["data"]["commentable"],
+                user_info=CollectionArticleUserInfo(
+                    id=item["object"]["data"]["user"]["id"],
+                    slug=item["object"]["data"]["user"]["slug"],
+                    name=item["object"]["data"]["user"]["nickname"],
+                    avatar_url=item["object"]["data"]["user"]["avatar"],
+                ),
+                views_count=item["object"]["data"]["views_count"],
+                likes_count=item["object"]["data"]["likes_count"],
+                comments_count=item["object"]["data"]["public_comments_count"],
+                tips_count=item["object"]["data"]["total_rewards_count"],
+                earned_fp_amount=normalize_assets_amount(
+                    item["object"]["data"]["total_fp_amount"]
+                ),
+            )._validate()
+            for item in data
+        )
+
+    async def iter_articles(
+        self,
+        start_page: int = 1,
+        order_by: Literal["add_time", "last_comment_time", "popularity"] = "add_time",
+        page_size: int = 20,
+    ) -> AsyncGenerator[CollectionArticleInfo, None]:
+        now_page = start_page
+        while True:
+            data = await self.get_articles(
+                page=now_page,
+                order_by=order_by,
+                page_size=page_size,
+            )
+            if not data:
+                return
+
+            for item in data:
+                yield item
+
+            now_page += 1
