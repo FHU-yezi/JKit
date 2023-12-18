@@ -15,11 +15,11 @@ from jkit._constraints import (
     UserNameStr,
     UserUploadedUrlStr,
 )
-from jkit._network_request import get_json
+from jkit._network_request import get_html, get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit._utils import only_one, validate_if_necessary
 from jkit.config import ENDPOINT_CONFIG
-from jkit.exceptions import ResourceUnavailableError
+from jkit.exceptions import APIUnsupportedError, ResourceUnavailableError
 from jkit.identifier_check import is_user_url
 from jkit.identifier_convert import user_slug_to_url, user_url_to_slug
 
@@ -229,3 +229,22 @@ class User(StandardResourceObject):
     @property
     async def fp_amount(self) -> float:
         return (await self.info).fp_amount
+
+    @property
+    async def assets_amount(self) -> float:
+        data = await get_html(endpoint=ENDPOINT_CONFIG.jianshu, path=f"/u/{self.slug}")
+
+        try:
+            return float(
+                data.xpath("//div[@class='meta-block']/p")[2]
+                .text.replace(".", "")
+                .replace("w", "000")
+            )
+        except IndexError:
+            raise APIUnsupportedError(
+                "受 API 限制，无法获取此用户的资产量信息"
+            ) from None
+
+    @property
+    async def ftn_amount(self) -> float:
+        return round((await self.assets_amount) - (await self.fp_amount), 3)
