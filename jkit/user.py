@@ -8,6 +8,7 @@ from typing_extensions import Self
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
     NonEmptyStr,
+    NonNegativeFloat,
     NonNegativeInt,
     NormalizedDatetime,
     PositiveInt,
@@ -15,7 +16,7 @@ from jkit._constraints import (
     UserUploadedUrlStr,
 )
 from jkit._network_request import get_json
-from jkit._normalization import normalize_datetime
+from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit._utils import only_one, validate_if_necessary
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import ResourceUnavailableError
@@ -64,7 +65,7 @@ class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
     fans_count: NonNegativeInt
     total_wordage: NonNegativeInt
     total_likes_count: NonNegativeInt
-    # TODO: 简书钻数量
+    fp_amount: NonNegativeFloat
 
 
 class User(StandardResourceObject):
@@ -166,6 +167,7 @@ class User(StandardResourceObject):
             fans_count=data["followers_count"],
             total_wordage=data["total_wordage"],
             total_likes_count=data["total_likes_count"],
+            fp_amount=normalize_assets_amount(data["jsd_balance"]),
         )._validate()
 
     @property
@@ -223,3 +225,7 @@ class User(StandardResourceObject):
     @property
     async def total_likes_count(self) -> int:
         return (await self.info).total_likes_count
+
+    @property
+    async def fp_amount(self) -> float:
+        return (await self.info).fp_amount
