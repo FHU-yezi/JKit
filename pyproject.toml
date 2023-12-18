@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jkit"
-version = "3.0.0a1"
+version = "3.0.0a2"
 description = "简书非官方 SDK - 创造可能性"
 readme = "README.md"
 license = "MIT"
@@ -24,8 +24,8 @@ classifiers = [
 python = "^3.8"
 httpx = {extras = ["http2"], version = "0.*"}
 msgspec = "0.*"
-typing-extensions = "^4.9.0"
-lxml = "^4.9.3"
+typing-extensions = ">=4.9.0"
+lxml = ">=4.9.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.0"
