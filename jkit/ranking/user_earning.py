@@ -82,4 +82,4 @@ class UserEarningRank(RankingResourceObject):
                 )
                 for ranking, item in enumerate(data["users"], start=1)
             ),
-        )
+        )._validate()
