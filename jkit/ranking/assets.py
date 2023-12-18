@@ -58,7 +58,7 @@ class AssetsRank(RankingResourceObject):
         )
 
     async def iter_data(
-        self, start_id: int = 1
+        self, *, start_id: int = 1
     ) -> AsyncGenerator[AssetsRankRecord, None]:
         now_id = start_id
         while True:

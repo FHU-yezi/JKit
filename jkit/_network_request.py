@@ -9,6 +9,7 @@ JSON_DECODER = Decoder()
 
 
 async def get_json(
+    *,
     endpoint: str,
     path: str,
     params: Optional[Dict[str, Any]] = None,

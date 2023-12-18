@@ -99,7 +99,9 @@ class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class Collection(StandardResourceObject):
-    def __init__(self, url: Optional[str] = None, slug: Optional[str] = None) -> None:
+    def __init__(
+        self, *, url: Optional[str] = None, slug: Optional[str] = None
+    ) -> None:
         super().__init__()
 
         if not only_one(url, slug):
@@ -173,6 +175,7 @@ class Collection(StandardResourceObject):
 
     async def get_articles(
         self,
+        *,
         page: int = 1,
         order_by: Literal["add_time", "last_comment_time", "popularity"] = "add_time",
         page_size: int = 20,
@@ -226,6 +229,7 @@ class Collection(StandardResourceObject):
 
     async def iter_articles(
         self,
+        *,
         start_page: int = 1,
         order_by: Literal["add_time", "last_comment_time", "popularity"] = "add_time",
         page_size: int = 20,
