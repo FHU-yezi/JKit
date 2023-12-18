@@ -2,9 +2,10 @@ name: Publish to PyPI
 
 on:
   release:
+    types: [published]
 
 jobs:
-  static-check:
+  publish-to-pypi:
     runs-on: ubuntu-latest
     env:
       POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
