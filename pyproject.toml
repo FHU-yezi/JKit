@@ -49,7 +49,3 @@ select = [
 ignore = ["ANN101", "ANN102", "ANN401", "BLE001", "ISC001", "RUF001", "RUF002", "RUF003", "SLF001"]
 
 target-version = "py38"
-
-[tool.ruff.lint.per-file-ignores]
-
-"__init__.py" = ["F401"]
