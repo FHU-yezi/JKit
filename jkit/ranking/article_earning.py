@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from jkit.article import Article
 
 
-class ArticleEarningRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+class ArticleEarningRankRecordAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     name: Optional[UserNameStr]
     avatar_url: Optional[UserUploadedUrlStr]
 
@@ -31,7 +31,7 @@ class ArticleEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
     total_fp_amount: PositiveFloat
     fp_to_author_anount: PositiveFloat
     fp_to_voter_amount: PositiveFloat
-    user_info: ArticleEarningRankRecordUserInfo
+    author_info: ArticleEarningRankRecordAuthorInfo
 
     @property
     def is_missing(self) -> bool:
@@ -81,7 +81,7 @@ class ArticleEarningRank(RankingResourceObject):
                     total_fp_amount=normalize_assets_amount(item["fp"]),
                     fp_to_author_anount=normalize_assets_amount(item["author_fp"]),
                     fp_to_voter_amount=normalize_assets_amount(item["voter_fp"]),
-                    user_info=ArticleEarningRankRecordUserInfo(
+                    author_info=ArticleEarningRankRecordAuthorInfo(
                         name=item["author_nickname"],
                         avatar_url=item["author_avatar"],
                     ),

@@ -63,7 +63,7 @@ class CollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     subscribers_count: NonNegativeInt
 
 
-class CollectionArticleUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+class CollectionArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
     slug: UserSlugStr
     name: UserNameStr
@@ -84,7 +84,7 @@ class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     published_at: NormalizedDatetime
     is_paid: bool
     can_comment: bool
-    user_info: CollectionArticleUserInfo
+    author_info: CollectionArticleAuthorInfo
 
     views_count: NonNegativeInt
     likes_count: NonNegativeInt
@@ -210,7 +210,7 @@ class Collection(StandardResourceObject):
                 ),
                 is_paid=item["object"]["data"]["paid"],
                 can_comment=item["object"]["data"]["commentable"],
-                user_info=CollectionArticleUserInfo(
+                author_info=CollectionArticleAuthorInfo(
                     id=item["object"]["data"]["user"]["id"],
                     slug=item["object"]["data"]["user"]["slug"],
                     name=item["object"]["data"]["user"]["nickname"],

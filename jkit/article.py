@@ -48,7 +48,7 @@ class ArticlePaidInfo(DataObject, **DATA_OBJECT_CONFIG):
     paid_readers_count: Optional[NonNegativeInt]
 
 
-class ArticleUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+class ArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
     slug: UserSlugStr
     name: UserNameStr
@@ -76,7 +76,7 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     can_comment: bool
     can_reprint: bool
     paid_info: ArticlePaidInfo
-    user_info: ArticleUserInfo
+    author_info: ArticleAuthorInfo
     content: NonEmptyStr
 
     likes_count: NonNegativeInt
@@ -179,7 +179,7 @@ class Article(StandardResourceObject):
                 else None,
                 paid_readers_count=data.get("purchased_count"),
             ),
-            user_info=ArticleUserInfo(
+            author_info=ArticleAuthorInfo(
                 id=data["user"]["id"],
                 slug=data["user"]["slug"],
                 name=data["user"]["nickname"],
@@ -237,8 +237,8 @@ class Article(StandardResourceObject):
         return (await self.info).paid_info
 
     @property
-    async def user_info(self) -> ArticleUserInfo:
-        return (await self.info).user_info
+    async def user_info(self) -> ArticleAuthorInfo:
+        return (await self.info).author_info
 
     @property
     async def content(self) -> str:
