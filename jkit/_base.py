@@ -2,12 +2,18 @@ from abc import ABCMeta, abstractmethod
 from typing import Any, List
 
 from msgspec import Struct, convert, to_builtins
+from msgspec import ValidationError as MsgspecValidationError
 from typing_extensions import Self
+
+from jkit.exceptions import ValidationError
 
 
 class DataObject(Struct):
     def _validate(self) -> Self:
-        return convert(to_builtins(self), type=self.__class__)
+        try:
+            return convert(to_builtins(self), type=self.__class__)
+        except MsgspecValidationError as e:
+            raise ValidationError(e.args[0]) from None
 
     def __repr__(self) -> str:
         field_strings: List[str] = []
