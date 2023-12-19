@@ -10,7 +10,7 @@ def only_one(*args: Any) -> bool:
 async def validate_if_necessary(
     self_validated: bool, validate_func: Callable[[], Coroutine[None, None, None]], /
 ) -> None:
-    if not BEHAVIOR_CONFIG.force_validate:
+    if not BEHAVIOR_CONFIG.auto_validate:
         return
 
     if not self_validated:

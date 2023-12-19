@@ -37,7 +37,7 @@ class ResourceObject:
     pass
 
 
-class StandardResourceObject(metaclass=ABCMeta):
+class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
     def __init__(self) -> None:
         self._validated = False
 
@@ -64,6 +64,20 @@ class StandardResourceObject(metaclass=ABCMeta):
     @abstractmethod
     async def validate(self) -> None:
         raise NotImplementedError
+
+    def _from_trusted_source(self) -> Self:
+        """将资源对象设置为已校验状态
+
+        从 DataObject 获取的资源标识符视为可信来源，对从其创建的资源对象跳过校验流程。
+        此操作有利于提升性能。
+        可通过修改 `BEHAVIOR_CONFIG.skip_validation_for_trusted_source` 的值改变此行为。
+        """
+
+        from jkit.config import BEHAVIOR_CONFIG
+
+        if BEHAVIOR_CONFIG.skip_validation_for_trusted_source:
+            self._validated = True
+        return self
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, self.__class__) and self.url == other.url:
