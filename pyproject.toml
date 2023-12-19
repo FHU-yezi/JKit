@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jkit"
-version = "3.0.0a2"
+version = "3.0.0a3"
 description = "简书非官方 SDK - 创造可能性"
 readme = "README.md"
 license = "MIT"
