@@ -37,7 +37,7 @@ class ArticleEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
     def is_missing(self) -> bool:
         return not bool(self.slug)
 
-    def get_article_obj(self) -> "Article":
+    def to_article_obj(self) -> "Article":
         if not self.slug:
             raise APIUnsupportedError("文章走丢了，无法获取文章对象")
 

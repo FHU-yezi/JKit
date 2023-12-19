@@ -43,7 +43,7 @@ class CollectionOwnerInfo(DataObject, **DATA_OBJECT_CONFIG):
     slug: UserSlugStr
     name: UserNameStr
 
-    def get_user_obj(self) -> "User":
+    def to_user_obj(self) -> "User":
         from jkit.user import User
 
         return User.from_slug(self.slug)
@@ -69,7 +69,7 @@ class CollectionArticleUserInfo(DataObject, **DATA_OBJECT_CONFIG):
     name: UserNameStr
     avatar_url: UserUploadedUrlStr
 
-    def get_user_obj(self) -> "User":
+    def to_user_obj(self) -> "User":
         from jkit.user import User
 
         return User.from_slug(self.slug)
@@ -92,7 +92,7 @@ class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     tips_count: NonNegativeInt
     earned_fp_amount: NonNegativeFloat
 
-    def get_article_obj(self) -> "Article":
+    def to_article_obj(self) -> "Article":
         from jkit.article import Article
 
         return Article.from_slug(self.slug)

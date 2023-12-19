@@ -59,8 +59,7 @@ class ArticleUserInfo(DataObject, **DATA_OBJECT_CONFIG):
     total_wordage: NonNegativeInt
     total_likes_count: NonNegativeInt
 
-    @property
-    def get_user_obj(self) -> "User":
+    def to_user_obj(self) -> "User":
         from jkit.user import User
 
         return User.from_slug(self.slug)

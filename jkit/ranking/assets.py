@@ -20,7 +20,7 @@ class AssetsRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
     slug: UserSlugStr
     avatar_url: UserUploadedUrlStr
 
-    def get_user_obj(self) -> "User":
+    def to_user_obj(self) -> "User":
         from jkit.user import User
 
         return User.from_slug(self.slug)

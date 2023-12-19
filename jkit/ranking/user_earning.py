@@ -27,7 +27,7 @@ class UserEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
     fp_by_creating_anount: PositiveFloat
     fp_by_voting_amount: PositiveFloat
 
-    def get_user_obj(self) -> "User":
+    def to_user_obj(self) -> "User":
         from jkit.user import User
 
         return User.from_slug(self.slug)
