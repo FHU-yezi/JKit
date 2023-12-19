@@ -5,6 +5,8 @@ on:
     types: [published]
 
 jobs:
+  static-check:
+    uses: ./.github/workflows/static-check.yaml
   publish-to-pypi:
     runs-on: ubuntu-latest
     env:

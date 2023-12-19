@@ -2,8 +2,7 @@ name: Static Check
 
 on:
   push:
-  release:
-    types: [published]
+  workflow_call:
 
 jobs:
   static-check:
