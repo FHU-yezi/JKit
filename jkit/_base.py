@@ -5,11 +5,15 @@ from msgspec import Struct, convert, to_builtins
 from msgspec import ValidationError as MsgspecValidationError
 from typing_extensions import Self
 
+from jkit.config import BEHAVIOR_CONFIG
 from jkit.exceptions import ValidationError
 
 
 class DataObject(Struct):
     def _validate(self) -> Self:
+        if not BEHAVIOR_CONFIG.enable_validate:
+            return self
+
         try:
             return convert(to_builtins(self), type=self.__class__)
         except MsgspecValidationError as e:

@@ -33,6 +33,7 @@ class _EndpointConfig(ConfigObject, **CONFIG_CONFIG):
 
 
 class _BehaviorConfig(ConfigObject, **CONFIG_CONFIG):
+    enable_validate: bool = True
     auto_validate: bool = True
     skip_validation_for_trusted_source: bool = True
 
