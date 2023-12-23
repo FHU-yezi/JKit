@@ -133,7 +133,7 @@ class Collection(StandardResourceObject):
         return collection_url_to_slug(self._url)
 
     async def check(self) -> None:
-        if self._validated:
+        if self._checked:
             return
 
         try:
@@ -141,7 +141,7 @@ class Collection(StandardResourceObject):
                 endpoint=ENDPOINT_CONFIG.jianshu,
                 path=f"/asimov/collections/slug/{self.slug}",
             )
-            self._validated = True
+            self._checked = True
         except HTTPStatusError:
             raise ResourceUnavailableError(
                 f"专题 {self.url} 不存在或已被删除锁定 / 私密 / 删除"
@@ -149,7 +149,7 @@ class Collection(StandardResourceObject):
 
     @property
     async def info(self) -> CollectionInfo:
-        await check_if_necessary(self._validated, self.check)
+        await check_if_necessary(self._checked, self.check)
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -180,7 +180,7 @@ class Collection(StandardResourceObject):
         order_by: Literal["add_time", "last_comment_time", "popularity"] = "add_time",
         page_size: int = 20,
     ) -> Tuple[CollectionArticleInfo, ...]:
-        await check_if_necessary(self._validated, self.check)
+        await check_if_necessary(self._checked, self.check)
 
         data: List[Dict[str, Any]] = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,

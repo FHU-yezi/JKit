@@ -1,12 +1,13 @@
 from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Tuple
 
 from httpx import HTTPStatusError
 from typing_extensions import Self
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
+    CollectionSlugStr,
     NonEmptyStr,
     NonNegativeFloat,
     NonNegativeInt,
@@ -27,6 +28,7 @@ from jkit.identifier_check import is_article_url
 from jkit.identifier_convert import article_slug_to_url, article_url_to_slug
 
 if TYPE_CHECKING:
+    from jkit.collection import Collection
     from jkit.user import User
 
 
@@ -104,6 +106,19 @@ class ArticleAudioInfo(DataObject, **DATA_OBJECT_CONFIG):
         return self.file_url_expire_time >= datetime.now()
 
 
+class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    slug: CollectionSlugStr
+    name: NonEmptyStr
+    image_url: UserUploadedUrlStr
+    owner_name: UserNameStr
+
+    def get_collection_obj(self) -> "Collection":
+        from jkit.collection import Collection
+
+        return Collection.from_slug(self.slug)._from_trusted_source()
+
+
 class Article(StandardResourceObject):
     def __init__(
         self, *, url: Optional[str] = None, slug: Optional[str] = None
@@ -139,7 +154,7 @@ class Article(StandardResourceObject):
         return article_url_to_slug(self._url)
 
     async def check(self) -> None:
-        if self._validated:
+        if self._checked:
             return
 
         try:
@@ -147,7 +162,7 @@ class Article(StandardResourceObject):
                 endpoint=ENDPOINT_CONFIG.jianshu,
                 path=f"/asimov/p/{self.slug}",
             )
-            self._validated = True
+            self._checked = True
         except HTTPStatusError:
             raise ResourceUnavailableError(
                 f"文章 {self.url} 不存在或已被锁定 / 私密 / 删除"
@@ -155,7 +170,7 @@ class Article(StandardResourceObject):
 
     @property
     async def info(self) -> ArticleInfo:
-        await check_if_necessary(self._validated, self.check)
+        await check_if_necessary(self._checked, self.check)
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -265,7 +280,7 @@ class Article(StandardResourceObject):
 
     @property
     async def views_count(self) -> int:
-        await check_if_necessary(self._validated, self.check)
+        await check_if_necessary(self._checked, self.check)
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -308,3 +323,23 @@ class Article(StandardResourceObject):
             duration_seconds=data["duration"],
             file_size_bytes=data["filesize"],
         )._validate()
+
+    async def get_included_collections_info(
+        self, page: int = 1, page_size: int = 10
+    ) -> Tuple[ArticleIncludedCollectionInfo, ...]:
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/shakespeare/notes/{await self.id}/included_collections",
+            params={"page": page, "count": page_size},
+        )
+
+        return tuple(
+            ArticleIncludedCollectionInfo(
+                id=item["id"],
+                slug=item["slug"],
+                name=item["title"],
+                image_url=item["avatar"],
+                owner_name=item["owner_name"],
+            )._validate()
+            for item in data["collections"]
+        )
