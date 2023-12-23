@@ -119,6 +119,13 @@ class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
         return Collection.from_slug(self.slug)._from_trusted_source()
 
 
+class ArticleBelongToNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    name: NonEmptyStr
+
+    # TODO: get_notebook_obj
+
+
 class Article(StandardResourceObject):
     def __init__(
         self, *, url: Optional[str] = None, slug: Optional[str] = None
@@ -358,3 +365,15 @@ class Article(StandardResourceObject):
                 yield item
 
             now_page += 1
+
+    @property
+    async def belong_to_notebook(self) -> ArticleBelongToNotebookInfo:
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/shakespeare/v2/notes/{self.slug}/book",
+        )
+
+        return ArticleBelongToNotebookInfo(
+            id=data["notebook_id"],
+            name=data["notebook_name"],
+        )._validate()
