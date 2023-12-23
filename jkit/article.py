@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, AsyncGenerator, Optional, Tuple
 
 from httpx import HTTPStatusError
 from typing_extensions import Self
@@ -343,3 +343,18 @@ class Article(StandardResourceObject):
             )._validate()
             for item in data["collections"]
         )
+
+    async def iter_included_collections_info(
+        self, *, start_page: int = 1, page_size: int = 10
+    ) -> AsyncGenerator[ArticleIncludedCollectionInfo, None]:
+        now_page = start_page
+        while True:
+            data = await self.get_included_collections_info(
+                page=now_page, page_size=page_size
+            )
+            if not data:
+                return
+            for item in data:
+                yield item
+
+            now_page += 1
