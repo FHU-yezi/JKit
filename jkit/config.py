@@ -32,12 +32,14 @@ class _EndpointConfig(ConfigObject, **CONFIG_CONFIG):
     jianshu: NonEmptyStr = "https://www.jianshu.com"
 
 
-class _BehaviorConfig(ConfigObject, **CONFIG_CONFIG):
-    enable_validate: bool = True
-    auto_validate: bool = True
-    skip_validation_for_trusted_source: bool = True
+class _ResourceObjectConfig(ConfigObject, **CONFIG_CONFIG):
+    auto_checking: bool = True
+    skip_checking_for_trusted_source: bool = True
 
+class _DataObjectConfig(ConfigObject, **CONFIG_CONFIG):
+    enable_validation: bool = True
 
 NETWORK_CONFIG = _NetworkConfig()
 ENDPOINT_CONFIG = _EndpointConfig()
-BEHAVIOR_CONFIG = _BehaviorConfig()
+RESOURCE_OBJECT_CONFIG = _ResourceObjectConfig()
+DATA_OBJECT_CONFIG = _DataObjectConfig()

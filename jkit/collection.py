@@ -27,7 +27,7 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit._utils import only_one, validate_if_necessary
+from jkit._utils import check_if_necessary, only_one
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_collection_url
@@ -132,7 +132,7 @@ class Collection(StandardResourceObject):
     def slug(self) -> str:
         return collection_url_to_slug(self._url)
 
-    async def validate(self) -> None:
+    async def check(self) -> None:
         if self._validated:
             return
 
@@ -149,7 +149,7 @@ class Collection(StandardResourceObject):
 
     @property
     async def info(self) -> CollectionInfo:
-        await validate_if_necessary(self._validated, self.validate)
+        await check_if_necessary(self._validated, self.check)
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -180,7 +180,7 @@ class Collection(StandardResourceObject):
         order_by: Literal["add_time", "last_comment_time", "popularity"] = "add_time",
         page_size: int = 20,
     ) -> Tuple[CollectionArticleInfo, ...]:
-        await validate_if_necessary(self._validated, self.validate)
+        await check_if_necessary(self._validated, self.check)
 
         data: List[Dict[str, Any]] = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,

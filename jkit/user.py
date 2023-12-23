@@ -17,7 +17,7 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_html, get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit._utils import only_one, validate_if_necessary
+from jkit._utils import check_if_necessary, only_one
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import APIUnsupportedError, ResourceUnavailableError
 from jkit.identifier_check import is_user_url
@@ -102,8 +102,8 @@ class User(StandardResourceObject):
     def slug(self) -> str:
         return user_url_to_slug(self._url)
 
-    async def validate(self) -> None:
-        if self._validated:
+    async def check(self) -> None:
+        if self._checked:
             return
 
         try:
@@ -118,7 +118,7 @@ class User(StandardResourceObject):
 
     @property
     async def info(self) -> UserInfo:
-        await validate_if_necessary(self._validated, self.validate)
+        await check_if_necessary(self._checked, self.check)
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,

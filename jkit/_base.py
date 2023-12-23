@@ -10,9 +10,9 @@ from jkit.exceptions import ValidationError
 
 class DataObject(Struct):
     def _validate(self) -> Self:
-        from jkit.config import BEHAVIOR_CONFIG
+        from jkit.config import DATA_OBJECT_CONFIG
 
-        if not BEHAVIOR_CONFIG.enable_validate:
+        if not DATA_OBJECT_CONFIG.enable_validation:
             return self
 
         try:
@@ -50,7 +50,7 @@ class ResourceObject:
 
 class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
     def __init__(self) -> None:
-        self._validated = False
+        self._checked = False
 
     @classmethod
     @abstractmethod
@@ -73,21 +73,22 @@ class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    async def validate(self) -> None:
+    async def check(self) -> None:
         raise NotImplementedError
 
     def _from_trusted_source(self) -> Self:
-        """将资源对象设置为已校验状态
+        """将资源对象设置为已检查状态
 
-        从 DataObject 获取的资源标识符视为可信来源，对从其创建的资源对象跳过校验流程。
+        从 DataObject 获取的资源标识符视为可信来源，对从其创建的资源对象跳过检查流程。
         此操作有利于提升性能。
-        可通过修改 `BEHAVIOR_CONFIG.skip_validation_for_trusted_source` 的值改变此行为。
+        可通过修改 `RESOURCE_OBJECT_CONFIG.skip_checking_for_trusted_source` 的值
+        改变此行为。
         """
 
-        from jkit.config import BEHAVIOR_CONFIG
+        from jkit.config import RESOURCE_OBJECT_CONFIG
 
-        if BEHAVIOR_CONFIG.skip_validation_for_trusted_source:
-            self._validated = True
+        if RESOURCE_OBJECT_CONFIG.skip_checking_for_trusted_source:
+            self._checked = True
         return self
 
     def __eq__(self, other: Any) -> bool:

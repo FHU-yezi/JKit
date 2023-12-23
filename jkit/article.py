@@ -20,7 +20,7 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit._utils import only_one, validate_if_necessary
+from jkit._utils import check_if_necessary, only_one
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_article_url
@@ -138,7 +138,7 @@ class Article(StandardResourceObject):
     def slug(self) -> str:
         return article_url_to_slug(self._url)
 
-    async def validate(self) -> None:
+    async def check(self) -> None:
         if self._validated:
             return
 
@@ -155,7 +155,7 @@ class Article(StandardResourceObject):
 
     @property
     async def info(self) -> ArticleInfo:
-        await validate_if_necessary(self._validated, self.validate)
+        await check_if_necessary(self._validated, self.check)
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -265,7 +265,7 @@ class Article(StandardResourceObject):
 
     @property
     async def views_count(self) -> int:
-        await validate_if_necessary(self._validated, self.validate)
+        await check_if_necessary(self._validated, self.check)
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
