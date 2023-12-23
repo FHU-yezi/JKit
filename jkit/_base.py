@@ -97,6 +97,9 @@ class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
 
         return False
 
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}(slug="{self.slug}")'
+
 
 class RankingResourceObject(ResourceObject):
     pass
