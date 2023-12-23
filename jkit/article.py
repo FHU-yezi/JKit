@@ -85,6 +85,25 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     earned_fp_amount: NonNegativeFloat
 
 
+class ArticleAudioInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    name: NonEmptyStr
+    author: NonEmptyStr
+    file_url: str  # TODO
+    duration_seconds: PositiveInt
+    file_size_bytes: PositiveInt
+
+    @property
+    def file_url_expire_time(self) -> datetime:
+        return datetime.fromtimestamp(
+            int(self.file_url.split("?")[1].split("&")[0].replace("Expires=", ""))
+        )
+
+    @property
+    def is_file_expired(self) -> bool:
+        return self.file_url_expire_time >= datetime.now()
+
+
 class Article(StandardResourceObject):
     def __init__(
         self, *, url: Optional[str] = None, slug: Optional[str] = None
@@ -270,3 +289,22 @@ class Article(StandardResourceObject):
     @property
     async def earned_fp_amount(self) -> float:
         return (await self.info).earned_fp_amount
+
+    @property
+    async def audio_info(self) -> Optional[ArticleAudioInfo]:
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/shakespeare/v2/notes/{self.slug}/audio",
+        )
+
+        if not data["exists"]:
+            return None
+
+        return ArticleAudioInfo(
+            id=data["id"],
+            name=data["title"],
+            author=data["dubber"],  # TODO: 命名调整
+            file_url=data["play_url"],
+            duration_seconds=data["duration"],
+            file_size_bytes=data["filesize"],
+        )._validate()
