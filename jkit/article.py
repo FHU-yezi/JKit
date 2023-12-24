@@ -372,6 +372,8 @@ class Article(StandardResourceObject):
 
     @property
     async def audio_info(self) -> Optional[ArticleAudioInfo]:
+        await check_if_necessary(self._checked, self.check)
+
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
             path=f"/shakespeare/v2/notes/{self.slug}/audio",
@@ -391,6 +393,8 @@ class Article(StandardResourceObject):
 
     @property
     async def belong_to_notebook(self) -> ArticleBelongToNotebookInfo:
+        await check_if_necessary(self._checked, self.check)
+
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
             path=f"/shakespeare/v2/notes/{self.slug}/book",
@@ -404,6 +408,8 @@ class Article(StandardResourceObject):
     async def iter_included_collections(
         self, *, start_page: int = 1, page_size: int = 10
     ) -> AsyncGenerator[ArticleIncludedCollectionInfo, None]:
+        await check_if_necessary(self._checked, self.check)
+
         now_page = start_page
         while True:
             data = await get_json(
@@ -432,6 +438,8 @@ class Article(StandardResourceObject):
         author_only: bool = False,
         page_size: int = 10,
     ) -> AsyncGenerator[ArticleCommentInfo, None]:
+        await check_if_necessary(self._checked, self.check)
+
         now_page = start_page
         while True:
             data = await get_json(
@@ -490,6 +498,8 @@ class Article(StandardResourceObject):
         self,
         count: int = 10,
     ) -> AsyncGenerator[ArticleFeaturedCommentInfo, None]:
+        await check_if_necessary(self._checked, self.check)
+
         data: List[Dict[str, Any]] = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
             path=f"/shakespeare/notes/{self.slug}/featured_comments",

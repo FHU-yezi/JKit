@@ -212,6 +212,8 @@ class Collection(StandardResourceObject):
         order_by: Literal["add_time", "last_comment_time", "popularity"] = "add_time",
         page_size: int = 20,
     ) -> AsyncGenerator[CollectionArticleInfo, None]:
+        await check_if_necessary(self._checked, self.check)
+
         now_page = start_page
         while True:
             data: List[Dict[str, Any]] = await get_json(

@@ -305,6 +305,8 @@ class User(StandardResourceObject):
 
     @property
     async def assets_amount(self) -> float:
+        await check_if_necessary(self._checked, self.check)
+
         data = await get_html(endpoint=ENDPOINT_CONFIG.jianshu, path=f"/u/{self.slug}")
 
         try:
@@ -325,6 +327,8 @@ class User(StandardResourceObject):
     async def owned_collections(
         self, page: int = 1, page_size: int = 10
     ) -> Tuple[UserCollectionInfo, ...]:
+        await check_if_necessary(self._checked, self.check)
+
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
             path=f"/users/{self.slug}/collections",
@@ -349,6 +353,8 @@ class User(StandardResourceObject):
     async def managed_collections(
         self, page: int = 1, page_size: int = 10
     ) -> Tuple[UserCollectionInfo, ...]:
+        await check_if_necessary(self._checked, self.check)
+
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
             path=f"/users/{self.slug}/collections",
@@ -373,6 +379,8 @@ class User(StandardResourceObject):
     async def notebooks(
         self, page: int = 1, page_size: int = 10
     ) -> Tuple[UserNotebookInfo, ...]:
+        await check_if_necessary(self._checked, self.check)
+
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
             path=f"/users/{self.slug}/notebooks",
@@ -403,6 +411,8 @@ class User(StandardResourceObject):
         ] = "published_at",
         page_size: int = 10,
     ) -> AsyncGenerator[UserArticleInfo, None]:
+        await check_if_necessary(self._checked, self.check)
+
         now_page = start_page
         while True:
             data: List[Dict[str, Any]] = await get_json(
