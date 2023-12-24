@@ -1,6 +1,15 @@
 from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, AsyncGenerator, Optional, Tuple
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AsyncGenerator,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+)
 
 from httpx import HTTPStatusError
 from typing_extensions import Self
@@ -124,6 +133,48 @@ class ArticleBelongToNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
     name: NonEmptyStr
 
     # TODO: get_notebook_obj
+
+
+class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    slug: UserSlugStr
+    name: UserNameStr
+    avatar_url: UserUploadedUrlStr
+    address_by_ip: NonEmptyStr
+
+    @property
+    def get_user_obj(self) -> "User":
+        from jkit.user import User
+
+        return User.from_slug(self.slug)._from_trusted_source()
+
+
+class ArticleSubcommentInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    content: NonEmptyStr
+    images: Tuple[UserUploadedUrlStr, ...]
+    published_at: NormalizedDatetime
+    publisher_info: ArticleCommentPublisherInfo
+
+
+class ArticleCommentInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    floor: PositiveInt
+    content: NonEmptyStr
+    images: Tuple[UserUploadedUrlStr, ...]
+    likes_count: NonNegativeInt
+    published_at: NormalizedDatetime
+    publisher_info: ArticleCommentPublisherInfo
+
+    subcomments: Tuple[ArticleSubcommentInfo, ...]
+
+    @property
+    def has_subcomment(self) -> bool:
+        return bool(self.subcomments)
+
+
+class ArticleFeaturedCommentInfo(ArticleCommentInfo, **DATA_OBJECT_CONFIG):
+    score: PositiveInt
 
 
 class Article(StandardResourceObject):
@@ -331,7 +382,7 @@ class Article(StandardResourceObject):
             file_size_bytes=data["filesize"],
         )._validate()
 
-    async def get_included_collections_info(
+    async def get_included_collections(
         self, page: int = 1, page_size: int = 10
     ) -> Tuple[ArticleIncludedCollectionInfo, ...]:
         data = await get_json(
@@ -351,12 +402,12 @@ class Article(StandardResourceObject):
             for item in data["collections"]
         )
 
-    async def iter_included_collections_info(
+    async def iter_included_collections(
         self, *, start_page: int = 1, page_size: int = 10
     ) -> AsyncGenerator[ArticleIncludedCollectionInfo, None]:
         now_page = start_page
         while True:
-            data = await self.get_included_collections_info(
+            data = await self.get_included_collections(
                 page=now_page, page_size=page_size
             )
             if not data:
@@ -377,3 +428,126 @@ class Article(StandardResourceObject):
             id=data["notebook_id"],
             name=data["notebook_name"],
         )._validate()
+
+    async def get_comments(
+        self,
+        page: int = 1,
+        direction: Literal["asc", "desc"] = "desc",
+        author_only: bool = False,
+        page_size: int = 10,
+    ) -> Tuple[ArticleCommentInfo, ...]:
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/shakespeare/notes/{await self.id}/comments",
+            params={
+                "page": page,
+                "order_by": direction,
+                "author_only": author_only,
+                "count": page_size,
+            },
+        )
+
+        return tuple(
+            ArticleCommentInfo(
+                id=item["id"],
+                floor=item["floor"],
+                content=item["compiled_content"],
+                images=item["images"],
+                likes_count=item["likes_count"],
+                published_at=normalize_datetime(item["created_at"]),
+                publisher_info=ArticleCommentPublisherInfo(
+                    id=item["user"]["id"],
+                    slug=item["user"]["slug"],
+                    name=item["user"]["nickname"],
+                    avatar_url=item["user"]["avatar"],
+                    address_by_ip=item["user"]["user_ip_addr"],
+                ),
+                subcomments=tuple(
+                    ArticleSubcommentInfo(
+                        id=subcomment["id"],
+                        content=subcomment["compiled_content"],
+                        images=subcomment["images"],
+                        published_at=normalize_datetime(subcomment["created_at"]),
+                        publisher_info=ArticleCommentPublisherInfo(
+                            id=subcomment["user"]["id"],
+                            slug=subcomment["user"]["slug"],
+                            name=subcomment["user"]["nickname"],
+                            avatar_url=subcomment["user"]["avatar"],
+                            address_by_ip=subcomment["user"]["user_ip_addr"],
+                        ),
+                    )
+                    for subcomment in item["children"]
+                ),
+            )._validate()
+            for item in data["comments"]
+        )
+
+    async def iter_comments(
+        self,
+        start_page: int = 1,
+        direction: Literal["asc", "desc"] = "desc",
+        author_only: bool = False,
+        page_size: int = 10,
+    ) -> AsyncGenerator[ArticleCommentInfo, None]:
+        now_page = start_page
+        while True:
+            data = await self.get_comments(
+                page=now_page,
+                direction=direction,
+                author_only=author_only,
+                page_size=page_size,
+            )
+            if not data:
+                return
+            for item in data:
+                yield item
+
+            now_page += 1
+
+    async def get_featured_comments(
+        self,
+        count: int = 10,
+    ) -> Tuple[ArticleFeaturedCommentInfo, ...]:
+        data: List[Dict[str, Any]] = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/shakespeare/notes/{self.slug}/featured_comments",
+            params={
+                "count": count,
+            },
+        ) # type: ignore
+
+        return tuple(
+            ArticleFeaturedCommentInfo(
+                id=item["id"],
+                floor=item["floor"],
+                content=item["compiled_content"],
+                images=item["images"],
+                likes_count=item["likes_count"],
+                published_at=normalize_datetime(item["created_at"]),
+                publisher_info=ArticleCommentPublisherInfo(
+                    id=item["user"]["id"],
+                    slug=item["user"]["slug"],
+                    name=item["user"]["nickname"],
+                    avatar_url=item["user"]["avatar"],
+                    address_by_ip=item["user"]["user_ip_addr"],
+                ),
+                subcomments=tuple(
+                    ArticleSubcommentInfo(
+                        id=subcomment["id"],
+                        content=subcomment["compiled_content"],
+                        images=subcomment["images"],
+                        published_at=normalize_datetime(subcomment["created_at"]),
+                        publisher_info=ArticleCommentPublisherInfo(
+                            id=subcomment["user"]["id"],
+                            slug=subcomment["user"]["slug"],
+                            name=subcomment["user"]["nickname"],
+                            avatar_url=subcomment["user"]["avatar"],
+                            address_by_ip=subcomment["user"]["user_ip_addr"],
+                        ),
+                    )
+                    for subcomment in item["children"]
+                ),
+                score=item["score"]
+            )._validate()
+            for item in data
+        )
