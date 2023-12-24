@@ -8,6 +8,7 @@ from jkit._constraints import (
     UserUploadedUrlStr,
 )
 from jkit._network_request import get_json
+from jkit._normalization import normalize_assets_amount
 from jkit.config import ENDPOINT_CONFIG
 from jkit.constants import MAX_ID
 
@@ -49,7 +50,7 @@ class AssetsRank(RankingResourceObject):
             for item in data["rankings"]:
                 yield AssetsRankRecord(
                     ranking=item["ranking"],
-                    assets_amount=item["amount"],
+                    assets_amount=normalize_assets_amount(item["amount"]),
                     user_info=AssetsRankRecordUserInfo(
                         id=item["user"]["id"],
                         slug=item["user"]["slug"],
