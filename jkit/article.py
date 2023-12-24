@@ -127,6 +127,13 @@ class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
 
         return Collection.from_slug(self.slug)._from_trusted_source()
 
+    @property
+    async def full_name(self) -> str:
+        if "..." not in self.name:
+            return self.name
+
+        return await self.get_collection_obj().name
+
 
 class ArticleBelongToNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
@@ -151,7 +158,7 @@ class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class ArticleSubcommentInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
-    content: NonEmptyStr
+    content: str
     images: Tuple[UserUploadedUrlStr, ...]
     published_at: NormalizedDatetime
     publisher_info: ArticleCommentPublisherInfo
@@ -160,7 +167,7 @@ class ArticleSubcommentInfo(DataObject, **DATA_OBJECT_CONFIG):
 class ArticleCommentInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
     floor: PositiveInt
-    content: NonEmptyStr
+    content: str
     images: Tuple[UserUploadedUrlStr, ...]
     likes_count: NonNegativeInt
     published_at: NormalizedDatetime
@@ -382,41 +389,6 @@ class Article(StandardResourceObject):
             file_size_bytes=data["filesize"],
         )._validate()
 
-    async def get_included_collections(
-        self, page: int = 1, page_size: int = 10
-    ) -> Tuple[ArticleIncludedCollectionInfo, ...]:
-        data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
-            path=f"/shakespeare/notes/{await self.id}/included_collections",
-            params={"page": page, "count": page_size},
-        )
-
-        return tuple(
-            ArticleIncludedCollectionInfo(
-                id=item["id"],
-                slug=item["slug"],
-                name=item["title"],
-                image_url=item["avatar"],
-                owner_name=item["owner_name"],
-            )._validate()
-            for item in data["collections"]
-        )
-
-    async def iter_included_collections(
-        self, *, start_page: int = 1, page_size: int = 10
-    ) -> AsyncGenerator[ArticleIncludedCollectionInfo, None]:
-        now_page = start_page
-        while True:
-            data = await self.get_included_collections(
-                page=now_page, page_size=page_size
-            )
-            if not data:
-                return
-            for item in data:
-                yield item
-
-            now_page += 1
-
     @property
     async def belong_to_notebook(self) -> ArticleBelongToNotebookInfo:
         data = await get_json(
@@ -429,58 +401,29 @@ class Article(StandardResourceObject):
             name=data["notebook_name"],
         )._validate()
 
-    async def get_comments(
-        self,
-        page: int = 1,
-        direction: Literal["asc", "desc"] = "desc",
-        author_only: bool = False,
-        page_size: int = 10,
-    ) -> Tuple[ArticleCommentInfo, ...]:
-        data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
-            path=f"/shakespeare/notes/{await self.id}/comments",
-            params={
-                "page": page,
-                "order_by": direction,
-                "author_only": author_only,
-                "count": page_size,
-            },
-        )
+    async def iter_included_collections(
+        self, *, start_page: int = 1, page_size: int = 10
+    ) -> AsyncGenerator[ArticleIncludedCollectionInfo, None]:
+        now_page = start_page
+        while True:
+            data = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path=f"/shakespeare/notes/{await self.id}/included_collections",
+                params={"page": now_page, "count": page_size},
+            )
+            if not data["collections"]:
+                return
 
-        return tuple(
-            ArticleCommentInfo(
-                id=item["id"],
-                floor=item["floor"],
-                content=item["compiled_content"],
-                images=item["images"],
-                likes_count=item["likes_count"],
-                published_at=normalize_datetime(item["created_at"]),
-                publisher_info=ArticleCommentPublisherInfo(
-                    id=item["user"]["id"],
-                    slug=item["user"]["slug"],
-                    name=item["user"]["nickname"],
-                    avatar_url=item["user"]["avatar"],
-                    address_by_ip=item["user"]["user_ip_addr"],
-                ),
-                subcomments=tuple(
-                    ArticleSubcommentInfo(
-                        id=subcomment["id"],
-                        content=subcomment["compiled_content"],
-                        images=subcomment["images"],
-                        published_at=normalize_datetime(subcomment["created_at"]),
-                        publisher_info=ArticleCommentPublisherInfo(
-                            id=subcomment["user"]["id"],
-                            slug=subcomment["user"]["slug"],
-                            name=subcomment["user"]["nickname"],
-                            avatar_url=subcomment["user"]["avatar"],
-                            address_by_ip=subcomment["user"]["user_ip_addr"],
-                        ),
-                    )
-                    for subcomment in item["children"]
-                ),
-            )._validate()
-            for item in data["comments"]
-        )
+            for item in data["collections"]:
+                yield ArticleIncludedCollectionInfo(
+                    id=item["id"],
+                    slug=item["slug"],
+                    name=item["title"],
+                    image_url=item["avatar"],
+                    owner_name=item["owner_name"],
+                )._validate()
+
+            now_page += 1
 
     async def iter_comments(
         self,
@@ -491,37 +434,78 @@ class Article(StandardResourceObject):
     ) -> AsyncGenerator[ArticleCommentInfo, None]:
         now_page = start_page
         while True:
-            data = await self.get_comments(
-                page=now_page,
-                direction=direction,
-                author_only=author_only,
-                page_size=page_size,
+            data = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path=f"/shakespeare/notes/{await self.id}/comments",
+                params={
+                    "page": now_page,
+                    "order_by": direction,
+                    "author_only": author_only,
+                    "count": page_size,
+                },
             )
-            if not data:
+            if not data["comments"]:
                 return
-            for item in data:
-                yield item
+
+            for item in data["comments"]:
+                yield ArticleCommentInfo(
+                    id=item["id"],
+                    floor=item["floor"],
+                    content=item["compiled_content"],
+                    images=tuple(image["url"] for image in item["images"])
+                    if item["images"]
+                    else (),
+                    likes_count=item["likes_count"],
+                    published_at=normalize_datetime(item["created_at"]),
+                    publisher_info=ArticleCommentPublisherInfo(
+                        id=item["user"]["id"],
+                        slug=item["user"]["slug"],
+                        name=item["user"]["nickname"],
+                        avatar_url=item["user"]["avatar"],
+                        address_by_ip=item["user"]["user_ip_addr"],
+                    ),
+                    subcomments=tuple(
+                        ArticleSubcommentInfo(
+                            id=subcomment["id"],
+                            content=subcomment["compiled_content"],
+                            images=tuple(image["url"] for image in subcomment["images"])
+                            if subcomment["images"]
+                            else (),
+                            published_at=normalize_datetime(subcomment["created_at"]),
+                            publisher_info=ArticleCommentPublisherInfo(
+                                id=subcomment["user"]["id"],
+                                slug=subcomment["user"]["slug"],
+                                name=subcomment["user"]["nickname"],
+                                avatar_url=subcomment["user"]["avatar"],
+                                address_by_ip=subcomment["user"]["user_ip_addr"],
+                            ),
+                        )
+                        for subcomment in item["children"]
+                    ),
+                )._validate()
 
             now_page += 1
 
-    async def get_featured_comments(
+    async def iter_featured_comments(
         self,
         count: int = 10,
-    ) -> Tuple[ArticleFeaturedCommentInfo, ...]:
+    ) -> AsyncGenerator[ArticleFeaturedCommentInfo, None]:
         data: List[Dict[str, Any]] = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
             path=f"/shakespeare/notes/{self.slug}/featured_comments",
             params={
                 "count": count,
             },
-        ) # type: ignore
+        )  # type: ignore
 
-        return tuple(
-            ArticleFeaturedCommentInfo(
+        for item in data:
+            yield ArticleFeaturedCommentInfo(
                 id=item["id"],
                 floor=item["floor"],
                 content=item["compiled_content"],
-                images=item["images"],
+                images=tuple(image["url"] for image in item["images"])
+                if item["images"]
+                else (),
                 likes_count=item["likes_count"],
                 published_at=normalize_datetime(item["created_at"]),
                 publisher_info=ArticleCommentPublisherInfo(
@@ -535,7 +519,9 @@ class Article(StandardResourceObject):
                     ArticleSubcommentInfo(
                         id=subcomment["id"],
                         content=subcomment["compiled_content"],
-                        images=subcomment["images"],
+                        images=tuple(image["url"] for image in subcomment["images"])
+                        if subcomment["images"]
+                        else (),
                         published_at=normalize_datetime(subcomment["created_at"]),
                         publisher_info=ArticleCommentPublisherInfo(
                             id=subcomment["user"]["id"],
@@ -547,7 +533,5 @@ class Article(StandardResourceObject):
                     )
                     for subcomment in item["children"]
                 ),
-                score=item["score"]
+                score=item["score"],
             )._validate()
-            for item in data
-        )

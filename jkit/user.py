@@ -121,7 +121,7 @@ class UserArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
     slug: ArticleSlugStr
     title: NonEmptyStr
-    description: NonEmptyStr
+    description: str
     image_url: Optional[UserUploadedUrlStr]
     published_at: NormalizedDatetime
     is_top: bool
@@ -394,60 +394,6 @@ class User(StandardResourceObject):
             for item in data["notebooks"]
         )
 
-    async def get_articles(
-        self,
-        page: int = 1,
-        order_by: Literal[
-            "published_at", "last_comment_time", "popularity"
-        ] = "published_at",
-        page_size: int = 10,
-    ) -> Tuple[UserArticleInfo, ...]:
-        data: List[Dict[str, Any]] = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
-            path=f"/asimov/users/slug/{self.slug}/public_notes",
-            params={
-                "page": page,
-                "count": page_size,
-                "order_by": {
-                    "published_at": "shared_at",
-                    "last_comment_time": "commented_at",
-                    "popularity": "top",
-                }[order_by],
-            },
-        )  # type: ignore
-
-        return tuple(
-            UserArticleInfo(
-                id=item["object"]["data"]["id"],
-                slug=item["object"]["data"]["slug"],
-                title=item["object"]["data"]["title"],
-                description=item["object"]["data"]["public_abbr"],
-                image_url=item["object"]["data"]["list_image_url"]
-                if item["object"]["data"]["list_image_url"]
-                else None,
-                published_at=normalize_datetime(
-                    item["object"]["data"]["first_shared_at"]
-                ),
-                is_top=item["object"]["data"]["is_top"],
-                is_paid=item["object"]["data"]["paid"],
-                can_comment=item["object"]["data"]["commentable"],
-                author_info=UserArticleAuthorInfo(
-                    id=item["object"]["data"]["user"]["id"],
-                    slug=item["object"]["data"]["user"]["slug"],
-                    name=item["object"]["data"]["user"]["nickname"],
-                    avatar_url=item["object"]["data"]["user"]["avatar"],
-                ),
-                views_count=item["object"]["data"]["views_count"],
-                likes_count=item["object"]["data"]["likes_count"],
-                comments_count=item["object"]["data"]["public_comments_count"],
-                tips_count=item["object"]["data"]["total_rewards_count"],
-                earned_fp_amount=normalize_assets_amount(
-                    item["object"]["data"]["total_fp_amount"]
-                ),
-            )._validate()
-            for item in data
-        )
-
     async def iter_articles(
         self,
         *,
@@ -459,15 +405,50 @@ class User(StandardResourceObject):
     ) -> AsyncGenerator[UserArticleInfo, None]:
         now_page = start_page
         while True:
-            data = await self.get_articles(
-                page=now_page,
-                order_by=order_by,
-                page_size=page_size,
-            )
+            data: List[Dict[str, Any]] = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path=f"/asimov/users/slug/{self.slug}/public_notes",
+                params={
+                    "page": now_page,
+                    "count": page_size,
+                    "order_by": {
+                        "published_at": "shared_at",
+                        "last_comment_time": "commented_at",
+                        "popularity": "top",
+                    }[order_by],
+                },
+            )  # type: ignore
             if not data:
                 return
 
             for item in data:
-                yield item
+                yield UserArticleInfo(
+                    id=item["object"]["data"]["id"],
+                    slug=item["object"]["data"]["slug"],
+                    title=item["object"]["data"]["title"],
+                    description=item["object"]["data"]["public_abbr"],
+                    image_url=item["object"]["data"]["list_image_url"]
+                    if item["object"]["data"]["list_image_url"]
+                    else None,
+                    published_at=normalize_datetime(
+                        item["object"]["data"]["first_shared_at"]
+                    ),
+                    is_top=item["object"]["data"]["is_top"],
+                    is_paid=item["object"]["data"]["paid"],
+                    can_comment=item["object"]["data"]["commentable"],
+                    author_info=UserArticleAuthorInfo(
+                        id=item["object"]["data"]["user"]["id"],
+                        slug=item["object"]["data"]["user"]["slug"],
+                        name=item["object"]["data"]["user"]["nickname"],
+                        avatar_url=item["object"]["data"]["user"]["avatar"],
+                    ),
+                    views_count=item["object"]["data"]["views_count"],
+                    likes_count=item["object"]["data"]["likes_count"],
+                    comments_count=item["object"]["data"]["public_comments_count"],
+                    tips_count=item["object"]["data"]["total_rewards_count"],
+                    earned_fp_amount=normalize_assets_amount(
+                        item["object"]["data"]["total_fp_amount"]
+                    ),
+                )._validate()
 
             now_page += 1
