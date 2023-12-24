@@ -84,6 +84,15 @@ class UserCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
         return Collection.from_slug(self.slug)._from_trusted_source()
 
 
+class UserNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    name: NonEmptyStr
+    is_book: bool  # TODO: 命名修改
+    is_paid_book: Optional[bool]  # TODO: 命名修改
+
+    # TODO: get_notebook_obj
+
+
 class User(StandardResourceObject):
     def __init__(
         self, *, url: Optional[str] = None, slug: Optional[str] = None
@@ -311,4 +320,28 @@ class User(StandardResourceObject):
                 image_url=item["avatar"],
             )._validate()
             for item in data["collections"]
+        )
+
+    async def notebooks(
+        self, page: int = 1, page_size: int = 10
+    ) -> Tuple[UserNotebookInfo, ...]:
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/users/{self.slug}/notebooks",
+            params={
+                "slug": self.slug,
+                "type": "manager",
+                "page": page,
+                "per_page": page_size,
+            },
+        )
+
+        return tuple(
+            UserNotebookInfo(
+                id=item["id"],
+                name=item["name"],
+                is_book=item["book"],
+                is_paid_book=item.get("paid_book"),
+            )._validate()
+            for item in data["notebooks"]
         )
