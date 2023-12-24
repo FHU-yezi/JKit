@@ -1,12 +1,13 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Tuple
+from typing import TYPE_CHECKING, Optional, Tuple
 
 from httpx import HTTPStatusError
 from typing_extensions import Self
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
+    CollectionSlugStr,
     NonEmptyStr,
     NonNegativeFloat,
     NonNegativeInt,
@@ -22,6 +23,9 @@ from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import APIUnsupportedError, ResourceUnavailableError
 from jkit.identifier_check import is_user_url
 from jkit.identifier_convert import user_slug_to_url, user_url_to_slug
+
+if TYPE_CHECKING:
+    from jkit.collection import Collection
 
 
 class UserBadge(DataObject, **DATA_OBJECT_CONFIG):
@@ -66,6 +70,18 @@ class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
     total_wordage: NonNegativeInt
     total_likes_count: NonNegativeInt
     fp_amount: NonNegativeFloat
+
+
+class UserCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt  # noqa: A003
+    slug: CollectionSlugStr
+    name: NonEmptyStr
+    image_url: UserUploadedUrlStr
+
+    def get_collection_obj(self) -> "Collection":
+        from jkit.collection import Collection
+
+        return Collection.from_slug(self.slug)._from_trusted_source()
 
 
 class User(StandardResourceObject):
@@ -248,3 +264,51 @@ class User(StandardResourceObject):
     @property
     async def ftn_amount(self) -> float:
         return round((await self.assets_amount) - (await self.fp_amount), 3)
+
+    async def owned_collections(
+        self, page: int = 1, page_size: int = 10
+    ) -> Tuple[UserCollectionInfo, ...]:
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/users/{self.slug}/collections",
+            params={
+                "slug": self.slug,
+                "type": "own",
+                "page": page,
+                "per_page": page_size,
+            },
+        )
+
+        return tuple(
+            UserCollectionInfo(
+                id=item["id"],
+                slug=item["slug"],
+                name=item["title"],
+                image_url=item["avatar"],
+            )._validate()
+            for item in data["collections"]
+        )
+
+    async def managed_collections(
+        self, page: int = 1, page_size: int = 10
+    ) -> Tuple[UserCollectionInfo, ...]:
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path=f"/users/{self.slug}/collections",
+            params={
+                "slug": self.slug,
+                "type": "manager",
+                "page": page,
+                "per_page": page_size,
+            },
+        )
+
+        return tuple(
+            UserCollectionInfo(
+                id=item["id"],
+                slug=item["slug"],
+                name=item["title"],
+                image_url=item["avatar"],
+            )._validate()
+            for item in data["collections"]
+        )
