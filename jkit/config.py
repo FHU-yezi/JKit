@@ -36,8 +36,10 @@ class _ResourceObjectConfig(ConfigObject, **CONFIG_CONFIG):
     auto_checking: bool = True
     skip_checking_for_trusted_source: bool = True
 
+
 class _DataObjectConfig(ConfigObject, **CONFIG_CONFIG):
     enable_validation: bool = True
+
 
 NETWORK_CONFIG = _NetworkConfig()
 ENDPOINT_CONFIG = _EndpointConfig()

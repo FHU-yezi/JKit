@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from re import sub as re_sub
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -12,6 +13,8 @@ from typing import (
 )
 
 from httpx import HTTPStatusError
+from lxml.html import HtmlElement
+from lxml.html import fromstring as parse_html
 from typing_extensions import Self
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
@@ -88,7 +91,7 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     can_reprint: bool
     paid_info: ArticlePaidInfo
     author_info: ArticleAuthorInfo
-    content: NonEmptyStr
+    html_content: NonEmptyStr
 
     likes_count: NonNegativeInt
     comments_count: NonNegativeInt
@@ -288,7 +291,7 @@ class Article(StandardResourceObject):
                 total_wordage=data["user"]["wordage"],
                 total_likes_count=data["user"]["likes_count"],
             ),
-            content=data["free_content"],
+            html_content=data["free_content"],
             likes_count=data["likes_count"],
             comments_count=data["public_comment_count"],
             featured_comments_count=data["featured_comments_count"],
@@ -340,8 +343,14 @@ class Article(StandardResourceObject):
         return (await self.info).author_info
 
     @property
-    async def content(self) -> str:
-        return (await self.info).content
+    async def html_content(self) -> str:
+        return (await self.info).html_content
+
+    @property
+    async def text_content(self) -> str:
+        html_obj: HtmlElement = parse_html(await self.html_content)
+        result = "".join(html_obj.itertext())  # type: ignore
+        return re_sub(r"\s{3,}", "", result)  # 去除多余的空行
 
     @property
     async def views_count(self) -> int:
