@@ -39,7 +39,7 @@ class JianshuLotteryWinRecord(DataObject, **DATA_OBJECT_CONFIG):
 
 class JianshuLottery(ResourceObject):
     async def iter_win_records(
-        self, count: int = 100
+        self, *, count: int = 100
     ) -> AsyncGenerator[JianshuLotteryWinRecord, None]:
         data: List[Dict[str, Any]] = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,

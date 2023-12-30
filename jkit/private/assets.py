@@ -30,7 +30,7 @@ class AssetsTransactionHistory(ResourceObject):
         self._assets_type = assets_type
 
     async def iter_records(
-        self, max_id: Optional[int] = None
+        self, *, max_id: Optional[int] = None
     ) -> AsyncGenerator[AssetsTransactionRecord, None]:
         now_max_id = max_id
 

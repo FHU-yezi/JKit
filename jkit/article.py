@@ -125,7 +125,7 @@ class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     image_url: UserUploadedUrlStr
     owner_name: UserNameStr
 
-    def get_collection_obj(self) -> "Collection":
+    def to_collection_obj(self) -> "Collection":
         from jkit.collection import Collection
 
         return Collection.from_slug(self.slug)._from_trusted_source()
@@ -135,14 +135,14 @@ class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
         if "..." not in self.name:
             return self.name
 
-        return await self.get_collection_obj().name
+        return await self.to_collection_obj().name
 
 
 class ArticleBelongToNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
     name: NonEmptyStr
 
-    # TODO: get_notebook_obj
+    # TODO: to_notebook_obj
 
 
 class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
@@ -153,7 +153,7 @@ class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
     address_by_ip: NonEmptyStr
 
     @property
-    def get_user_obj(self) -> "User":
+    def to_user_obj(self) -> "User":
         from jkit.user import User
 
         return User.from_slug(self.slug)._from_trusted_source()
@@ -339,7 +339,7 @@ class Article(StandardResourceObject):
         return (await self.info).paid_info
 
     @property
-    async def user_info(self) -> ArticleAuthorInfo:
+    async def author_info(self) -> ArticleAuthorInfo:
         return (await self.info).author_info
 
     @property
@@ -442,6 +442,7 @@ class Article(StandardResourceObject):
 
     async def iter_comments(
         self,
+        *,
         start_page: int = 1,
         direction: Literal["asc", "desc"] = "desc",
         author_only: bool = False,
@@ -505,6 +506,7 @@ class Article(StandardResourceObject):
 
     async def iter_featured_comments(
         self,
+        *,
         count: int = 10,
     ) -> AsyncGenerator[ArticleFeaturedCommentInfo, None]:
         await check_if_necessary(self._checked, self.check)

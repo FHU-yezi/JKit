@@ -17,6 +17,7 @@ from typing_extensions import Self
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
     ArticleSlugStr,
+    ArticleUrlStr,
     CollectionSlugStr,
     NonEmptyStr,
     NonNegativeFloat,
@@ -41,9 +42,9 @@ if TYPE_CHECKING:
 
 
 class UserBadge(DataObject, **DATA_OBJECT_CONFIG):
-    name: str
-    introduction_url: str
-    image_url: str
+    name: NonEmptyStr
+    introduction_url: ArticleUrlStr
+    image_url: NonEmptyStr
 
 
 class MembershipEnum(Enum):
@@ -90,7 +91,7 @@ class UserCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     name: NonEmptyStr
     image_url: UserUploadedUrlStr
 
-    def get_collection_obj(self) -> "Collection":
+    def to_collection_obj(self) -> "Collection":
         from jkit.collection import Collection
 
         return Collection.from_slug(self.slug)._from_trusted_source()
@@ -102,7 +103,7 @@ class UserNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
     is_book: bool  # TODO: 命名修改
     is_paid_book: Optional[bool]  # TODO: 命名修改
 
-    # TODO: get_notebook_obj
+    # TODO: to_notebook_obj
 
 
 class UserArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
@@ -325,7 +326,7 @@ class User(StandardResourceObject):
         return round((await self.assets_amount) - (await self.fp_amount), 3)
 
     async def owned_collections(
-        self, page: int = 1, page_size: int = 10
+        self, *, page: int = 1, page_size: int = 10
     ) -> Tuple[UserCollectionInfo, ...]:
         await check_if_necessary(self._checked, self.check)
 
@@ -351,7 +352,7 @@ class User(StandardResourceObject):
         )
 
     async def managed_collections(
-        self, page: int = 1, page_size: int = 10
+        self, *, page: int = 1, page_size: int = 10
     ) -> Tuple[UserCollectionInfo, ...]:
         await check_if_necessary(self._checked, self.check)
 
@@ -377,7 +378,7 @@ class User(StandardResourceObject):
         )
 
     async def notebooks(
-        self, page: int = 1, page_size: int = 10
+        self, *, page: int = 1, page_size: int = 10
     ) -> Tuple[UserNotebookInfo, ...]:
         await check_if_necessary(self._checked, self.check)
 
