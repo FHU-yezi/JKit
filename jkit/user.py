@@ -325,83 +325,95 @@ class User(StandardResourceObject):
     async def ftn_amount(self) -> float:
         return round((await self.assets_amount) - (await self.fp_amount), 3)
 
-    async def owned_collections(
-        self, *, page: int = 1, page_size: int = 10
-    ) -> Tuple[UserCollectionInfo, ...]:
+    async def iter_owned_collections(
+        self, *, start_page: int = 1, page_size: int = 10
+    ) -> AsyncGenerator[UserCollectionInfo, None]:
         await check_if_necessary(self._checked, self.check)
 
-        data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
-            path=f"/users/{self.slug}/collections",
-            params={
-                "slug": self.slug,
-                "type": "own",
-                "page": page,
-                "per_page": page_size,
-            },
-        )
+        now_page = start_page
+        while True:
+            data = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path=f"/users/{self.slug}/collections",
+                params={
+                    "slug": self.slug,
+                    "type": "own",
+                    "page": now_page,
+                    "per_page": page_size,
+                },
+            )
+            if not data["collections"]:
+                return
 
-        return tuple(
-            UserCollectionInfo(
-                id=item["id"],
-                slug=item["slug"],
-                name=item["title"],
-                image_url=item["avatar"],
-            )._validate()
-            for item in data["collections"]
-        )
+            for item in data["collections"]:
+                yield UserCollectionInfo(
+                    id=item["id"],
+                    slug=item["slug"],
+                    name=item["title"],
+                    image_url=item["avatar"],
+                )._validate()
 
-    async def managed_collections(
-        self, *, page: int = 1, page_size: int = 10
-    ) -> Tuple[UserCollectionInfo, ...]:
+            now_page += 1
+
+    async def iter_managed_collections(
+        self, *, start_page: int = 1, page_size: int = 10
+    ) -> AsyncGenerator[UserCollectionInfo, None]:
         await check_if_necessary(self._checked, self.check)
 
-        data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
-            path=f"/users/{self.slug}/collections",
-            params={
-                "slug": self.slug,
-                "type": "manager",
-                "page": page,
-                "per_page": page_size,
-            },
-        )
+        now_page = start_page
+        while True:
+            data = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path=f"/users/{self.slug}/collections",
+                params={
+                    "slug": self.slug,
+                    "type": "manager",
+                    "page": now_page,
+                    "per_page": page_size,
+                },
+            )
+            if not data["collections"]:
+                return
 
-        return tuple(
-            UserCollectionInfo(
-                id=item["id"],
-                slug=item["slug"],
-                name=item["title"],
-                image_url=item["avatar"],
-            )._validate()
-            for item in data["collections"]
-        )
+            for item in data["collections"]:
+                yield UserCollectionInfo(
+                    id=item["id"],
+                    slug=item["slug"],
+                    name=item["title"],
+                    image_url=item["avatar"],
+                )._validate()
 
-    async def notebooks(
-        self, *, page: int = 1, page_size: int = 10
-    ) -> Tuple[UserNotebookInfo, ...]:
+            now_page += 1
+
+    async def iter_notebooks(
+        self, *, start_page: int = 1, page_size: int = 10
+    ) -> AsyncGenerator[UserNotebookInfo, None]:
         await check_if_necessary(self._checked, self.check)
 
-        data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
-            path=f"/users/{self.slug}/notebooks",
-            params={
-                "slug": self.slug,
-                "type": "manager",
-                "page": page,
-                "per_page": page_size,
-            },
-        )
+        now_page = start_page
+        while True:
+            data = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path=f"/users/{self.slug}/notebooks",
+                params={
+                    "slug": self.slug,
+                    "type": "manager",
+                    "page": now_page,
+                    "per_page": page_size,
+                },
+            )
+            if not data["notebooks"]:
+                return
 
-        return tuple(
-            UserNotebookInfo(
-                id=item["id"],
-                name=item["name"],
-                is_book=item["book"],
-                is_paid_book=item.get("paid_book"),
-            )._validate()
-            for item in data["notebooks"]
-        )
+            for item in data["notebooks"]:
+                yield UserNotebookInfo(
+                    id=item["id"],
+                    name=item["name"],
+                    is_book=item["book"],
+                    is_paid_book=item.get("paid_book"),
+                )._validate()
+
+            now_page += 1
 
     async def iter_articles(
         self,
