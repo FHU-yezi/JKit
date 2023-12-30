@@ -15,8 +15,13 @@ async def get_json(
     endpoint: str,
     path: str,
     params: Optional[Dict[str, Any]] = None,
+    cookies: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    response = await HTTP_CLIENT.get(f"{endpoint}{path}", params=params)
+    response = await HTTP_CLIENT.get(
+        f"{endpoint}{path}",
+        params=params,
+        cookies=cookies,
+    )
     response.raise_for_status()
 
     return JSON_DECODER.decode(response.content)
