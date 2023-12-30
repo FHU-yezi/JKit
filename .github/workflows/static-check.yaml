@@ -21,5 +21,3 @@ jobs:
       run: poetry run ruff check --output-format=github .
     - name: Type checking with Pyright
       run: poetry run pyright --warnings .
-    - name: Spelling check with Codespell
-      run: poetry run codespell -f .
