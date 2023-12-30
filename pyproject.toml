@@ -30,7 +30,6 @@ lxml = "*"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.0"
 pyright = "^1.1.0"
-codespell = "^2.2.0"
 
 [build-system]
 requires = ["poetry-core"]
