@@ -17,7 +17,6 @@ from typing_extensions import Self
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
     ArticleSlugStr,
-    ArticleUrlStr,
     CollectionSlugStr,
     NonEmptyStr,
     NonNegativeFloat,
@@ -43,7 +42,7 @@ if TYPE_CHECKING:
 
 class UserBadge(DataObject, **DATA_OBJECT_CONFIG):
     name: NonEmptyStr
-    introduction_url: ArticleUrlStr
+    introduction_url: str
     image_url: NonEmptyStr
 
 
