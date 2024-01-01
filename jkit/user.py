@@ -49,7 +49,7 @@ class UserBadge(DataObject, **DATA_OBJECT_CONFIG):
 class MembershipEnum(Enum):
     NONE = "无会员"
     BRONZE = "铜牌会员"
-    SLIVER = "银牌会员"
+    SILVER = "银牌会员"
     GOLD = "金牌会员"
     PLATINA = "白金会员"
 
@@ -224,7 +224,7 @@ class User(StandardResourceObject):
             membership_info=UserMembershipInfo(
                 type={
                     "bronze": MembershipEnum.BRONZE,
-                    "sliver": MembershipEnum.SLIVER,
+                    "silver": MembershipEnum.SILVER,
                     "gold": MembershipEnum.GOLD,
                     "platina": MembershipEnum.PLATINA,
                 }[data["member"]["type"]],
