@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Context, Decimal
 from typing import Union
 
 
@@ -13,3 +14,7 @@ def normalize_datetime(input_data: Union[int, float, str], /) -> datetime:
 
 def normalize_assets_amount(input_data: int, /) -> float:
     return input_data / 1000
+
+
+def normalize_assets_amount_precise(input_data: int, /) -> Decimal:
+    return Context(prec=18).create_decimal_from_float(input_data / 10**18)

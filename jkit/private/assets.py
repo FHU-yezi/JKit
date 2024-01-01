@@ -1,4 +1,4 @@
-from decimal import Context, Decimal
+from decimal import Decimal
 from typing import AsyncGenerator, Optional
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
@@ -8,7 +8,11 @@ from jkit._constraints import (
     PositiveInt,
 )
 from jkit._network_request import get_json
-from jkit._normalization import normalize_assets_amount, normalize_datetime
+from jkit._normalization import (
+    normalize_assets_amount,
+    normalize_assets_amount_precise,
+    normalize_datetime,
+)
 from jkit.config import ENDPOINT_CONFIG
 from jkit.credential import JianshuCredential
 
@@ -54,8 +58,8 @@ class AssetsTransactionHistory(ResourceObject):
                     type_text=item["display_name"],
                     amount=normalize_assets_amount(item["amount"])
                     * (-1 if is_out else 1),
-                    amount_precise=Context(prec=18).create_decimal_from_float(
-                        (item["amount_18"] * (-1 if is_out else 1)) / 10**18
+                    amount_precise=normalize_assets_amount_precise(
+                        item["amount_18"] * (-1 if is_out else 1)
                     ),
                 )._validate()
 
@@ -87,7 +91,7 @@ class AssetsTransactionHistory(ResourceObject):
                     type_text=item["display_name"],
                     amount=normalize_assets_amount(item["amount"])
                     * (-1 if is_out else 1),
-                    amount_precise=Context(prec=18).create_decimal_from_float(
-                        (item["amount_18"] * (-1 if is_out else 1)) / 10**18
+                    amount_precise=normalize_assets_amount_precise(
+                        item["amount_18"] * (-1 if is_out else 1)
                     ),
                 )._validate()
