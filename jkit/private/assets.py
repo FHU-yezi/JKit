@@ -4,6 +4,7 @@ from typing import AsyncGenerator, Optional
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
     NonEmptyStr,
+    NonNegativeFloat,
     NormalizedDatetime,
     PositiveInt,
 )
@@ -17,7 +18,7 @@ from jkit.config import ENDPOINT_CONFIG
 from jkit.credential import JianshuCredential
 
 
-class AssetsTransactionHistoryRecord(DataObject, **DATA_OBJECT_CONFIG):
+class AssetsTransactionRecord(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt  # noqa: A003
     time: NormalizedDatetime
     type_id: PositiveInt
@@ -26,13 +27,26 @@ class AssetsTransactionHistoryRecord(DataObject, **DATA_OBJECT_CONFIG):
     amount_precise: Decimal
 
 
-class AssetsTransactionHistory(ResourceObject):
+class FPRewardsRecord(DataObject, **DATA_OBJECT_CONFIG):
+    time: NormalizedDatetime
+    own_amount: Decimal
+    referral_amount: Decimal
+    grand_referral_amount: Decimal
+    total_amount: Decimal
+
+
+class BenefitCardsInfo(DataObject, **DATA_OBJECT_CONFIG):
+    total_amount: NonNegativeFloat
+    estimated_benefits_percent: NonNegativeFloat
+
+
+class Assets(ResourceObject):
     def __init__(self, *, credential: JianshuCredential) -> None:
         self._credential = credential
 
     async def iter_fp_records(
         self, *, max_id: Optional[int] = None
-    ) -> AsyncGenerator[AssetsTransactionHistoryRecord, None]:
+    ) -> AsyncGenerator[AssetsTransactionRecord, None]:
         now_max_id = max_id
 
         while True:
@@ -51,7 +65,7 @@ class AssetsTransactionHistory(ResourceObject):
 
             for item in data["transactions"]:
                 is_out = item["io_type"] == 2
-                yield AssetsTransactionHistoryRecord(
+                yield AssetsTransactionRecord(
                     id=item["id"],
                     time=normalize_datetime(item["time"]),
                     type_id=item["tn_type"],
@@ -65,7 +79,7 @@ class AssetsTransactionHistory(ResourceObject):
 
     async def iter_ftn_records(
         self, *, max_id: Optional[int] = None
-    ) -> AsyncGenerator[AssetsTransactionHistoryRecord, None]:
+    ) -> AsyncGenerator[AssetsTransactionRecord, None]:
         now_max_id = max_id
 
         while True:
@@ -84,7 +98,7 @@ class AssetsTransactionHistory(ResourceObject):
 
             for item in data["transactions"]:
                 is_out = item["io_type"] == 2
-                yield AssetsTransactionHistoryRecord(
+                yield AssetsTransactionRecord(
                     id=item["id"],
                     time=normalize_datetime(item["time"]),
                     type_id=item["tn_type"],
@@ -96,22 +110,9 @@ class AssetsTransactionHistory(ResourceObject):
                     ),
                 )._validate()
 
-
-class FPRewardsHistoryRecord(DataObject, **DATA_OBJECT_CONFIG):
-    time: NormalizedDatetime
-    own_amount: Decimal
-    referral_amount: Decimal
-    grand_referral_amount: Decimal
-    total_amount: Decimal
-
-
-class FPRewardsHistory(ResourceObject):
-    def __init__(self, *, credential: JianshuCredential) -> None:
-        self._credential = credential
-
-    async def iter_records(
-        self, page_size: int = 10
-    ) -> AsyncGenerator[FPRewardsHistoryRecord, None]:
+    async def iter_fp_rewards_records(
+        self, *, page_size: int = 10
+    ) -> AsyncGenerator[FPRewardsRecord, None]:
         now_page = 1
 
         while True:
@@ -125,7 +126,7 @@ class FPRewardsHistory(ResourceObject):
                 return
 
             for item in data["transactions"]:
-                yield FPRewardsHistoryRecord(
+                yield FPRewardsRecord(
                     time=normalize_datetime(item["time"]),
                     own_amount=normalize_assets_amount_precise(item["own_reards18"]),
                     referral_amount=normalize_assets_amount_precise(
@@ -140,3 +141,16 @@ class FPRewardsHistory(ResourceObject):
                 )._validate()
 
             now_page += 1
+
+    @property
+    async def benefit_cards_info(self) -> BenefitCardsInfo:
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu,
+            path="/asimov/fp_wallets/benefit_cards/info",
+            cookies=self._credential.cookies,
+        )
+
+        return BenefitCardsInfo(
+            total_amount=float(normalize_assets_amount_precise(data["total_amount18"])),
+            estimated_benefits_percent=data["total_estimated_benefits"] / 100,
+        )._validate()
