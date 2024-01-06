@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 from typing import AsyncGenerator, Optional
 
@@ -38,6 +39,39 @@ class FPRewardsRecord(DataObject, **DATA_OBJECT_CONFIG):
 class BenefitCardsInfo(DataObject, **DATA_OBJECT_CONFIG):
     total_amount: NonNegativeFloat
     estimated_benefits_percent: NonNegativeFloat
+
+
+class UnsentBenfitCardRecord(DataObject, **DATA_OBJECT_CONFIG):  # TODO: 名称更改
+    amount: NonNegativeFloat
+    start_time: NormalizedDatetime
+    end_time: NormalizedDatetime
+
+    @property
+    def is_valid(self) -> bool:
+        return self.start_time <= datetime.now() <= self.end_time
+
+
+class ActiveBenfitCardRecord(DataObject, **DATA_OBJECT_CONFIG):
+    amount: NonNegativeFloat
+    start_time: NormalizedDatetime
+    end_time: NormalizedDatetime
+    estimated_benefits_precent: NonNegativeFloat
+
+    @property
+    def is_valid(self) -> bool:
+        return self.start_time <= datetime.now() <= self.end_time
+
+
+class ExpiredBenfitCardRecord(DataObject, **DATA_OBJECT_CONFIG):
+    amount: NonNegativeFloat
+    start_time: NormalizedDatetime
+    end_time: NormalizedDatetime
+    benefits: float
+    benfits_precise: Decimal
+
+    @property
+    def is_valid(self) -> bool:
+        return self.start_time <= datetime.now() <= self.end_time
 
 
 class Assets(ResourceObject):
@@ -154,3 +188,83 @@ class Assets(ResourceObject):
             total_amount=float(normalize_assets_amount_precise(data["total_amount18"])),
             estimated_benefits_percent=data["total_estimated_benefits"] / 100,
         )._validate()
+
+    async def iter_unsent_benefit_cards(  # TODO: 名称更改
+        self, *, page_count: int = 10
+    ) -> AsyncGenerator[UnsentBenfitCardRecord, None]:
+        now_page = 1
+
+        while True:
+            data = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path="/asimov/fp_wallets/benefit_cards/unsent",
+                params={"page": now_page, "count": page_count},
+                cookies=self._credential.cookies,
+            )
+
+            if not data["benefit_cards"]:
+                return
+
+            for item in data["benefit_cards"]:
+                yield UnsentBenfitCardRecord(
+                    amount=float(normalize_assets_amount_precise(item["amount18"])),
+                    start_time=normalize_datetime(item["start_time"]),
+                    end_time=normalize_datetime(item["end_time"]),
+                )._validate()
+
+            now_page += 1
+
+    async def iter_active_benefit_cards(  # TODO: 名称更改
+        self, *, page_count: int = 10
+    ) -> AsyncGenerator[ActiveBenfitCardRecord, None]:
+        now_page = 1
+
+        while True:
+            data = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path="/asimov/fp_wallets/benefit_cards/active",
+                params={"page": now_page, "count": page_count},
+                cookies=self._credential.cookies,
+            )
+
+            if not data["benefit_cards"]:
+                return
+
+            for item in data["benefit_cards"]:
+                yield ActiveBenfitCardRecord(
+                    amount=float(normalize_assets_amount_precise(item["amount18"])),
+                    start_time=normalize_datetime(item["start_time"]),
+                    end_time=normalize_datetime(item["end_time"]),
+                    estimated_benefits_precent=item["estimated_benefits"] / 100,
+                )._validate()
+
+            now_page += 1
+
+    async def iter_expired_benefit_cards(  # TODO: 名称更改
+        self, *, page_count: int = 10
+    ) -> AsyncGenerator[ExpiredBenfitCardRecord, None]:
+        now_page = 1
+
+        while True:
+            data = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path="/asimov/fp_wallets/benefit_cards/expire",
+                params={"page": now_page, "count": page_count},
+                cookies=self._credential.cookies,
+            )
+
+            if not data["benefit_cards"]:
+                return
+
+            for item in data["benefit_cards"]:
+                yield ExpiredBenfitCardRecord(
+                    amount=float(normalize_assets_amount_precise(item["amount18"])),
+                    start_time=normalize_datetime(item["start_time"]),
+                    end_time=normalize_datetime(item["end_time"]),
+                    benefits=round(
+                        float(normalize_assets_amount_precise(item["benefits"])), 2
+                    ),
+                    benfits_precise=normalize_assets_amount_precise(item["benefits"]),
+                )._validate()
+
+            now_page += 1
