@@ -32,7 +32,11 @@ from jkit._constraints import (
     UserUploadedUrlStr,
 )
 from jkit._network_request import get_json
-from jkit._normalization import normalize_assets_amount, normalize_datetime
+from jkit._normalization import (
+    normalize_assets_amount,
+    normalize_datetime,
+    normalize_percentage,
+)
 from jkit._utils import check_if_necessary, only_one
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import ResourceUnavailableError
@@ -275,8 +279,9 @@ class Article(StandardResourceObject):
                 price=float(data["retail_price"]) / 100
                 if data.get("retail_price")
                 else None,
-                paid_cotent_percent=float(data["paid_content_percent"].replace("%", ""))
-                / 100
+                paid_cotent_percent=normalize_percentage(
+                    float(data["paid_content_percent"].replace("%", ""))
+                )
                 if data.get("paid_content_percent")
                 else None,
                 paid_readers_count=data.get("purchased_count"),

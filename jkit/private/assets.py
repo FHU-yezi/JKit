@@ -11,6 +11,7 @@ from jkit._constraints import (
     NonEmptyStr,
     NonNegativeFloat,
     NormalizedDatetime,
+    Percentage,
     PositiveInt,
 )
 from jkit._network_request import JSON_DECODER, get_json, send_post
@@ -18,6 +19,7 @@ from jkit._normalization import (
     normalize_assets_amount,
     normalize_assets_amount_precise,
     normalize_datetime,
+    normalize_percentage,
 )
 from jkit.config import ENDPOINT_CONFIG
 from jkit.credential import JianshuCredential
@@ -43,7 +45,7 @@ class FPRewardsRecord(DataObject, **DATA_OBJECT_CONFIG):
 
 class BenefitCardsInfo(DataObject, **DATA_OBJECT_CONFIG):
     total_amount: NonNegativeFloat
-    estimated_benefits_percent: NonNegativeFloat
+    estimated_benefits_percent: Percentage
 
 
 class UnsentBenfitCardRecord(DataObject, **DATA_OBJECT_CONFIG):  # TODO: 名称更改
@@ -191,7 +193,9 @@ class Assets(ResourceObject):
 
         return BenefitCardsInfo(
             total_amount=float(normalize_assets_amount_precise(data["total_amount18"])),
-            estimated_benefits_percent=data["total_estimated_benefits"] / 100,
+            estimated_benefits_percent=normalize_percentage(
+                data["total_estimated_benefits"]
+            ),
         )._validate()
 
     async def iter_unsent_benefit_cards(  # TODO: 名称更改
