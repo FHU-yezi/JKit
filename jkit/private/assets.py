@@ -1,6 +1,10 @@
+from contextlib import suppress
 from datetime import datetime
 from decimal import Decimal
-from typing import AsyncGenerator, Optional
+from typing import AsyncGenerator, Optional, Union
+
+from httpx import HTTPStatusError
+from msgspec import DecodeError
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
@@ -9,7 +13,7 @@ from jkit._constraints import (
     NormalizedDatetime,
     PositiveInt,
 )
-from jkit._network_request import get_json
+from jkit._network_request import JSON_DECODER, get_json, send_post
 from jkit._normalization import (
     normalize_assets_amount,
     normalize_assets_amount_precise,
@@ -17,6 +21,7 @@ from jkit._normalization import (
 )
 from jkit.config import ENDPOINT_CONFIG
 from jkit.credential import JianshuCredential
+from jkit.exceptions import BalanceNotEnoughError, WeeklyConvertLimitExceededError
 
 
 class AssetsTransactionRecord(DataObject, **DATA_OBJECT_CONFIG):
@@ -268,3 +273,55 @@ class Assets(ResourceObject):
                 )._validate()
 
             now_page += 1
+
+    async def fp_to_ftn(self, /, amount: Union[int, float]) -> None:
+        if amount <= 0:
+            raise ValueError("转换的简书钻数量必须大于 0")
+
+        try:
+            with suppress(DecodeError):  # TODO
+                await send_post(
+                    endpoint=ENDPOINT_CONFIG.jianshu,
+                    path="/asimov/fp_wallets/exchange_jsb",
+                    json={"count": str(amount)},
+                    headers={"Accept": "application/json"},
+                    cookies=self._credential.cookies,
+                )
+        except HTTPStatusError as e:
+            if e.response.status_code == 422:
+                data = JSON_DECODER.decode(e.response.content)
+                if data["error"][0]["code"] == 18002:
+                    raise BalanceNotEnoughError("简书钻余额不足") from None
+
+                if data["error"][0]["code"] == 18005:
+                    raise WeeklyConvertLimitExceededError(
+                        "超出每周转换额度限制"
+                    ) from None
+
+            raise e from None
+
+    async def ftn_to_fp(self, /, amount: Union[int, float]) -> None:
+        if amount <= 0:
+            raise ValueError("转换的简书贝数量必须大于 0")
+
+        try:
+            with suppress(DecodeError):  # TODO
+                await send_post(
+                    endpoint=ENDPOINT_CONFIG.jianshu,
+                    path="/asimov/fp_wallets/exchange_jsd",
+                    json={"count": str(amount)},
+                    headers={"Accept": "application/json"},
+                    cookies=self._credential.cookies,
+                )
+        except HTTPStatusError as e:
+            if e.response.status_code == 422:
+                data = JSON_DECODER.decode(e.response.content)
+                if data["error"][0]["code"] == 18002:
+                    raise BalanceNotEnoughError("简书贝余额不足") from None
+
+                if data["error"][0]["code"] == 18005:
+                    raise WeeklyConvertLimitExceededError(
+                        "超出每周转换额度限制"
+                    ) from None
+
+            raise e from None
