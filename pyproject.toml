@@ -28,7 +28,7 @@ typing-extensions = "*"
 lxml = "*"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.1.0"
+ruff = "^0.2.0"
 pyright = "^1.1.0"
 
 [build-system]
@@ -37,7 +37,9 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 
-select = [
+target-version = "py38"
+
+lint.select = [
     "A", "ANN", "ASYNC", "B", "BLE",
     "C4", "E", "F", "I", "ICN",
     "ISC", "N", "PIE", "Q", "RET",
@@ -45,6 +47,4 @@ select = [
     "TCH", "UP", "W"
 ]
 
-ignore = ["ANN101", "ANN102", "ANN401", "BLE001", "ISC001", "RUF001", "RUF002", "RUF003", "SLF001"]
-
-target-version = "py38"
+lint.ignore = ["ANN101", "ANN102", "ANN401", "BLE001", "ISC001", "RUF001", "RUF002", "RUF003", "SLF001"]
