@@ -67,7 +67,7 @@ class ArticlePaidInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class ArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: UserSlugStr
     name: UserNameStr
     avatar_url: UserUploadedUrlStr
@@ -84,7 +84,7 @@ class ArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     notebook_id: PositiveInt
     title: NonEmptyStr
     description: NonEmptyStr
@@ -104,7 +104,7 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class ArticleAudioInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     name: NonEmptyStr
     author: NonEmptyStr
     file_url: str  # TODO
@@ -123,7 +123,7 @@ class ArticleAudioInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: CollectionSlugStr
     name: NonEmptyStr
     image_url: UserUploadedUrlStr
@@ -143,14 +143,14 @@ class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class ArticleBelongToNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     name: NonEmptyStr
 
     # TODO: to_notebook_obj
 
 
 class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: UserSlugStr
     name: UserNameStr
     avatar_url: UserUploadedUrlStr
@@ -164,7 +164,7 @@ class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class ArticleSubcommentInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     content: str
     images: Tuple[UserUploadedUrlStr, ...]
     published_at: NormalizedDatetime
@@ -172,7 +172,7 @@ class ArticleSubcommentInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class ArticleCommentInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     floor: PositiveInt
     content: str
     images: Tuple[UserUploadedUrlStr, ...]
@@ -304,7 +304,7 @@ class Article(StandardResourceObject):
         )._validate()
 
     @property
-    async def id(self) -> int:  # noqa: A003
+    async def id(self) -> int:
         return (await self.info).id
 
     @property

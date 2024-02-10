@@ -39,7 +39,7 @@ if TYPE_CHECKING:
 
 
 class CollectionOwnerInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: UserSlugStr
     name: UserNameStr
 
@@ -50,7 +50,7 @@ class CollectionOwnerInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class CollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: CollectionSlugStr
     name: NonEmptyStr
     image_url: UserUploadedUrlStr
@@ -64,7 +64,7 @@ class CollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class CollectionArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: UserSlugStr
     name: UserNameStr
     avatar_url: UserUploadedUrlStr
@@ -76,7 +76,7 @@ class CollectionArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: ArticleSlugStr
     title: NonEmptyStr
     description: str

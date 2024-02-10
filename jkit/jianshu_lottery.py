@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 class JianshuLotteryWinRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: UserSlugStr
     name: UserNameStr
     avatar_url: UserUploadedUrlStr
@@ -30,7 +30,7 @@ class JianshuLotteryWinRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class JianshuLotteryWinRecord(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     time: NormalizedDatetime
     award_name: NonEmptyStr
 

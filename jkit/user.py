@@ -61,12 +61,12 @@ class GenderEnum(Enum):
 
 
 class UserMembershipInfo(DataObject, **DATA_OBJECT_CONFIG):
-    type: MembershipEnum  # noqa: A003
+    type: MembershipEnum
     expired_at: Optional[NormalizedDatetime]
 
 
 class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     name: UserNameStr
     gender: GenderEnum
     introduction: str
@@ -85,7 +85,7 @@ class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class UserCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: CollectionSlugStr
     name: NonEmptyStr
     image_url: UserUploadedUrlStr
@@ -97,7 +97,7 @@ class UserCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class UserNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     name: NonEmptyStr
     is_book: bool  # TODO: 命名修改
     is_paid_book: Optional[bool]  # TODO: 命名修改
@@ -106,7 +106,7 @@ class UserNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class UserArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: UserSlugStr
     name: UserNameStr
     avatar_url: UserUploadedUrlStr
@@ -118,7 +118,7 @@ class UserArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class UserArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: ArticleSlugStr
     title: NonEmptyStr
     description: str
@@ -244,7 +244,7 @@ class User(StandardResourceObject):
         )._validate()
 
     @property
-    async def id(self) -> int:  # noqa: A003
+    async def id(self) -> int:
         return (await self.info).id
 
     @property

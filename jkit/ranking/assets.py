@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 class AssetsRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     slug: UserSlugStr
     avatar_url: UserUploadedUrlStr
 

@@ -27,7 +27,7 @@ from jkit.exceptions import BalanceNotEnoughError, WeeklyConvertLimitExceededErr
 
 
 class AssetsTransactionRecord(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt  # noqa: A003
+    id: PositiveInt
     time: NormalizedDatetime
     type_id: PositiveInt
     type_text: NonEmptyStr
