@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Any, List
+from typing import List
 
 from msgspec import Struct, convert, to_builtins
 from msgspec import ValidationError as MsgspecValidationError
@@ -91,7 +91,7 @@ class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
             self._checked = True
         return self
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__) and self.url == other.url:
             return True
 

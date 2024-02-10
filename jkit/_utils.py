@@ -1,9 +1,9 @@
-from typing import Any, Callable, Coroutine
+from typing import Callable, Coroutine
 
 from jkit.config import RESOURCE_OBJECT_CONFIG
 
 
-def only_one(*args: Any) -> bool:
+def only_one(*args: object) -> bool:
     return len(tuple(filter(None, args))) == 1
 
 

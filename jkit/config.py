@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Literal, Optional
 
 from httpx import AsyncClient
 from httpx._types import ProxiesTypes, TimeoutTypes
@@ -20,7 +20,7 @@ class _NetworkConfig(ConfigObject, **CONFIG_CONFIG):
             timeout=self.timeout,
         )
 
-    def __setattr__(self, __name: str, __value: Any) -> None:
+    def __setattr__(self, __name: str, __value: object) -> None:
         super().__setattr__(__name, __value)
 
         import jkit._network_request
