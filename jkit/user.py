@@ -94,7 +94,7 @@ class UserCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     def to_collection_obj(self) -> "Collection":
         from jkit.collection import Collection
 
-        return Collection.from_slug(self.slug)._from_trusted_source()
+        return Collection.from_slug(self.slug)._as_checked()
 
 
 class UserNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
@@ -118,7 +118,7 @@ class UserArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     def to_user_obj(self) -> "User":
         from jkit.user import User
 
-        return User.from_slug(self.slug)._from_trusted_source()
+        return User.from_slug(self.slug)._as_checked()
 
 
 class UserArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
@@ -142,7 +142,7 @@ class UserArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     def to_article_obj(self) -> "Article":
         from jkit.article import Article
 
-        return Article.from_slug(self.slug)._from_trusted_source()
+        return Article.from_slug(self.slug)._as_checked()
 
 
 class User(StandardResourceObject):

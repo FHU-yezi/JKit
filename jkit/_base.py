@@ -76,18 +76,18 @@ class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
     async def check(self) -> None:
         raise NotImplementedError
 
-    def _from_trusted_source(self) -> Self:
+    def _as_checked(self) -> Self:
         """将资源对象设置为已检查状态
 
-        从 DataObject 获取的资源标识符视为可信来源，对从其创建的资源对象跳过检查流程。
+        默认情况下，从 DataObject 获取的资源标识符创建的资源对象不进行检查。
         此操作有利于提升性能。
-        可通过修改 `RESOURCE_OBJECT_CONFIG.skip_checking_for_trusted_source` 的值
+        可通过修改 `RESOURCE_OBJECT_CONFIG.force_check_object_from_data_object` 的值
         改变此行为。
         """
 
         from jkit.config import RESOURCE_OBJECT_CONFIG
 
-        if RESOURCE_OBJECT_CONFIG.skip_checking_for_trusted_source:
+        if RESOURCE_OBJECT_CONFIG.force_check_object_from_data_object:
             self._checked = True
         return self
 

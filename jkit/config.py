@@ -34,7 +34,7 @@ class _EndpointConfig(ConfigObject, **CONFIG_CONFIG):
 
 class _ResourceObjectConfig(ConfigObject, **CONFIG_CONFIG):
     auto_checking: bool = True
-    skip_checking_for_trusted_source: bool = True
+    force_check_object_from_data_object: bool = True
 
 
 class _DataObjectConfig(ConfigObject, **CONFIG_CONFIG):

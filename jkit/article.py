@@ -81,7 +81,7 @@ class ArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     def to_user_obj(self) -> "User":
         from jkit.user import User
 
-        return User.from_slug(self.slug)._from_trusted_source()
+        return User.from_slug(self.slug)._as_checked()
 
 
 class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
@@ -133,7 +133,7 @@ class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     def to_collection_obj(self) -> "Collection":
         from jkit.collection import Collection
 
-        return Collection.from_slug(self.slug)._from_trusted_source()
+        return Collection.from_slug(self.slug)._as_checked()
 
     @property
     async def full_name(self) -> str:
@@ -164,7 +164,7 @@ class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
     def to_user_obj(self) -> "User":
         from jkit.user import User
 
-        return User.from_slug(self.slug)._from_trusted_source()
+        return User.from_slug(self.slug)._as_checked()
 
 
 class ArticleSubcommentInfo(DataObject, **DATA_OBJECT_CONFIG):

@@ -43,7 +43,7 @@ class ArticleEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
 
         from jkit.article import Article
 
-        return Article.from_slug(self.slug)._from_trusted_source()
+        return Article.from_slug(self.slug)._as_checked()
 
 
 class ArticleEarningRankData(DataObject, **DATA_OBJECT_CONFIG):

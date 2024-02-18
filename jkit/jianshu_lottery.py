@@ -26,7 +26,7 @@ class JianshuLotteryWinRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
     def to_user_obj(self) -> "User":
         from jkit.user import User
 
-        return User.from_slug(self.slug)._from_trusted_source()
+        return User.from_slug(self.slug)._as_checked()
 
 
 class JianshuLotteryWinRecord(DataObject, **DATA_OBJECT_CONFIG):
