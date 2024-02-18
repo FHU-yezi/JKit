@@ -105,8 +105,8 @@ class UserCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
 class UserNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     name: NonEmptyStr
-    is_book: bool  # TODO: 命名修改
-    is_paid_book: Optional[bool]  # TODO: 命名修改
+    is_serial: bool
+    is_paid: Optional[bool]
 
     def to_notebook_obj(self) -> "Notebook":
         from jkit.notebook import Notebook
@@ -365,8 +365,8 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
                 yield UserNotebookInfo(
                     id=item["id"],
                     name=item["name"],
-                    is_book=item["book"],
-                    is_paid_book=item.get("paid_book"),
+                    is_serial=item["book"],
+                    is_paid=item.get("paid_book"),
                 )._validate()
 
             now_page += 1

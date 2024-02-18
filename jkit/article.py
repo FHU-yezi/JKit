@@ -119,7 +119,7 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
 class ArticleAudioInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     name: NonEmptyStr
-    author: NonEmptyStr
+    producer: NonEmptyStr
     file_url: str  # TODO
     duration_seconds: PositiveInt
     file_size_bytes: PositiveInt
@@ -349,7 +349,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         return ArticleAudioInfo(
             id=data["id"],
             name=data["title"],
-            author=data["dubber"],  # TODO: 命名调整
+            producer=data["dubber"],
             file_url=data["play_url"],
             duration_seconds=data["duration"],
             file_size_bytes=data["filesize"],

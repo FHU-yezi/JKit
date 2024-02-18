@@ -38,8 +38,8 @@ class AssetsTransactionRecord(DataObject, **DATA_OBJECT_CONFIG):
 class FPRewardsRecord(DataObject, **DATA_OBJECT_CONFIG):
     time: NormalizedDatetime
     own_amount: Decimal
-    referral_amount: Decimal
-    grand_referral_amount: Decimal
+    level1_referral_amount: Decimal
+    level2_referral_amount: Decimal
     total_amount: Decimal
 
 
@@ -48,7 +48,7 @@ class BenefitCardsInfo(DataObject, **DATA_OBJECT_CONFIG):
     estimated_benefits_percent: Percentage
 
 
-class UnsentBenfitCardRecord(DataObject, **DATA_OBJECT_CONFIG):  # TODO: 名称更改
+class UnusedBenfitCardRecord(DataObject, **DATA_OBJECT_CONFIG):
     amount: NonNegativeFloat
     start_time: NormalizedDatetime
     end_time: NormalizedDatetime
@@ -170,12 +170,12 @@ class Assets(ResourceObject):
                 yield FPRewardsRecord(
                     time=normalize_datetime(item["time"]),
                     own_amount=normalize_assets_amount_precise(item["own_reards18"]),
-                    referral_amount=normalize_assets_amount_precise(
+                    level1_referral_amount=normalize_assets_amount_precise(
                         item["referral_rewards18"]
                     ),
-                    grand_referral_amount=normalize_assets_amount_precise(
+                    level2_referral_amount=normalize_assets_amount_precise(
                         item["grand_referral_rewards18"]
-                    ),  # TODO: 命名调整
+                    ),
                     total_amount=normalize_assets_amount_precise(
                         item["total_amount18"]
                     ),
@@ -198,9 +198,9 @@ class Assets(ResourceObject):
             ),
         )._validate()
 
-    async def iter_unsent_benefit_cards(  # TODO: 名称更改
+    async def iter_unused_benefit_cards(
         self, *, page_count: int = 10
-    ) -> AsyncGenerator[UnsentBenfitCardRecord, None]:
+    ) -> AsyncGenerator[UnusedBenfitCardRecord, None]:
         now_page = 1
 
         while True:
@@ -215,7 +215,7 @@ class Assets(ResourceObject):
                 return
 
             for item in data["benefit_cards"]:
-                yield UnsentBenfitCardRecord(
+                yield UnusedBenfitCardRecord(
                     amount=float(normalize_assets_amount_precise(item["amount18"])),
                     start_time=normalize_datetime(item["start_time"]),
                     end_time=normalize_datetime(item["end_time"]),
@@ -223,7 +223,7 @@ class Assets(ResourceObject):
 
             now_page += 1
 
-    async def iter_active_benefit_cards(  # TODO: 名称更改
+    async def iter_active_benefit_cards(
         self, *, page_count: int = 10
     ) -> AsyncGenerator[ActiveBenfitCardRecord, None]:
         now_page = 1
@@ -249,7 +249,7 @@ class Assets(ResourceObject):
 
             now_page += 1
 
-    async def iter_expired_benefit_cards(  # TODO: 名称更改
+    async def iter_expired_benefit_cards(
         self, *, page_count: int = 10
     ) -> AsyncGenerator[ExpiredBenfitCardRecord, None]:
         now_page = 1
