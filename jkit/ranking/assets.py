@@ -1,9 +1,10 @@
-from typing import TYPE_CHECKING, AsyncGenerator
+from typing import TYPE_CHECKING, AsyncGenerator, Optional
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
     NonNegativeFloat,
     PositiveInt,
+    UserName,
     UserSlug,
     UserUploadedUrl,
 )
@@ -11,18 +12,23 @@ from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount
 from jkit.config import ENDPOINT_CONFIG
 from jkit.constants import MAX_ID
+from jkit.exceptions import ResourceUnavailableError
 
 if TYPE_CHECKING:
     from jkit.user import User
 
 
 class AssetsRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: PositiveInt
-    slug: UserSlug
-    avatar_url: UserUploadedUrl
+    id: Optional[PositiveInt]
+    slug: Optional[UserSlug]
+    name: Optional[UserName]
+    avatar_url: Optional[UserUploadedUrl]
 
     def to_user_obj(self) -> "User":
         from jkit.user import User
+
+        if not self.slug:
+            raise ResourceUnavailableError("用户信息不可用，无法生成用户对象")
 
         return User.from_slug(self.slug)._as_checked()
 
@@ -54,6 +60,7 @@ class AssetsRank(ResourceObject):
                     user_info=AssetsRankRecordUserInfo(
                         id=item["user"]["id"],
                         slug=item["user"]["slug"],
+                        name=item["user"]["nickname"],
                         avatar_url=item["user"]["avatar"],
                     ),
                 )._validate()
