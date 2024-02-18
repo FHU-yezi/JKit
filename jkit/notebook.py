@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List, Literal, Opti
 from httpx import HTTPStatusError
 from typing_extensions import Self
 
-from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
+from jkit._base import DATA_OBJECT_CONFIG, CheckableObject, DataObject, ResourceObject
 from jkit._constraints import (
     ArticleSlug,
     NonEmptyStr,
@@ -18,7 +18,6 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit._utils import check_if_necessary
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_notebook_id
@@ -86,7 +85,7 @@ class NotebookArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
         return Article.from_slug(self.slug)._as_checked()
 
 
-class Notebook(ResourceObject):
+class Notebook(ResourceObject, CheckableObject):
     def __init__(self, *, id: int) -> None:  # noqa: A002
         super().__init__()
         self._checked = False
@@ -121,7 +120,7 @@ class Notebook(ResourceObject):
 
     @property
     async def info(self) -> NotebookInfo:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu, path=f"/asimov/nb/{self.id}"
@@ -148,7 +147,7 @@ class Notebook(ResourceObject):
         order_by: Literal["add_time", "last_comment_time"] = "add_time",
         page_size: int = 20,
     ) -> AsyncGenerator[NotebookArticleInfo, None]:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         now_page = start_page
         while True:

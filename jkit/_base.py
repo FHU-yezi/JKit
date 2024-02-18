@@ -48,10 +48,40 @@ class ResourceObject:
     pass
 
 
-class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
+class CheckableObject(metaclass=ABCMeta):
     def __init__(self) -> None:
         self._checked = False
 
+    @abstractmethod
+    async def check(self) -> None:
+        raise NotImplementedError
+
+    async def _auto_check(self) -> None:
+        from jkit.config import RESOURCE_OBJECT_CONFIG
+
+        if not RESOURCE_OBJECT_CONFIG.auto_checking:
+            return
+
+        if not self._checked:
+            await self.check()
+
+    def _as_checked(self) -> Self:
+        """将资源对象设置为已检查状态
+
+        默认情况下，从 DataObject 获取的资源标识符创建的资源对象不进行检查。
+        此操作有利于提升性能。
+        可通过修改 `RESOURCE_OBJECT_CONFIG.force_check_object_from_data_object` 的值
+        改变此行为。
+        """
+
+        from jkit.config import RESOURCE_OBJECT_CONFIG
+
+        if RESOURCE_OBJECT_CONFIG.force_check_object_from_data_object:
+            self._checked = True
+        return self
+
+
+class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
     @classmethod
     @abstractmethod
     def from_url(cls, url: str, /) -> Self:
@@ -71,25 +101,6 @@ class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
     @abstractmethod
     def slug(self) -> str:
         raise NotImplementedError
-
-    @abstractmethod
-    async def check(self) -> None:
-        raise NotImplementedError
-
-    def _as_checked(self) -> Self:
-        """将资源对象设置为已检查状态
-
-        默认情况下，从 DataObject 获取的资源标识符创建的资源对象不进行检查。
-        此操作有利于提升性能。
-        可通过修改 `RESOURCE_OBJECT_CONFIG.force_check_object_from_data_object` 的值
-        改变此行为。
-        """
-
-        from jkit.config import RESOURCE_OBJECT_CONFIG
-
-        if RESOURCE_OBJECT_CONFIG.force_check_object_from_data_object:
-            self._checked = True
-        return self
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__) and self.url == other.url:

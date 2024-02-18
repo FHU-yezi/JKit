@@ -17,7 +17,12 @@ from lxml.html import HtmlElement
 from lxml.html import fromstring as parse_html
 from typing_extensions import Self
 
-from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
+from jkit._base import (
+    DATA_OBJECT_CONFIG,
+    CheckableObject,
+    DataObject,
+    StandardResourceObject,
+)
 from jkit._constraints import (
     CollectionSlug,
     NonEmptyStr,
@@ -37,7 +42,7 @@ from jkit._normalization import (
     normalize_datetime,
     normalize_percentage,
 )
-from jkit._utils import check_if_necessary, only_one
+from jkit._utils import only_one
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_article_url
@@ -195,7 +200,7 @@ class ArticleFeaturedCommentInfo(ArticleCommentInfo, **DATA_OBJECT_CONFIG):
     score: PositiveInt
 
 
-class Article(StandardResourceObject):
+class Article(StandardResourceObject, CheckableObject):
     def __init__(
         self, *, url: Optional[str] = None, slug: Optional[str] = None
     ) -> None:
@@ -246,7 +251,7 @@ class Article(StandardResourceObject):
 
     @property
     async def info(self) -> ArticleInfo:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -363,7 +368,7 @@ class Article(StandardResourceObject):
 
     @property
     async def views_count(self) -> int:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -390,7 +395,7 @@ class Article(StandardResourceObject):
 
     @property
     async def audio_info(self) -> Optional[ArticleAudioInfo]:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -411,7 +416,7 @@ class Article(StandardResourceObject):
 
     @property
     async def belong_to_notebook(self) -> ArticleBelongToNotebookInfo:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -426,7 +431,7 @@ class Article(StandardResourceObject):
     async def iter_included_collections(
         self, *, start_page: int = 1, page_size: int = 10
     ) -> AsyncGenerator[ArticleIncludedCollectionInfo, None]:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         now_page = start_page
         while True:
@@ -457,7 +462,7 @@ class Article(StandardResourceObject):
         author_only: bool = False,
         page_size: int = 10,
     ) -> AsyncGenerator[ArticleCommentInfo, None]:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         now_page = start_page
         while True:
@@ -518,7 +523,7 @@ class Article(StandardResourceObject):
         *,
         count: int = 10,
     ) -> AsyncGenerator[ArticleFeaturedCommentInfo, None]:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         data: List[Dict[str, Any]] = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,

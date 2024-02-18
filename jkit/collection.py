@@ -12,7 +12,12 @@ from typing import (
 from httpx import HTTPStatusError
 from typing_extensions import Self
 
-from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
+from jkit._base import (
+    DATA_OBJECT_CONFIG,
+    CheckableObject,
+    DataObject,
+    StandardResourceObject,
+)
 from jkit._constraints import (
     ArticleSlug,
     CollectionSlug,
@@ -27,7 +32,7 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit._utils import check_if_necessary, only_one
+from jkit._utils import only_one
 from jkit.config import ENDPOINT_CONFIG
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_collection_url
@@ -98,7 +103,7 @@ class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
         return Article.from_slug(self.slug)._as_checked()
 
 
-class Collection(StandardResourceObject):
+class Collection(StandardResourceObject, CheckableObject):
     def __init__(
         self, *, url: Optional[str] = None, slug: Optional[str] = None
     ) -> None:
@@ -149,7 +154,7 @@ class Collection(StandardResourceObject):
 
     @property
     async def info(self) -> CollectionInfo:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         data = await get_json(
             endpoint=ENDPOINT_CONFIG.jianshu,
@@ -212,7 +217,7 @@ class Collection(StandardResourceObject):
         order_by: Literal["add_time", "last_comment_time", "popularity"] = "add_time",
         page_size: int = 20,
     ) -> AsyncGenerator[CollectionArticleInfo, None]:
-        await check_if_necessary(self._checked, self.check)
+        await self._auto_check()
 
         now_page = start_page
         while True:
