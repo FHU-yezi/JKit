@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: https://www.jianshu.com/asimov/notebooks/{{notebook_id}}/public_notes?page=1&count=10
+  url: https://www.jianshu.com/asimov/notebooks/{{notebook_id}}/public_notes?page=1&count=10&order_by=added_at
   body: none
   auth: none
 }
@@ -13,4 +13,5 @@ get {
 query {
   page: 1
   count: 10
+  order_by: added_at
 }

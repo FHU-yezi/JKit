@@ -1,0 +1,199 @@
+from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List, Literal, Optional
+
+from httpx import HTTPStatusError
+from typing_extensions import Self
+
+from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
+from jkit._constraints import (
+    ArticleSlugStr,
+    NonEmptyStr,
+    NonNegativeFloat,
+    NonNegativeInt,
+    NormalizedDatetime,
+    NotebookIdInt,
+    PositiveInt,
+    UserNameStr,
+    UserSlugStr,
+    UserUploadedUrlStr,
+)
+from jkit._network_request import get_json
+from jkit._normalization import normalize_assets_amount, normalize_datetime
+from jkit._utils import check_if_necessary
+from jkit.config import ENDPOINT_CONFIG
+from jkit.exceptions import ResourceUnavailableError
+from jkit.identifier_check import is_notebook_id
+from jkit.identifier_convert import notebook_id_to_url
+
+if TYPE_CHECKING:
+    from jkit.article import Article
+    from jkit.user import User
+
+
+class NotebookAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
+    slug: UserSlugStr
+    name: UserNameStr
+    avatar_url: UserUploadedUrlStr
+
+    def to_user_obj(self) -> "User":
+        from jkit.user import User
+
+        return User.from_slug(self.slug)._from_trusted_source()
+
+
+class NotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: NotebookIdInt
+    name: NonEmptyStr
+    description_updated_at: NormalizedDatetime
+    author_info: NotebookAuthorInfo
+
+    articles_count: NonNegativeInt
+    subscribers_count: NonNegativeInt
+    total_wordage: NonNegativeInt
+
+
+class NotebookArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt
+    slug: UserSlugStr
+    name: UserNameStr
+    avatar_url: UserUploadedUrlStr
+
+    def to_user_obj(self) -> "User":
+        from jkit.user import User
+
+        return User.from_slug(self.slug)._from_trusted_source()
+
+
+class NotebookArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
+    id: PositiveInt
+    slug: ArticleSlugStr
+    title: NonEmptyStr
+    description: str
+    image_url: Optional[UserUploadedUrlStr]
+    published_at: NormalizedDatetime
+    is_paid: bool
+    can_comment: bool
+    author_info: NotebookArticleAuthorInfo
+
+    views_count: NonNegativeInt
+    likes_count: NonNegativeInt
+    comments_count: NonNegativeInt
+    tips_count: NonNegativeInt
+    earned_fp_amount: NonNegativeFloat
+
+    def to_article_obj(self) -> "Article":
+        from jkit.article import Article
+
+        return Article.from_slug(self.slug)._from_trusted_source()
+
+
+class Notebook(ResourceObject):
+    def __init__(self, *, id: int) -> None:  # noqa: A002
+        super().__init__()
+        self._checked = False
+
+        if not is_notebook_id(id):
+            raise ValueError(f"{id} 不是有效的 notebook_id")
+        self._id = id
+
+    @classmethod
+    def from_id(cls, id: int, /) -> Self:  # noqa: A002
+        return cls(id=id)
+
+    @property
+    def id(self) -> int:
+        return self._id
+
+    @property
+    def url(self) -> str:
+        return notebook_id_to_url(self._id)
+
+    async def check(self) -> None:
+        if self._checked:
+            return
+
+        try:
+            await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu, path=f"/asimov/nb/{self.id}"
+            )
+            self._checked = True
+        except HTTPStatusError:
+            raise ResourceUnavailableError(f"文集 {self.url} 不存在或删除") from None
+
+    @property
+    async def info(self) -> NotebookInfo:
+        await check_if_necessary(self._checked, self.check)
+
+        data = await get_json(
+            endpoint=ENDPOINT_CONFIG.jianshu, path=f"/asimov/nb/{self.id}"
+        )
+
+        return NotebookInfo(
+            id=data["id"],
+            name=data["name"],
+            description_updated_at=normalize_datetime(data["last_updated_at"]),
+            author_info=NotebookAuthorInfo(
+                slug=data["user"]["slug"],
+                name=data["user"]["nickname"],
+                avatar_url=data["user"]["avatar"],
+            ),
+            articles_count=data["notes_count"],
+            subscribers_count=data["subscribers_count"],
+            total_wordage=data["wordage"],
+        )._validate()
+
+    async def iter_articles(
+        self,
+        start_page: int = 1,
+        order_by: Literal["add_time", "last_comment_time"] = "add_time",
+        page_size: int = 20,
+    ) -> AsyncGenerator[NotebookArticleInfo, None]:
+        await check_if_necessary(self._checked, self.check)
+
+        now_page = start_page
+        while True:
+            data: List[Dict[str, Any]] = await get_json(
+                endpoint=ENDPOINT_CONFIG.jianshu,
+                path=f"/asimov/notebooks/{self.id}/public_notes",
+                params={
+                    "page": now_page,
+                    "count": page_size,
+                    "order_by": {
+                        "add_time": "added_at",
+                        "last_comment_time": "commented_at",
+                    }[order_by],
+                },
+            )  # type: ignore
+
+            if not data:
+                return
+
+            for item in data:
+                yield NotebookArticleInfo(
+                    id=item["object"]["data"]["id"],
+                    slug=item["object"]["data"]["slug"],
+                    title=item["object"]["data"]["title"],
+                    description=item["object"]["data"]["public_abbr"],
+                    image_url=item["object"]["data"]["list_image_url"]
+                    if item["object"]["data"]["list_image_url"]
+                    else None,
+                    published_at=normalize_datetime(
+                        item["object"]["data"]["first_shared_at"]
+                    ),
+                    is_paid=item["object"]["data"]["paid"],
+                    can_comment=item["object"]["data"]["commentable"],
+                    author_info=NotebookArticleAuthorInfo(
+                        id=item["object"]["data"]["user"]["id"],
+                        slug=item["object"]["data"]["user"]["slug"],
+                        name=item["object"]["data"]["user"]["nickname"],
+                        avatar_url=item["object"]["data"]["user"]["avatar"],
+                    ),
+                    views_count=item["object"]["data"]["views_count"],
+                    likes_count=item["object"]["data"]["likes_count"],
+                    comments_count=item["object"]["data"]["public_comments_count"],
+                    tips_count=item["object"]["data"]["total_rewards_count"],
+                    earned_fp_amount=normalize_assets_amount(
+                        item["object"]["data"]["total_fp_amount"]
+                    ),
+                )._validate()
+
+            now_page += 1
