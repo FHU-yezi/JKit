@@ -24,7 +24,7 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit.config import ENDPOINT_CONFIG
+from jkit.config import CONFIG
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_notebook_id
 from jkit.identifier_convert import notebook_id_to_url
@@ -118,7 +118,7 @@ class Notebook(ResourceObject, CheckableObject, SlugAndUrlObject):
 
         try:
             await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu, path=f"/asimov/nb/{self.id}"
+                endpoint=CONFIG.endpoints.jianshu, path=f"/asimov/nb/{self.id}"
             )
             self._checked = True
         except HTTPStatusError:
@@ -129,7 +129,7 @@ class Notebook(ResourceObject, CheckableObject, SlugAndUrlObject):
         await self._auto_check()
 
         data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu, path=f"/asimov/nb/{self.id}"
+            endpoint=CONFIG.endpoints.jianshu, path=f"/asimov/nb/{self.id}"
         )
 
         return NotebookInfo(
@@ -158,7 +158,7 @@ class Notebook(ResourceObject, CheckableObject, SlugAndUrlObject):
         now_page = start_page
         while True:
             data: List[Dict[str, Any]] = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/asimov/notebooks/{self.id}/public_notes",
                 params={
                     "page": now_page,

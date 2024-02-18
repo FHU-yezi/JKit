@@ -33,7 +33,7 @@ from jkit._constraints import (
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit._utils import only_one
-from jkit.config import ENDPOINT_CONFIG
+from jkit.config import CONFIG
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_collection_url
 from jkit.identifier_convert import collection_slug_to_url, collection_url_to_slug
@@ -143,7 +143,7 @@ class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
 
         try:
             await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/asimov/collections/slug/{self.slug}",
             )
             self._checked = True
@@ -157,7 +157,7 @@ class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
         await self._auto_check()
 
         data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path=f"/asimov/collections/slug/{self.slug}",
         )
 
@@ -190,7 +190,7 @@ class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
         now_page = start_page
         while True:
             data: List[Dict[str, Any]] = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/asimov/collections/slug/{self.slug}/public_notes",
                 params={
                     "page": now_page,

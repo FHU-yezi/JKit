@@ -4,9 +4,9 @@ from lxml.html import HtmlElement
 from lxml.html import fromstring as parse_html
 from msgspec.json import Decoder
 
-from jkit.config import NETWORK_CONFIG
+from jkit.config import CONFIG
 
-HTTP_CLIENT = NETWORK_CONFIG._get_http_client()
+HTTP_CLIENT = CONFIG.network._get_http_client()
 JSON_DECODER = Decoder()
 
 

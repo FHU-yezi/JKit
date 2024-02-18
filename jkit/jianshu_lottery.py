@@ -11,7 +11,7 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_datetime
-from jkit.config import ENDPOINT_CONFIG
+from jkit.config import CONFIG
 
 if TYPE_CHECKING:
     from jkit.user import User
@@ -42,7 +42,7 @@ class JianshuLottery(ResourceObject):
         self, *, count: int = 100
     ) -> AsyncGenerator[JianshuLotteryWinRecord, None]:
         data: List[Dict[str, Any]] = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path="/asimov/ad_rewards/winner_list",
             params={"count": count},
         )  # type: ignore

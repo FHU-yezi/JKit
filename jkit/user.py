@@ -35,7 +35,7 @@ from jkit._constraints import (
 from jkit._network_request import get_html, get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit._utils import only_one
-from jkit.config import ENDPOINT_CONFIG
+from jkit.config import CONFIG
 from jkit.exceptions import APIUnsupportedError, ResourceUnavailableError
 from jkit.identifier_check import is_user_url
 from jkit.identifier_convert import user_slug_to_url, user_url_to_slug
@@ -190,7 +190,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
 
         try:
             await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/asimov/users/slug/{self.slug}",
             )
         except HTTPStatusError:
@@ -207,7 +207,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
         await self._auto_check()
 
         data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path=f"/asimov/users/slug/{self.slug}",
         )
 
@@ -268,7 +268,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
     async def assets_amount(self) -> float:
         await self._auto_check()
 
-        data = await get_html(endpoint=ENDPOINT_CONFIG.jianshu, path=f"/u/{self.slug}")
+        data = await get_html(endpoint=CONFIG.endpoints.jianshu, path=f"/u/{self.slug}")
 
         try:
             return float(
@@ -289,7 +289,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
         now_page = start_page
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/users/{self.slug}/collections",
                 params={
                     "slug": self.slug,
@@ -319,7 +319,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
         now_page = start_page
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/users/{self.slug}/collections",
                 params={
                     "slug": self.slug,
@@ -349,7 +349,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
         now_page = start_page
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/users/{self.slug}/notebooks",
                 params={
                     "slug": self.slug,
@@ -385,7 +385,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
         now_page = start_page
         while True:
             data: List[Dict[str, Any]] = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/asimov/users/slug/{self.slug}/public_notes",
                 params={
                     "page": now_page,

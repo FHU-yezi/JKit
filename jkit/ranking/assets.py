@@ -10,7 +10,7 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount
-from jkit.config import ENDPOINT_CONFIG
+from jkit.config import CONFIG
 from jkit.constants import MAX_ID
 from jkit.exceptions import ResourceUnavailableError
 
@@ -46,7 +46,7 @@ class AssetsRank(ResourceObject):
         now_id = start_id
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path="/asimov/fp_rankings",
                 params={"since_id": now_id - 1, "max_id": MAX_ID},
             )

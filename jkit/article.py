@@ -44,7 +44,7 @@ from jkit._normalization import (
     normalize_percentage,
 )
 from jkit._utils import only_one
-from jkit.config import ENDPOINT_CONFIG
+from jkit.config import CONFIG
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_article_url
 from jkit.identifier_convert import article_slug_to_url, article_url_to_slug
@@ -247,7 +247,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
 
         try:
             await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/asimov/p/{self.slug}",
             )
             self._checked = True
@@ -265,7 +265,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         await self._auto_check()
 
         data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path=f"/asimov/p/{self.slug}",
         )
 
@@ -328,7 +328,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         await self._auto_check()
 
         data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path=f"/shakespeare/v2/notes/{self.slug}/views_count",
         )
 
@@ -339,7 +339,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         await self._auto_check()
 
         data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path=f"/shakespeare/v2/notes/{self.slug}/audio",
         )
 
@@ -360,7 +360,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         await self._auto_check()
 
         data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path=f"/shakespeare/v2/notes/{self.slug}/book",
         )
 
@@ -377,7 +377,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         now_page = start_page
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/shakespeare/notes/{await self.id}/included_collections",
                 params={"page": now_page, "count": page_size},
             )
@@ -408,7 +408,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         now_page = start_page
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path=f"/shakespeare/notes/{await self.id}/comments",
                 params={
                     "page": now_page,
@@ -467,7 +467,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         await self._auto_check()
 
         data: List[Dict[str, Any]] = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path=f"/shakespeare/notes/{self.slug}/featured_comments",
             params={
                 "count": count,

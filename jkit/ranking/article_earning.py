@@ -12,7 +12,7 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount
-from jkit.config import ENDPOINT_CONFIG
+from jkit.config import CONFIG
 from jkit.exceptions import APIUnsupportedError
 
 if TYPE_CHECKING:
@@ -64,7 +64,7 @@ class ArticleEarningRank(ResourceObject):
 
     async def get_data(self) -> ArticleEarningRankData:
         data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path="/asimov/fp_rankings/voter_notes",
             params={"date": self._target_date.strftime(r"%Y%m%d")},
         )

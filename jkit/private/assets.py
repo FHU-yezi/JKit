@@ -21,7 +21,7 @@ from jkit._normalization import (
     normalize_datetime,
     normalize_percentage,
 )
-from jkit.config import ENDPOINT_CONFIG
+from jkit.config import CONFIG
 from jkit.credential import JianshuCredential
 from jkit.exceptions import BalanceNotEnoughError, WeeklyConvertLimitExceededError
 
@@ -92,7 +92,7 @@ class Assets(ResourceObject):
 
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path="/asimov/fp_wallets/transactions",
                 params={"since_id": 0, "max_id": now_max_id}
                 if now_max_id
@@ -125,7 +125,7 @@ class Assets(ResourceObject):
 
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path="/asimov/fp_wallets/jsb_transactions",
                 params={"since_id": 0, "max_id": now_max_id}
                 if now_max_id
@@ -158,7 +158,7 @@ class Assets(ResourceObject):
 
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path="/asimov/fp_wallets/jsd_rewards",
                 params={"page": now_page, "count": page_size},
                 cookies=self._credential.cookies,
@@ -186,7 +186,7 @@ class Assets(ResourceObject):
     @property
     async def benefit_cards_info(self) -> BenefitCardsInfo:
         data = await get_json(
-            endpoint=ENDPOINT_CONFIG.jianshu,
+            endpoint=CONFIG.endpoints.jianshu,
             path="/asimov/fp_wallets/benefit_cards/info",
             cookies=self._credential.cookies,
         )
@@ -205,7 +205,7 @@ class Assets(ResourceObject):
 
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path="/asimov/fp_wallets/benefit_cards/unsent",
                 params={"page": now_page, "count": page_count},
                 cookies=self._credential.cookies,
@@ -230,7 +230,7 @@ class Assets(ResourceObject):
 
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path="/asimov/fp_wallets/benefit_cards/active",
                 params={"page": now_page, "count": page_count},
                 cookies=self._credential.cookies,
@@ -256,7 +256,7 @@ class Assets(ResourceObject):
 
         while True:
             data = await get_json(
-                endpoint=ENDPOINT_CONFIG.jianshu,
+                endpoint=CONFIG.endpoints.jianshu,
                 path="/asimov/fp_wallets/benefit_cards/expire",
                 params={"page": now_page, "count": page_count},
                 cookies=self._credential.cookies,
@@ -285,7 +285,7 @@ class Assets(ResourceObject):
         try:
             with suppress(DecodeError):  # TODO
                 await send_post(
-                    endpoint=ENDPOINT_CONFIG.jianshu,
+                    endpoint=CONFIG.endpoints.jianshu,
                     path="/asimov/fp_wallets/exchange_jsb",
                     json={"count": str(amount)},
                     headers={"Accept": "application/json"},
@@ -311,7 +311,7 @@ class Assets(ResourceObject):
         try:
             with suppress(DecodeError):  # TODO
                 await send_post(
-                    endpoint=ENDPOINT_CONFIG.jianshu,
+                    endpoint=CONFIG.endpoints.jianshu,
                     path="/asimov/fp_wallets/exchange_jsd",
                     json={"count": str(amount)},
                     headers={"Accept": "application/json"},
