@@ -78,6 +78,7 @@ class CheckableObject(metaclass=ABCMeta):
 
         if RESOURCE_OBJECT_CONFIG.force_check_object_from_data_object:
             self._checked = True
+
         return self
 
 

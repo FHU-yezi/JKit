@@ -109,6 +109,12 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     featured_comments_count: NonNegativeInt
     earned_fp_amount: NonNegativeFloat
 
+    @property
+    def text_content(self) -> str:
+        html_obj: HtmlElement = parse_html(self.html_content)
+        result = "".join(html_obj.itertext())  # type: ignore
+        return re_sub(r"\s{3,}", "", result)  # 去除多余的空行
+
 
 class ArticleAudioInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
@@ -146,7 +152,7 @@ class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
         if "..." not in self.name:
             return self.name
 
-        return await self.to_collection_obj().name
+        return (await self.to_collection_obj().info).name
 
 
 class ArticleBelongToNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
@@ -251,6 +257,10 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
             ) from None
 
     @property
+    async def id(self) -> int:
+        return (await self.info).id
+
+    @property
     async def info(self) -> ArticleInfo:
         await self._auto_check()
 
@@ -314,60 +324,6 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         )._validate()
 
     @property
-    async def id(self) -> int:
-        return (await self.info).id
-
-    @property
-    async def notebook_id(self) -> int:
-        return (await self.info).notebook_id
-
-    @property
-    async def title(self) -> str:
-        return (await self.info).title
-
-    @property
-    async def description(self) -> str:
-        return (await self.info).description
-
-    @property
-    async def wordage(self) -> int:
-        return (await self.info).wordage
-
-    @property
-    async def published_at(self) -> datetime:
-        return (await self.info).published_at
-
-    @property
-    async def updated_at(self) -> datetime:
-        return (await self.info).updated_at
-
-    @property
-    async def can_comment(self) -> bool:
-        return (await self.info).can_comment
-
-    @property
-    async def can_reprint(self) -> bool:
-        return (await self.info).can_reprint
-
-    @property
-    async def paid_info(self) -> ArticlePaidInfo:
-        return (await self.info).paid_info
-
-    @property
-    async def author_info(self) -> ArticleAuthorInfo:
-        return (await self.info).author_info
-
-    @property
-    async def html_content(self) -> str:
-        return (await self.info).html_content
-
-    @property
-    async def text_content(self) -> str:
-        html_obj: HtmlElement = parse_html(await self.html_content)
-        result = "".join(html_obj.itertext())  # type: ignore
-        return re_sub(r"\s{3,}", "", result)  # 去除多余的空行
-
-    @property
     async def views_count(self) -> int:
         await self._auto_check()
 
@@ -377,22 +333,6 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
         )
 
         return data["views_count"]
-
-    @property
-    async def likes_count(self) -> int:
-        return (await self.info).likes_count
-
-    @property
-    async def comments_count(self) -> int:
-        return (await self.info).comments_count
-
-    @property
-    async def featured_comments_count(self) -> int:
-        return (await self.info).featured_comments_count
-
-    @property
-    async def earned_fp_amount(self) -> float:
-        return (await self.info).earned_fp_amount
 
     @property
     async def audio_info(self) -> Optional[ArticleAudioInfo]:

@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -178,38 +177,6 @@ class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
             articles_count=data["notes_count"],
             subscribers_count=data["subscribers_count"],
         )._validate()
-
-    @property
-    async def name(self) -> str:
-        return (await self.info).name
-
-    @property
-    async def image_url(self) -> str:
-        return (await self.info).image_url
-
-    @property
-    async def description(self) -> str:
-        return (await self.info).description
-
-    @property
-    async def description_updated_at(self) -> datetime:
-        return (await self.info).description_updated_at
-
-    @property
-    async def new_article_added_at(self) -> datetime:
-        return (await self.info).new_article_added_at
-
-    @property
-    async def owner_info(self) -> CollectionOwnerInfo:
-        return (await self.info).owner_info
-
-    @property
-    async def articles_count(self) -> int:
-        return (await self.info).articles_count
-
-    @property
-    async def subscribers_count(self) -> int:
-        return (await self.info).subscribers_count
 
     async def iter_articles(
         self,

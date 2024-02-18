@@ -1,4 +1,3 @@
-from datetime import datetime
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
@@ -200,6 +199,10 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
             ) from None
 
     @property
+    async def id(self) -> int:
+        return (await self.info).id
+
+    @property
     async def info(self) -> UserInfo:
         await self._auto_check()
 
@@ -254,64 +257,12 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
         )._validate()
 
     @property
-    async def id(self) -> int:
-        return (await self.info).id
-
-    @property
-    async def name(self) -> str:
-        return (await self.info).name
-
-    @property
-    async def gender(self) -> GenderEnum:
-        return (await self.info).gender
-
-    @property
-    async def introduction(self) -> str:
-        return (await self.info).introduction
-
-    @property
-    async def introduction_updated_at(self) -> datetime:
-        return (await self.info).introduction_updated_at
-
-    @property
-    async def avatar_url(self) -> str:
-        return (await self.info).avatar_url
-
-    @property
-    async def background_image_url(self) -> Optional[str]:
-        return (await self.info).background_image_url
-
-    @property
-    async def badges(self) -> Tuple[UserBadge, ...]:
-        return (await self.info).badges
-
-    @property
-    async def membership(self) -> UserMembershipInfo:
-        return (await self.info).membership_info
-
-    @property
-    async def address_by_ip(self) -> str:
-        return (await self.info).address_by_ip
-
-    @property
-    async def followers_count(self) -> int:
-        return (await self.info).followers_count
-
-    @property
-    async def fans_count(self) -> int:
-        return (await self.info).fans_count
-
-    @property
-    async def total_wordage(self) -> int:
-        return (await self.info).total_wordage
-
-    @property
-    async def total_likes_count(self) -> int:
-        return (await self.info).total_likes_count
-
-    @property
     async def fp_amount(self) -> float:
         return (await self.info).fp_amount
+
+    @property
+    async def ftn_amount(self) -> float:
+        return round((await self.assets_amount) - (await self.info).fp_amount, 3)
 
     @property
     async def assets_amount(self) -> float:
@@ -329,10 +280,6 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
             raise APIUnsupportedError(
                 "受 API 限制，无法获取此用户的资产量信息"
             ) from None
-
-    @property
-    async def ftn_amount(self) -> float:
-        return round((await self.assets_amount) - (await self.fp_amount), 3)
 
     async def iter_owned_collections(
         self, *, start_page: int = 1, page_size: int = 10
