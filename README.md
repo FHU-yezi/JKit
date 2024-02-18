@@ -29,24 +29,23 @@ pip install jkit --pre
 ```
 
 ```python
-from asyncio import run as asyncio_run
+import asyncio
 
 from jkit import User
 
 
 async def main() -> None:
     user = User.from_url("https://www.jianshu.com/u/622a3993108c")
-    print(f"用户昵称：{await user.name}")  # == (await user.info).name
 
     info = await user.info
+    print(f"用户昵称：{info.name}")
     print(
         f"性别：{info.gender.value}，会员等级：{info.membership_info.type.value}\n"
         f"会员过期时间：{info.membership_info.expired_at}"
     )
 
 
-asyncio_run(main())
-
+asyncio.run(main())
 ```
 
 ```
