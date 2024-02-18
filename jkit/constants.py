@@ -12,7 +12,8 @@ ISLAND_URL_REGEX = regex_compile(r"^https://www\.jianshu\.com/g/[a-z0-9]{16}/?$"
 
 USER_SLUG_REGEX = regex_compile(r"^[a-z0-9]{6,12}/?$")
 ARTICLE_SLUG_REGEX = regex_compile(r"^[a-z0-9]{12}/?$")
-NOTEBOOK_SLUG_REGEX = regex_compile(r"^\d{7,8}/?$")
+NOTEBOOK_ID_MIN = 10000000
+NOTEBOOK_ID_MAX = 99999999
 COLLECTION_SLUG_REGEX = regex_compile(r"^[a-z0-9]{6,12}/?$")
 ISLAND_SLUG_REGEX = regex_compile(r"^[a-z0-9]{16}/?$")
 
