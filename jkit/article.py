@@ -95,7 +95,7 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     notebook_id: PositiveInt
     title: NonEmptyStr
     description: str
-    wordage: PositiveInt
+    wordage: NonNegativeInt
     published_at: NormalizedDatetime
     updated_at: NormalizedDatetime
     can_comment: bool
