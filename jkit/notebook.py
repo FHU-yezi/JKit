@@ -3,7 +3,13 @@ from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List, Literal, Opti
 from httpx import HTTPStatusError
 from typing_extensions import Self
 
-from jkit._base import DATA_OBJECT_CONFIG, CheckableObject, DataObject, ResourceObject
+from jkit._base import (
+    DATA_OBJECT_CONFIG,
+    CheckableObject,
+    DataObject,
+    ResourceObject,
+    SlugAndUrlObject,
+)
 from jkit._constraints import (
     ArticleSlug,
     NonEmptyStr,
@@ -85,7 +91,7 @@ class NotebookArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
         return Article.from_slug(self.slug)._as_checked()
 
 
-class Notebook(ResourceObject, CheckableObject):
+class Notebook(ResourceObject, CheckableObject, SlugAndUrlObject):
     def __init__(self, *, id: int) -> None:  # noqa: A002
         super().__init__()
         self._checked = False

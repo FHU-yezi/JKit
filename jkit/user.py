@@ -18,7 +18,8 @@ from jkit._base import (
     DATA_OBJECT_CONFIG,
     CheckableObject,
     DataObject,
-    StandardResourceObject,
+    ResourceObject,
+    SlugAndUrlObject,
 )
 from jkit._constraints import (
     ArticleSlug,
@@ -150,7 +151,7 @@ class UserArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
         return Article.from_slug(self.slug)._as_checked()
 
 
-class User(StandardResourceObject, CheckableObject):
+class User(ResourceObject, CheckableObject, SlugAndUrlObject):
     def __init__(
         self, *, url: Optional[str] = None, slug: Optional[str] = None
     ) -> None:

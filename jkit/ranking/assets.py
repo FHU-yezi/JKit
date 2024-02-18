@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, AsyncGenerator
 
-from jkit._base import DATA_OBJECT_CONFIG, DataObject, RankingResourceObject
+from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
     NonNegativeFloat,
     PositiveInt,
@@ -33,7 +33,7 @@ class AssetsRankRecord(DataObject, **DATA_OBJECT_CONFIG):
     user_info: AssetsRankRecordUserInfo
 
 
-class AssetsRank(RankingResourceObject):
+class AssetsRank(ResourceObject):
     async def iter_data(
         self, *, start_id: int = 1
     ) -> AsyncGenerator[AssetsRankRecord, None]:

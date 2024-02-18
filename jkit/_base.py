@@ -81,20 +81,15 @@ class CheckableObject(metaclass=ABCMeta):
         return self
 
 
-class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
-    @classmethod
-    @abstractmethod
-    def from_url(cls, url: str, /) -> Self:
-        raise NotImplementedError
-
+class SlugAndUrlObject(metaclass=ABCMeta):
     @classmethod
     @abstractmethod
     def from_slug(cls, slug: str, /) -> Self:
         raise NotImplementedError
 
-    @property
+    @classmethod
     @abstractmethod
-    def url(self) -> str:
+    def from_url(cls, url: str, /) -> Self:
         raise NotImplementedError
 
     @property
@@ -102,18 +97,44 @@ class StandardResourceObject(ResourceObject, metaclass=ABCMeta):
     def slug(self) -> str:
         raise NotImplementedError
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__) and self.url == other.url:
-            return True
+    @property
+    @abstractmethod
+    def url(self) -> str:
+        raise NotImplementedError
 
-        return False
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, self.__class__) and self.slug == other.slug
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(slug="{self.slug}")'
 
 
-class RankingResourceObject(ResourceObject):
-    pass
+class IdAndUrlObject(metaclass=ABCMeta):
+    @classmethod
+    @abstractmethod
+    def from_id(cls, id: int, /) -> Self:  # noqa: A002
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def from_url(cls, url: str, /) -> Self:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def id(self) -> int:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def url(self) -> str:
+        raise NotImplementedError
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, self.__class__) and self.id == other.id
+
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}(id="{self.id}")'
 
 
 class ConfigObject(Struct):

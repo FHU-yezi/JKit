@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import TYPE_CHECKING, Literal, Tuple
 
-from jkit._base import DATA_OBJECT_CONFIG, DataObject, RankingResourceObject
+from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
     PositiveFloat,
     PositiveInt,
@@ -40,7 +40,7 @@ class UserEarningRankData(DataObject, **DATA_OBJECT_CONFIG):
     records: Tuple[UserEarningRankRecord, ...]
 
 
-class UserEarningRank(RankingResourceObject):
+class UserEarningRank(ResourceObject):
     def __init__(
         self,
         target_date: date,

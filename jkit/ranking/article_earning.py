@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import TYPE_CHECKING, Optional, Tuple
 
-from jkit._base import DATA_OBJECT_CONFIG, DataObject, RankingResourceObject
+from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
     ArticleSlug,
     NonEmptyStr,
@@ -53,7 +53,7 @@ class ArticleEarningRankData(DataObject, **DATA_OBJECT_CONFIG):
     records: Tuple[ArticleEarningRankRecord, ...]
 
 
-class ArticleEarningRank(RankingResourceObject):
+class ArticleEarningRank(ResourceObject):
     def __init__(self, target_date: date, /) -> None:
         if target_date < date(2020, 6, 20):
             raise APIUnsupportedError("不支持获取 2020.06.20 前的排行榜数据")

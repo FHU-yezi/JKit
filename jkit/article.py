@@ -21,7 +21,8 @@ from jkit._base import (
     DATA_OBJECT_CONFIG,
     CheckableObject,
     DataObject,
-    StandardResourceObject,
+    ResourceObject,
+    SlugAndUrlObject,
 )
 from jkit._constraints import (
     CollectionSlug,
@@ -200,7 +201,7 @@ class ArticleFeaturedCommentInfo(ArticleCommentInfo, **DATA_OBJECT_CONFIG):
     score: PositiveInt
 
 
-class Article(StandardResourceObject, CheckableObject):
+class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
     def __init__(
         self, *, url: Optional[str] = None, slug: Optional[str] = None
     ) -> None:
