@@ -5,16 +5,16 @@ from typing_extensions import Self
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
-    ArticleSlugStr,
+    ArticleSlug,
     NonEmptyStr,
     NonNegativeFloat,
     NonNegativeInt,
     NormalizedDatetime,
-    NotebookIdInt,
+    NotebookId,
     PositiveInt,
-    UserNameStr,
-    UserSlugStr,
-    UserUploadedUrlStr,
+    UserName,
+    UserSlug,
+    UserUploadedUrl,
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
@@ -30,9 +30,9 @@ if TYPE_CHECKING:
 
 
 class NotebookAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
-    slug: UserSlugStr
-    name: UserNameStr
-    avatar_url: UserUploadedUrlStr
+    slug: UserSlug
+    name: UserName
+    avatar_url: UserUploadedUrl
 
     def to_user_obj(self) -> "User":
         from jkit.user import User
@@ -41,7 +41,7 @@ class NotebookAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class NotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
-    id: NotebookIdInt
+    id: NotebookId
     name: NonEmptyStr
     description_updated_at: NormalizedDatetime
     author_info: NotebookAuthorInfo
@@ -53,9 +53,9 @@ class NotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class NotebookArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: UserSlugStr
-    name: UserNameStr
-    avatar_url: UserUploadedUrlStr
+    slug: UserSlug
+    name: UserName
+    avatar_url: UserUploadedUrl
 
     def to_user_obj(self) -> "User":
         from jkit.user import User
@@ -65,10 +65,10 @@ class NotebookArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class NotebookArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: ArticleSlugStr
+    slug: ArticleSlug
     title: NonEmptyStr
     description: str
-    image_url: Optional[UserUploadedUrlStr]
+    image_url: Optional[UserUploadedUrl]
     published_at: NormalizedDatetime
     is_paid: bool
     can_comment: bool

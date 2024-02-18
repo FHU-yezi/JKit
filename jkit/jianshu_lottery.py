@@ -5,9 +5,9 @@ from jkit._constraints import (
     NonEmptyStr,
     NormalizedDatetime,
     PositiveInt,
-    UserNameStr,
-    UserSlugStr,
-    UserUploadedUrlStr,
+    UserName,
+    UserSlug,
+    UserUploadedUrl,
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_datetime
@@ -19,9 +19,9 @@ if TYPE_CHECKING:
 
 class JianshuLotteryWinRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: UserSlugStr
-    name: UserNameStr
-    avatar_url: UserUploadedUrlStr
+    slug: UserSlug
+    name: UserName
+    avatar_url: UserUploadedUrl
 
     def to_user_obj(self) -> "User":
         from jkit.user import User

@@ -3,12 +3,12 @@ from typing import TYPE_CHECKING, Optional, Tuple
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, RankingResourceObject
 from jkit._constraints import (
-    ArticleSlugStr,
+    ArticleSlug,
     NonEmptyStr,
     PositiveFloat,
     PositiveInt,
-    UserNameStr,
-    UserUploadedUrlStr,
+    UserName,
+    UserUploadedUrl,
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount
@@ -20,14 +20,14 @@ if TYPE_CHECKING:
 
 
 class ArticleEarningRankRecordAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
-    name: Optional[UserNameStr]
-    avatar_url: Optional[UserUploadedUrlStr]
+    name: Optional[UserName]
+    avatar_url: Optional[UserUploadedUrl]
 
 
 class ArticleEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     title: Optional[NonEmptyStr]
-    slug: Optional[ArticleSlugStr]
+    slug: Optional[ArticleSlug]
     total_fp_amount: PositiveFloat
     fp_to_author_anount: PositiveFloat
     fp_to_voter_amount: PositiveFloat

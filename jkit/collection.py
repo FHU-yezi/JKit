@@ -14,16 +14,16 @@ from typing_extensions import Self
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
-    ArticleSlugStr,
-    CollectionSlugStr,
+    ArticleSlug,
+    CollectionSlug,
     NonEmptyStr,
     NonNegativeFloat,
     NonNegativeInt,
     NormalizedDatetime,
     PositiveInt,
-    UserNameStr,
-    UserSlugStr,
-    UserUploadedUrlStr,
+    UserName,
+    UserSlug,
+    UserUploadedUrl,
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
@@ -40,8 +40,8 @@ if TYPE_CHECKING:
 
 class CollectionOwnerInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: UserSlugStr
-    name: UserNameStr
+    slug: UserSlug
+    name: UserName
 
     def to_user_obj(self) -> "User":
         from jkit.user import User
@@ -51,9 +51,9 @@ class CollectionOwnerInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class CollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: CollectionSlugStr
+    slug: CollectionSlug
     name: NonEmptyStr
-    image_url: UserUploadedUrlStr
+    image_url: UserUploadedUrl
     description: str
     description_updated_at: NormalizedDatetime
     new_article_added_at: NormalizedDatetime
@@ -65,9 +65,9 @@ class CollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class CollectionArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: UserSlugStr
-    name: UserNameStr
-    avatar_url: UserUploadedUrlStr
+    slug: UserSlug
+    name: UserName
+    avatar_url: UserUploadedUrl
 
     def to_user_obj(self) -> "User":
         from jkit.user import User
@@ -77,10 +77,10 @@ class CollectionArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: ArticleSlugStr
+    slug: ArticleSlug
     title: NonEmptyStr
     description: str
-    image_url: Optional[UserUploadedUrlStr]
+    image_url: Optional[UserUploadedUrl]
     published_at: NormalizedDatetime
     is_paid: bool
     can_comment: bool

@@ -4,8 +4,8 @@ from jkit._base import DATA_OBJECT_CONFIG, DataObject, RankingResourceObject
 from jkit._constraints import (
     NonNegativeFloat,
     PositiveInt,
-    UserSlugStr,
-    UserUploadedUrlStr,
+    UserSlug,
+    UserUploadedUrl,
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount
@@ -18,8 +18,8 @@ if TYPE_CHECKING:
 
 class AssetsRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: UserSlugStr
-    avatar_url: UserUploadedUrlStr
+    slug: UserSlug
+    avatar_url: UserUploadedUrl
 
     def to_user_obj(self) -> "User":
         from jkit.user import User

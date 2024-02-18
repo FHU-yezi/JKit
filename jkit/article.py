@@ -19,7 +19,7 @@ from typing_extensions import Self
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
-    CollectionSlugStr,
+    CollectionSlug,
     NonEmptyStr,
     NonNegativeFloat,
     NonNegativeInt,
@@ -27,9 +27,9 @@ from jkit._constraints import (
     Percentage,
     PositiveFloat,
     PositiveInt,
-    UserNameStr,
-    UserSlugStr,
-    UserUploadedUrlStr,
+    UserName,
+    UserSlug,
+    UserUploadedUrl,
 )
 from jkit._network_request import get_json
 from jkit._normalization import (
@@ -68,9 +68,9 @@ class ArticlePaidInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class ArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: UserSlugStr
-    name: UserNameStr
-    avatar_url: UserUploadedUrlStr
+    slug: UserSlug
+    name: UserName
+    avatar_url: UserUploadedUrl
     introduction: str
     address_by_ip: NonEmptyStr
 
@@ -124,10 +124,10 @@ class ArticleAudioInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class ArticleIncludedCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: CollectionSlugStr
+    slug: CollectionSlug
     name: NonEmptyStr
-    image_url: UserUploadedUrlStr
-    owner_name: UserNameStr
+    image_url: UserUploadedUrl
+    owner_name: UserName
 
     def to_collection_obj(self) -> "Collection":
         from jkit.collection import Collection
@@ -151,9 +151,9 @@ class ArticleBelongToNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: UserSlugStr
-    name: UserNameStr
-    avatar_url: UserUploadedUrlStr
+    slug: UserSlug
+    name: UserName
+    avatar_url: UserUploadedUrl
     address_by_ip: NonEmptyStr
 
     @property
@@ -166,7 +166,7 @@ class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
 class ArticleSubcommentInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     content: str
-    images: Tuple[UserUploadedUrlStr, ...]
+    images: Tuple[UserUploadedUrl, ...]
     published_at: NormalizedDatetime
     publisher_info: ArticleCommentPublisherInfo
 
@@ -175,7 +175,7 @@ class ArticleCommentInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     floor: PositiveInt
     content: str
-    images: Tuple[UserUploadedUrlStr, ...]
+    images: Tuple[UserUploadedUrl, ...]
     likes_count: NonNegativeInt
     published_at: NormalizedDatetime
     publisher_info: ArticleCommentPublisherInfo

@@ -5,9 +5,9 @@ from jkit._base import DATA_OBJECT_CONFIG, DataObject, RankingResourceObject
 from jkit._constraints import (
     PositiveFloat,
     PositiveInt,
-    UserNameStr,
-    UserSlugStr,
-    UserUploadedUrlStr,
+    UserName,
+    UserSlug,
+    UserUploadedUrl,
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount
@@ -20,9 +20,9 @@ if TYPE_CHECKING:
 
 class UserEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
-    name: UserNameStr
-    slug: UserSlugStr
-    avatar_url: UserUploadedUrlStr
+    name: UserName
+    slug: UserSlug
+    avatar_url: UserUploadedUrl
     total_fp_amount: PositiveFloat
     fp_by_creating_anount: PositiveFloat
     fp_by_voting_amount: PositiveFloat

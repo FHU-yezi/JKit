@@ -16,16 +16,16 @@ from typing_extensions import Self
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, StandardResourceObject
 from jkit._constraints import (
-    ArticleSlugStr,
-    CollectionSlugStr,
+    ArticleSlug,
+    CollectionSlug,
     NonEmptyStr,
     NonNegativeFloat,
     NonNegativeInt,
     NormalizedDatetime,
     PositiveInt,
-    UserNameStr,
-    UserSlugStr,
-    UserUploadedUrlStr,
+    UserName,
+    UserSlug,
+    UserUploadedUrl,
 )
 from jkit._network_request import get_html, get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
@@ -67,12 +67,12 @@ class UserMembershipInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    name: UserNameStr
+    name: UserName
     gender: GenderEnum
     introduction: str
     introduction_updated_at: NormalizedDatetime
-    avatar_url: UserUploadedUrlStr
-    background_image_url: Optional[UserUploadedUrlStr]
+    avatar_url: UserUploadedUrl
+    background_image_url: Optional[UserUploadedUrl]
     badges: Tuple[UserBadge, ...]
     membership_info: UserMembershipInfo
     address_by_ip: NonEmptyStr
@@ -86,9 +86,9 @@ class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class UserCollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: CollectionSlugStr
+    slug: CollectionSlug
     name: NonEmptyStr
-    image_url: UserUploadedUrlStr
+    image_url: UserUploadedUrl
 
     def to_collection_obj(self) -> "Collection":
         from jkit.collection import Collection
@@ -107,9 +107,9 @@ class UserNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class UserArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: UserSlugStr
-    name: UserNameStr
-    avatar_url: UserUploadedUrlStr
+    slug: UserSlug
+    name: UserName
+    avatar_url: UserUploadedUrl
 
     def to_user_obj(self) -> "User":
         from jkit.user import User
@@ -119,10 +119,10 @@ class UserArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class UserArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
-    slug: ArticleSlugStr
+    slug: ArticleSlug
     title: NonEmptyStr
     description: str
-    image_url: Optional[UserUploadedUrlStr]
+    image_url: Optional[UserUploadedUrl]
     published_at: NormalizedDatetime
     is_top: bool
     is_paid: bool
