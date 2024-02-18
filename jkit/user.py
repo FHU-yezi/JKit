@@ -38,6 +38,7 @@ from jkit.identifier_convert import user_slug_to_url, user_url_to_slug
 if TYPE_CHECKING:
     from jkit.article import Article
     from jkit.collection import Collection
+    from jkit.notebook import Notebook
 
 
 class UserBadge(DataObject, **DATA_OBJECT_CONFIG):
@@ -102,7 +103,10 @@ class UserNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
     is_book: bool  # TODO: 命名修改
     is_paid_book: Optional[bool]  # TODO: 命名修改
 
-    # TODO: to_notebook_obj
+    def to_notebook_obj(self) -> "Notebook":
+        from jkit.notebook import Notebook
+
+        return Notebook.from_id(self.id)
 
 
 class UserArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):

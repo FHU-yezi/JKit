@@ -45,6 +45,7 @@ from jkit.identifier_convert import article_slug_to_url, article_url_to_slug
 
 if TYPE_CHECKING:
     from jkit.collection import Collection
+    from jkit.notebook import Notebook
     from jkit.user import User
 
 
@@ -146,7 +147,10 @@ class ArticleBelongToNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     name: NonEmptyStr
 
-    # TODO: to_notebook_obj
+    def to_notebook_obj(self) -> "Notebook":
+        from jkit.notebook import Notebook
+
+        return Notebook.from_id(self.id)
 
 
 class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
