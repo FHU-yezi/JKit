@@ -49,9 +49,9 @@ class UserEarningRank(RankingResourceObject):
         type: Literal["all", "creating", "voting"] = "all",  # noqa: A002
     ) -> None:
         if target_date < date(2020, 6, 20):
-            raise APIUnsupportedError("仅支持获取 2020.06.20 后的排行榜数据")
+            raise APIUnsupportedError("不支持获取 2020.06.20 前的排行榜数据")
         if target_date >= datetime.now().date():
-            raise ValueError("不支持获取尚未生成的排行榜数据")
+            raise ValueError("不支持获取未来的排行榜数据")
 
         self._target_date = target_date
         self._type = type

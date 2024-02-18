@@ -148,16 +148,16 @@ class User(StandardResourceObject):
         super().__init__()
 
         if not only_one(url, slug):
-            raise ValueError("url 和 slug 不可同时提供")
+            raise ValueError("用户链接与用户 Slug 不可同时提供")
 
         if url:
             if not is_user_url(url):
-                raise ValueError(f"{url} 不是有效的 user_url")
+                raise ValueError(f"{url} 不是有效的用户链接")
             self._url = url
         elif slug:
             self._url = user_slug_to_url(slug)
         else:
-            raise ValueError("必须提供 url 或 slug")
+            raise ValueError("必须提供用户链接或用户 Slug")
 
     @classmethod
     def from_url(cls, url: str, /) -> Self:

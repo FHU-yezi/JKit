@@ -92,7 +92,7 @@ class Notebook(ResourceObject):
         self._checked = False
 
         if not is_notebook_id(id):
-            raise ValueError(f"{id} 不是有效的 notebook_id")
+            raise ValueError(f"{id} 不是有效的文集 ID")
         self._id = id
 
     @classmethod
@@ -143,6 +143,7 @@ class Notebook(ResourceObject):
 
     async def iter_articles(
         self,
+        *,
         start_page: int = 1,
         order_by: Literal["add_time", "last_comment_time"] = "add_time",
         page_size: int = 20,

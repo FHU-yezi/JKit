@@ -198,16 +198,16 @@ class Article(StandardResourceObject):
         super().__init__()
 
         if not only_one(url, slug):
-            raise ValueError("url 和 slug 不可同时提供")
+            raise ValueError("文章链接和文章 Slug 不可同时提供")
 
         if url:
             if not is_article_url(url):
-                raise ValueError(f"{url} 不是有效的 article_url")
+                raise ValueError(f"{url} 不是有效的文章链接")
             self._url = url
         elif slug:
             self._url = article_slug_to_url(slug)
         else:
-            raise ValueError("必须提供 url 或 slug")
+            raise ValueError("必须提供文章链接或文章 Slug")
 
     @classmethod
     def from_url(cls, url: str, /) -> Self:
