@@ -2,6 +2,7 @@ from typing import Literal, Optional
 
 from httpx import AsyncClient
 from httpx._types import ProxiesTypes, TimeoutTypes
+from msgspec import field
 
 from jkit._base import CONFIG_CONFIG, ConfigObject
 from jkit._constraints import NonEmptyStr
@@ -39,6 +40,7 @@ class _EndpointsConfig(ConfigObject, **CONFIG_CONFIG):
     """API 端点配置"""
 
     jianshu: NonEmptyStr = "https://www.jianshu.com"
+    jpep: NonEmptyStr = "https://20221023.jianshubei.com/api"
 
 
 class _ResourceCheckConfig(ConfigObject, **CONFIG_CONFIG):
@@ -65,10 +67,12 @@ class _DataValidationConfig(ConfigObject, **CONFIG_CONFIG):
 
 
 class _Config(ConfigObject, **CONFIG_CONFIG):
-    network: _NetworkConfig = _NetworkConfig()
-    endpoints: _EndpointsConfig = _EndpointsConfig()
-    resource_check: _ResourceCheckConfig = _ResourceCheckConfig()
-    data_validation: _DataValidationConfig = _DataValidationConfig()
+    network: _NetworkConfig = field(default_factory=_NetworkConfig)
+    endpoints: _EndpointsConfig = field(default_factory=_EndpointsConfig)
+    resource_check: _ResourceCheckConfig = field(default_factory=_ResourceCheckConfig)
+    data_validation: _DataValidationConfig = field(
+        default_factory=_DataValidationConfig
+    )
 
 
 CONFIG = _Config()
