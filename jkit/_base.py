@@ -5,12 +5,12 @@ from msgspec import Struct, convert, to_builtins
 from msgspec import ValidationError as MsgspecValidationError
 from typing_extensions import Self
 
+from jkit.config import CONFIG
 from jkit.exceptions import ValidationError
 
 
 class DataObject(Struct):
     def _validate(self) -> Self:
-        from jkit.config import CONFIG
 
         if not CONFIG.data_validation.enabled:
             return self
@@ -57,8 +57,6 @@ class CheckableObject(metaclass=ABCMeta):
         raise NotImplementedError
 
     async def _auto_check(self) -> None:
-        from jkit.config import CONFIG
-
         if not CONFIG.resource_check.auto_check:
             return
 
@@ -66,8 +64,6 @@ class CheckableObject(metaclass=ABCMeta):
             await self.check()
 
     def _as_checked(self) -> Self:
-        from jkit.config import CONFIG
-
         if CONFIG.resource_check.force_check_safe_data:
             self._checked = True
 
@@ -128,15 +124,3 @@ class IdAndUrlObject(metaclass=ABCMeta):
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(id="{self.id}")'
-
-
-class ConfigObject(Struct):
-    def _validate(self) -> Self:
-        return convert(to_builtins(self), type=self.__class__)
-
-
-CONFIG_CONFIG = {
-    "eq": False,
-    "kw_only": True,
-    "gc": False,
-}

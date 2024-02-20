@@ -2,13 +2,25 @@ from typing import Literal, Optional
 
 from httpx import AsyncClient
 from httpx._types import ProxiesTypes, TimeoutTypes
-from msgspec import field
+from msgspec import Struct, convert, field, to_builtins
+from typing_extensions import Self
 
-from jkit._base import CONFIG_CONFIG, ConfigObject
 from jkit._constraints import NonEmptyStr
 
 
-class _NetworkConfig(ConfigObject, **CONFIG_CONFIG):
+class ConfigObject(Struct):
+    def _validate(self) -> Self:
+        return convert(to_builtins(self), type=self.__class__)
+
+
+CONFIG_OBJECT_CONFIG = {
+    "eq": False,
+    "kw_only": True,
+    "gc": False,
+}
+
+
+class _NetworkConfig(ConfigObject, **CONFIG_OBJECT_CONFIG):
     """网络配置"""
 
     # 使用的传输协议，HTTP/2 有助于提升性能
@@ -36,14 +48,14 @@ class _NetworkConfig(ConfigObject, **CONFIG_CONFIG):
         jkit._network_request.HTTP_CLIENT = self._get_http_client()
 
 
-class _EndpointsConfig(ConfigObject, **CONFIG_CONFIG):
+class _EndpointsConfig(ConfigObject, **CONFIG_OBJECT_CONFIG):
     """API 端点配置"""
 
     jianshu: NonEmptyStr = "https://www.jianshu.com"
     jpep: NonEmptyStr = "https://20221023.jianshubei.com/api"
 
 
-class _ResourceCheckConfig(ConfigObject, **CONFIG_CONFIG):
+class _ResourceCheckConfig(ConfigObject, **CONFIG_OBJECT_CONFIG):
     """资源检查配置"""
 
     # 从资源对象获取数据时自动进行资源检查
@@ -58,7 +70,7 @@ class _ResourceCheckConfig(ConfigObject, **CONFIG_CONFIG):
     force_check_safe_data: bool = False
 
 
-class _DataValidationConfig(ConfigObject, **CONFIG_CONFIG):
+class _DataValidationConfig(ConfigObject, **CONFIG_OBJECT_CONFIG):
     """数据校验配置"""
 
     # 是否启用数据校验
@@ -66,7 +78,7 @@ class _DataValidationConfig(ConfigObject, **CONFIG_CONFIG):
     enabled: bool = True
 
 
-class _Config(ConfigObject, **CONFIG_CONFIG):
+class _Config(ConfigObject, **CONFIG_OBJECT_CONFIG):
     network: _NetworkConfig = field(default_factory=_NetworkConfig)
     endpoints: _EndpointsConfig = field(default_factory=_EndpointsConfig)
     resource_check: _ResourceCheckConfig = field(default_factory=_ResourceCheckConfig)
