@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import List
+from typing import Callable, List, Optional
 
 from msgspec import Struct, convert, to_builtins
 from msgspec import ValidationError as MsgspecValidationError
@@ -70,6 +70,38 @@ class CheckableObject(metaclass=ABCMeta):
 
 
 class SlugAndUrlObject(metaclass=ABCMeta):
+    @classmethod
+    def _check_params(
+        cls,
+        *,
+        object_readable_name: str,
+        slug: Optional[str],
+        url: Optional[str],
+        slug_check_func: Callable[[str], bool],
+        url_convert_func: Callable[[str], str],
+    ) -> str:
+        # 如果同时提供了 Slug 和 Url
+        if slug is not None and url is not None:
+            raise ValueError(
+                f"{object_readable_name} Slug 与{object_readable_name}链接不可同时提供"
+            )
+
+        # 如果提供了 Slug
+        if slug is not None:
+            if not slug_check_func(slug):
+                raise ValueError(f"{slug} 不是有效的{object_readable_name} Slug")
+
+            return slug
+        # 如果提供了 Url
+        elif url is not None:  # noqa: RET505
+            # 转换函数中会对 Url 进行检查，并在 Url 无效时抛出异常
+            return url_convert_func(url)
+
+        # 如果 Slug 与 Url 均未提供
+        raise ValueError(
+            f"必须提供{object_readable_name} Slug 或{object_readable_name}链接"
+        )
+
     @classmethod
     @abstractmethod
     def from_slug(cls, slug: str, /) -> Self:

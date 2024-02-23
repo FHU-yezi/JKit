@@ -32,10 +32,9 @@ from jkit._constraints import (
 )
 from jkit._network_request import get_json
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit._utils import only_one
 from jkit.config import CONFIG
 from jkit.exceptions import ResourceUnavailableError
-from jkit.identifier_check import is_collection_url
+from jkit.identifier_check import is_collection_slug
 from jkit.identifier_convert import collection_slug_to_url, collection_url_to_slug
 
 if TYPE_CHECKING:
@@ -105,37 +104,33 @@ class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
     def __init__(
-        self, *, url: Optional[str] = None, slug: Optional[str] = None
+        self, *, slug: Optional[str] = None, url: Optional[str] = None
     ) -> None:
         super().__init__()
 
-        if not only_one(url, slug):
-            raise ValueError("专题链接和专题 Slug 不可同时提供")
-
-        if url:
-            if not is_collection_url(url):
-                raise ValueError(f"{url} 不是有效的专题链接")
-            self._url = url
-        elif slug:
-            self._url = collection_slug_to_url(slug)
-        else:
-            raise ValueError("必须提供专题链接或专题 Slug")
-
-    @classmethod
-    def from_url(cls, url: str, /) -> Self:
-        return cls(url=url)
+        self._slug = self._check_params(
+            object_readable_name="专题",
+            slug=slug,
+            url=url,
+            slug_check_func=is_collection_slug,
+            url_convert_func=collection_url_to_slug,
+        )
 
     @classmethod
     def from_slug(cls, slug: str, /) -> Self:
         return cls(slug=slug)
 
-    @property
-    def url(self) -> str:
-        return self._url
+    @classmethod
+    def from_url(cls, url: str, /) -> Self:
+        return cls(url=url)
 
     @property
     def slug(self) -> str:
-        return collection_url_to_slug(self._url)
+        return self._slug
+
+    @property
+    def url(self) -> str:
+        return collection_slug_to_url(self._slug)
 
     async def check(self) -> None:
         if self._checked:
