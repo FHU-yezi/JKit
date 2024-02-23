@@ -66,7 +66,7 @@ class GenderEnum(Enum):
     FEMALE = "女"
 
 
-class UserMembershipInfo(DataObject, **DATA_OBJECT_CONFIG):
+class MembershipInfoField(DataObject, **DATA_OBJECT_CONFIG):
     type: MembershipEnum
     expired_at: Optional[NormalizedDatetime]
 
@@ -80,7 +80,7 @@ class UserInfo(DataObject, **DATA_OBJECT_CONFIG):
     avatar_url: UserUploadedUrl
     background_image_url: Optional[UserUploadedUrl]
     badges: Tuple[UserBadge, ...]
-    membership_info: UserMembershipInfo
+    membership_info: MembershipInfoField
     address_by_ip: NonEmptyStr
 
     followers_count: NonNegativeInt
@@ -114,7 +114,7 @@ class UserNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
         return Notebook.from_id(self.id)
 
 
-class UserArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
+class ArticleAuthorInfoField(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     slug: UserSlug
     name: UserName
@@ -136,7 +136,7 @@ class UserArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     is_top: bool
     is_paid: bool
     can_comment: bool
-    author_info: UserArticleAuthorInfo
+    author_info: ArticleAuthorInfoField
 
     views_count: NonNegativeInt
     likes_count: NonNegativeInt
@@ -234,7 +234,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
                 )
                 for badge in data["badges"]
             ),
-            membership_info=UserMembershipInfo(
+            membership_info=MembershipInfoField(
                 type={
                     "bronze": MembershipEnum.BRONZE,
                     "silver": MembershipEnum.SILVER,
@@ -244,7 +244,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
                 expired_at=normalize_datetime(data["member"]["expires_at"]),
             )
             if data.get("member")
-            else UserMembershipInfo(
+            else MembershipInfoField(
                 type=MembershipEnum.NONE,
                 expired_at=None,
             ),
@@ -415,7 +415,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
                     is_top=item["object"]["data"]["is_top"],
                     is_paid=item["object"]["data"]["paid"],
                     can_comment=item["object"]["data"]["commentable"],
-                    author_info=UserArticleAuthorInfo(
+                    author_info=ArticleAuthorInfoField(
                         id=item["object"]["data"]["user"]["id"],
                         slug=item["object"]["data"]["user"]["slug"],
                         name=item["object"]["data"]["user"]["nickname"],

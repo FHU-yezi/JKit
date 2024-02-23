@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from jkit.user import User
 
 
-class AssetsRankingRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+class UserInfoField(DataObject, **DATA_OBJECT_CONFIG):
     id: Optional[PositiveInt]
     slug: Optional[UserSlug]
     name: Optional[UserName]
@@ -36,7 +36,7 @@ class AssetsRankingRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
 class AssetsRankingRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     assets_amount: NonNegativeFloat
-    user_info: AssetsRankingRecordUserInfo
+    user_info: UserInfoField
 
 
 class AssetsRanking(ResourceObject):
@@ -58,7 +58,7 @@ class AssetsRanking(ResourceObject):
                 yield AssetsRankingRecord(
                     ranking=item["ranking"],
                     assets_amount=normalize_assets_amount(item["amount"]),
-                    user_info=AssetsRankingRecordUserInfo(
+                    user_info=UserInfoField(
                         id=item["user"]["id"],
                         slug=item["user"]["slug"],
                         name=item["user"]["nickname"],

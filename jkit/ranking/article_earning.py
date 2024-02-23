@@ -19,19 +19,19 @@ if TYPE_CHECKING:
     from jkit.article import Article
 
 
-class ArticleEarningRankingRecordAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
+class AuthorInfoField(DataObject, **DATA_OBJECT_CONFIG):
     name: Optional[UserName]
     avatar_url: Optional[UserUploadedUrl]
 
 
-class ArticleEarningRankingRecord(DataObject, **DATA_OBJECT_CONFIG):
+class RecordField(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     title: Optional[NonEmptyStr]
     slug: Optional[ArticleSlug]
     total_fp_amount: PositiveFloat
     fp_to_author_anount: PositiveFloat
     fp_to_voter_amount: PositiveFloat
-    author_info: ArticleEarningRankingRecordAuthorInfo
+    author_info: AuthorInfoField
 
     @property
     def is_missing(self) -> bool:
@@ -50,7 +50,7 @@ class ArticleEarningRankingData(DataObject, **DATA_OBJECT_CONFIG):
     total_fp_amount_sum: PositiveFloat
     fp_to_author_amount_sum: PositiveFloat
     fp_to_voter_amount_sum: PositiveFloat
-    records: Tuple[ArticleEarningRankingRecord, ...]
+    records: Tuple[RecordField, ...]
 
 
 class ArticleEarningRanking(ResourceObject):
@@ -77,14 +77,14 @@ class ArticleEarningRanking(ResourceObject):
             fp_to_author_amount_sum=normalize_assets_amount(data["author_fp"]),
             fp_to_voter_amount_sum=normalize_assets_amount(data["voter_fp"]),
             records=tuple(
-                ArticleEarningRankingRecord(
+                RecordField(
                     ranking=ranking,
                     title=item["title"],
                     slug=item["slug"],
                     total_fp_amount=normalize_assets_amount(item["fp"]),
                     fp_to_author_anount=normalize_assets_amount(item["author_fp"]),
                     fp_to_voter_amount=normalize_assets_amount(item["voter_fp"]),
-                    author_info=ArticleEarningRankingRecordAuthorInfo(
+                    author_info=AuthorInfoField(
                         name=item["author_nickname"],
                         avatar_url=item["author_avatar"],
                     ),
@@ -93,6 +93,6 @@ class ArticleEarningRanking(ResourceObject):
             ),
         )._validate()
 
-    async def __aiter__(self) -> AsyncGenerator[ArticleEarningRankingRecord, None]:
+    async def __aiter__(self) -> AsyncGenerator[RecordField, None]:
         for item in (await self.get_data()).records:
             yield item

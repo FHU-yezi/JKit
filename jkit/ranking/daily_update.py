@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from jkit.user import User
 
 
-class DailyUpdateRankingRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+class UserInfoField(DataObject, **DATA_OBJECT_CONFIG):
     slug: UserSlug
     name: UserName
     avatar_url: UserUploadedUrl
@@ -23,7 +23,7 @@ class DailyUpdateRankingRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
 class DailyUpdateRankingRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     days: PositiveInt
-    user_info: DailyUpdateRankingRecordUserInfo
+    user_info: UserInfoField
 
 
 class DailyUpdateRanking(ResourceObject):
@@ -37,7 +37,7 @@ class DailyUpdateRanking(ResourceObject):
             yield DailyUpdateRankingRecord(
                 ranking=item["rank"],
                 days=item["checkin_count"],
-                user_info=DailyUpdateRankingRecordUserInfo(
+                user_info=UserInfoField(
                     slug=item["slug"],
                     name=item["nickname"],
                     avatar_url=item["avatar"],

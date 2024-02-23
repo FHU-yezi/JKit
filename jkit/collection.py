@@ -43,7 +43,7 @@ if TYPE_CHECKING:
     from jkit.user import User
 
 
-class CollectionOwnerInfo(DataObject, **DATA_OBJECT_CONFIG):
+class OwnerInfoField(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     slug: UserSlug
     name: UserName
@@ -62,13 +62,13 @@ class CollectionInfo(DataObject, **DATA_OBJECT_CONFIG):
     description: str
     description_updated_at: NormalizedDatetime
     new_article_added_at: NormalizedDatetime
-    owner_info: CollectionOwnerInfo
+    owner_info: OwnerInfoField
 
     articles_count: NonNegativeInt
     subscribers_count: NonNegativeInt
 
 
-class CollectionArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
+class ArticleAuthorInfoField(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     slug: UserSlug
     name: UserName
@@ -89,7 +89,7 @@ class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     published_at: NormalizedDatetime
     is_paid: bool
     can_comment: bool
-    author_info: CollectionArticleAuthorInfo
+    author_info: ArticleAuthorInfoField
 
     views_count: NonNegativeInt
     likes_count: NonNegativeInt
@@ -169,7 +169,7 @@ class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
             description=data["content_in_full"],
             description_updated_at=normalize_datetime(data["last_updated_at"]),
             new_article_added_at=normalize_datetime(data["newly_added_at"]),
-            owner_info=CollectionOwnerInfo(
+            owner_info=OwnerInfoField(
                 id=data["owner"]["id"],
                 slug=data["owner"]["slug"],
                 name=data["owner"]["nickname"],
@@ -219,7 +219,7 @@ class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
                     ),
                     is_paid=item["object"]["data"]["paid"],
                     can_comment=item["object"]["data"]["commentable"],
-                    author_info=CollectionArticleAuthorInfo(
+                    author_info=ArticleAuthorInfoField(
                         id=item["object"]["data"]["user"]["id"],
                         slug=item["object"]["data"]["user"]["slug"],
                         name=item["object"]["data"]["user"]["nickname"],

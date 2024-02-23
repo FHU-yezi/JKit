@@ -20,7 +20,7 @@ class PaymentChannels(Enum):
     ANT_CREDIT_PAY = "蚂蚁花呗"
 
 
-class FTNMacketOrderPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
+class PublisherInfoField(DataObject, **DATA_OBJECT_CONFIG):
     is_anonymous: bool
     id: Optional[PositiveInt]
     name: Optional[NonEmptyStr]
@@ -29,7 +29,7 @@ class FTNMacketOrderPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
     credit: Optional[NonNegativeInt]
 
 
-class FTNMacketOrder(DataObject, **DATA_OBJECT_CONFIG):
+class FTNMacketOrderRecord(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     price: PositiveFloat
 
@@ -42,7 +42,7 @@ class FTNMacketOrder(DataObject, **DATA_OBJECT_CONFIG):
     publish_time: NormalizedDatetime
     supported_payment_channels: Tuple[PaymentChannels, ...]
 
-    publisher_info: FTNMacketOrderPublisherInfo
+    publisher_info: PublisherInfoField
 
 
 class FTNMacket(ResourceObject):
@@ -51,7 +51,7 @@ class FTNMacket(ResourceObject):
         *,
         type: Literal["buy", "sell"],  # noqa: A002
         start_page: int = 1,
-    ) -> AsyncGenerator[FTNMacketOrder, None]:
+    ) -> AsyncGenerator[FTNMacketOrderRecord, None]:
         now_page = start_page
         while True:
             data = await send_post(
@@ -86,7 +86,7 @@ class FTNMacket(ResourceObject):
                 break
 
             for item in data["data"]:
-                yield FTNMacketOrder(
+                yield FTNMacketOrderRecord(
                     id=item["id"],
                     price=item["price"],
                     total_amount=item["totalNum"],
@@ -105,7 +105,7 @@ class FTNMacket(ResourceObject):
                     )
                     if item["member.user"][0]["pay_types"]
                     else (),
-                    publisher_info=FTNMacketOrderPublisherInfo(
+                    publisher_info=PublisherInfoField(
                         is_anonymous=bool(item["anony"]),
                         id=item["member.user"][0]["id"],
                         name=item["member.user"][0]["username"],
@@ -115,6 +115,6 @@ class FTNMacket(ResourceObject):
                         else None,
                         credit=item["member.user"][0]["credit"],
                     ),
-                )
+                )._validate()
 
             now_page += 1

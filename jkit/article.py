@@ -65,7 +65,7 @@ class ArticlePaidStatusEnum(Enum):
     PAID = "付费"
 
 
-class ArticlePaidInfo(DataObject, **DATA_OBJECT_CONFIG):
+class PaidInfoField(DataObject, **DATA_OBJECT_CONFIG):
     notebook_paid_status: Optional[NotebookPaidStatusEnum]
     article_paid_status: ArticlePaidStatusEnum
     price: Optional[PositiveFloat]
@@ -73,7 +73,7 @@ class ArticlePaidInfo(DataObject, **DATA_OBJECT_CONFIG):
     paid_readers_count: Optional[NonNegativeInt]
 
 
-class ArticleAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
+class AuthorInfoField(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     slug: UserSlug
     name: UserName
@@ -100,8 +100,8 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
     updated_at: NormalizedDatetime
     can_comment: bool
     can_reprint: bool
-    paid_info: ArticlePaidInfo
-    author_info: ArticleAuthorInfo
+    paid_info: PaidInfoField
+    author_info: AuthorInfoField
     html_content: NonEmptyStr
 
     likes_count: NonNegativeInt
@@ -120,7 +120,7 @@ class ArticleAudioInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     name: NonEmptyStr
     producer: NonEmptyStr
-    file_url: str  # TODO
+    file_url: str  # TODO: 更严格的校验
     duration_seconds: PositiveInt
     file_size_bytes: PositiveInt
 
@@ -165,7 +165,7 @@ class ArticleBelongToNotebookInfo(DataObject, **DATA_OBJECT_CONFIG):
         return Notebook.from_id(self.id)
 
 
-class ArticleCommentPublisherInfo(DataObject, **DATA_OBJECT_CONFIG):
+class CommentPublisherInfoField(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     slug: UserSlug
     name: UserName
@@ -184,7 +184,7 @@ class ArticleSubcommentInfo(DataObject, **DATA_OBJECT_CONFIG):
     content: str
     images: Tuple[UserUploadedUrl, ...]
     published_at: NormalizedDatetime
-    publisher_info: ArticleCommentPublisherInfo
+    publisher_info: CommentPublisherInfoField
 
 
 class ArticleCommentInfo(DataObject, **DATA_OBJECT_CONFIG):
@@ -194,7 +194,7 @@ class ArticleCommentInfo(DataObject, **DATA_OBJECT_CONFIG):
     images: Tuple[UserUploadedUrl, ...]
     likes_count: NonNegativeInt
     published_at: NormalizedDatetime
-    publisher_info: ArticleCommentPublisherInfo
+    publisher_info: CommentPublisherInfoField
 
     subcomments: Tuple[ArticleSubcommentInfo, ...]
 
@@ -279,7 +279,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
             updated_at=normalize_datetime(data["last_updated_at"]),
             can_comment=data["commentable"],
             can_reprint=data["reprintable"],
-            paid_info=ArticlePaidInfo(
+            paid_info=PaidInfoField(
                 notebook_paid_status={
                     "free": None,  # 免费文章
                     "fbook_free": NotebookPaidStatusEnum.FREE,  # 免费连载中的免费文章
@@ -306,7 +306,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
                 else None,
                 paid_readers_count=data.get("purchased_count"),
             ),
-            author_info=ArticleAuthorInfo(
+            author_info=AuthorInfoField(
                 id=data["user"]["id"],
                 slug=data["user"]["slug"],
                 name=data["user"]["nickname"],
@@ -430,7 +430,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
                     else (),
                     likes_count=item["likes_count"],
                     published_at=normalize_datetime(item["created_at"]),
-                    publisher_info=ArticleCommentPublisherInfo(
+                    publisher_info=CommentPublisherInfoField(
                         id=item["user"]["id"],
                         slug=item["user"]["slug"],
                         name=item["user"]["nickname"],
@@ -445,7 +445,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
                             if subcomment["images"]
                             else (),
                             published_at=normalize_datetime(subcomment["created_at"]),
-                            publisher_info=ArticleCommentPublisherInfo(
+                            publisher_info=CommentPublisherInfoField(
                                 id=subcomment["user"]["id"],
                                 slug=subcomment["user"]["slug"],
                                 name=subcomment["user"]["nickname"],
@@ -484,7 +484,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
                 else (),
                 likes_count=item["likes_count"],
                 published_at=normalize_datetime(item["created_at"]),
-                publisher_info=ArticleCommentPublisherInfo(
+                publisher_info=CommentPublisherInfoField(
                     id=item["user"]["id"],
                     slug=item["user"]["slug"],
                     name=item["user"]["nickname"],
@@ -499,7 +499,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
                         if subcomment["images"]
                         else (),
                         published_at=normalize_datetime(subcomment["created_at"]),
-                        publisher_info=ArticleCommentPublisherInfo(
+                        publisher_info=CommentPublisherInfoField(
                             id=subcomment["user"]["id"],
                             slug=subcomment["user"]["slug"],
                             name=subcomment["user"]["nickname"],

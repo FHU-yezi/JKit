@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from jkit.user import User
 
 
-class JianshuLotteryWinRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+class UserInfoField(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     slug: UserSlug
     name: UserName
@@ -34,7 +34,7 @@ class JianshuLotteryWinRecord(DataObject, **DATA_OBJECT_CONFIG):
     time: NormalizedDatetime
     award_name: NonEmptyStr
 
-    user_info: JianshuLotteryWinRecordUserInfo
+    user_info: UserInfoField
 
 
 class JianshuLottery(ResourceObject):
@@ -52,7 +52,7 @@ class JianshuLottery(ResourceObject):
                 id=item["id"],
                 time=normalize_datetime(item["created_at"]),
                 award_name=item["name"],
-                user_info=JianshuLotteryWinRecordUserInfo(
+                user_info=UserInfoField(
                     id=item["user"]["id"],
                     slug=item["user"]["slug"],
                     name=item["user"]["nickname"],

@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from jkit.user import User
 
 
-class UserEarningRankingRecord(DataObject, **DATA_OBJECT_CONFIG):
+class RecordField(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     name: UserName
     slug: UserSlug
@@ -38,7 +38,7 @@ class UserEarningRankingData(DataObject, **DATA_OBJECT_CONFIG):
     total_fp_amount_sum: PositiveFloat
     fp_by_creating_amount_sum: PositiveFloat
     fp_by_voting_amount_sum: PositiveFloat
-    records: Tuple[UserEarningRankingRecord, ...]
+    records: Tuple[RecordField, ...]
 
 
 class UserEarningRanking(ResourceObject):
@@ -75,7 +75,7 @@ class UserEarningRanking(ResourceObject):
             fp_by_creating_amount_sum=normalize_assets_amount(data["author_fp"]),
             fp_by_voting_amount_sum=normalize_assets_amount(data["voter_fp"]),
             records=tuple(
-                UserEarningRankingRecord(
+                RecordField(
                     ranking=ranking,
                     name=item["nickname"],
                     slug=item["slug"],
@@ -88,6 +88,6 @@ class UserEarningRanking(ResourceObject):
             ),
         )._validate()
 
-    async def __aiter__(self) -> AsyncGenerator[UserEarningRankingRecord, None]:
+    async def __aiter__(self) -> AsyncGenerator[RecordField, None]:
         for item in (await self.get_data()).records:
             yield item
