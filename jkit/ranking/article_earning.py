@@ -19,19 +19,19 @@ if TYPE_CHECKING:
     from jkit.article import Article
 
 
-class ArticleEarningRankRecordAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
+class ArticleEarningRankingRecordAuthorInfo(DataObject, **DATA_OBJECT_CONFIG):
     name: Optional[UserName]
     avatar_url: Optional[UserUploadedUrl]
 
 
-class ArticleEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
+class ArticleEarningRankingRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     title: Optional[NonEmptyStr]
     slug: Optional[ArticleSlug]
     total_fp_amount: PositiveFloat
     fp_to_author_anount: PositiveFloat
     fp_to_voter_amount: PositiveFloat
-    author_info: ArticleEarningRankRecordAuthorInfo
+    author_info: ArticleEarningRankingRecordAuthorInfo
 
     @property
     def is_missing(self) -> bool:
@@ -46,14 +46,14 @@ class ArticleEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
         return Article.from_slug(self.slug)._as_checked()
 
 
-class ArticleEarningRankData(DataObject, **DATA_OBJECT_CONFIG):
+class ArticleEarningRankingData(DataObject, **DATA_OBJECT_CONFIG):
     total_fp_amount_sum: PositiveFloat
     fp_to_author_amount_sum: PositiveFloat
     fp_to_voter_amount_sum: PositiveFloat
-    records: Tuple[ArticleEarningRankRecord, ...]
+    records: Tuple[ArticleEarningRankingRecord, ...]
 
 
-class ArticleEarningRank(ResourceObject):
+class ArticleEarningRanking(ResourceObject):
     def __init__(self, target_date: date, /) -> None:
         if target_date < date(2020, 6, 20):
             raise APIUnsupportedError("不支持获取 2020.06.20 前的排行榜数据")
@@ -62,26 +62,26 @@ class ArticleEarningRank(ResourceObject):
 
         self._target_date = target_date
 
-    async def get_data(self) -> ArticleEarningRankData:
+    async def get_data(self) -> ArticleEarningRankingData:
         data = await get_json(
             endpoint=CONFIG.endpoints.jianshu,
             path="/asimov/fp_rankings/voter_notes",
             params={"date": self._target_date.strftime(r"%Y%m%d")},
         )
 
-        return ArticleEarningRankData(
+        return ArticleEarningRankingData(
             total_fp_amount_sum=normalize_assets_amount(data["fp"]),
             fp_to_author_amount_sum=normalize_assets_amount(data["author_fp"]),
             fp_to_voter_amount_sum=normalize_assets_amount(data["voter_fp"]),
             records=tuple(
-                ArticleEarningRankRecord(
+                ArticleEarningRankingRecord(
                     ranking=ranking,
                     title=item["title"],
                     slug=item["slug"],
                     total_fp_amount=normalize_assets_amount(item["fp"]),
                     fp_to_author_anount=normalize_assets_amount(item["author_fp"]),
                     fp_to_voter_amount=normalize_assets_amount(item["voter_fp"]),
-                    author_info=ArticleEarningRankRecordAuthorInfo(
+                    author_info=ArticleEarningRankingRecordAuthorInfo(
                         name=item["author_nickname"],
                         avatar_url=item["author_avatar"],
                     ),
@@ -90,6 +90,6 @@ class ArticleEarningRank(ResourceObject):
             ),
         )._validate()
 
-    async def __aiter__(self) -> AsyncGenerator[ArticleEarningRankRecord, None]:
+    async def __aiter__(self) -> AsyncGenerator[ArticleEarningRankingRecord, None]:
         for item in (await self.get_data()).records:
             yield item

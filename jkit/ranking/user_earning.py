@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from jkit.user import User
 
 
-class UserEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
+class UserEarningRankingRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     name: UserName
     slug: UserSlug
@@ -34,14 +34,14 @@ class UserEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
         return User.from_slug(self.slug)._as_checked()
 
 
-class UserEarningRankData(DataObject, **DATA_OBJECT_CONFIG):
+class UserEarningRankingData(DataObject, **DATA_OBJECT_CONFIG):
     total_fp_amount_sum: PositiveFloat
     fp_by_creating_amount_sum: PositiveFloat
     fp_by_voting_amount_sum: PositiveFloat
-    records: Tuple[UserEarningRankRecord, ...]
+    records: Tuple[UserEarningRankingRecord, ...]
 
 
-class UserEarningRank(ResourceObject):
+class UserEarningRanking(ResourceObject):
     def __init__(
         self,
         target_date: date,
@@ -57,7 +57,7 @@ class UserEarningRank(ResourceObject):
         self._target_date = target_date
         self._type = type
 
-    async def get_data(self) -> UserEarningRankData:
+    async def get_data(self) -> UserEarningRankingData:
         data = await get_json(
             endpoint=CONFIG.endpoints.jianshu,
             path="/asimov/fp_rankings/voter_users",
@@ -67,12 +67,12 @@ class UserEarningRank(ResourceObject):
             },
         )
 
-        return UserEarningRankData(
+        return UserEarningRankingData(
             total_fp_amount_sum=normalize_assets_amount(data["fp"]),
             fp_by_creating_amount_sum=normalize_assets_amount(data["author_fp"]),
             fp_by_voting_amount_sum=normalize_assets_amount(data["voter_fp"]),
             records=tuple(
-                UserEarningRankRecord(
+                UserEarningRankingRecord(
                     ranking=ranking,
                     name=item["nickname"],
                     slug=item["slug"],
@@ -85,6 +85,6 @@ class UserEarningRank(ResourceObject):
             ),
         )._validate()
 
-    async def __aiter__(self) -> AsyncGenerator[UserEarningRankRecord, None]:
+    async def __aiter__(self) -> AsyncGenerator[UserEarningRankingRecord, None]:
         for item in (await self.get_data()).records:
             yield item

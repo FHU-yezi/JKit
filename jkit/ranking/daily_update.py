@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from jkit.user import User
 
 
-class DailyUpdateRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+class DailyUpdateRankingRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
     slug: UserSlug
     name: UserName
     avatar_url: UserUploadedUrl
@@ -20,24 +20,24 @@ class DailyUpdateRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
         return User.from_slug(self.slug)._as_checked()
 
 
-class DailyUpdateRankRecord(DataObject, **DATA_OBJECT_CONFIG):
+class DailyUpdateRankingRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     days: PositiveInt
-    user_info: DailyUpdateRankRecordUserInfo
+    user_info: DailyUpdateRankingRecordUserInfo
 
 
-class DailyUpdateRank(ResourceObject):
-    async def __aiter__(self) -> AsyncGenerator[DailyUpdateRankRecord, None]:
+class DailyUpdateRanking(ResourceObject):
+    async def __aiter__(self) -> AsyncGenerator[DailyUpdateRankingRecord, None]:
         data = await get_json(
             endpoint=CONFIG.endpoints.jianshu,
             path="/asimov/daily_activity_participants/rank",
         )
 
         for item in data["daps"]:
-            yield DailyUpdateRankRecord(
+            yield DailyUpdateRankingRecord(
                 ranking=item["rank"],
                 days=item["checkin_count"],
-                user_info=DailyUpdateRankRecordUserInfo(
+                user_info=DailyUpdateRankingRecordUserInfo(
                     slug=item["slug"],
                     name=item["nickname"],
                     avatar_url=item["avatar"],

@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from jkit.user import User
 
 
-class AssetsRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
+class AssetsRankingRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
     id: Optional[PositiveInt]
     slug: Optional[UserSlug]
     name: Optional[UserName]
@@ -33,17 +33,17 @@ class AssetsRankRecordUserInfo(DataObject, **DATA_OBJECT_CONFIG):
         return User.from_slug(self.slug)._as_checked()
 
 
-class AssetsRankRecord(DataObject, **DATA_OBJECT_CONFIG):
+class AssetsRankingRecord(DataObject, **DATA_OBJECT_CONFIG):
     ranking: PositiveInt
     assets_amount: NonNegativeFloat
-    user_info: AssetsRankRecordUserInfo
+    user_info: AssetsRankingRecordUserInfo
 
 
-class AssetsRank(ResourceObject):
+class AssetsRanking(ResourceObject):
     def __init__(self, *, start_id: int = 1) -> None:
         self._start_id = start_id
 
-    async def __aiter__(self) -> AsyncGenerator[AssetsRankRecord, None]:
+    async def __aiter__(self) -> AsyncGenerator[AssetsRankingRecord, None]:
         now_id = self._start_id
         while True:
             data = await get_json(
@@ -55,10 +55,10 @@ class AssetsRank(ResourceObject):
                 return
 
             for item in data["rankings"]:
-                yield AssetsRankRecord(
+                yield AssetsRankingRecord(
                     ranking=item["ranking"],
                     assets_amount=normalize_assets_amount(item["amount"]),
-                    user_info=AssetsRankRecordUserInfo(
+                    user_info=AssetsRankingRecordUserInfo(
                         id=item["user"]["id"],
                         slug=item["user"]["slug"],
                         name=item["user"]["nickname"],
