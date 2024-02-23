@@ -34,7 +34,6 @@ class _NetworkConfig(ConfigObject, **CONFIG_OBJECT_CONFIG):
 
     def _get_http_client(self) -> AsyncClient:
         return AsyncClient(
-            http1=self.protool == "HTTP/1",
             http2=self.protool == "HTTP/2",
             proxies=self.proxies,
             timeout=self.timeout,
