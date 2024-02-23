@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, AsyncGenerator, Literal, Tuple
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
+    NonNegativeFloat,
     PositiveFloat,
     PositiveInt,
     UserName,
@@ -24,8 +25,8 @@ class UserEarningRankRecord(DataObject, **DATA_OBJECT_CONFIG):
     slug: UserSlug
     avatar_url: UserUploadedUrl
     total_fp_amount: PositiveFloat
-    fp_by_creating_anount: PositiveFloat
-    fp_by_voting_amount: PositiveFloat
+    fp_by_creating_anount: NonNegativeFloat
+    fp_by_voting_amount: NonNegativeFloat
 
     def to_user_obj(self) -> "User":
         from jkit.user import User
@@ -65,7 +66,6 @@ class UserEarningRank(ResourceObject):
                 "date": self._target_date.strftime(r"%Y%m%d"),
             },
         )
-        print(data["users"][2])
 
         return UserEarningRankData(
             total_fp_amount_sum=normalize_assets_amount(data["fp"]),
