@@ -11,7 +11,6 @@ from jkit.exceptions import ValidationError
 
 class DataObject(Struct):
     def _validate(self) -> Self:
-
         if not CONFIG.data_validation.enabled:
             return self
 

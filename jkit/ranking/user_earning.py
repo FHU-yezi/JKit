@@ -1,5 +1,5 @@
-from datetime import date, datetime
-from typing import TYPE_CHECKING, AsyncGenerator, Literal, Tuple
+from datetime import date, datetime, timedelta
+from typing import TYPE_CHECKING, AsyncGenerator, Literal, Optional, Tuple
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
@@ -44,11 +44,14 @@ class UserEarningRankingData(DataObject, **DATA_OBJECT_CONFIG):
 class UserEarningRanking(ResourceObject):
     def __init__(
         self,
-        target_date: date,
+        target_date: Optional[date] = None,
         /,
         *,
         type: Literal["all", "creating", "voting"] = "all",  # noqa: A002
     ) -> None:
+        if not target_date:
+            target_date = datetime.now().date() - timedelta(days=1)
+
         if target_date < date(2020, 6, 20):
             raise APIUnsupportedError("不支持获取 2020.06.20 前的排行榜数据")
         if target_date >= datetime.now().date():
