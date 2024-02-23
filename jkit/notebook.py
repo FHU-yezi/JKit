@@ -7,8 +7,8 @@ from jkit._base import (
     DATA_OBJECT_CONFIG,
     CheckableObject,
     DataObject,
+    IdAndUrlObject,
     ResourceObject,
-    SlugAndUrlObject,
 )
 from jkit._constraints import (
     ArticleSlug,
@@ -91,7 +91,7 @@ class NotebookArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
         return Article.from_slug(self.slug)._as_checked()
 
 
-class Notebook(ResourceObject, CheckableObject, SlugAndUrlObject):
+class Notebook(ResourceObject, CheckableObject, IdAndUrlObject):
     def __init__(self, *, id: int) -> None:  # noqa: A002
         super().__init__()
         self._checked = False

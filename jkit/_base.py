@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Callable, List, Optional
+from typing import Callable, ClassVar, List, Optional
 
 from msgspec import Struct, convert, to_builtins
 from msgspec import ValidationError as MsgspecValidationError
@@ -69,7 +69,37 @@ class CheckableObject(metaclass=ABCMeta):
         return self
 
 
-class SlugAndUrlObject(metaclass=ABCMeta):
+class SlugAndUrlObject:
+    _slug_check_func: ClassVar[Optional[Callable[[str], bool]]] = None
+    _slug_to_url_func: ClassVar[Optional[Callable[[str], str]]] = None
+    _url_to_slug_func: ClassVar[Optional[Callable[[str], str]]] = None
+
+    def __init__(
+        self, *, slug: Optional[str] = None, url: Optional[str] = None
+    ) -> None:
+        del slug, url
+
+        self._slug = ""
+
+    @classmethod
+    def from_slug(cls, slug: str, /) -> Self:
+        return cls(slug=slug)
+
+    @classmethod
+    def from_url(cls, url: str, /) -> Self:
+        return cls(url=url)
+
+    @property
+    def slug(self) -> str:
+        return self._slug
+
+    @property
+    def url(self) -> str:
+        if not self.__class__._slug_to_url_func:
+            raise AssertionError
+
+        return self.__class__._slug_to_url_func(self._slug)
+
     @classmethod
     def _check_params(
         cls,
@@ -77,8 +107,6 @@ class SlugAndUrlObject(metaclass=ABCMeta):
         object_readable_name: str,
         slug: Optional[str],
         url: Optional[str],
-        slug_check_func: Callable[[str], bool],
-        url_convert_func: Callable[[str], str],
     ) -> str:
         # 如果同时提供了 Slug 和 Url
         if slug is not None and url is not None:
@@ -88,39 +116,25 @@ class SlugAndUrlObject(metaclass=ABCMeta):
 
         # 如果提供了 Slug
         if slug is not None:
-            if not slug_check_func(slug):
+            if not cls._slug_check_func:
+                raise AssertionError
+
+            if not cls._slug_check_func(slug):
                 raise ValueError(f"{slug} 不是有效的{object_readable_name} Slug")
 
             return slug
         # 如果提供了 Url
         elif url is not None:  # noqa: RET505
+            if not cls._url_to_slug_func:
+                raise AssertionError
+
             # 转换函数中会对 Url 进行检查，并在 Url 无效时抛出异常
-            return url_convert_func(url)
+            return cls._url_to_slug_func(url)
 
         # 如果 Slug 与 Url 均未提供
         raise ValueError(
             f"必须提供{object_readable_name} Slug 或{object_readable_name}链接"
         )
-
-    @classmethod
-    @abstractmethod
-    def from_slug(cls, slug: str, /) -> Self:
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def from_url(cls, url: str, /) -> Self:
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def slug(self) -> str:
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def url(self) -> str:
-        raise NotImplementedError
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, self.__class__) and self.slug == other.slug

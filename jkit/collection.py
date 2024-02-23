@@ -9,7 +9,6 @@ from typing import (
 )
 
 from httpx import HTTPStatusError
-from typing_extensions import Self
 
 from jkit._base import (
     DATA_OBJECT_CONFIG,
@@ -103,6 +102,10 @@ class CollectionArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
+    _slug_check_func = is_collection_slug
+    _slug_to_url_func = collection_slug_to_url
+    _url_to_slug_func = collection_url_to_slug
+
     def __init__(
         self, *, slug: Optional[str] = None, url: Optional[str] = None
     ) -> None:
@@ -112,25 +115,7 @@ class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
             object_readable_name="专题",
             slug=slug,
             url=url,
-            slug_check_func=is_collection_slug,
-            url_convert_func=collection_url_to_slug,
         )
-
-    @classmethod
-    def from_slug(cls, slug: str, /) -> Self:
-        return cls(slug=slug)
-
-    @classmethod
-    def from_url(cls, url: str, /) -> Self:
-        return cls(url=url)
-
-    @property
-    def slug(self) -> str:
-        return self._slug
-
-    @property
-    def url(self) -> str:
-        return collection_slug_to_url(self._slug)
 
     async def check(self) -> None:
         if self._checked:

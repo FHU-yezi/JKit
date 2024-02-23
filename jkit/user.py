@@ -11,7 +11,6 @@ from typing import (
 )
 
 from httpx import HTTPStatusError
-from typing_extensions import Self
 
 from jkit._base import (
     DATA_OBJECT_CONFIG,
@@ -150,6 +149,10 @@ class UserArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class User(ResourceObject, CheckableObject, SlugAndUrlObject):
+    _slug_check_func = is_user_slug
+    _slug_to_url_func = user_slug_to_url
+    _url_to_slug_func = user_url_to_slug
+
     def __init__(
         self, *, slug: Optional[str] = None, url: Optional[str] = None
     ) -> None:
@@ -159,25 +162,7 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
             object_readable_name="用户",
             slug=slug,
             url=url,
-            slug_check_func=is_user_slug,
-            url_convert_func=user_url_to_slug,
         )
-
-    @classmethod
-    def from_slug(cls, slug: str, /) -> Self:
-        return cls(slug=slug)
-
-    @classmethod
-    def from_url(cls, url: str, /) -> Self:
-        return cls(url=url)
-
-    @property
-    def slug(self) -> str:
-        return self._slug
-
-    @property
-    def url(self) -> str:
-        return user_slug_to_url(self._slug)
 
     async def check(self) -> None:
         if self._checked:
