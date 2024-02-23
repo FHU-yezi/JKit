@@ -233,7 +233,7 @@ class Article(ResourceObject, CheckableObject, SlugAndUrlObject):
             self._checked = True
         except HTTPStatusError:
             raise ResourceUnavailableError(
-                f"文章 {self.url} 不存在或已被锁定 / 私密 / 删除"
+                f"文章 {self.url} 不存在或已被删除 / 私密 / 锁定"
             ) from None
 
     @property

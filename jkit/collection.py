@@ -129,7 +129,7 @@ class Collection(ResourceObject, CheckableObject, SlugAndUrlObject):
             self._checked = True
         except HTTPStatusError:
             raise ResourceUnavailableError(
-                f"专题 {self.url} 不存在或已被删除锁定 / 私密 / 删除"
+                f"专题 {self.url} 不存在或已被删除"
             ) from None
 
     @property

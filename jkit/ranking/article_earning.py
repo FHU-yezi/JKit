@@ -39,7 +39,7 @@ class RecordField(DataObject, **DATA_OBJECT_CONFIG):
 
     def to_article_obj(self) -> "Article":
         if not self.slug:
-            raise APIUnsupportedError("文章走丢了，无法获取文章对象")
+            raise APIUnsupportedError("文章走丢了，可能已被作者删除 / 私密或被锁定")
 
         from jkit.article import Article
 

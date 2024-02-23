@@ -28,7 +28,7 @@ class UserInfoField(DataObject, **DATA_OBJECT_CONFIG):
         from jkit.user import User
 
         if not self.slug:
-            raise ResourceUnavailableError("用户信息不可用，无法生成用户对象")
+            raise ResourceUnavailableError("用户已注销或被封禁")
 
         return User.from_slug(self.slug)._as_checked()
 
