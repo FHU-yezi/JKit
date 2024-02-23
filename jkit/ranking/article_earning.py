@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, AsyncGenerator, Optional, Tuple
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
@@ -89,3 +89,7 @@ class ArticleEarningRank(ResourceObject):
                 for ranking, item in enumerate(data["notes"], start=1)
             ),
         )._validate()
+
+    async def __aiter__(self) -> AsyncGenerator[ArticleEarningRankRecord, None]:
+        for item in (await self.get_data()).records:
+            yield item

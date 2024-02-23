@@ -27,7 +27,7 @@ class DailyUpdateRankRecord(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class DailyUpdateRank(ResourceObject):
-    async def iter_data(self) -> AsyncGenerator[DailyUpdateRankRecord, None]:
+    async def __aiter__(self) -> AsyncGenerator[DailyUpdateRankRecord, None]:
         data = await get_json(
             endpoint=CONFIG.endpoints.jianshu,
             path="/asimov/daily_activity_participants/rank",

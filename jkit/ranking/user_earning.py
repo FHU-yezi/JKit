@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import TYPE_CHECKING, Literal, Tuple
+from typing import TYPE_CHECKING, AsyncGenerator, Literal, Tuple
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
 from jkit._constraints import (
@@ -65,6 +65,7 @@ class UserEarningRank(ResourceObject):
                 "date": self._target_date.strftime(r"%Y%m%d"),
             },
         )
+        print(data["users"][2])
 
         return UserEarningRankData(
             total_fp_amount_sum=normalize_assets_amount(data["fp"]),
@@ -83,3 +84,7 @@ class UserEarningRank(ResourceObject):
                 for ranking, item in enumerate(data["users"], start=1)
             ),
         )._validate()
+
+    async def __aiter__(self) -> AsyncGenerator[UserEarningRankRecord, None]:
+        for item in (await self.get_data()).records:
+            yield item

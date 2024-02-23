@@ -40,10 +40,11 @@ class AssetsRankRecord(DataObject, **DATA_OBJECT_CONFIG):
 
 
 class AssetsRank(ResourceObject):
-    async def iter_data(
-        self, *, start_id: int = 1
-    ) -> AsyncGenerator[AssetsRankRecord, None]:
-        now_id = start_id
+    def __init__(self, *, start_id: int = 1) -> None:
+        self._start_id = start_id
+
+    async def __aiter__(self) -> AsyncGenerator[AssetsRankRecord, None]:
+        now_id = self._start_id
         while True:
             data = await get_json(
                 endpoint=CONFIG.endpoints.jianshu,
