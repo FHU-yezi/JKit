@@ -56,7 +56,8 @@ class MembershipEnum(Enum):
     SILVER = "银牌会员"
     GOLD = "金牌会员"
     PLATINA = "白金会员"
-    DISTINGUISHED = "尊享会员"
+    LEGACY_ORDINARY = "普通会员（旧版）"
+    LEGACY_DISTINGUISHED = "尊享会员（旧版）"
 
 
 class GenderEnum(Enum):
@@ -221,7 +222,8 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
                     "silver": MembershipEnum.SILVER,
                     "gold": MembershipEnum.GOLD,
                     "platina": MembershipEnum.PLATINA,
-                    "distinguished": MembershipEnum.DISTINGUISHED,
+                    "ordinary": MembershipEnum.LEGACY_ORDINARY,
+                    "distinguished": MembershipEnum.LEGACY_DISTINGUISHED,
                 }[data["member"]["type"]],
                 expired_at=normalize_datetime(data["member"]["expires_at"]),
             )
