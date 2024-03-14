@@ -21,12 +21,11 @@ class PaymentChannels(Enum):
 
 
 class PublisherInfoField(DataObject, **DATA_OBJECT_CONFIG):
-    is_anonymous: bool
-    id: Optional[PositiveInt]
-    name: Optional[NonEmptyStr]
-    hashed_name: Optional[NonEmptyStr]
+    id: PositiveInt
+    name: NonEmptyStr
+    hashed_name: NonEmptyStr
     avatar_url: Optional[NonEmptyStr]
-    credit: Optional[NonNegativeInt]
+    credit: NonNegativeInt
 
 
 class FTNMacketOrderRecord(DataObject, **DATA_OBJECT_CONFIG):
@@ -106,7 +105,6 @@ class FTNMacket(ResourceObject):
                     if item["member.user"][0]["pay_types"]
                     else (),
                     publisher_info=PublisherInfoField(
-                        is_anonymous=bool(item["anony"]),
                         id=item["member.user"][0]["id"],
                         name=item["member.user"][0]["username"],
                         hashed_name=item["member.user"][0]["username_md5"],
