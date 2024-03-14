@@ -29,7 +29,7 @@ class UserInfoField(DataObject, **DATA_OBJECT_CONFIG):
         return User.from_slug(self.slug)._as_checked()
 
 
-class JianshuLotteryWinRecord(DataObject, **DATA_OBJECT_CONFIG):
+class LotteryWinRecord(DataObject, **DATA_OBJECT_CONFIG):
     id: PositiveInt
     time: NormalizedDatetime
     award_name: NonEmptyStr
@@ -37,10 +37,10 @@ class JianshuLotteryWinRecord(DataObject, **DATA_OBJECT_CONFIG):
     user_info: UserInfoField
 
 
-class JianshuLottery(ResourceObject):
+class Lottery(ResourceObject):
     async def iter_win_records(
         self, *, count: int = 100
-    ) -> AsyncGenerator[JianshuLotteryWinRecord, None]:
+    ) -> AsyncGenerator[LotteryWinRecord, None]:
         data: List[Dict[str, Any]] = await get_json(
             endpoint=CONFIG.endpoints.jianshu,
             path="/asimov/ad_rewards/winner_list",
@@ -48,7 +48,7 @@ class JianshuLottery(ResourceObject):
         )  # type: ignore
 
         for item in data:
-            yield JianshuLotteryWinRecord(
+            yield LotteryWinRecord(
                 id=item["id"],
                 time=normalize_datetime(item["created_at"]),
                 award_name=item["name"],
