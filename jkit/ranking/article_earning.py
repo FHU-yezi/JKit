@@ -2,7 +2,11 @@ from datetime import date, datetime, timedelta
 from typing import TYPE_CHECKING, AsyncGenerator, Optional, Tuple
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
-from jkit._constraints import (
+from jkit._network_request import get_json
+from jkit._normalization import normalize_assets_amount
+from jkit.config import CONFIG
+from jkit.exceptions import APIUnsupportedError
+from jkit.msgspec_constraints import (
     ArticleSlug,
     NonEmptyStr,
     PositiveFloat,
@@ -10,10 +14,6 @@ from jkit._constraints import (
     UserName,
     UserUploadedUrl,
 )
-from jkit._network_request import get_json
-from jkit._normalization import normalize_assets_amount
-from jkit.config import CONFIG
-from jkit.exceptions import APIUnsupportedError
 
 if TYPE_CHECKING:
     from jkit.article import Article

@@ -1,7 +1,10 @@
 from typing import TYPE_CHECKING, Any, AsyncGenerator, Dict, List
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
-from jkit._constraints import (
+from jkit._network_request import get_json
+from jkit._normalization import normalize_datetime
+from jkit.config import CONFIG
+from jkit.msgspec_constraints import (
     NonEmptyStr,
     NormalizedDatetime,
     PositiveInt,
@@ -9,9 +12,6 @@ from jkit._constraints import (
     UserSlug,
     UserUploadedUrl,
 )
-from jkit._network_request import get_json
-from jkit._normalization import normalize_datetime
-from jkit.config import CONFIG
 
 if TYPE_CHECKING:
     from jkit.user import User

@@ -23,7 +23,17 @@ from jkit._base import (
     ResourceObject,
     SlugAndUrlObject,
 )
-from jkit._constraints import (
+from jkit._network_request import get_json
+from jkit._normalization import (
+    normalize_assets_amount,
+    normalize_datetime,
+    normalize_percentage,
+)
+from jkit.config import CONFIG
+from jkit.exceptions import ResourceUnavailableError
+from jkit.identifier_check import is_article_slug
+from jkit.identifier_convert import article_slug_to_url, article_url_to_slug
+from jkit.msgspec_constraints import (
     CollectionSlug,
     NonEmptyStr,
     NonNegativeFloat,
@@ -36,16 +46,6 @@ from jkit._constraints import (
     UserSlug,
     UserUploadedUrl,
 )
-from jkit._network_request import get_json
-from jkit._normalization import (
-    normalize_assets_amount,
-    normalize_datetime,
-    normalize_percentage,
-)
-from jkit.config import CONFIG
-from jkit.exceptions import ResourceUnavailableError
-from jkit.identifier_check import is_article_slug
-from jkit.identifier_convert import article_slug_to_url, article_url_to_slug
 
 if TYPE_CHECKING:
     from jkit.collection import Collection

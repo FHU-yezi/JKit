@@ -2,16 +2,16 @@ from enum import Enum
 from typing import AsyncGenerator, Literal, Optional, Tuple
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
-from jkit._constraints import (
+from jkit._network_request import send_post
+from jkit._normalization import normalize_datetime
+from jkit.config import CONFIG
+from jkit.msgspec_constraints import (
     NonEmptyStr,
     NonNegativeInt,
     NormalizedDatetime,
     PositiveFloat,
     PositiveInt,
 )
-from jkit._network_request import send_post
-from jkit._normalization import normalize_datetime
-from jkit.config import CONFIG
 
 
 class PaymentChannels(Enum):

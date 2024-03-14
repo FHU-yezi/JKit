@@ -1,7 +1,7 @@
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
-from jkit._constraints import NonNegativeFloat
 from jkit._network_request import send_post
 from jkit.config import CONFIG
+from jkit.msgspec_constraints import NonNegativeFloat
 
 
 class PlatformSettingsData(DataObject, **DATA_OBJECT_CONFIG):

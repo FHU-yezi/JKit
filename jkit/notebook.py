@@ -10,7 +10,13 @@ from jkit._base import (
     IdAndUrlObject,
     ResourceObject,
 )
-from jkit._constraints import (
+from jkit._network_request import get_json
+from jkit._normalization import normalize_assets_amount, normalize_datetime
+from jkit.config import CONFIG
+from jkit.exceptions import ResourceUnavailableError
+from jkit.identifier_check import is_notebook_id
+from jkit.identifier_convert import notebook_id_to_url
+from jkit.msgspec_constraints import (
     ArticleSlug,
     NonEmptyStr,
     NonNegativeFloat,
@@ -22,12 +28,6 @@ from jkit._constraints import (
     UserSlug,
     UserUploadedUrl,
 )
-from jkit._network_request import get_json
-from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit.config import CONFIG
-from jkit.exceptions import ResourceUnavailableError
-from jkit.identifier_check import is_notebook_id
-from jkit.identifier_convert import notebook_id_to_url
 
 if TYPE_CHECKING:
     from jkit.article import Article

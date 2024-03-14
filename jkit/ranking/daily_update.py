@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING, AsyncGenerator
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
-from jkit._constraints import PositiveInt, UserName, UserSlug, UserUploadedUrl
 from jkit._network_request import get_json
 from jkit.config import CONFIG
+from jkit.msgspec_constraints import PositiveInt, UserName, UserSlug, UserUploadedUrl
 
 if TYPE_CHECKING:
     from jkit.user import User

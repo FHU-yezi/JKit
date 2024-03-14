@@ -7,13 +7,6 @@ from httpx import HTTPStatusError
 from msgspec import DecodeError
 
 from jkit._base import DATA_OBJECT_CONFIG, DataObject, ResourceObject
-from jkit._constraints import (
-    NonEmptyStr,
-    NonNegativeFloat,
-    NormalizedDatetime,
-    Percentage,
-    PositiveInt,
-)
 from jkit._network_request import JSON_DECODER, get_json, send_post
 from jkit._normalization import (
     normalize_assets_amount,
@@ -24,6 +17,13 @@ from jkit._normalization import (
 from jkit.config import CONFIG
 from jkit.credential import JianshuCredential
 from jkit.exceptions import BalanceNotEnoughError, WeeklyConvertLimitExceededError
+from jkit.msgspec_constraints import (
+    NonEmptyStr,
+    NonNegativeFloat,
+    NormalizedDatetime,
+    Percentage,
+    PositiveInt,
+)
 
 
 class AssetsTransactionRecord(DataObject, **DATA_OBJECT_CONFIG):

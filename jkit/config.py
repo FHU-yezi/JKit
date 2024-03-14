@@ -5,7 +5,7 @@ from httpx._types import ProxiesTypes, TimeoutTypes
 from msgspec import Struct, convert, field, to_builtins
 from typing_extensions import Self
 
-from jkit._constraints import NonEmptyStr
+from jkit.msgspec_constraints import NonEmptyStr
 
 
 class ConfigObject(Struct):
