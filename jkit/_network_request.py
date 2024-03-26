@@ -1,7 +1,5 @@
 from typing import Any, Dict, Optional
 
-from lxml.html import HtmlElement
-from lxml.html import fromstring as parse_html
 from msgspec.json import Decoder
 
 from jkit.config import CONFIG
@@ -52,8 +50,8 @@ async def get_html(
     *,
     endpoint: str,
     path: str,
-) -> HtmlElement:
+) -> str:
     response = await HTTP_CLIENT.get(f"{endpoint}{path}")
     response.raise_for_status()
 
-    return parse_html(response.content)
+    return response.text

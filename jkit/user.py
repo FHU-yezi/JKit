@@ -1,4 +1,5 @@
 from enum import Enum
+from re import compile as re_compile
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -42,6 +43,8 @@ if TYPE_CHECKING:
     from jkit.article import Article
     from jkit.collection import Collection
     from jkit.notebook import Notebook
+
+ASSETS_AMOUNT_REGEX = re_compile(r"收获喜欢[\s\S]*?<p>(.*)</p>[\s\S]*?总资产")
 
 
 class UserBadge(DataObject, **DATA_OBJECT_CONFIG):
@@ -255,11 +258,8 @@ class User(ResourceObject, CheckableObject, SlugAndUrlObject):
         data = await get_html(endpoint=CONFIG.endpoints.jianshu, path=f"/u/{self.slug}")
 
         try:
-            return float(
-                data.xpath("//div[@class='meta-block']/p")[2]
-                .text.replace(".", "")
-                .replace("w", "000")
-            )
+            assets_amount: str = ASSETS_AMOUNT_REGEX.findall(data)[0]
+            return float(assets_amount.replace(".", "").replace("w", "000"))
         except IndexError:
             raise APIUnsupportedError(
                 "受 API 限制，无法获取此用户的资产量信息"
