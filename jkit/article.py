@@ -1,6 +1,5 @@
 from datetime import datetime
 from enum import Enum
-from re import sub as re_sub
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -13,8 +12,6 @@ from typing import (
 )
 
 from httpx import HTTPStatusError
-from lxml.html import HtmlElement
-from lxml.html import fromstring as parse_html
 
 from jkit._base import (
     DATA_OBJECT_CONFIG,
@@ -30,6 +27,7 @@ from jkit._normalization import (
     normalize_percentage,
 )
 from jkit.config import CONFIG
+from jkit.constants import BLANK_LINES_REGEX, HTML_TAG_REGEX
 from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_article_slug
 from jkit.identifier_convert import article_slug_to_url, article_url_to_slug
@@ -109,9 +107,8 @@ class ArticleInfo(DataObject, **DATA_OBJECT_CONFIG):
 
     @property
     def text_content(self) -> str:
-        html_obj: HtmlElement = parse_html(self.html_content)
-        result = "".join(html_obj.itertext())  # type: ignore
-        return re_sub(r"\s{3,}", "", result)  # 去除多余的空行
+        result = HTML_TAG_REGEX.sub("", self.html_content)
+        return BLANK_LINES_REGEX.sub("\n", result)
 
 
 class ArticleAudioInfo(DataObject, **DATA_OBJECT_CONFIG):
