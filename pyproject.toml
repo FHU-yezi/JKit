@@ -25,7 +25,6 @@ python = "^3.8"
 httpx = {extras = ["http2"], version = "*"}
 msgspec = "*"
 typing-extensions = "*"
-lxml = "*"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.0"
