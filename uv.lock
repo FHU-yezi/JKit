@@ -124,7 +124,6 @@ source = { virtual = "." }
 dependencies = [
     { name = "httpx", extra = ["http2"] },
     { name = "msgspec" },
-    { name = "typing-extensions" },
 ]
 
 [package.dev-dependencies]
@@ -137,7 +136,6 @@ dev = [
 requires-dist = [
     { name = "httpx", extras = ["http2"] },
     { name = "msgspec" },
-    { name = "typing-extensions" },
 ]
 
 [package.metadata.requires-dev]
