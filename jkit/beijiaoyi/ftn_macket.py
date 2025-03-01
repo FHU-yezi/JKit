@@ -15,6 +15,8 @@ from jkit.constraints import (
 )
 from jkit.credentials import BeijiaoyiCredential
 
+AVATAR_URL_PREFIX = "https://testapi.beijiaoyi.com/"
+
 OrderSupportedPaymentChannelsType = Literal["WECHAT_PAY", "ALIPAY"]
 
 
@@ -90,8 +92,7 @@ class FtnMacket(ResourceObject):
                     publisher_info=_PublisherInfoField(
                         id=item["userId"],
                         name=item["userName"],
-                        # TODO: 拼接完整链接
-                        avatar_url=item["userImage"],
+                        avatar_url=AVATAR_URL_PREFIX + item["userImage"],
                     ),
                 )._validate()
 

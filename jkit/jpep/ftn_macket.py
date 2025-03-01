@@ -14,6 +14,8 @@ from jkit.constraints import (
     PositiveInt,
 )
 
+AVATAR_URL_PREFIX = "https://20221023.jianshubei.com/media/"
+
 OrderSupportedPaymentChannelsType = Literal["WECHAT_PAY", "ALIPAY", "ANT_CREDIT_PAY"]
 
 
@@ -110,7 +112,8 @@ class FtnMacket(ResourceObject):
                         id=item["member.user"][0]["id"],
                         name=item["member.user"][0]["username"],
                         hashed_name=item["member.user"][0]["username_md5"],
-                        avatar_url=item["member.user"][0]["avatarUrl"]
+                        avatar_url=AVATAR_URL_PREFIX
+                        + item["member.user"][0]["avatarUrl"]
                         if item["member.user"][0]["avatarUrl"]
                         else None,
                         credit=item["member.user"][0]["credit"],
