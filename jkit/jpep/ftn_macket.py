@@ -113,9 +113,7 @@ class FtnMacket(ResourceObject):
                         name=item["member.user"][0]["username"],
                         hashed_name=item["member.user"][0]["username_md5"],
                         avatar_url=AVATAR_URL_PREFIX
-                        + item["member.user"][0]["avatarUrl"]
-                        if item["member.user"][0]["avatarUrl"]
-                        else None,
+                        + item["member.user"][0]["avatarUrl"],
                         credit=item["member.user"][0]["credit"],
                     ),
                 )._validate()
