@@ -22,6 +22,18 @@ class ResourceUnavailableError(JKitError):
     pass
 
 
+class CredentialError(JKitError):
+    pass
+
+
+class InvalidCredentialError(JKitError):
+    pass
+
+
+class ExpiredCredentialError(JKitError):
+    pass
+
+
 class AssetsActionError(JKitError):
     pass
 

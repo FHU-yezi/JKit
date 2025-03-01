@@ -13,6 +13,7 @@ from jkit.exceptions import RatelimitError
 
 HttpMethodType = Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
 
+# TODO: 将编解码器移至单独模块
 JSON_ENCODER = JsonEncoder()
 JSON_DECODER = JsonDecoder()
 

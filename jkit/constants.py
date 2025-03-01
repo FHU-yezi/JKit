@@ -22,6 +22,8 @@ USER_NAME_REGEX = re_compile(r"^[\w]{,15}$")
 JIANSHU_URL_REGEX = re_compile(r"^https://www\.jianshu\.com/[a-zA-Z0-9/]*/?$")
 USER_UPLOADED_URL_REGEX = re_compile(r"^https?:\/\/.*/?$")
 
+_JWT_TOKEN_REGEX = re_compile(r"^[a-zA-Z0-9-_]*\.[a-zA-Z0-9-_]*\.[a-zA-Z0-9-_]*$")
+
 _HTML_TAG_REGEX = re_compile("<.*?>")
 _BLANK_LINES_REGEX = re_compile("\n{2,}")
 
