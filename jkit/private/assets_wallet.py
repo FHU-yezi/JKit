@@ -4,7 +4,7 @@ from collections.abc import AsyncGenerator
 from contextlib import suppress
 from decimal import Decimal
 from re import compile as re_compile
-from typing import Literal
+from typing import Any, Literal
 
 from httpx import HTTPStatusError
 from msgspec import DecodeError
@@ -41,6 +41,18 @@ class AssetsInfoData(DataObject, frozen=True):
     converting_fp_amount: Decimal
 
 
+class BenefitCardsInfoData(DataObject, frozen=True):
+    total_amount: NonNegativeInt
+    estimated_benefits_percent: Percentage
+
+
+class IncomeData(DataObject, frozen=True):
+    poc: Decimal
+    fp_holding_own_reward: Decimal
+    fp_holding_referral_reward: Decimal
+    membership_referral_reward: Decimal
+
+
 class TransactionData(DataObject, frozen=True):
     id: PositiveInt
     time: NormalizedDatetime
@@ -57,11 +69,6 @@ class FpHoldingRewardData(DataObject, frozen=True):
     total_amount: Decimal
 
 
-class BenefitCardsInfoData(DataObject, frozen=True):
-    total_amount: NonNegativeInt
-    estimated_benefits_percent: Percentage
-
-
 class BenefitCardData(DataObject, frozen=True):
     type: BenefitCardType
     amount: NonNegativeInt
@@ -74,8 +81,7 @@ class AssetsWallet(ResourceObject):
     def __init__(self, *, credential: JianshuCredential) -> None:
         self._credential = credential
 
-    @property
-    async def assets_info(self) -> AssetsInfoData:
+    async def _get_html_inner_json(self) -> dict[str, Any]:
         html = await send_request(
             datasource="JIANSHU",
             method="GET",
@@ -83,22 +89,74 @@ class AssetsWallet(ResourceObject):
             credential=self._credential,
             response_type="HTML",
         )
-        data = JSON_DECODER.decode(_HTML_INNER_JSON_REGEX.findall(html)[0])
+        return JSON_DECODER.decode(_HTML_INNER_JSON_REGEX.findall(html)[0])
+
+    @property
+    async def assets_info(self) -> AssetsInfoData:
+        data = await self._get_html_inner_json()
+        data: dict[str, Any] = data["ruby"]["wallet"]["assets"]
 
         return AssetsInfoData(
-            fp_amount=normalize_assets_amount_precise(
-                data["ruby"]["wallet"]["assets"]["jsd_amount18"]
-            ),
-            ftn_amount=normalize_assets_amount_precise(
-                data["ruby"]["wallet"]["assets"]["jsb_amount18"]
-            ),
-            assets_amount=normalize_assets_amount_precise(
-                data["ruby"]["wallet"]["assets"]["total_assets18"]
-            ),
+            fp_amount=normalize_assets_amount_precise(data["jsd_amount18"]),
+            ftn_amount=normalize_assets_amount_precise(data["jsb_amount18"]),
+            assets_amount=normalize_assets_amount_precise(data["total_assets18"]),
             converting_fp_amount=normalize_assets_amount_precise(
-                data["ruby"]["wallet"]["assets"]["exchanging_jsb18"]
+                data["exchanging_jsb18"]
             ),
         )._validate()
+
+    @property
+    async def benefit_cards_info(self) -> BenefitCardsInfoData:
+        data = await send_request(
+            datasource="JIANSHU",
+            method="GET",
+            path="/asimov/fp_wallets/benefit_cards/info",
+            credential=self._credential,
+            response_type="JSON",
+        )
+
+        return BenefitCardsInfoData(
+            total_amount=int(normalize_assets_amount_precise(data["total_amount18"])),
+            estimated_benefits_percent=normalize_percentage(
+                data["total_estimated_benefits"]
+            ),
+        )._validate()
+
+    @property
+    async def yesterday_income_info(self) -> IncomeData:
+        data = await self._get_html_inner_json()
+        data: dict[str, Any] = data["ruby"]["wallet"]["income"]["yesterday"]
+
+        return IncomeData(
+            poc=normalize_assets_amount_precise(data["poc"]),
+            fp_holding_own_reward=normalize_assets_amount_precise(
+                data["member_rewards18"]
+            ),
+            fp_holding_referral_reward=normalize_assets_amount_precise(
+                data["referral_rewads18"]
+            ),
+            membership_referral_reward=normalize_assets_amount_precise(
+                data["member_distribution"]
+            ),
+        )
+
+    @property
+    async def total_income_info(self) -> IncomeData:
+        data = await self._get_html_inner_json()
+        data: dict[str, Any] = data["ruby"]["wallet"]["income"]["total"]
+
+        return IncomeData(
+            poc=normalize_assets_amount_precise(data["poc"]),
+            fp_holding_own_reward=normalize_assets_amount_precise(
+                data["member_rewards18"]
+            ),
+            fp_holding_referral_reward=normalize_assets_amount_precise(
+                data["referral_rewads18"]
+            ),
+            membership_referral_reward=normalize_assets_amount_precise(
+                data["member_distribution"]
+            ),
+        )
 
     async def iter_transactions(
         self,
@@ -179,23 +237,6 @@ class AssetsWallet(ResourceObject):
                 )._validate()
 
             current_page += 1
-
-    @property
-    async def benefit_cards_info(self) -> BenefitCardsInfoData:
-        data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path="/asimov/fp_wallets/benefit_cards/info",
-            credential=self._credential,
-            response_type="JSON",
-        )
-
-        return BenefitCardsInfoData(
-            total_amount=int(normalize_assets_amount_precise(data["total_amount18"])),
-            estimated_benefits_percent=normalize_percentage(
-                data["total_estimated_benefits"]
-            ),
-        )._validate()
 
     async def iter_benefit_cards(
         self, *, type: BenefitCardType
