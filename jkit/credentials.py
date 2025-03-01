@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any
 
 from jkit._base import CredentialObject
-from jkit._network import JSON_DECODER
+from jkit._codec import JSON_DECODER
 from jkit._normalization import normalize_datetime
 from jkit.constants import _JWT_TOKEN_REGEX
 from jkit.exceptions import ExpiredCredentialError, InvalidCredentialError

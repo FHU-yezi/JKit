@@ -3,19 +3,14 @@ from __future__ import annotations
 from typing import Any, Literal, overload
 
 from httpx import AsyncClient
-from msgspec.json import Decoder as JsonDecoder
-from msgspec.json import Encoder as JsonEncoder
 
 from jkit._base import CredentialObject
+from jkit._codec import JSON_DECODER, JSON_ENCODER
 from jkit.config import CONFIG, _DatasourceNameType
 from jkit.constants import _RATELIMIT_STATUS_CODE
 from jkit.exceptions import RatelimitError
 
 HttpMethodType = Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
-
-# TODO: 将编解码器移至单独模块
-JSON_ENCODER = JsonEncoder()
-JSON_DECODER = JsonDecoder()
 
 DATASOURCE_CLIENTS: dict[_DatasourceNameType, AsyncClient] = {
     "JIANSHU": CONFIG.datasources.jianshu._get_httpx_client(),

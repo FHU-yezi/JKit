@@ -10,7 +10,8 @@ from httpx import HTTPStatusError
 from msgspec import DecodeError
 
 from jkit._base import DataObject, ResourceObject
-from jkit._network import JSON_DECODER, send_request
+from jkit._codec import JSON_DECODER
+from jkit._network import send_request
 from jkit._normalization import (
     normalize_assets_amount_precise,
     normalize_datetime,
