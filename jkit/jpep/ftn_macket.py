@@ -34,7 +34,7 @@ class OrderData(DataObject, frozen=True):
     price: PositiveFloat
     total_amount: PositiveInt
     traded_amount: NonNegativeInt
-    tradable_amount: NonNegativeInt
+    remaining_amount: NonNegativeInt
     minimum_trade_amount: PositiveInt
 
     completed_trades_count: NonNegativeInt
@@ -93,7 +93,7 @@ class FtnMacket(ResourceObject):
                     price=item["price"],
                     total_amount=item["totalNum"],
                     traded_amount=item["tradeNum"],
-                    tradable_amount=item["tradable"],
+                    remaining_amount=item["tradable"],
                     minimum_trade_amount=item["minNum"],
                     completed_trades_count=item["tradeCount"],
                     publish_time=normalize_datetime(item["pub_date"]),

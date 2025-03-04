@@ -33,7 +33,7 @@ class OrderData(DataObject, frozen=True):
     price: PositiveFloat
     total_amount: PositiveInt
     traded_amount: NonNegativeInt
-    tradable_amount: NonNegativeInt
+    remaining_amount: NonNegativeInt
     minimum_trade_amount: PositiveInt
     maximum_trade_amount: PositiveInt | None
 
@@ -82,8 +82,8 @@ class FtnMacket(ResourceObject):
                     id=int(item["productId"]),
                     price=item["unitPrice"],
                     total_amount=int(item["totalQty"]),
-                    tradable_amount=int(item["availableQty"]),
                     traded_amount=int(item["totalQty"] - item["availableQty"]),
+                    remaining_amount=int(item["availableQty"]),
                     minimum_trade_amount=item["Limit"],
                     maximum_trade_amount=item["MaxLimit"],
                     completed_trades_count=item["tradeQty"],
