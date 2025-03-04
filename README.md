@@ -57,18 +57,18 @@ async def main() -> None:
 
     info = await user.info
 
-    print("ID:", info.id)
-    print("URL:", user.url)
-    print("昵称:", info.name)
+    print(f"ID：{info.id}")
+    print(f"URL：{user.url}")
+    print(f"昵称：{info.name}")
 
 
 asyncio.run(main())
 ```
 
 ```
-ID: 19867175
-URL: https://www.jianshu.com/u/ea36c8d8aa30
-昵称: 初心不变_叶子
+ID：19867175
+URL：https://www.jianshu.com/u/ea36c8d8aa30
+昵称：初心不变_叶子
 ```
 
 # 获取凭证
@@ -152,7 +152,7 @@ OrderData(
     price=0.046,
     total_amount=10000,
     traded_amount=0,
-    tradable_amount=10000,
+    remaining_amount=10000,
     minimum_trade_amount=1000,
     maximum_trade_amount=None,
     completed_trades_count=0,
