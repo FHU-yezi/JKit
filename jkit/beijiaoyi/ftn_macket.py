@@ -24,7 +24,7 @@ class _PublisherInfoField(DataObject, frozen=True):
     id: PositiveInt
     name: NonEmptyStr
 
-    avatar_url: NonEmptyStr | None
+    avatar_url: NonEmptyStr
 
 
 class OrderData(DataObject, frozen=True):
