@@ -47,7 +47,7 @@ class RecordData(DataObject, frozen=True):
 
         from jkit.article import Article
 
-        return Article.from_slug(self.slug)._as_checked()
+        return Article.from_slug(self.slug)
 
 
 class ArticleEarningRanking(ResourceObject):

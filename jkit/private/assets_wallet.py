@@ -88,6 +88,7 @@ class AssetsWallet(ResourceObject):
             credential=self._credential,
             response_type="HTML",
         )
+
         return JSON_DECODER.decode(_HTML_INNER_JSON_REGEX.findall(html)[0])
 
     @property
@@ -182,6 +183,7 @@ class AssetsWallet(ResourceObject):
                 credential=self._credential,
                 response_type="JSON",
             )
+
             if not data["transactions"]:
                 return
 
@@ -217,6 +219,7 @@ class AssetsWallet(ResourceObject):
                 credential=self._credential,
                 response_type="JSON",
             )
+
             if not data["transactions"]:
                 return
 

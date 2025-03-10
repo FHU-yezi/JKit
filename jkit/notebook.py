@@ -3,17 +3,15 @@ from __future__ import annotations
 from collections.abc import AsyncGenerator
 from typing import TYPE_CHECKING, Literal, TypeVar
 
-from httpx import HTTPStatusError
-
 from jkit._base import (
     CheckableResourceMixin,
     DataObject,
     IdAndUrlResourceMixin,
     ResourceObject,
 )
+from jkit._exception_handlers import resource_unavaliable_error_handler
 from jkit._network import send_request
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit.constants import _RESOURCE_UNAVAILABLE_STATUS_CODE
 from jkit.constraints import (
     ArticleSlug,
     NonEmptyStr,
@@ -26,7 +24,6 @@ from jkit.constraints import (
     UserSlug,
     UserUploadedUrl,
 )
-from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_notebook_id, is_notebook_url
 from jkit.identifier_convert import notebook_id_to_url, notebook_url_to_id
 
@@ -45,7 +42,7 @@ class _AuthorInfoField(DataObject, frozen=True):
     def to_user_obj(self) -> User:
         from jkit.user import User
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class InfoData(DataObject, frozen=True):
@@ -68,7 +65,7 @@ class _ArticleAuthorInfoField(DataObject, frozen=True):
     def to_user_obj(self) -> User:
         from jkit.user import User
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class ArticleData(DataObject, frozen=True):
@@ -91,7 +88,7 @@ class ArticleData(DataObject, frozen=True):
     def to_article_obj(self) -> Article:
         from jkit.article import Article
 
-        return Article.from_slug(self.slug)._as_checked()
+        return Article.from_slug(self.slug)
 
 
 class Notebook(ResourceObject, IdAndUrlResourceMixin, CheckableResourceMixin):
@@ -105,37 +102,22 @@ class Notebook(ResourceObject, IdAndUrlResourceMixin, CheckableResourceMixin):
 
     def __init__(self, *, id: int | None = None, url: str | None = None) -> None:
         IdAndUrlResourceMixin.__init__(self, id=id, url=url)
-        CheckableResourceMixin.__init__(self)
 
     def __repr__(self) -> str:
         return IdAndUrlResourceMixin.__repr__(self)
 
     async def check(self) -> None:
-        try:
-            await send_request(
+        await self.info
+
+    @property
+    async def info(self) -> InfoData:
+        with resource_unavaliable_error_handler(message=f"文集 {self.url} 已被删除"):
+            data = await send_request(
                 datasource="JIANSHU",
                 method="GET",
                 path=f"/asimov/nb/{self.id}",
                 response_type="JSON",
             )
-        except HTTPStatusError as e:
-            if e.response.status_code == _RESOURCE_UNAVAILABLE_STATUS_CODE:
-                raise ResourceUnavailableError(f"文集 {self.url} 已被删除") from None
-
-            raise
-        else:
-            self._checked = True
-
-    @property
-    async def info(self) -> InfoData:
-        await self._require_check()
-
-        data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/asimov/nb/{self.id}",
-            response_type="JSON",
-        )
 
         return InfoData(
             id=data["id"],
@@ -157,24 +139,25 @@ class Notebook(ResourceObject, IdAndUrlResourceMixin, CheckableResourceMixin):
         start_page: int = 1,
         order_by: Literal["ADD_TIME", "LAST_COMMENT_TIME"] = "ADD_TIME",
     ) -> AsyncGenerator[ArticleData, None]:
-        await self._require_check()
-
         current_page = start_page
         while True:
-            data = await send_request(
-                datasource="JIANSHU",
-                method="GET",
-                path=f"/asimov/notebooks/{self.id}/public_notes",
-                params={
-                    "page": current_page,
-                    "count": 20,
-                    "order_by": {
-                        "ADD_TIME": "added_at",
-                        "LAST_COMMENT_TIME": "commented_at",
-                    }[order_by],
-                },
-                response_type="JSON_LIST",
-            )
+            with resource_unavaliable_error_handler(
+                message=f"文集 {self.url} 已被删除"
+            ):
+                data = await send_request(
+                    datasource="JIANSHU",
+                    method="GET",
+                    path=f"/asimov/notebooks/{self.id}/public_notes",
+                    params={
+                        "page": current_page,
+                        "count": 20,
+                        "order_by": {
+                            "ADD_TIME": "added_at",
+                            "LAST_COMMENT_TIME": "commented_at",
+                        }[order_by],
+                    },
+                    response_type="JSON_LIST",
+                )
 
             if not data:
                 return

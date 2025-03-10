@@ -7,14 +7,13 @@ from typing import (
     Literal,
 )
 
-from httpx import HTTPStatusError
-
 from jkit._base import (
     CheckableResourceMixin,
     DataObject,
     ResourceObject,
     SlugAndUrlResourceMixin,
 )
+from jkit._exception_handlers import resource_unavaliable_error_handler
 from jkit._network import send_request
 from jkit._normalization import (
     normalize_assets_amount,
@@ -24,7 +23,6 @@ from jkit._normalization import (
 from jkit.constants import (
     _BLANK_LINES_REGEX,
     _HTML_TAG_REGEX,
-    _RESOURCE_UNAVAILABLE_STATUS_CODE,
 )
 from jkit.constraints import (
     ArticleSlug,
@@ -41,7 +39,6 @@ from jkit.constraints import (
     UserSlug,
     UserUploadedUrl,
 )
-from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_article_slug, is_article_url
 from jkit.identifier_convert import article_slug_to_url, article_url_to_slug
 
@@ -76,7 +73,7 @@ class _AuthorInfoField(DataObject, frozen=True):
     def to_user_obj(self) -> User:
         from jkit.user import User
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class InfoData(DataObject, frozen=True):
@@ -131,7 +128,7 @@ class BelongedNotebookInfoData(DataObject, frozen=True):
     def to_notebook_obj(self) -> Notebook:
         from jkit.notebook import Notebook
 
-        return Notebook.from_id(self.id)._as_checked()
+        return Notebook.from_id(self.id)
 
 
 class IncludedCollectionInfoData(DataObject, frozen=True):
@@ -145,7 +142,7 @@ class IncludedCollectionInfoData(DataObject, frozen=True):
     def to_collection_obj(self) -> Collection:
         from jkit.collection import Collection
 
-        return Collection.from_slug(self.slug)._as_checked()
+        return Collection.from_slug(self.slug)
 
     @property
     async def full_name(self) -> str:
@@ -165,7 +162,7 @@ class _CommentPublisherInfoField(DataObject, frozen=True):
     def to_user_obj(self) -> User:
         from jkit.user import User
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class SubcommentData(DataObject, frozen=True):
@@ -203,28 +200,12 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     def __init__(self, *, slug: str | None = None, url: str | None = None) -> None:
         SlugAndUrlResourceMixin.__init__(self, slug=slug, url=url)
-        CheckableResourceMixin.__init__(self)
 
     def __repr__(self) -> str:
         return SlugAndUrlResourceMixin.__repr__(self)
 
     async def check(self) -> None:
-        try:
-            await send_request(
-                datasource="JIANSHU",
-                method="GET",
-                path=f"/asimov/p/{self.slug}",
-                response_type="JSON",
-            )
-        except HTTPStatusError as e:
-            if e.response.status_code == _RESOURCE_UNAVAILABLE_STATUS_CODE:
-                raise ResourceUnavailableError(
-                    f"文章 {self.url} 已被删除 / 私密 / 锁定"
-                ) from None
-
-            raise
-        else:
-            self._checked = True
+        await self.views_count
 
     @property
     async def id(self) -> int:
@@ -232,14 +213,15 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def info(self) -> InfoData:
-        await self._require_check()
-
-        data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/asimov/p/{self.slug}",
-            response_type="JSON",
-        )
+        with resource_unavaliable_error_handler(
+            message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
+        ):
+            data = await send_request(
+                datasource="JIANSHU",
+                method="GET",
+                path=f"/asimov/p/{self.slug}",
+                response_type="JSON",
+            )
 
         return InfoData(
             id=data["id"],
@@ -296,27 +278,29 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def views_count(self) -> int:
-        await self._require_check()
-
-        data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/shakespeare/v2/notes/{self.slug}/views_count",
-            response_type="JSON",
-        )
+        with resource_unavaliable_error_handler(
+            message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
+        ):
+            data = await send_request(
+                datasource="JIANSHU",
+                method="GET",
+                path=f"/shakespeare/v2/notes/{self.slug}/views_count",
+                response_type="JSON",
+            )
 
         return data["views_count"]
 
     @property
     async def audio_info(self) -> AudioInfoData | None:
-        await self._require_check()
-
-        data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/shakespeare/v2/notes/{self.slug}/audio",
-            response_type="JSON",
-        )
+        with resource_unavaliable_error_handler(
+            message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
+        ):
+            data = await send_request(
+                datasource="JIANSHU",
+                method="GET",
+                path=f"/shakespeare/v2/notes/{self.slug}/audio",
+                response_type="JSON",
+            )
 
         if not data["exists"]:
             return None
@@ -332,14 +316,15 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def belonged_notebook_info(self) -> BelongedNotebookInfoData:
-        await self._require_check()
-
-        data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/shakespeare/v2/notes/{self.slug}/book",
-            response_type="JSON",
-        )
+        with resource_unavaliable_error_handler(
+            message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
+        ):
+            data = await send_request(
+                datasource="JIANSHU",
+                method="GET",
+                path=f"/shakespeare/v2/notes/{self.slug}/book",
+                response_type="JSON",
+            )
 
         return BelongedNotebookInfoData(
             id=data["notebook_id"],
@@ -349,17 +334,19 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
     async def iter_included_collections(
         self, *, start_page: int = 1
     ) -> AsyncGenerator[IncludedCollectionInfoData, None]:
-        await self._require_check()
-
         current_page = start_page
         while True:
-            data = await send_request(
-                datasource="JIANSHU",
-                method="GET",
-                path=f"/shakespeare/notes/{await self.id}/included_collections",
-                params={"page": current_page, "count": 20},
-                response_type="JSON",
-            )
+            with resource_unavaliable_error_handler(
+                message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
+            ):
+                data = await send_request(
+                    datasource="JIANSHU",
+                    method="GET",
+                    path=f"/shakespeare/notes/{await self.id}/included_collections",
+                    params={"page": current_page, "count": 20},
+                    response_type="JSON",
+                )
+
             if not data["collections"]:
                 return
 
@@ -381,22 +368,24 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
         direction: Literal["ASC", "DESC"] = "DESC",
         author_only: bool = False,
     ) -> AsyncGenerator[CommentData, None]:
-        await self._require_check()
-
         current_page = start_page
         while True:
-            data = await send_request(
-                datasource="JIANSHU",
-                method="GET",
-                path=f"/shakespeare/notes/{await self.id}/comments",
-                params={
-                    "page": current_page,
-                    "order_by": direction.lower(),
-                    "author_only": author_only,
-                    "count": 20,
-                },
-                response_type="JSON",
-            )
+            with resource_unavaliable_error_handler(
+                message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
+            ):
+                data = await send_request(
+                    datasource="JIANSHU",
+                    method="GET",
+                    path=f"/shakespeare/notes/{await self.id}/comments",
+                    params={
+                        "page": current_page,
+                        "order_by": direction.lower(),
+                        "author_only": author_only,
+                        "count": 20,
+                    },
+                    response_type="JSON",
+                )
+
             if not data["comments"]:
                 return
 
@@ -444,17 +433,18 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
         *,
         count: int = 10,
     ) -> AsyncGenerator[FeaturedCommentData, None]:
-        await self._require_check()
-
-        data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/shakespeare/notes/{self.slug}/featured_comments",
-            params={
-                "count": count,
-            },
-            response_type="JSON_LIST",
-        )
+        with resource_unavaliable_error_handler(
+            message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
+        ):
+            data = await send_request(
+                datasource="JIANSHU",
+                method="GET",
+                path=f"/shakespeare/notes/{self.slug}/featured_comments",
+                params={
+                    "count": count,
+                },
+                response_type="JSON_LIST",
+            )
 
         for item in data:
             yield FeaturedCommentData(

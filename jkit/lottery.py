@@ -26,7 +26,7 @@ class _UserInfoField(DataObject, frozen=True):
     def to_user_obj(self) -> User:
         from jkit.user import User
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class WinRecordData(DataObject, frozen=True):

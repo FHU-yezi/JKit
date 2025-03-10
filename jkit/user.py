@@ -7,17 +7,15 @@ from typing import (
     Literal,
 )
 
-from httpx import HTTPStatusError
-
 from jkit._base import (
     CheckableResourceMixin,
     DataObject,
     ResourceObject,
     SlugAndUrlResourceMixin,
 )
+from jkit._exception_handlers import resource_unavaliable_error_handler
 from jkit._network import send_request
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit.constants import _RESOURCE_UNAVAILABLE_STATUS_CODE
 from jkit.constraints import (
     ArticleSlug,
     CollectionSlug,
@@ -31,7 +29,6 @@ from jkit.constraints import (
     UserSlug,
     UserUploadedUrl,
 )
-from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_user_slug, is_user_url
 from jkit.identifier_convert import user_slug_to_url, user_url_to_slug
 
@@ -93,7 +90,7 @@ class _ArticleAuthorInfoField(DataObject, frozen=True):
     def to_user_obj(self) -> User:
         from jkit.user import User
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class AssetsInfoData(DataObject, frozen=True):
@@ -123,7 +120,7 @@ class ArticleData(DataObject, frozen=True):
     def to_article_obj(self) -> Article:
         from jkit.article import Article
 
-        return Article.from_slug(self.slug)._as_checked()
+        return Article.from_slug(self.slug)
 
 
 class NotebookData(DataObject, frozen=True):
@@ -135,7 +132,7 @@ class NotebookData(DataObject, frozen=True):
     def to_notebook_obj(self) -> Notebook:
         from jkit.notebook import Notebook
 
-        return Notebook.from_id(self.id)._as_checked()
+        return Notebook.from_id(self.id)
 
 
 class CollectionData(DataObject, frozen=True):
@@ -147,7 +144,7 @@ class CollectionData(DataObject, frozen=True):
     def to_collection_obj(self) -> Collection:
         from jkit.collection import Collection
 
-        return Collection.from_slug(self.slug)._as_checked()
+        return Collection.from_slug(self.slug)
 
 
 class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
@@ -161,28 +158,12 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     def __init__(self, *, slug: str | None = None, url: str | None = None) -> None:
         SlugAndUrlResourceMixin.__init__(self, slug=slug, url=url)
-        CheckableResourceMixin.__init__(self)
 
     def __repr__(self) -> str:
         return SlugAndUrlResourceMixin.__repr__(self)
 
     async def check(self) -> None:
-        try:
-            await send_request(
-                datasource="JIANSHU",
-                method="GET",
-                path=f"/asimov/users/slug/{self.slug}",
-                response_type="JSON",
-            )
-        except HTTPStatusError as e:
-            if e.response.status_code == _RESOURCE_UNAVAILABLE_STATUS_CODE:
-                raise ResourceUnavailableError(
-                    f"用户 {self.url} 已注销 / 被封禁"
-                ) from None
-
-            raise
-        else:
-            self._checked = True
+        await self.info
 
     @property
     async def id(self) -> int:
@@ -190,14 +171,15 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def info(self) -> InfoData:
-        await self._require_check()
-
-        data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/asimov/users/slug/{self.slug}",
-            response_type="JSON",
-        )
+        with resource_unavaliable_error_handler(
+            message=f"用户 {self.url} 已注销 / 被封禁"
+        ):
+            data = await send_request(
+                datasource="JIANSHU",
+                method="GET",
+                path=f"/asimov/users/slug/{self.slug}",
+                response_type="JSON",
+            )
 
         return InfoData(
             id=data["id"],
@@ -250,20 +232,28 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def assets_info(self) -> AssetsInfoData:
-        fp_amount_data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/asimov/users/slug/{self.slug}",
-            response_type="JSON",
-        )
+        with resource_unavaliable_error_handler(
+            message=f"用户 {self.url} 已注销 / 被封禁"
+        ):
+            fp_amount_data = await send_request(
+                datasource="JIANSHU",
+                method="GET",
+                path=f"/asimov/users/slug/{self.slug}",
+                response_type="JSON",
+            )
+
         fp_amount = normalize_assets_amount(fp_amount_data["jsd_balance"])
 
-        assets_amount_data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/u/{self.slug}",
-            response_type="HTML",
-        )
+        with resource_unavaliable_error_handler(
+            message=f"用户 {self.url} 已注销 / 被封禁"
+        ):
+            assets_amount_data = await send_request(
+                datasource="JIANSHU",
+                method="GET",
+                path=f"/u/{self.slug}",
+                response_type="HTML",
+            )
+
         try:
             assets_amount = float(
                 _ASSETS_AMOUNT_REGEX.findall(assets_amount_data)[0]
@@ -303,25 +293,27 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
             "PUBLISH_TIME", "LAST_COMMENT_TIME", "POPULARITY"
         ] = "PUBLISH_TIME",
     ) -> AsyncGenerator[ArticleData, None]:
-        await self._require_check()
-
         current_page = start_page
         while True:
-            data = await send_request(
-                datasource="JIANSHU",
-                method="GET",
-                path=f"/asimov/users/slug/{self.slug}/public_notes",
-                params={
-                    "page": current_page,
-                    "count": 20,
-                    "order_by": {
-                        "PUBLISH_TIME": "shared_at",
-                        "LAST_COMMENT_TIME": "commented_at",
-                        "POPULARITY": "top",
-                    }[order_by],
-                },
-                response_type="JSON_LIST",
-            )
+            with resource_unavaliable_error_handler(
+                message=f"用户 {self.url} 已注销 / 被封禁"
+            ):
+                data = await send_request(
+                    datasource="JIANSHU",
+                    method="GET",
+                    path=f"/asimov/users/slug/{self.slug}/public_notes",
+                    params={
+                        "page": current_page,
+                        "count": 20,
+                        "order_by": {
+                            "PUBLISH_TIME": "shared_at",
+                            "LAST_COMMENT_TIME": "commented_at",
+                            "POPULARITY": "top",
+                        }[order_by],
+                    },
+                    response_type="JSON_LIST",
+                )
+
             if not data:
                 return
 
@@ -358,22 +350,24 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
     async def iter_notebooks(
         self, *, start_page: int = 1
     ) -> AsyncGenerator[NotebookData, None]:
-        await self._require_check()
-
         current_page = start_page
         while True:
-            data = await send_request(
-                datasource="JIANSHU",
-                method="GET",
-                path=f"/users/{self.slug}/notebooks",
-                params={
-                    "slug": self.slug,
-                    "type": "manager",
-                    "page": current_page,
-                    "per_page": 20,
-                },
-                response_type="JSON",
-            )
+            with resource_unavaliable_error_handler(
+                message=f"用户 {self.url} 已注销 / 被封禁"
+            ):
+                data = await send_request(
+                    datasource="JIANSHU",
+                    method="GET",
+                    path=f"/users/{self.slug}/notebooks",
+                    params={
+                        "slug": self.slug,
+                        "type": "manager",
+                        "page": current_page,
+                        "per_page": 20,
+                    },
+                    response_type="JSON",
+                )
+
             if not data["notebooks"]:
                 return
 
@@ -394,22 +388,24 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
         type: Literal["OWNED", "MANAGED"],
         start_page: int = 1,
     ) -> AsyncGenerator[CollectionData, None]:
-        await self._require_check()
-
         current_page = start_page
         while True:
-            data = await send_request(
-                datasource="JIANSHU",
-                method="GET",
-                path=f"/users/{self.slug}/collections",
-                params={
-                    "slug": self.slug,
-                    "type": {"OWNED": "own", "MANAGED": "manager"}[type],
-                    "page": current_page,
-                    "per_page": 20,
-                },
-                response_type="JSON",
-            )
+            with resource_unavaliable_error_handler(
+                message=f"用户 {self.url} 已注销 / 被封禁"
+            ):
+                data = await send_request(
+                    datasource="JIANSHU",
+                    method="GET",
+                    path=f"/users/{self.slug}/collections",
+                    params={
+                        "slug": self.slug,
+                        "type": {"OWNED": "own", "MANAGED": "manager"}[type],
+                        "page": current_page,
+                        "per_page": 20,
+                    },
+                    response_type="JSON",
+                )
+
             if not data["collections"]:
                 return
 

@@ -6,17 +6,15 @@ from typing import (
     Literal,
 )
 
-from httpx import HTTPStatusError
-
 from jkit._base import (
     CheckableResourceMixin,
     DataObject,
     ResourceObject,
     SlugAndUrlResourceMixin,
 )
+from jkit._exception_handlers import resource_unavaliable_error_handler
 from jkit._network import send_request
 from jkit._normalization import normalize_assets_amount, normalize_datetime
-from jkit.constants import _RESOURCE_UNAVAILABLE_STATUS_CODE
 from jkit.constraints import (
     ArticleSlug,
     CollectionSlug,
@@ -29,7 +27,6 @@ from jkit.constraints import (
     UserSlug,
     UserUploadedUrl,
 )
-from jkit.exceptions import ResourceUnavailableError
 from jkit.identifier_check import is_collection_slug, is_collection_url
 from jkit.identifier_convert import collection_slug_to_url, collection_url_to_slug
 
@@ -46,7 +43,7 @@ class _OwnerInfoField(DataObject, frozen=True):
     def to_user_obj(self) -> User:
         from jkit.user import User
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class InfoData(DataObject, frozen=True):
@@ -73,7 +70,7 @@ class _ArticleAuthorInfoField(DataObject, frozen=True):
     def to_user_obj(self) -> User:
         from jkit.user import User
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class ArticleData(DataObject, frozen=True):
@@ -96,7 +93,7 @@ class ArticleData(DataObject, frozen=True):
     def to_article_obj(self) -> Article:
         from jkit.article import Article
 
-        return Article.from_slug(self.slug)._as_checked()
+        return Article.from_slug(self.slug)
 
 
 class Collection(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
@@ -110,37 +107,22 @@ class Collection(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin
 
     def __init__(self, *, slug: str | None = None, url: str | None = None) -> None:
         SlugAndUrlResourceMixin.__init__(self, slug=slug, url=url)
-        CheckableResourceMixin.__init__(self)
 
     def __repr__(self) -> str:
         return SlugAndUrlResourceMixin.__repr__(self)
 
     async def check(self) -> None:
-        try:
-            await send_request(
+        await self.info
+
+    @property
+    async def info(self) -> InfoData:
+        with resource_unavaliable_error_handler(message=f"专题 {self.url} 已被删除"):
+            data = await send_request(
                 datasource="JIANSHU",
                 method="GET",
                 path=f"/asimov/collections/slug/{self.slug}",
                 response_type="JSON",
             )
-        except HTTPStatusError as e:
-            if e.response.status_code == _RESOURCE_UNAVAILABLE_STATUS_CODE:
-                raise ResourceUnavailableError(f"专题 {self.url} 已被删除") from None
-
-            raise
-        else:
-            self._checked = True
-
-    @property
-    async def info(self) -> InfoData:
-        await self._require_check()
-
-        data = await send_request(
-            datasource="JIANSHU",
-            method="GET",
-            path=f"/asimov/collections/slug/{self.slug}",
-            response_type="JSON",
-        )
 
         return InfoData(
             id=data["id"],
@@ -165,25 +147,27 @@ class Collection(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin
         start_page: int = 1,
         order_by: Literal["ADD_TIME", "LAST_COMMENT_TIME", "POPULARITY"] = "ADD_TIME",
     ) -> AsyncGenerator[ArticleData, None]:
-        await self._require_check()
-
         current_page = start_page
         while True:
-            data = await send_request(
-                datasource="JIANSHU",
-                method="GET",
-                path=f"/asimov/collections/slug/{self.slug}/public_notes",
-                params={
-                    "page": current_page,
-                    "count": 20,
-                    "ordered_by": {
-                        "ADD_TIME": "time",
-                        "LAST_COMMENT_TIME": "comment_time",
-                        "POPULARITY": "hot",
-                    }[order_by],
-                },
-                response_type="JSON_LIST",
-            )
+            with resource_unavaliable_error_handler(
+                message=f"专题 {self.url} 已被删除"
+            ):
+                data = await send_request(
+                    datasource="JIANSHU",
+                    method="GET",
+                    path=f"/asimov/collections/slug/{self.slug}/public_notes",
+                    params={
+                        "page": current_page,
+                        "count": 20,
+                        "ordered_by": {
+                            "ADD_TIME": "time",
+                            "LAST_COMMENT_TIME": "comment_time",
+                            "POPULARITY": "hot",
+                        }[order_by],
+                    },
+                    response_type="JSON_LIST",
+                )
+
             if not data:
                 return
 

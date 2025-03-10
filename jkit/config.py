@@ -66,19 +66,6 @@ class _DatasourcesList(_ConfigObject):
     beijiaoyi: _DatasourceConfig
 
 
-class _ResourceCheckConfig(_ConfigObject):
-    # 从资源对象获取数据时自动进行资源检查
-    # 检查结果将在同对象中缓存，以避免不必要的开销
-    # 关闭后需要手动调用资源对象的 check 方法进行检查
-    # 否则可能抛出 jkit.exceptions 范围以外的异常
-    auto_check: bool = True
-
-    # 强制对从安全数据来源构建的资源对象进行资源检查
-    # 启用后可避免边界条件下的报错（如长时间保存资源对象）
-    # 这将对性能造成影响
-    force_check_safe_data: bool = False
-
-
 class _DataValidationConfig(_ConfigObject):
     # 是否启用数据校验
     # 遇特殊情况时可关闭以避免造成 ValidationError，此时不保证采集到的数据正确
@@ -117,8 +104,6 @@ class _Config(_ConfigObject):
             ),
         )
     )
-    # 资源检查配置
-    resource_check: _ResourceCheckConfig = field(default_factory=_ResourceCheckConfig)
     # 数据校验配置
     data_validation: _DataValidationConfig = field(
         default_factory=_DataValidationConfig

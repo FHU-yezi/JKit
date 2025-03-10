@@ -42,7 +42,7 @@ class RecordData(DataObject, frozen=True):
 
         from jkit.user import User
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class UserEarningRanking(ResourceObject):

@@ -31,7 +31,7 @@ class _UserInfoField(DataObject, frozen=True):
         if not self.slug:
             raise ResourceUnavailableError("用户已注销 / 被封禁")
 
-        return User.from_slug(self.slug)._as_checked()
+        return User.from_slug(self.slug)
 
 
 class RecordData(DataObject, frozen=True):
@@ -54,6 +54,7 @@ class UserAssetsRanking(ResourceObject):
                 params={"since_id": current_id - 1, "max_id": 10**9},
                 response_type="JSON",
             )
+
             if not data["rankings"]:
                 return
 

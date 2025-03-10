@@ -137,25 +137,9 @@ class IdAndUrlResourceMixin:
 
 
 class CheckableResourceMixin(metaclass=ABCMeta):
-    def __init__(self) -> None:
-        self._checked = False
-
     @abstractmethod
     async def check(self) -> None:
         raise NotImplementedError
-
-    async def _require_check(self) -> None:
-        if self._checked or not CONFIG.resource_check.auto_check:
-            return
-
-        await self.check()
-        self._checked = True
-
-    def _as_checked(self: P1) -> P1:
-        if not CONFIG.resource_check.force_check_safe_data:
-            self._checked = True
-
-        return self
 
 
 class DataObject(Struct, frozen=True, eq=True, kw_only=True):
