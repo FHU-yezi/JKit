@@ -120,9 +120,7 @@ class Notebook(ResourceObject, IdAndUrlResourceMixin, CheckableResourceMixin):
             )
         except HTTPStatusError as e:
             if e.response.status_code == _RESOURCE_UNAVAILABLE_STATUS_CODE:
-                raise ResourceUnavailableError(
-                    f"文集 {self.url} 不存在或已被删除"
-                ) from None
+                raise ResourceUnavailableError(f"文集 {self.url} 已被删除") from None
 
             raise
         else:

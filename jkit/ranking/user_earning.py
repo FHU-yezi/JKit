@@ -38,7 +38,7 @@ class RecordData(DataObject, frozen=True):
 
     def to_user_obj(self) -> User:
         if not self.slug:
-            raise ResourceUnavailableError("用户不存在或已注销 / 被封禁")
+            raise ResourceUnavailableError("用户已注销 / 被封禁")
 
         from jkit.user import User
 

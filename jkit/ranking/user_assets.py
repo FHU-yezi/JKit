@@ -29,7 +29,7 @@ class _UserInfoField(DataObject, frozen=True):
         from jkit.user import User
 
         if not self.slug:
-            raise ResourceUnavailableError("用户不存在或已注销 / 被封禁")
+            raise ResourceUnavailableError("用户已注销 / 被封禁")
 
         return User.from_slug(self.slug)._as_checked()
 

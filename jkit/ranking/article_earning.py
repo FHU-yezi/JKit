@@ -43,7 +43,7 @@ class RecordData(DataObject, frozen=True):
 
     def to_article_obj(self) -> Article:
         if not self.slug:
-            raise ResourceUnavailableError("文章不存在或已被删除 / 私密 / 锁定")
+            raise ResourceUnavailableError("文章已被删除 / 私密 / 锁定")
 
         from jkit.article import Article
 

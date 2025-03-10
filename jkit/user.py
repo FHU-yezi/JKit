@@ -177,7 +177,7 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
         except HTTPStatusError as e:
             if e.response.status_code == _RESOURCE_UNAVAILABLE_STATUS_CODE:
                 raise ResourceUnavailableError(
-                    f"用户 {self.url} 不存在或已注销 / 被封禁"
+                    f"用户 {self.url} 已注销 / 被封禁"
                 ) from None
 
             raise

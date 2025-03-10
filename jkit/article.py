@@ -219,7 +219,7 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
         except HTTPStatusError as e:
             if e.response.status_code == _RESOURCE_UNAVAILABLE_STATUS_CODE:
                 raise ResourceUnavailableError(
-                    f"文章 {self.url} 不存在或已被删除 / 私密 / 锁定"
+                    f"文章 {self.url} 已被删除 / 私密 / 锁定"
                 ) from None
 
             raise
