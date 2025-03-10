@@ -16,7 +16,6 @@ from jkit.constraints import (
     UserUploadedUrl,
 )
 from jkit.exceptions import APIUnsupportedError, ResourceUnavailableError
-from jkit.identifier_convert import article_slug_to_url
 
 if TYPE_CHECKING:
     from jkit.article import Article
@@ -44,11 +43,7 @@ class RecordData(DataObject, frozen=True):
 
     def to_article_obj(self) -> Article:
         if not self.slug:
-            raise ResourceUnavailableError(
-                f"文章 {article_slug_to_url(self.slug)} 不存在或已被删除 / 私密 / 锁定"
-                if self.slug
-                else "文章不存在或已被删除 / 私密 / 锁定"
-            )
+            raise ResourceUnavailableError("文章不存在或已被删除 / 私密 / 锁定")
 
         from jkit.article import Article
 

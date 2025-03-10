@@ -14,7 +14,6 @@ from jkit.constraints import (
     UserUploadedUrl,
 )
 from jkit.exceptions import ResourceUnavailableError
-from jkit.identifier_convert import user_slug_to_url
 
 if TYPE_CHECKING:
     from jkit.user import User
@@ -30,11 +29,7 @@ class _UserInfoField(DataObject, frozen=True):
         from jkit.user import User
 
         if not self.slug:
-            raise ResourceUnavailableError(
-                f"用户 {user_slug_to_url(self.slug)} 不存在或已注销 / 被封禁"
-                if self.slug
-                else "用户不存在或已注销 / 被封禁"
-            )
+            raise ResourceUnavailableError("用户不存在或已注销 / 被封禁")
 
         return User.from_slug(self.slug)._as_checked()
 

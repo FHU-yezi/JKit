@@ -29,14 +29,17 @@ class SummaryData(DataObject, frozen=True):
 
 class RecordData(DataObject, frozen=True):
     ranking: PositiveInt
-    name: UserName
-    slug: UserSlug
-    avatar_url: UserUploadedUrl
+    name: UserName | None
+    slug: UserSlug | None
+    avatar_url: UserUploadedUrl | None
     total_fp_amount: PositiveFloat
     fp_by_creating_amount: NonNegativeFloat
     fp_by_voting_amount: NonNegativeFloat
 
     def to_user_obj(self) -> User:
+        if not self.slug:
+            raise ResourceUnavailableError("用户不存在或已注销 / 被封禁")
+
         from jkit.user import User
 
         return User.from_slug(self.slug)._as_checked()
