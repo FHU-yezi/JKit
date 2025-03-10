@@ -252,24 +252,21 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
             updated_time=normalize_datetime(data["last_updated_at"]),
             can_comment=data["commentable"],
             can_reprint=data["reprintable"],
+            # free -> 免费文章
+            # fbook_free -> 免费连载中的免费文章
+            # pbook_free -> 付费连载中的免费文章
+            # paid -> 付费文章
+            # fbook_paid -> 免费连载中的付费文章
+            # pbook_paid -> 付费连载中的付费文章
             paid_info=_PaidInfoField(
-                notebook_paid_type={
-                    "free": None,  # 免费文章
-                    "fbook_free": "FREE",  # 免费连载中的免费文章
-                    "pbook_free": "PAID",  # 付费连载中的免费文章
-                    "paid": None,  # 付费文章
-                    "fbook_paid": "FREE",  # 免费连载中的付费文章
-                    "pbook_paid": "PAID",  # 付费连载中的付费文章
-                }[data["paid_type"]],
-                # TODO: 优化类型检查
-                article_paid_type={
-                    "free": "FREE",  # 免费文章
-                    "fbook_free": "FREE",  # 免费连载中的免费文章
-                    "pbook_free": "FREE",  # 付费连载中的免费文章
-                    "paid": "PAID",  # 付费文章
-                    "fbook_paid": "PAID",  # 免费连载中的付费文章
-                    "pbook_paid": "PAID",  # 付费连载中的付费文章
-                }[data["paid_type"]],  # type: ignore
+                notebook_paid_type=(
+                    "FREE" if data["paid_type"].startswith("f") else "PAID"
+                )
+                if "book" in data["paid_type"]
+                else None,
+                article_paid_type="FREE"
+                if data["paid_type"].endswith("free")
+                else "PAID",
                 price=float(data["retail_price"]) / 100
                 if data.get("retail_price")
                 else None,
