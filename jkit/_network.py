@@ -58,6 +58,19 @@ async def send_request(
 ) -> str: ...
 
 
+@overload
+async def send_request(
+    *,
+    datasource: _DatasourceNameType,
+    method: HttpMethodType,
+    path: str,
+    params: dict[str, Any] | None = None,
+    body: dict[str, Any] | None = None,
+    credential: CredentialObject | None = None,
+    response_type: None,
+) -> None: ...
+
+
 async def send_request(  # noqa: PLR0913
     *,
     datasource: _DatasourceNameType,
@@ -66,8 +79,8 @@ async def send_request(  # noqa: PLR0913
     params: dict[str, Any] | None = None,
     body: dict[str, Any] | None = None,
     credential: CredentialObject | None = None,
-    response_type: Literal["JSON", "JSON_LIST", "HTML"],
-) -> dict[str, Any] | list[dict[str, Any]] | str:
+    response_type: Literal["JSON", "JSON_LIST", "HTML"] | None,
+) -> dict[str, Any] | list[dict[str, Any]] | str | None:
     client = DATASOURCE_CLIENTS[datasource]
 
     headers = {"Accept": "text/html" if response_type == "HTML" else "application/json"}
@@ -90,7 +103,8 @@ async def send_request(  # noqa: PLR0913
 
     response.raise_for_status()
 
+    if response_type in {"JSON", "JSON_LIST"}:
+        return JSON_DECODER.decode(response.content)
     if response_type == "HTML":
         return response.text
-    else:  # noqa: RET505
-        return JSON_DECODER.decode(response.content)
+    return None

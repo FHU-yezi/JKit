@@ -1,13 +1,11 @@
 from __future__ import annotations
 
 from collections.abc import AsyncGenerator
-from contextlib import suppress
 from decimal import Decimal
 from re import compile as re_compile
 from typing import Any, Literal
 
 from httpx import HTTPStatusError
-from msgspec import DecodeError
 
 from jkit._base import DataObject, ResourceObject
 from jkit._codec import JSON_DECODER
@@ -282,16 +280,14 @@ class AssetsWallet(ResourceObject):
             raise ValueError("转换的简书钻数量必须大于 0")
 
         try:
-            # TODO: send_request 函数支持 response_type=None
-            with suppress(DecodeError):
-                await send_request(
-                    datasource="JIANSHU",
-                    method="POST",
-                    path="/asimov/fp_wallets/exchange_jsb",
-                    body={"count": amount},
-                    credential=self._credential,
-                    response_type="JSON",
-                )
+            await send_request(
+                datasource="JIANSHU",
+                method="POST",
+                path="/asimov/fp_wallets/exchange_jsb",
+                body={"count": amount},
+                credential=self._credential,
+                response_type=None,
+            )
         except HTTPStatusError as e:
             if e.response.status_code == _ASSETS_ACTION_FAILED_STATUS_CODE:
                 data = JSON_DECODER.decode(e.response.content)
@@ -311,16 +307,14 @@ class AssetsWallet(ResourceObject):
             raise ValueError("转换的简书贝数量必须大于 0")
 
         try:
-            # TODO: send_request 函数支持 response_type=None
-            with suppress(DecodeError):
-                await send_request(
-                    datasource="JIANSHU",
-                    method="POST",
-                    path="/asimov/fp_wallets/exchange_jsd",
-                    body={"count": amount},
-                    credential=self._credential,
-                    response_type="JSON",
-                )
+            await send_request(
+                datasource="JIANSHU",
+                method="POST",
+                path="/asimov/fp_wallets/exchange_jsd",
+                body={"count": amount},
+                credential=self._credential,
+                response_type=None,
+            )
         except HTTPStatusError as e:
             if e.response.status_code == _ASSETS_ACTION_FAILED_STATUS_CODE:
                 data = JSON_DECODER.decode(e.response.content)
