@@ -128,7 +128,7 @@ JSON.parse(window.localStorage.app_user_token).token
 ```python
 import asyncio
 
-from jkit.beijiaoyi.ftn_macket import FtnMacket
+from jkit.beijiaoyi.ftn_market import FtnMarket
 from jkit.credentials import BeijiaoyiCredential
 
 TOKEN = "<YOUR_TOKEN>"
@@ -136,9 +136,9 @@ TOKEN = "<YOUR_TOKEN>"
 
 async def main() -> None:
     credential = BeijiaoyiCredential.from_bearer_token(TOKEN)
-    ftn_macket = FtnMacket(credential=credential)
+    ftn_market = FtnMarket(credential=credential)
 
-    async for item in ftn_macket.iter_orders(type="BUY"):
+    async for item in ftn_market.iter_orders(type="BUY"):
         print(item)
         return
 

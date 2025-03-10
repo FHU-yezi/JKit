@@ -37,7 +37,7 @@ class RecordData(DataObject, frozen=True):
     ranking: PositiveInt
     slug: ArticleSlug | None
     title: NonEmptyStr | None
-    fp_to_author_anount: PositiveFloat
+    fp_to_author_amount: PositiveFloat
     fp_to_voter_amount: PositiveFloat
     total_fp_amount: PositiveFloat
     author_info: _AuthorInfoField
@@ -97,7 +97,7 @@ class ArticleEarningRanking(ResourceObject):
                 title=item["title"],
                 slug=item["slug"],
                 total_fp_amount=normalize_assets_amount(item["fp"]),
-                fp_to_author_anount=normalize_assets_amount(item["author_fp"]),
+                fp_to_author_amount=normalize_assets_amount(item["author_fp"]),
                 fp_to_voter_amount=normalize_assets_amount(item["voter_fp"]),
                 author_info=_AuthorInfoField(
                     name=item["author_nickname"],

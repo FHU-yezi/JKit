@@ -58,7 +58,7 @@ class _PaidInfoField(DataObject, frozen=True):
     notebook_paid_type: PaidType | None
     article_paid_type: PaidType
     price: PositiveFloat | None
-    paid_cotent_percent: Percentage | None
+    paid_content_percent: Percentage | None
     paid_readers_count: NonNegativeInt | None
 
 
@@ -273,7 +273,7 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
                 price=float(data["retail_price"]) / 100
                 if data.get("retail_price")
                 else None,
-                paid_cotent_percent=normalize_percentage(
+                paid_content_percent=normalize_percentage(
                     float(data["paid_content_percent"].replace("%", ""))
                 )
                 if data.get("paid_content_percent")

@@ -75,7 +75,7 @@ class BenefitCardData(DataObject, frozen=True):
     amount: NonNegativeInt
     start_time: NormalizedDatetime
     end_time: NormalizedDatetime
-    estimated_benefits_precent: NonNegativeFloat | None
+    estimated_benefits_percent: NonNegativeFloat | None
 
 
 class AssetsWallet(ResourceObject):
@@ -134,7 +134,7 @@ class AssetsWallet(ResourceObject):
                 data["member_rewards18"]
             ),
             fp_holding_referral_reward=normalize_assets_amount_precise(
-                data["referral_rewads18"]
+                data["referral_rewads18"]  # 简书 API 拼写错误
             ),
             membership_referral_reward=normalize_assets_amount_precise(
                 data["member_distribution"]
@@ -152,7 +152,7 @@ class AssetsWallet(ResourceObject):
                 data["member_rewards18"]
             ),
             fp_holding_referral_reward=normalize_assets_amount_precise(
-                data["referral_rewads18"]
+                data["referral_rewads18"]  # 简书 API 拼写错误
             ),
             membership_referral_reward=normalize_assets_amount_precise(
                 data["member_distribution"]
@@ -225,7 +225,9 @@ class AssetsWallet(ResourceObject):
             for item in data["transactions"]:
                 yield FpHoldingRewardData(
                     time=normalize_datetime(item["time"]),
-                    own_amount=normalize_assets_amount_precise(item["own_reards18"]),
+                    own_amount=normalize_assets_amount_precise(
+                        item["own_reards18"]
+                    ),  # 简书 API 拼写错误
                     level1_referral_amount=normalize_assets_amount_precise(
                         item["referral_rewards18"]
                     ),
@@ -267,7 +269,7 @@ class AssetsWallet(ResourceObject):
                     amount=int(normalize_assets_amount_precise(item["amount18"])),
                     start_time=normalize_datetime(item["start_time"]),
                     end_time=normalize_datetime(item["end_time"]),
-                    estimated_benefits_precent=item["estimated_benefits"] / 100
+                    estimated_benefits_percent=item["estimated_benefits"] / 100
                     if "estimated_benefits" in item
                     else None,
                 )._validate()

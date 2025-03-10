@@ -44,7 +44,7 @@ class OrderData(DataObject, frozen=True):
     publisher_info: _PublisherInfoField
 
 
-class FtnMacket(ResourceObject):
+class FtnMarket(ResourceObject):
     async def iter_orders(
         self, *, type: Literal["BUY", "SELL"], start_page: int = 1
     ) -> AsyncGenerator[OrderData, None]:

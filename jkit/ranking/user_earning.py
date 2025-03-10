@@ -33,7 +33,7 @@ class RecordData(DataObject, frozen=True):
     slug: UserSlug
     avatar_url: UserUploadedUrl
     total_fp_amount: PositiveFloat
-    fp_by_creating_anount: NonNegativeFloat
+    fp_by_creating_amount: NonNegativeFloat
     fp_by_voting_amount: NonNegativeFloat
 
     def to_user_obj(self) -> User:
@@ -96,6 +96,6 @@ class UserEarningRanking(ResourceObject):
                 slug=item["slug"],
                 avatar_url=item["avatar"],
                 total_fp_amount=normalize_assets_amount(item["fp"]),
-                fp_by_creating_anount=normalize_assets_amount(item["author_fp"]),
+                fp_by_creating_amount=normalize_assets_amount(item["author_fp"]),
                 fp_by_voting_amount=normalize_assets_amount(item["voter_fp"]),
             )._validate()

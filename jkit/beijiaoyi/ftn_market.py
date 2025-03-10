@@ -44,7 +44,7 @@ class OrderData(DataObject, frozen=True):
     publisher_info: _PublisherInfoField
 
 
-class FtnMacket(ResourceObject):
+class FtnMarket(ResourceObject):
     def __init__(self, *, credential: BeijiaoyiCredential) -> None:
         self._credential = credential
 
