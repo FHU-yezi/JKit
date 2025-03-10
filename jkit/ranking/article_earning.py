@@ -51,23 +51,23 @@ class RecordData(DataObject, frozen=True):
 
 
 class ArticleEarningRanking(ResourceObject):
-    def __init__(self, target_date: date | None = None, /) -> None:
-        if not target_date:
-            target_date = datetime.now().date() - timedelta(days=1)
+    def __init__(self, *, date_: date | None = None) -> None:
+        if not date_:
+            date_ = datetime.now().date() - timedelta(days=1)
 
-        if target_date < date(2020, 6, 20):
+        if date_ < date(2020, 6, 20):
             raise APIUnsupportedError("受 API 限制，无法获取 2020.06.20 前的排行榜数据")
-        if target_date >= datetime.now().date():
+        if date_ >= datetime.now().date():
             raise ResourceUnavailableError("无法获取未来的排行榜数据")
 
-        self._target_date = target_date
+        self._date = date_
 
     async def get_summary(self) -> SummaryData:
         data = await send_request(
             datasource="JIANSHU",
             method="GET",
             path="/asimov/fp_rankings/voter_notes",
-            params={"date": self._target_date.strftime(r"%Y%m%d")},
+            params={"date": self._date.strftime(r"%Y%m%d")},
             response_type="JSON",
         )
 
@@ -82,7 +82,7 @@ class ArticleEarningRanking(ResourceObject):
             datasource="JIANSHU",
             method="GET",
             path="/asimov/fp_rankings/voter_notes",
-            params={"date": self._target_date.strftime(r"%Y%m%d")},
+            params={"date": self._date.strftime(r"%Y%m%d")},
             response_type="JSON",
         )
 
