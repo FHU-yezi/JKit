@@ -185,7 +185,6 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
             id=data["id"],
             slug=data["slug"],
             name=data["nickname"],
-            # TODO: 优化类型检查
             gender={
                 0: "UNKNOWN",
                 1: "MALE",
@@ -207,7 +206,6 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
                 for badge in data["badges"]
             ),
             membership_info=_MembershipInfoField(
-                # TODO: 优化类型检查
                 type={
                     "bronze": "BRONZE",
                     "silver": "SILVER",

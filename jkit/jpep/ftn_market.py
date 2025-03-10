@@ -97,7 +97,6 @@ class FtnMarket(ResourceObject):
                     minimum_trade_amount=item["minNum"],
                     completed_trades_count=item["tradeCount"],
                     publish_time=normalize_datetime(item["pub_date"]),
-                    # TODO: 优化类型检查
                     supported_payment_channels=tuple(
                         {
                             1: "WECHAT_PAY",
