@@ -31,7 +31,7 @@ class BeijiaoyiCredential(CredentialObject):
 
         try:
             jwt_body = self.__class__._get_decoded_jwt_body(bearer_token)
-        except Exception:
+        except Exception:  # noqa: BLE001
             raise InvalidCredentialError("凭证不是有效的 JWT Token 格式") from None
 
         self._create_time = normalize_datetime(int(jwt_body["iat"]))

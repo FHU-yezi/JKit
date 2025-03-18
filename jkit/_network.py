@@ -71,7 +71,7 @@ async def send_request(
 ) -> None: ...
 
 
-async def send_request(  # noqa: PLR0913
+async def send_request(
     *,
     datasource: _DatasourceNameType,
     method: HttpMethodType,

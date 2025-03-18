@@ -316,31 +316,33 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
                 return
 
             for item in data:
-                item = item["object"]["data"]  # noqa: PLW2901
+                inner_item = item["object"]["data"]
 
                 yield ArticleData(
-                    id=item["id"],
-                    slug=item["slug"],
-                    title=item["title"],
-                    description=item["public_abbr"],
-                    image_url=item["list_image_url"]
-                    if item["list_image_url"]
+                    id=inner_item["id"],
+                    slug=inner_item["slug"],
+                    title=inner_item["title"],
+                    description=inner_item["public_abbr"],
+                    image_url=inner_item["list_image_url"]
+                    if inner_item["list_image_url"]
                     else None,
-                    publish_time=normalize_datetime(item["first_shared_at"]),
-                    is_top=item["is_top"],
-                    is_paid=item["paid"],
-                    can_comment=item["commentable"],
+                    publish_time=normalize_datetime(inner_item["first_shared_at"]),
+                    is_top=inner_item["is_top"],
+                    is_paid=inner_item["paid"],
+                    can_comment=inner_item["commentable"],
                     author_info=_ArticleAuthorInfoField(
-                        id=item["user"]["id"],
-                        slug=item["user"]["slug"],
-                        name=item["user"]["nickname"],
-                        avatar_url=item["user"]["avatar"],
+                        id=inner_item["user"]["id"],
+                        slug=inner_item["user"]["slug"],
+                        name=inner_item["user"]["nickname"],
+                        avatar_url=inner_item["user"]["avatar"],
                     ),
-                    views_count=item["views_count"],
-                    likes_count=item["likes_count"],
-                    comments_count=item["public_comments_count"],
-                    tips_count=item["total_rewards_count"],
-                    earned_fp_amount=normalize_assets_amount(item["total_fp_amount"]),
+                    views_count=inner_item["views_count"],
+                    likes_count=inner_item["likes_count"],
+                    comments_count=inner_item["public_comments_count"],
+                    tips_count=inner_item["total_rewards_count"],
+                    earned_fp_amount=normalize_assets_amount(
+                        inner_item["total_fp_amount"]
+                    ),
                 )._validate()
 
             current_page += 1

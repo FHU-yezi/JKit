@@ -24,7 +24,7 @@ requires-python = ">=3.9"
 dependencies = ["httpx[http2]>=0.28.0", "msgspec>=0.19.0"]
 
 [tool.uv]
-dev-dependencies = ["pyright>=1.1.0", "ruff>=0.9.0"]
+dev-dependencies = ["pyright>=1.1.0", "ruff>=0.11.0"]
 
 [build-system]
 requires = ["hatchling"]
@@ -38,16 +38,19 @@ lint.select = [
     "ARG",
     "ASYNC",
     "B",
+    "BLE",
     "C4",
     "E",
     "F",
     "FA",
     "FBT",
+    "FLY",
     "FURB",
     "I",
     "ISC",
     "N",
     "PERF",
+    "PGH",
     "PIE",
     "PL",
     "PT",
@@ -58,22 +61,19 @@ lint.select = [
     "RUF",
     "S",
     "SIM",
-    "SLF",
-    "T20",
-    "TID",
     "TRY",
     "UP",
     "W",
 ]
 lint.ignore = [
-    "A005",
     "PERF203",
+    "PGH003",
+    "PLR0913",
+    "PLR2004",
     "RUF001",
     "RUF002",
     "RUF003",
     "S311",
-    "SLF001",
     "TRY003",
 ]
-
 lint.flake8-builtins.builtins-ignorelist = ["id", "range", "type"]

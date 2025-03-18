@@ -178,7 +178,7 @@ class DataObject(Struct, frozen=True, eq=True, kw_only=True):
                 continue
 
             # 截断长度大于 100 的字符串
-            if isinstance(value, str) and len(value) > 100:  # noqa: PLR2004
+            if isinstance(value, str) and len(value) > 100:
                 value = value[:100] + "..."
 
             result.append(f"{key}={value!r}")

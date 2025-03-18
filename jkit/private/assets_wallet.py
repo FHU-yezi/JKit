@@ -294,10 +294,10 @@ class AssetsWallet(ResourceObject):
         except HTTPStatusError as e:
             if e.response.status_code == _ASSETS_ACTION_FAILED_STATUS_CODE:
                 data = JSON_DECODER.decode(e.response.content)
-                if data["error"][0]["code"] == 18002:  # noqa: PLR2004
+                if data["error"][0]["code"] == 18002:
                     raise BalanceNotEnoughError("简书钻余额不足") from None
 
-                if data["error"][0]["code"] == 18005:  # noqa: PLR2004
+                if data["error"][0]["code"] == 18005:
                     raise WeeklyConvertLimitExceededError(
                         "超出每周转换额度限制"
                     ) from None
@@ -321,10 +321,10 @@ class AssetsWallet(ResourceObject):
         except HTTPStatusError as e:
             if e.response.status_code == _ASSETS_ACTION_FAILED_STATUS_CODE:
                 data = JSON_DECODER.decode(e.response.content)
-                if data["error"][0]["code"] == 18002:  # noqa: PLR2004
+                if data["error"][0]["code"] == 18002:
                     raise BalanceNotEnoughError("简书贝余额不足") from None
 
-                if data["error"][0]["code"] == 18005:  # noqa: PLR2004
+                if data["error"][0]["code"] == 18005:
                     raise WeeklyConvertLimitExceededError(
                         "超出每周转换额度限制"
                     ) from None

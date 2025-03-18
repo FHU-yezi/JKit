@@ -42,7 +42,7 @@ class _DatasourceConfig(_ConfigObject):
         return AsyncClient(
             base_url=self.endpoint,
             headers=self.headers,
-            http2=self.http_version == 2,  # noqa: PLR2004
+            http2=self.http_version == 2,
             timeout=self.timeout,
             proxy=self.proxy,
         )
