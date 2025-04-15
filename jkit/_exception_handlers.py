@@ -8,7 +8,7 @@ from jkit.exceptions import ResourceUnavailableError
 
 
 @contextmanager
-def resource_unavaliable_error_handler(*, message: str) -> Generator[None]:
+def resource_unavailable_error_handler(*, message: str) -> Generator[None]:
     try:
         yield
     except HTTPStatusError as e:

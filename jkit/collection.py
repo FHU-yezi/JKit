@@ -12,7 +12,7 @@ from jkit._base import (
     ResourceObject,
     SlugAndUrlResourceMixin,
 )
-from jkit._exception_handlers import resource_unavaliable_error_handler
+from jkit._exception_handlers import resource_unavailable_error_handler
 from jkit._network import send_request
 from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit.constraints import (
@@ -116,7 +116,7 @@ class Collection(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin
 
     @property
     async def info(self) -> InfoData:
-        with resource_unavaliable_error_handler(message=f"专题 {self.url} 已被删除"):
+        with resource_unavailable_error_handler(message=f"专题 {self.url} 已被删除"):
             data = await send_request(
                 datasource="JIANSHU",
                 method="GET",
@@ -149,7 +149,7 @@ class Collection(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin
     ) -> AsyncGenerator[ArticleData, None]:
         current_page = start_page
         while True:
-            with resource_unavaliable_error_handler(
+            with resource_unavailable_error_handler(
                 message=f"专题 {self.url} 已被删除"
             ):
                 data = await send_request(

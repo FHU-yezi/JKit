@@ -13,7 +13,7 @@ from jkit._base import (
     ResourceObject,
     SlugAndUrlResourceMixin,
 )
-from jkit._exception_handlers import resource_unavaliable_error_handler
+from jkit._exception_handlers import resource_unavailable_error_handler
 from jkit._network import send_request
 from jkit._normalization import normalize_assets_amount, normalize_datetime
 from jkit.constraints import (
@@ -171,7 +171,7 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def info(self) -> InfoData:
-        with resource_unavaliable_error_handler(
+        with resource_unavailable_error_handler(
             message=f"用户 {self.url} 已注销 / 被封禁"
         ):
             data = await send_request(
@@ -230,7 +230,7 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def assets_info(self) -> AssetsInfoData:
-        with resource_unavaliable_error_handler(
+        with resource_unavailable_error_handler(
             message=f"用户 {self.url} 已注销 / 被封禁"
         ):
             fp_amount_data = await send_request(
@@ -242,7 +242,7 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
         fp_amount = normalize_assets_amount(fp_amount_data["jsd_balance"])
 
-        with resource_unavaliable_error_handler(
+        with resource_unavailable_error_handler(
             message=f"用户 {self.url} 已注销 / 被封禁"
         ):
             assets_amount_data = await send_request(
@@ -293,7 +293,7 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
     ) -> AsyncGenerator[ArticleData, None]:
         current_page = start_page
         while True:
-            with resource_unavaliable_error_handler(
+            with resource_unavailable_error_handler(
                 message=f"用户 {self.url} 已注销 / 被封禁"
             ):
                 data = await send_request(
@@ -352,7 +352,7 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
     ) -> AsyncGenerator[NotebookData, None]:
         current_page = start_page
         while True:
-            with resource_unavaliable_error_handler(
+            with resource_unavailable_error_handler(
                 message=f"用户 {self.url} 已注销 / 被封禁"
             ):
                 data = await send_request(
@@ -390,7 +390,7 @@ class User(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
     ) -> AsyncGenerator[CollectionData, None]:
         current_page = start_page
         while True:
-            with resource_unavaliable_error_handler(
+            with resource_unavailable_error_handler(
                 message=f"用户 {self.url} 已注销 / 被封禁"
             ):
                 data = await send_request(

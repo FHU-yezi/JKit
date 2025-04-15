@@ -13,7 +13,7 @@ from jkit._base import (
     ResourceObject,
     SlugAndUrlResourceMixin,
 )
-from jkit._exception_handlers import resource_unavaliable_error_handler
+from jkit._exception_handlers import resource_unavailable_error_handler
 from jkit._network import send_request
 from jkit._normalization import (
     normalize_assets_amount,
@@ -213,7 +213,7 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def info(self) -> InfoData:
-        with resource_unavaliable_error_handler(
+        with resource_unavailable_error_handler(
             message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
         ):
             data = await send_request(
@@ -278,7 +278,7 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def views_count(self) -> int:
-        with resource_unavaliable_error_handler(
+        with resource_unavailable_error_handler(
             message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
         ):
             data = await send_request(
@@ -292,7 +292,7 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def audio_info(self) -> AudioInfoData | None:
-        with resource_unavaliable_error_handler(
+        with resource_unavailable_error_handler(
             message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
         ):
             data = await send_request(
@@ -316,7 +316,7 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
 
     @property
     async def belonged_notebook_info(self) -> BelongedNotebookInfoData:
-        with resource_unavaliable_error_handler(
+        with resource_unavailable_error_handler(
             message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
         ):
             data = await send_request(
@@ -336,7 +336,7 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
     ) -> AsyncGenerator[IncludedCollectionInfoData, None]:
         current_page = start_page
         while True:
-            with resource_unavaliable_error_handler(
+            with resource_unavailable_error_handler(
                 message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
             ):
                 data = await send_request(
@@ -370,7 +370,7 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
     ) -> AsyncGenerator[CommentData, None]:
         current_page = start_page
         while True:
-            with resource_unavaliable_error_handler(
+            with resource_unavailable_error_handler(
                 message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
             ):
                 data = await send_request(
@@ -433,7 +433,7 @@ class Article(ResourceObject, SlugAndUrlResourceMixin, CheckableResourceMixin):
         *,
         count: int = 10,
     ) -> AsyncGenerator[FeaturedCommentData, None]:
-        with resource_unavaliable_error_handler(
+        with resource_unavailable_error_handler(
             message=f"文章 {self.url} 已被删除 / 私密 / 锁定"
         ):
             data = await send_request(
